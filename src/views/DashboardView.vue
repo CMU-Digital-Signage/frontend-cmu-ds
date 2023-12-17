@@ -1,7 +1,7 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div class="Dashboard">
+    <HelloWorld msg="Test 1 2 3" />
+    <button @click="$router.push('/login')">Log out</button>
   </div>
 </template>
 
@@ -10,9 +10,11 @@ import { defineComponent } from "vue";
 import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
 
 export default defineComponent({
-  name: "HomeView",
+  name: "DashboardView",
   components: {
     HelloWorld,
   },
 });
 </script>
+
+<style></style>
