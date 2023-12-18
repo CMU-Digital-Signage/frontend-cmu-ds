@@ -10,6 +10,7 @@ module.exports = {
     fontFamily: {
       "sf-pro": ["SF Pro"],
       "sf-pro-rounded": ["SF Pro Rounded"],
+      "notoThai" : ["NotoSansThai"]
     },
     colors: {
       red: "#FF0000",
