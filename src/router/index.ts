@@ -1,12 +1,21 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Dashboard from "../views/DashboardView.vue";
 import Login from "../views/LoginView.vue";
+import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
+import Dashboard from "../views/DashboardView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/login",
     name: "Login",
     component: Login,
+    meta: {
+      hideNavbar: true,
+    },
+  },
+  {
+    path: "/cmuOAuthCallback",
+    name: "cmuOAuth",
+    component: cmuOAuthCallback,
     meta: {
       hideNavbar: true,
     },
