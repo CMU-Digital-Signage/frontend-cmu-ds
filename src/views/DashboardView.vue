@@ -14,11 +14,11 @@ export default defineComponent({
   name: "DashboardView",
   components: { UserInfo },
   beforeRouteEnter(to, from, next) {
-    if (!store.state.userInfo?.email) {
-      next({ path: "/login" });
-    } else {
-      next();
-    }
+    // if (!store.state.userInfo?.email) {
+    //   next({ path: "/login" });
+    // } else {
+    //   next();
+    // }
   },
 });
 </script>
