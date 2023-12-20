@@ -40,14 +40,23 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from "vue";
+import store from "@/store";
 
-export default {
+export default defineComponent({
   methods: {
     redirectToOAuth() {
       window.location = process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL;
     },
   },
-};
+  beforeRouteEnter(to, from, next) {
+    if (store.state.userInfo.email) {
+      next({ path: "/" });
+    } else {
+      next();
+    }
+  },
+});
 </script>
 
 <style></style>

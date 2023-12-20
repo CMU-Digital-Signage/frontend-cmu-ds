@@ -1,12 +1,13 @@
 <template>
   <div v-if="user">{{ user.firstName }} {{ user.lastName }}</div>
   <div v-else>Loading...</div>
+  <button @click="logout()">Log out</button>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { defineComponent } from "vue";
 import store from "@/store";
-import { getUserInfo } from "@/services";
+import { signOut } from "@/services";
 import router from "@/router";
 
 export default defineComponent({
@@ -16,15 +17,13 @@ export default defineComponent({
       return store.state.userInfo;
     },
   },
-  setup() {
-    onMounted(async () => {
-      const res = await getUserInfo();
-      if (res.ok) {
-        store.commit("setUserInfo", res.user);
-      } else {
-        router.replace("/");
-      }
-    });
+  methods: {
+    logout() {
+      signOut().finally(() => {
+        store.commit("setUserInfo", null);
+        router.replace("/login");
+      });
+    },
   },
 });
 </script>

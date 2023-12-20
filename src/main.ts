@@ -4,4 +4,16 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-createApp(App).use(store).use(router).mount("#app");
+import { getUserInfo } from "@/services";
+
+(async () => {
+  const res = await getUserInfo();
+
+  if (res.ok) {
+    store.commit("setUserInfo", res.user);
+  } else {
+    router.replace("/login");
+  }
+
+  createApp(App).use(store).use(router).mount("#app");
+})();
