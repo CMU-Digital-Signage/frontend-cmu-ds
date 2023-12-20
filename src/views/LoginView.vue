@@ -18,17 +18,17 @@
           >Digital Signage</span
         >
         <span class="text-lg mb-3 font-notoThai">ลงชื่อเข้าสู่ระบบ</span>
-          <button
-            class="flex items-center justify-center w-auto p-5 h-12 relative rounded-[10px] bg-periwinkle font-sf-pro text-white text-2xl"
-            @click="redirectToOAuth()"
-          >
-            <img
-              class="w-7 mr-2"
-              alt="cmulogo"
-              src="../assets/images/cmu-logo-th.png"
-            />
-            <span class="text-lg">Login with CMU Account</span>
-          </button>
+        <button
+          class="flex items-center justify-center w-auto p-5 h-12 relative rounded-[10px] bg-periwinkle font-sf-pro text-white text-2xl"
+          @click="redirectToOAuth()"
+        >
+          <img
+            class="w-7 mr-2"
+            alt="cmulogo"
+            src="../assets/images/cmu-logo-th.png"
+          />
+          <span class="text-lg">Login with CMU Account</span>
+        </button>
       </div>
       <img
         class="absolute top-28 right-0 w-1/2"
@@ -40,20 +40,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
 
-console.log(process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL);
-
-
-export default defineComponent({
-  name: "LoginView",
-  components: {},
+export default {
   methods: {
     redirectToOAuth() {
       window.location = process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL;
     },
   },
-});
+};
 </script>
 
 <style></style>
