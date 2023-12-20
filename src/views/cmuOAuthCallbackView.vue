@@ -1,7 +1,9 @@
 <template>
-  <div class="py-32 justify-center flex flex-row gap-10">
-    <button class="bg-rose" @click="$router.push('/login')">Back</button>
-    <button class="bg-teal" @click="$router.push('/')">Dashboard</button>
+  <div class="py-32 flex flex-col gap-10">
+    <h1 class="text-3xl">{{ message }}</h1>
+    <div class="justify-center flex flex-row gap-10 text-xl">
+      <button class="bg-rose" @click="$router.push('/login')">Back</button>
+    </div>
   </div>
 </template>
 
@@ -17,7 +19,7 @@ export default {
     const code = queryParameters.get("code");
 
     const store = useStore();
-    const message = ref("");
+    const message = ref("Loading...");
 
     async function signIn(authorizationCode: string) {
       try {
