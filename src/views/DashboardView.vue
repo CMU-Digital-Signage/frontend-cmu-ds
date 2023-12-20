@@ -14,7 +14,7 @@ export default defineComponent({
   name: "DashboardView",
   components: { UserInfo },
   beforeRouteEnter(to, from, next) {
-    if (!store.state.userInfo.email) {
+    if (!store.state.userInfo?.email) {
       next({ path: "/login" });
     } else {
       next();

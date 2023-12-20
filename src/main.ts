@@ -7,13 +7,13 @@ import store from "./store";
 import { getUserInfo } from "@/services";
 
 (async () => {
-  const res = await getUserInfo();
-
-  if (res.ok) {
-    store.commit("setUserInfo", res.user);
-  } else {
-    router.replace("/login");
+  if (!store.state.userInfo?.email) {
+    const res = await getUserInfo();
+    if (res.ok) {
+      store.commit("setUserInfo", res.user);
+    } else {
+      router.replace("/login");
+    }
   }
-
   createApp(App).use(store).use(router).mount("#app");
 })();

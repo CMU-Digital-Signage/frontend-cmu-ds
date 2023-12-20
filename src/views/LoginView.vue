@@ -50,7 +50,7 @@ export default defineComponent({
     },
   },
   beforeRouteEnter(to, from, next) {
-    if (store.state.userInfo.email) {
+    if (store.state.userInfo?.email) {
       next({ path: "/" });
     } else {
       next();
