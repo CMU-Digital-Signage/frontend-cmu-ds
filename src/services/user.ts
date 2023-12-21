@@ -5,12 +5,13 @@ export async function getUserInfo() {
     const res = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/user`, {
       withCredentials: true,
     });
+    
     return res.data;
   } catch (err: any) {
     if (!err.response) {
       return "Cannot connect to API Server. Please try again later.";
     }
-    return err.resonse.data;
+    return err.response.data;
   }
 }
 
