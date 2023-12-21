@@ -7,7 +7,7 @@ import store from "./store";
 import { getUserInfo } from "@/services";
 
 (async () => {
-  if (!store.state.userInfo?.email) {
+  if (!store.state.userInfo.email) {
     const res = await getUserInfo();
     if (res.ok) {
       store.commit("setUserInfo", res.user);

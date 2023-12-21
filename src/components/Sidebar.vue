@@ -204,7 +204,9 @@
         </svg>
         <!-- <UserInfo /> -->
         <div class="flex flex-col items-start">
-          <p v-if="user" style="font-size: 16px">{{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.</p>
+          <p v-if="user" style="font-size: 16px">
+            {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
+          </p>
           <p
             v-if="user?.isAdmin"
             class="-mt-1"
@@ -241,13 +243,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import store from "@/store";
-import { signOut } from "@/services";
 import router from "@/router";
+import { signOut } from "@/services";
 
 export default defineComponent({
-  name: "UserInfo",
+  name: "SideBar",
   beforeRouteEnter(to, from, next) {
-    if (!store.state.userInfo?.email) {
+    if (!store.state.userInfo.email) {
       next({ path: "/login" });
     } else {
       next();
@@ -261,7 +263,7 @@ export default defineComponent({
   methods: {
     logout() {
       signOut().finally(() => {
-        store.commit("setUserInfo", null);
+        store.commit("resetUser");
         router.replace("/login");
       });
     },
