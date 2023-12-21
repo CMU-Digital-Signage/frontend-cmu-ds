@@ -11,7 +11,8 @@ import { getUserInfo } from "@/services";
     const res = await getUserInfo();
     if (res.ok) {
       store.commit("setUserInfo", res.user);
-    } else {
+    }
+    else {
       router.replace("/login");
     }
   }
