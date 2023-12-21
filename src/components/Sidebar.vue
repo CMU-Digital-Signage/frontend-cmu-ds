@@ -117,9 +117,11 @@
             </a>
           </li>
         </ul>
-        <div class="border-t" style="border-color: #aaaa"></div>
+        <div class="border-t w-11/12 ml-2 " style="border-color: #aaaa"></div>
       </div>
-      <div class="-ml-1">
+
+      <!-- admin management sidebar -->
+      <div v-if="user?.isAdmin" class="-ml-1">
         <p
           class="flex ml-3 font-semibold"
           style="font-size: 18px; color: #282828"
@@ -141,11 +143,11 @@
                   fill="#282828"
                 />
               </svg>
-              <router-link to="/admin">Dashboard</router-link>
+              <router-link to="/admin">Management</router-link>
             </a>
           </li>
           <li class="rounded-sm">
-            <a href="#" class="flex items-center p-2 space-x-2 rounded-md">
+            <a href="#" class="flex items-center p-2 space-x-2 rounded-md" >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -185,6 +187,7 @@
       </div>
     </div>
 
+    <!-- <UserInfo /> -->
     <div
       class="flex h-14 w-full p-5 items-center justify-between"
       style="border-top: 1px solid #aaa; border-bottom: 1px solid #aaa"
@@ -202,7 +205,6 @@
             fill="black"
           />
         </svg>
-        <!-- <UserInfo /> -->
         <div class="flex flex-col items-start">
           <p v-if="user" style="font-size: 16px">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
@@ -223,7 +225,9 @@
           </p>
         </div>
       </div>
+      <button  @click="logout()">
       <svg
+       
         xmlns="http://www.w3.org/2000/svg"
         width="20"
         height="22"
@@ -235,8 +239,8 @@
           fill="#282828"
         />
       </svg>
+    </button>
     </div>
-    <!-- <button @click="logout()">Log out</button> -->
   </div>
 </template>
 
