@@ -204,13 +204,20 @@
         </svg>
         <!-- <UserInfo /> -->
         <div class="flex flex-col items-start">
-          <p v-if="user">{{ user.firstName }} {{ user.lastName }}</p>
-          <p style="font-size: 16px">Navadon K.</p>
+          <p v-if="user" style="font-size: 16px">{{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.</p>
           <p
+            v-if="user?.isAdmin"
             class="-mt-1"
             style="color: #0094ff; font-size: 13px; font-weight: 700"
           >
             Admin
+          </p>
+          <p
+            v-if="!user?.isAdmin"
+            class="-mt-1"
+            style="color: #0094ff; font-size: 13px; font-weight: 700"
+          >
+            Instructor
           </p>
         </div>
       </div>
