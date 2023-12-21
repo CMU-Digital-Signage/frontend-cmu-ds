@@ -1,5 +1,5 @@
 <template>
-  <div class="flex" v-if="!$route.meta.hideNavbar">
+  <div class="flex" v-if="!$route.meta.hideSidebar">
     <Sidebar />
     <router-view />
   </div>
@@ -10,6 +10,7 @@
 import { defineComponent } from "vue";
 import router from "@/router";
 import store from "@/store";
+import { getUserInfo } from "@/services";
 import Sidebar from "@/components/Sidebar.vue";
 
 export default defineComponent({

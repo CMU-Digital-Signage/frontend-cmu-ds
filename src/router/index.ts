@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Login",
     component: Login,
     meta: {
-      hideNavbar: true,
+      hideSidebar: true,
     },
   },
   {
@@ -18,7 +18,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "cmuOAuth",
     component: cmuOAuthCallback,
     meta: {
-      hideNavbar: true,
+      hideSidebar: true,
     },
   },
   {
