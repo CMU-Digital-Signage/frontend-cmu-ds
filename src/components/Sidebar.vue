@@ -117,7 +117,7 @@
             </a>
           </li>
         </ul>
-        <div class="border-t w-11/12 ml-2 " style="border-color: #aaaa"></div>
+        <div class="border-t w-11/12 ml-2" style="border-color: #aaaa"></div>
       </div>
 
       <!-- admin management sidebar -->
@@ -147,7 +147,7 @@
             </a>
           </li>
           <li class="rounded-sm">
-            <a href="#" class="flex items-center p-2 space-x-2 rounded-md" >
+            <a href="#" class="flex items-center p-2 space-x-2 rounded-md">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -225,21 +225,20 @@
           </p>
         </div>
       </div>
-      <button  @click="logout()">
-      <svg
-       
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="22"
-        viewBox="0 0 20 22"
-        fill="none"
-      >
-        <path
-          d="M0.160156 16.1433C0.160156 16.3281 0.226563 16.5172 0.355469 16.659C0.613281 16.9426 1.03516 16.9426 1.29297 16.659L10.1172 6.95234L18.8125 16.5172C19.0703 16.8008 19.4922 16.8008 19.75 16.5172C20.0078 16.2336 20.0078 15.7695 19.75 15.4859L10.5859 5.40117C10.3281 5.11758 9.90625 5.11758 9.64844 5.40117L0.355469 15.6234C0.222656 15.7695 0.160156 15.9543 0.160156 16.1433Z"
-          fill="#282828"
-        />
-      </svg>
-    </button>
+      <button @click="logout()">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="22"
+          viewBox="0 0 20 22"
+          fill="none"
+        >
+          <path
+            d="M0.160156 16.1433C0.160156 16.3281 0.226563 16.5172 0.355469 16.659C0.613281 16.9426 1.03516 16.9426 1.29297 16.659L10.1172 6.95234L18.8125 16.5172C19.0703 16.8008 19.4922 16.8008 19.75 16.5172C20.0078 16.2336 20.0078 15.7695 19.75 15.4859L10.5859 5.40117C10.3281 5.11758 9.90625 5.11758 9.64844 5.40117L0.355469 15.6234C0.222656 15.7695 0.160156 15.9543 0.160156 16.1433Z"
+            fill="#282828"
+          />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
@@ -248,16 +247,24 @@
 import { defineComponent } from "vue";
 import store from "@/store";
 import router from "@/router";
-import { signOut } from "@/services";
+import { getUserInfo, signOut } from "@/services";
 
 export default defineComponent({
   name: "SideBar",
-  beforeRouteEnter(to, from, next) {
-    if (!store.state.userInfo.email) {
-      next({ path: "/login" });
-    } else {
-      next();
-    }
+  setup() {
+    router.beforeEach(async (to, from, next) => {
+      if (!to.meta.hideSidebar && !store.state.userInfo.email) {
+        const res = await getUserInfo();
+        if (res.ok) {
+          store.commit("setUserInfo", res.user);
+          next();
+        } else {
+          next("/login");
+        }
+      } else {
+        next();
+      }
+    });
   },
   computed: {
     user() {
