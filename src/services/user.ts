@@ -9,7 +9,6 @@ export async function getUserInfo() {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
       withCredentials: true,
-      timeout: 500,
     });
 
     return res.data;

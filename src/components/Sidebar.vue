@@ -1,7 +1,7 @@
 <template>
   <div
-    class="flex flex-col justify-between h-screen shadow w-60"
-    style="background-color: #f6f6f6; border-right: 1px solid #aaaaaa"
+    class=" flex flex-col justify-between h-screen shadow " id="side-bar"  :class="openSidebar == true? 'side-bar-open' : 'side-bar-close'"
+    style="background-color: #f6f6f6; border-right: 1px solid #c7bbbb"
   >
     <div class="space-y-5 p-4 font-sf-pro">
       <div class="flex justify-between items-start">
@@ -11,8 +11,9 @@
             alt="cmulogo"
             src="../assets/images/cpe-mini-logo.png"
           />
-          <p class="font-bold" style="font-size: 20px">CPE Signage</p>
+          <p class="font-bold text-[20px]" v-show="openSidebar" >CPE Signage</p>
         </div>
+        <button @click="toggleSidebar()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -35,12 +36,13 @@
             </clipPath>
           </defs>
         </svg>
+        </button>
       </div>
 
       <div class="-ml-1">
         <p
-          class="flex ml-3 pb-2 font-semibold"
-          style="font-size: 18px; color: #282828"
+          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
+          v-show="openSidebar" 
         >
           Menu
         </p>
@@ -62,7 +64,7 @@
                 />
               </svg>
 
-              <router-link to="/" class="underline-ho" active-class="custom-underline">Dashboard</router-link>
+              <router-link to="/" class="underline-ho" active-class="custom-underline"   v-show="openSidebar" >Dashboard</router-link>
             </a>
           </li>
           <li class="rounded-sm">
@@ -95,7 +97,7 @@
                 </defs>
               </svg>
 
-              <router-link to="/file" class="underline-ho" active-class="custom-underline">File Manager</router-link>
+              <router-link to="/file" class="underline-ho" active-class="custom-underline"    v-show="openSidebar" >File Manager</router-link>
             </a>
           </li>
           <li class="rounded-sm">
@@ -112,7 +114,7 @@
                   fill="#282828"
                 />
               </svg>
-              <router-link to="/device" class="underline-ho" active-class="custom-underline">Device</router-link>
+              <router-link to="/device" class="underline-ho" active-class="custom-underline"    v-show="openSidebar" >Device</router-link>
 
             </a>
           </li>
@@ -123,8 +125,8 @@
       <!-- admin management sidebar -->
       <div v-if="user?.isAdmin" class="-ml-1">
         <p
-          class="flex ml-3 pb-2 font-semibold"
-          style="font-size: 18px; color: #282828"
+          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
+          v-show="openSidebar" 
         >
           Admin
         </p>
@@ -143,7 +145,7 @@
                   fill="#282828"
                 />
               </svg>
-              <router-link to="/admin" class="underline-ho" active-class="custom-underline">Management</router-link>
+              <router-link to="/admin" class="underline-ho" active-class="custom-underline"    v-show="openSidebar" >Management</router-link>
             </a>
           </li>
           <li class="rounded-sm">
@@ -180,9 +182,7 @@
                 </defs>
               </svg>
 
-              <router-link to="/emergency" class="underline-ho-em font-semibold" active-class="custom-underline-em" style="color: #f00">Emergency</router-link>
-
-              <span class="hover:border-b-2  hover:border-rose  font-semibold" active-class="custom-underline" style="color: #f00"></span>
+              <router-link to="/emergency" class="underline-ho-em font-semibold text-[#f00] hover:border-b-2  hover:border-rose " active-class="custom-underline-em"  v-show="openSidebar" >Emergency</router-link>
             </a>
           </li>
         </ul>
@@ -207,14 +207,15 @@
             fill="black"
           />
         </svg>
-        <div class="flex flex-col items-start">
-          <p v-if="user" style="font-size: 15px">
+        <div class="flex flex-col items-start text-[15px]" v-show="openSidebar">
+          <p v-if="user" >
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
           <p
             v-if="user?.isAdmin"
-            class="-mt-1"
-            style="color: #0094ff; font-size: 13px; font-weight: 700"
+            class="-mt-1 text-[#0094ff] text-[13px] "
+            style="font-weight: 700"
+            v-show="openSidebar"
           >
             Admin
           </p>
@@ -227,7 +228,7 @@
           </p>
         </div>
       </div>
-      <button @click="signOut()">
+      <button @click="signOut()"  v-show="openSidebar">
         <div class="flex justify-center items-center logout-bt">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -282,6 +283,16 @@ export default defineComponent({
     signOut() {
       signOut();
     },
+    toggleSidebar() {
+      this.openSidebar = !this.openSidebar
+      console.log(this.openSidebar);
+      
+    }
+  },
+  data(){
+    return{
+      openSidebar: true
+    }
   },
 });
 </script>
@@ -311,5 +322,16 @@ export default defineComponent({
 }
 .underline-ho-em:hover{
     border-bottom: 1px solid #f00;
+}
+#side-bar{
+  overflow: hidden;
+  transition: 300ms
+}
+
+.side-bar-open{
+  width: 15rem;
+}
+.side-bar-close{
+  width: 5rem;
 }
 </style>
