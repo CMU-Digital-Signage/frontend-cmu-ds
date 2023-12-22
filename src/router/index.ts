@@ -3,6 +3,8 @@ import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
 import AdminDashboard from "../views/AdminView.vue";
+import store from "@/store";
+import { getUserInfo } from "@/services";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -36,6 +38,20 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach(async (to, from, next) => {
+  if (!to.meta.hideSidebar && !store.state.userInfo.email) {
+    const res = await getUserInfo();
+    if (res.ok) {
+      store.commit("setUserInfo", res.user);
+      next();
+    } else {
+      next({ name: "Login", replace: true });
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

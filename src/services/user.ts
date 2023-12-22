@@ -1,3 +1,5 @@
+import router from "@/router";
+import store from "@/store";
 import axios from "axios";
 
 export async function getUserInfo() {
@@ -7,7 +9,7 @@ export async function getUserInfo() {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
       withCredentials: true,
-      // timeout: 5,
+      timeout: 500,
     });
 
     return res.data;
@@ -19,6 +21,8 @@ export async function getUserInfo() {
   }
 }
 
-export async function signOut() {
+export function signOut() {
   localStorage.removeItem("token");
+  store.commit("resetUser");
+  router.replace("/login");
 }

@@ -251,21 +251,21 @@ import { getUserInfo, signOut } from "@/services";
 
 export default defineComponent({
   name: "SideBar",
-  setup() {
-    router.beforeEach(async (to, from, next) => {
-      if (!to.meta.hideSidebar && !store.state.userInfo.email) {
-        const res = await getUserInfo();
-        if (res.ok) {
-          store.commit("setUserInfo", res.user);
-          next();
-        } else {
-          next("/login");
-        }
-      } else {
-        next();
-      }
-    });
-  },
+  // setup() {
+  //   router.beforeEach(async (to, from, next) => {
+  //     if (!to.meta.hideSidebar && !store.state.userInfo.email) {
+  //       const res = await getUserInfo();
+  //       if (res.ok) {
+  //         store.commit("setUserInfo", res.user);
+  //         next();
+  //       } else {
+  //         next("/login");
+  //       }
+  //     } else {
+  //       next();
+  //     }
+  //   });
+  // },
   computed: {
     user() {
       return store.state.userInfo;
