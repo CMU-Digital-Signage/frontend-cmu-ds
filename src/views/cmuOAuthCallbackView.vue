@@ -46,16 +46,13 @@ export default {
       }
     }
 
-    const setUserInfo = (data: any) => {
-      store.commit("setUserInfo", data);
-    };
-
     const fetchData = async () => {
       if (!code) return;
 
       const res = await signIn(code);
       if (res) {
-        setUserInfo(res);
+        store.commit("setUserInfo", res.user);
+        localStorage.setItem("token", res.token);
         router.replace("/");
       }
     };
