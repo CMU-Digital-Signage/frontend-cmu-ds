@@ -225,7 +225,7 @@
           </p>
         </div>
       </div>
-      <button @click="logout()">
+      <button @click="signOut()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="20"
@@ -272,11 +272,8 @@ export default defineComponent({
     },
   },
   methods: {
-    logout() {
-      signOut().finally(() => {
-        store.commit("resetUser");
-        router.replace("/login");
-      });
+    signOut() {
+      signOut();
     },
   },
 });
