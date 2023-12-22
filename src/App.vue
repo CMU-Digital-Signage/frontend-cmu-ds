@@ -12,7 +12,7 @@ import Sidebar from "@/components/Sidebar.vue";
 import store from "./store";
 
 export default defineComponent({
-  components: { S
+  components: { Sidebar },
   computed: {
     user() {
       return store.state.userInfo;
