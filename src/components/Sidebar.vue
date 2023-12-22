@@ -1,6 +1,8 @@
 <template>
   <div
-    class=" flex flex-col justify-between h-screen shadow " id="side-bar"  :class="openSidebar == true? 'side-bar-open' : 'side-bar-close'"
+    class="flex flex-col justify-between h-screen shadow"
+    id="side-bar"
+    :class="openSidebar == true ? 'side-bar-open' : 'side-bar-close'"
     style="background-color: #f6f6f6; border-right: 1px solid #c7bbbb"
   >
     <div class="space-y-5 p-4 font-sf-pro">
@@ -11,44 +13,48 @@
             alt="cmulogo"
             src="../assets/images/cpe-mini-logo.png"
           />
-          <p class="font-bold text-[20px]" v-show="openSidebar" >CPE Signage</p>
+          <p class="font-bold text-[20px]" v-show="openSidebar">CPE Signage</p>
         </div>
-        <button @click="toggleSidebar()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-        >
-          <g clip-path="url(#clip0_181_143)">
-            <path
-              d="M3.33325 5H17.8787M6.06052 12.2727H17.8787M8.7878 19.5455H17.8787"
-              stroke="#5B5B5B"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </g>
-          <defs>
-            <clipPath id="clip0_181_143">
-              <rect width="20" height="20" fill="white" />
-            </clipPath>
-          </defs>
-        </svg>
+        <button @click="toggleSidebar()" :class="{ 'scale-x-[-1]': !openSidebar }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+          >
+            <g clip-path="url(#clip0_181_143)">
+              <path
+                d="M3.33325 5H17.8787M6.06052 12.2727H17.8787M8.7878 19.5455H17.8787"
+                stroke="#5B5B5B"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_181_143">
+                <rect width="20" height="20" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
         </button>
       </div>
 
       <div class="-ml-1">
         <p
           class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
-          v-show="openSidebar" 
+          v-show="openSidebar"
         >
           Menu
         </p>
-        <ul class="pt-1 ml-4 pb-5 space-y-2" style="font-size: 15px">
+        <ul class="pt-1 ml-4 pb-5 space-y-2 text-[15px]">
           <li class="rounded-sm">
-            <a href="#" class="flex p-2 space-x-3 rounded-md">
+            <a
+              href="#"
+              class="flex space-x-3 rounded-md"
+              :class="openSidebar == true ? ' p-2' : ' pt-4 '"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -64,11 +70,21 @@
                 />
               </svg>
 
-              <router-link to="/" class="underline-ho" active-class="custom-underline"   v-show="openSidebar" >Dashboard</router-link>
+              <router-link
+                to="/"
+                class="underline-ho"
+                active-class="custom-underline"
+                v-show="openSidebar"
+                >Dashboard</router-link
+              >
             </a>
           </li>
           <li class="rounded-sm">
-            <a href="#" class="flex p-2 space-x-3 rounded-md">
+            <a
+              href="#"
+              class="flex space-x-3 rounded-md"
+              :class="openSidebar == true ? ' p-2' : ' pt-4 '"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -97,59 +113,87 @@
                 </defs>
               </svg>
 
-              <router-link to="/file" class="underline-ho" active-class="custom-underline"    v-show="openSidebar" >File Manager</router-link>
+              <router-link
+                to="/file"
+                class="underline-ho"
+                active-class="custom-underline"
+                v-show="openSidebar"
+                >File Manager</router-link
+              >
             </a>
           </li>
           <li class="rounded-sm">
-            <a href="#" class="flex items-center p-2 space-x-2 rounded-md">
+            <a
+              href="#"
+              class="flex items-center space-x-3 rounded-md"
+              :class="openSidebar == true ? ' p-2 ' : 'pt-4 '"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
+                width="20"
+                height="17"
+                viewBox="0 0 20 17"
                 fill="none"
               >
                 <path
-                  d="M4.375 4C3.74511 4 3.14102 4.25022 2.69562 4.69562C2.25022 5.14102 2 5.74511 2 6.375V15.625C2 16.2549 2.25022 16.859 2.69562 17.3044C3.14102 17.7498 3.74511 18 4.375 18H19.625C20.2549 18 20.859 17.7498 21.3044 17.3044C21.7498 16.859 22 16.2549 22 15.625V6.375C22 5.74511 21.7498 5.14102 21.3044 4.69562C20.859 4.25022 20.2549 4 19.625 4H4.375ZM3.25 6.375C3.25 6.07663 3.36853 5.79048 3.5795 5.5795C3.79048 5.36853 4.07663 5.25 4.375 5.25H19.625C19.9234 5.25 20.2095 5.36853 20.4205 5.5795C20.6315 5.79048 20.75 6.07663 20.75 6.375V15.625C20.75 15.9234 20.6315 16.2095 20.4205 16.4205C20.2095 16.6315 19.9234 16.75 19.625 16.75H4.375C4.07663 16.75 3.79048 16.6315 3.5795 16.4205C3.36853 16.2095 3.25 15.9234 3.25 15.625V6.375ZM5.625 19.75C5.45924 19.75 5.30027 19.8158 5.18306 19.9331C5.06585 20.0503 5 20.2092 5 20.375C5 20.5408 5.06585 20.6997 5.18306 20.8169C5.30027 20.9342 5.45924 21 5.625 21H18.375C18.5408 21 18.6997 20.9342 18.8169 20.8169C18.9342 20.6997 19 20.5408 19 20.375C19 20.2092 18.9342 20.0503 18.8169 19.9331C18.6997 19.8158 18.5408 19.75 18.375 19.75H5.625Z"
+                  d="M2.375 0C1.74511 0 1.14102 0.250223 0.695621 0.695621C0.250223 1.14102 0 1.74511 0 2.375V11.625C0 12.2549 0.250223 12.859 0.695621 13.3044C1.14102 13.7498 1.74511 14 2.375 14H17.625C18.2549 14 18.859 13.7498 19.3044 13.3044C19.7498 12.859 20 12.2549 20 11.625V2.375C20 1.74511 19.7498 1.14102 19.3044 0.695621C18.859 0.250223 18.2549 0 17.625 0H2.375ZM1.25 2.375C1.25 2.07663 1.36853 1.79048 1.5795 1.5795C1.79048 1.36853 2.07663 1.25 2.375 1.25H17.625C17.9234 1.25 18.2095 1.36853 18.4205 1.5795C18.6315 1.79048 18.75 2.07663 18.75 2.375V11.625C18.75 11.9234 18.6315 12.2095 18.4205 12.4205C18.2095 12.6315 17.9234 12.75 17.625 12.75H2.375C2.07663 12.75 1.79048 12.6315 1.5795 12.4205C1.36853 12.2095 1.25 11.9234 1.25 11.625V2.375ZM3.625 15.75C3.45924 15.75 3.30027 15.8158 3.18306 15.9331C3.06585 16.0503 3 16.2092 3 16.375C3 16.5408 3.06585 16.6997 3.18306 16.8169C3.30027 16.9342 3.45924 17 3.625 17H16.375C16.5408 17 16.6997 16.9342 16.8169 16.8169C16.9342 16.6997 17 16.5408 17 16.375C17 16.2092 16.9342 16.0503 16.8169 15.9331C16.6997 15.8158 16.5408 15.75 16.375 15.75H3.625Z"
                   fill="#282828"
                 />
               </svg>
-              <router-link to="/device" class="underline-ho" active-class="custom-underline"    v-show="openSidebar" >Device</router-link>
-
+              <router-link
+                to="/device"
+                class="underline-ho"
+                active-class="custom-underline"
+                v-show="openSidebar"
+                >Device</router-link
+              >
             </a>
           </li>
         </ul>
-        <div class="border-t w-11/12 ml-2 pb-1" style="border-color: #aaaa"></div>
+        <div
+          class="border-t w-11/12 border-[#aaaa]"
+          :class="openSidebar == true ? 'pb-1 ml-2 ' : 'pt-4 ml-1'"
+        ></div>
       </div>
 
       <!-- admin management sidebar -->
       <div v-if="user?.isAdmin" class="-ml-1">
         <p
           class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
-          v-show="openSidebar" 
+          v-show="openSidebar"
         >
           Admin
         </p>
         <ul class="pt-1 ml-4 pb-4 space-y-2" style="font-size: 15px">
           <li class="rounded-sm">
-            <a href="#" class="flex items-center p-2 space-x-1 rounded-md">
+            <a
+              href="#"
+              class="flex items-center space-x-2 rounded-md"
+              :class="openSidebar == true ? ' pl-2 ' : ''"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="28"
-                height="28"
-                viewBox="0 0 28 28"
+                width="24"
+                height="24"
+                viewBox="0 0 21 17"
                 fill="none"
               >
                 <path
-                  d="M11.6667 13.2825C10.7046 13.2825 9.8805 12.9395 9.1945 12.2535C8.5085 11.5675 8.16589 10.7438 8.16667 9.78247C8.16667 8.81958 8.50928 7.99514 9.1945 7.30914C9.87972 6.62469 10.7038 6.28247 11.6667 6.28247C12.6296 6.28247 13.4536 6.62469 14.1388 7.30914C14.8241 7.99514 15.1667 8.81958 15.1667 9.78247C15.1667 10.7446 14.8241 11.5682 14.1388 12.2535C13.4536 12.9387 12.6296 13.2817 11.6667 13.2825ZM3.5 21.7175V19.7983C3.5 19.2616 3.63533 18.7973 3.906 18.4053C4.17667 18.0133 4.55894 17.7014 5.05283 17.4696C5.99939 17.0092 6.9755 16.63 7.98117 16.3321C8.98606 16.0342 10.2146 15.8853 11.6667 15.8853H11.9408C12.0124 15.8853 12.0991 15.89 12.201 15.8993C12.1201 16.1 12.0559 16.2964 12.0085 16.4885L11.8732 17.052H11.6667C10.3608 17.052 9.22211 17.1861 8.25067 17.4545C7.27922 17.722 6.39878 18.0681 5.60933 18.4928C5.25467 18.6795 5.00889 18.8755 4.872 19.0808C4.73511 19.2854 4.66667 19.5245 4.66667 19.7983V20.552H12.0167C12.0734 20.7363 12.1431 20.9346 12.2255 21.147C12.3079 21.3577 12.3986 21.5483 12.4973 21.7186L3.5 21.7175ZM18.914 22.2786L18.7425 20.9323C18.4197 20.8654 18.1152 20.7522 17.829 20.5928C17.542 20.4334 17.2842 20.2311 17.0555 19.9861L15.7908 20.4878L15.2973 19.649L16.3695 18.8416C16.2404 18.5095 16.1758 18.1673 16.1758 17.815C16.1758 17.4611 16.2404 17.1181 16.3695 16.786L15.3195 15.9343L15.813 15.0943L17.0555 15.6193C17.2694 15.3743 17.5233 15.176 17.8173 15.0243C18.1113 14.8726 18.4197 14.763 18.7425 14.6953L18.914 13.349H19.901L20.0492 14.6953C20.3719 14.763 20.6803 14.8738 20.9743 15.0278C21.2683 15.1818 21.5223 15.3836 21.7362 15.6333L22.9787 15.0943L23.4722 15.9471L22.4222 16.8C22.5513 17.1274 22.6158 17.4689 22.6158 17.8243C22.6158 18.1797 22.5513 18.5189 22.4222 18.8416L23.4955 19.649L23.0008 20.489L21.7362 19.9861C21.5075 20.2311 21.2497 20.4334 20.9627 20.5928C20.6757 20.7522 20.3712 20.8654 20.0492 20.9323L19.901 22.2786H18.914ZM19.3865 19.922C19.9667 19.922 20.4629 19.7159 20.8752 19.3036C21.2874 18.8899 21.4935 18.3929 21.4935 17.8126C21.4935 17.2324 21.287 16.7358 20.874 16.3228C20.4602 15.9106 19.9632 15.7045 19.383 15.7045C18.8028 15.7045 18.3062 15.9114 17.8932 16.3251C17.4809 16.7389 17.2748 17.2359 17.2748 17.8161C17.2748 18.3964 17.4817 18.8926 17.8955 19.3048C18.3093 19.717 18.8063 19.922 19.3865 19.922ZM11.6667 12.117C12.3083 12.117 12.8578 11.8883 13.3152 11.431C13.7725 10.9736 14.0008 10.4241 14 9.78247C14 9.1408 13.7717 8.5913 13.3152 8.13397C12.8586 7.67664 12.3091 7.44836 11.6667 7.44914C11.025 7.44914 10.4759 7.67742 10.0193 8.13397C9.56278 8.59053 9.33411 9.14003 9.33333 9.78247C9.33333 10.4241 9.562 10.9732 10.0193 11.4298C10.4767 11.8864 11.0258 12.1162 11.6667 12.117Z"
+                  d="M8.66667 7.28247C7.70456 7.28247 6.8805 6.93947 6.1945 6.25347C5.5085 5.56747 5.16589 4.7438 5.16667 3.78247C5.16667 2.81958 5.50928 1.99514 6.1945 1.30914C6.87972 0.624693 7.70378 0.282471 8.66667 0.282471C9.62956 0.282471 10.4536 0.624693 11.1388 1.30914C11.8241 1.99514 12.1667 2.81958 12.1667 3.78247C12.1667 4.74458 11.8241 5.56825 11.1388 6.25347C10.4536 6.93869 9.62956 7.28169 8.66667 7.28247ZM0.5 15.7175V13.7983C0.5 13.2616 0.635333 12.7973 0.906 12.4053C1.17667 12.0133 1.55894 11.7014 2.05283 11.4696C2.99939 11.0092 3.9755 10.63 4.98117 10.3321C5.98606 10.0342 7.21456 9.8853 8.66667 9.8853H8.94083C9.01239 9.8853 9.09911 9.88997 9.201 9.8993C9.12011 10.1 9.05594 10.2964 9.0085 10.4885L8.87317 11.052H8.66667C7.36078 11.052 6.22211 11.1861 5.25067 11.4545C4.27922 11.722 3.39878 12.0681 2.60933 12.4928C2.25467 12.6795 2.00889 12.8755 1.872 13.0808C1.73511 13.2854 1.66667 13.5245 1.66667 13.7983V14.552H9.01667C9.07344 14.7363 9.14305 14.9346 9.2255 15.147C9.30794 15.3577 9.39855 15.5483 9.49733 15.7186L0.5 15.7175ZM15.914 16.2786L15.7425 14.9323C15.4197 14.8654 15.1152 14.7522 14.829 14.5928C14.542 14.4334 14.2842 14.2311 14.0555 13.9861L12.7908 14.4878L12.2973 13.649L13.3695 12.8416C13.2404 12.5095 13.1758 12.1673 13.1758 11.815C13.1758 11.4611 13.2404 11.1181 13.3695 10.786L12.3195 9.9343L12.813 9.0943L14.0555 9.6193C14.2694 9.3743 14.5233 9.17597 14.8173 9.0243C15.1113 8.87264 15.4197 8.76297 15.7425 8.6953L15.914 7.34897H16.901L17.0492 8.6953C17.3719 8.76297 17.6803 8.8738 17.9743 9.0278C18.2683 9.1818 18.5223 9.38364 18.7362 9.6333L19.9787 9.0943L20.4722 9.94714L19.4222 10.8C19.5513 11.1274 19.6158 11.4689 19.6158 11.8243C19.6158 12.1797 19.5513 12.5189 19.4222 12.8416L20.4955 13.649L20.0008 14.489L18.7362 13.9861C18.5075 14.2311 18.2497 14.4334 17.9627 14.5928C17.6757 14.7522 17.3712 14.8654 17.0492 14.9323L16.901 16.2786H15.914ZM16.3865 13.922C16.9667 13.922 17.4629 13.7159 17.8752 13.3036C18.2874 12.8899 18.4935 12.3929 18.4935 11.8126C18.4935 11.2324 18.287 10.7358 17.874 10.3228C17.4602 9.91058 16.9632 9.70447 16.383 9.70447C15.8028 9.70447 15.3062 9.91136 14.8932 10.3251C14.4809 10.7389 14.2748 11.2359 14.2748 11.8161C14.2748 12.3964 14.4817 12.8926 14.8955 13.3048C15.3093 13.717 15.8063 13.922 16.3865 13.922ZM8.66667 6.11697C9.30833 6.11697 9.85783 5.8883 10.3152 5.43097C10.7725 4.97364 11.0008 4.42414 11 3.78247C11 3.1408 10.7717 2.5913 10.3152 2.13397C9.85861 1.67664 9.30911 1.44836 8.66667 1.44914C8.025 1.44914 7.47589 1.67742 7.01933 2.13397C6.56278 2.59053 6.33411 3.14003 6.33333 3.78247C6.33333 4.42414 6.562 4.97325 7.01933 5.4298C7.47667 5.88636 8.02578 6.11619 8.66667 6.11697Z"
                   fill="#282828"
                 />
               </svg>
-              <router-link to="/admin" class="underline-ho" active-class="custom-underline"    v-show="openSidebar" >Management</router-link>
+              <router-link
+                to="/admin"
+                class="underline-ho"
+                active-class="custom-underline"
+                v-show="openSidebar"
+                >Management</router-link
+              >
             </a>
           </li>
           <li class="rounded-sm">
-            <a href="#" class="flex items-center p-2 space-x-2 rounded-md">
+            <a href="#" class="flex items-center  space-x-2 rounded-md"   :class="openSidebar == true ? ' p-2 ' : 'pt-4 pr-2'">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -182,7 +226,13 @@
                 </defs>
               </svg>
 
-              <router-link to="/emergency" class="underline-ho-em font-semibold text-[#f00] hover:border-b-2  hover:border-rose " active-class="custom-underline-em"  v-show="openSidebar" >Emergency</router-link>
+              <router-link
+                to="/emergency"
+                class="underline-ho-em font-semibold text-[#f00] hover:border-b-2 hover:border-rose"
+                active-class="custom-underline-em"
+                v-show="openSidebar"
+                >Emergency</router-link
+              >
             </a>
           </li>
         </ul>
@@ -192,7 +242,7 @@
     <!-- <UserInfo /> -->
     <div
       class="flex h-14 w-full p-5 items-center justify-between"
-      style="border-top: 1px solid #aaa;"
+      style="border-top: 1px solid #aaa"
     >
       <div class="flex flex-row gap-1 items-center">
         <svg
@@ -208,12 +258,12 @@
           />
         </svg>
         <div class="flex flex-col items-start text-[15px]" v-show="openSidebar">
-          <p v-if="user" >
+          <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
           <p
             v-if="user?.isAdmin"
-            class="-mt-1 text-[#0094ff] text-[13px] "
+            class="-mt-1 text-[#0094ff] text-[13px]"
             style="font-weight: 700"
             v-show="openSidebar"
           >
@@ -228,7 +278,7 @@
           </p>
         </div>
       </div>
-      <button @click="signOut()"  v-show="openSidebar">
+      <button @click="signOut()" v-show="openSidebar">
         <div class="flex justify-center items-center logout-bt">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -236,7 +286,6 @@
             height="22"
             viewBox="0 0 20 22"
             fill="none"
-          
           >
             <path
               d="M13.0801 3.86007V2.84007C13.0801 2.27674 12.6235 1.82007 12.0601 1.82007H2.88011C2.31677 1.82007 1.86011 2.27674 1.86011 2.84007V19.1601C1.86011 19.7234 2.31678 20.1801 2.88011 20.1801H12.0601C12.6235 20.1801 13.0801 19.7234 13.0801 19.1601V18.1401"
@@ -284,15 +333,14 @@ export default defineComponent({
       signOut();
     },
     toggleSidebar() {
-      this.openSidebar = !this.openSidebar
+      this.openSidebar = !this.openSidebar;
       console.log(this.openSidebar);
-      
-    }
+    },
   },
-  data(){
-    return{
-      openSidebar: true
-    }
+  data() {
+    return {
+      openSidebar: true,
+    };
   },
 });
 </script>
@@ -309,29 +357,29 @@ export default defineComponent({
   background: #ff5252;
 }
 .logout-bt:hover .logout-icon {
-  stroke: #fff; 
+  stroke: #fff;
 }
-.custom-underline{
-    border-bottom: 1px solid #282828;
+.custom-underline {
+  border-bottom: 1px solid #282828;
 }
-.underline-ho:hover{
-    border-bottom: 1px solid #8c8c8c;
+.underline-ho:hover {
+  border-bottom: 1px solid #8c8c8c;
 }
-.custom-underline-em{
-    border-bottom: 1px solid #f00;
+.custom-underline-em {
+  border-bottom: 1px solid #f00;
 }
-.underline-ho-em:hover{
-    border-bottom: 1px solid #f00;
+.underline-ho-em:hover {
+  border-bottom: 1px solid #f00;
 }
-#side-bar{
+#side-bar {
   overflow: hidden;
-  transition: 300ms
+  transition: 300ms;
 }
 
-.side-bar-open{
+.side-bar-open {
   width: 15rem;
 }
-.side-bar-close{
+.side-bar-close {
   width: 5rem;
 }
 </style>
