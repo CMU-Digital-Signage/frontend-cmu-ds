@@ -42,6 +42,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import store from "@/store";
+import { getUserInfo } from "@/services";
 
 export default defineComponent({
   methods: {
@@ -49,9 +50,15 @@ export default defineComponent({
       window.location = process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL;
     },
   },
-  beforeRouteEnter(to, from, next) {
-    if (store.state.userInfo.email) {
-      next({ path: "/" });
+  async beforeRouteEnter(to, from, next) {
+    if (!store.state.userInfo.email && localStorage.getItem("token")) {
+      const res = await getUserInfo();
+      if (res.ok) {
+        store.commit("setUserInfo", res.user);
+        next({ path: "/" });
+      } else {
+        next();
+      }
     } else {
       next();
     }
