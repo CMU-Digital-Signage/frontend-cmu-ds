@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex flex-col justify-between h-screen shadow w-60"
-    style="background-color: #f6f6f6; border: 1px solid #aaaaaa"
+    style="background-color: #f6f6f6; border-right: 1px solid #aaaaaa"
   >
     <div class="space-y-5 p-4 font-sf-pro">
       <div class="flex justify-between items-start">
@@ -11,7 +11,7 @@
             alt="cmulogo"
             src="../assets/images/cpe-mini-logo.png"
           />
-          <p class="font-bold" style="font-size: 20px">CPE SIGNAGE</p>
+          <p class="font-bold" style="font-size: 20px">CPE Signage</p>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -39,12 +39,12 @@
 
       <div class="-ml-1">
         <p
-          class="flex ml-3 font-semibold"
+          class="flex ml-3 pb-2 font-semibold"
           style="font-size: 18px; color: #282828"
         >
           Menu
         </p>
-        <ul class="pt-1 ml-4 pb-4 space-y-1" style="font-size: 15px">
+        <ul class="pt-1 ml-4 pb-5 space-y-2" style="font-size: 15px">
           <li class="rounded-sm">
             <a href="#" class="flex p-2 space-x-3 rounded-md">
               <svg
@@ -117,18 +117,18 @@
             </a>
           </li>
         </ul>
-        <div class="border-t w-11/12 ml-2" style="border-color: #aaaa"></div>
+        <div class="border-t w-11/12 ml-2 pb-1" style="border-color: #aaaa"></div>
       </div>
 
       <!-- admin management sidebar -->
       <div v-if="user?.isAdmin" class="-ml-1">
         <p
-          class="flex ml-3 font-semibold"
+          class="flex ml-3 pb-2 font-semibold"
           style="font-size: 18px; color: #282828"
         >
           Admin
         </p>
-        <ul class="pt-1 ml-4 pb-4 space-y-1" style="font-size: 15px">
+        <ul class="pt-1 ml-4 pb-4 space-y-2" style="font-size: 15px">
           <li class="rounded-sm">
             <a href="#" class="flex items-center p-2 space-x-1 rounded-md">
               <svg
@@ -190,13 +190,13 @@
     <!-- <UserInfo /> -->
     <div
       class="flex h-14 w-full p-5 items-center justify-between"
-      style="border-top: 1px solid #aaa; border-bottom: 1px solid #aaa"
+      style="border-top: 1px solid #aaa; "
     >
-      <div class="flex flex-row gap-2 items-center">
+      <div class="flex flex-row gap-1 items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="39"
-          height="39"
+          width="38"
+          height="38"
           viewBox="0 0 39 39"
           fill="none"
         >
@@ -206,7 +206,7 @@
           />
         </svg>
         <div class="flex flex-col items-start">
-          <p v-if="user" style="font-size: 16px">
+          <p v-if="user" style="font-size: 15px">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
           <p
@@ -226,46 +226,51 @@
         </div>
       </div>
       <button @click="signOut()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="22"
-          viewBox="0 0 20 22"
-          fill="none"
-        >
-          <path
-            d="M0.160156 16.1433C0.160156 16.3281 0.226563 16.5172 0.355469 16.659C0.613281 16.9426 1.03516 16.9426 1.29297 16.659L10.1172 6.95234L18.8125 16.5172C19.0703 16.8008 19.4922 16.8008 19.75 16.5172C20.0078 16.2336 20.0078 15.7695 19.75 15.4859L10.5859 5.40117C10.3281 5.11758 9.90625 5.11758 9.64844 5.40117L0.355469 15.6234C0.222656 15.7695 0.160156 15.9543 0.160156 16.1433Z"
-            fill="#282828"
-          />
-        </svg>
+        <div class="flex justify-center items-center logout-bt">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="22"
+            viewBox="0 0 20 22"
+            fill="none"
+          
+          >
+            <path
+              d="M13.0801 3.86007V2.84007C13.0801 2.27674 12.6235 1.82007 12.0601 1.82007H2.88011C2.31677 1.82007 1.86011 2.27674 1.86011 2.84007V19.1601C1.86011 19.7234 2.31678 20.1801 2.88011 20.1801H12.0601C12.6235 20.1801 13.0801 19.7234 13.0801 19.1601V18.1401"
+              stroke="#282828"
+              class="logout-icon"
+              stroke-width="1.74857"
+              stroke-linecap="round"
+            />
+            <path
+              d="M6.96021 11H12.5702H18.1802"
+              stroke="#282828"
+              class="logout-icon"
+              stroke-width="1.74857"
+              stroke-linecap="round"
+            />
+            <path
+              d="M14.6104 7.43005L18.1804 11.0001L14.6104 14.5701"
+              stroke="#282828"
+              class="logout-icon"
+              stroke-width="1.74857"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
       </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { ref, defineComponent } from "vue";
 import store from "@/store";
 import router from "@/router";
 import { getUserInfo, signOut } from "@/services";
 
 export default defineComponent({
   name: "SideBar",
-  // setup() {
-  //   router.beforeEach(async (to, from, next) => {
-  //     if (!to.meta.hideSidebar && !store.state.userInfo.email) {
-  //       const res = await getUserInfo();
-  //       if (res.ok) {
-  //         store.commit("setUserInfo", res.user);
-  //         next();
-  //       } else {
-  //         next("/login");
-  //       }
-  //     } else {
-  //       next();
-  //     }
-  //   });
-  // },
   computed: {
     user() {
       return store.state.userInfo;
@@ -278,3 +283,19 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.logout-bt {
+  width: 36px;
+  height: 36px;
+  border-radius: 11.52px;
+  background: #eee;
+  transition: 0.1s;
+}
+.logout-bt:hover {
+  background: #ff5252;
+}
+.logout-bt:hover .logout-icon {
+  stroke: #fff; 
+}
+</style>
