@@ -62,7 +62,7 @@
                 />
               </svg>
 
-              <router-link to="/">Dashboard</router-link>
+              <router-link to="/" class="underline-ho" active-class="custom-underline">Dashboard</router-link>
             </a>
           </li>
           <li class="rounded-sm">
@@ -95,7 +95,7 @@
                 </defs>
               </svg>
 
-              <span>File Manager</span>
+              <router-link to="/file" class="underline-ho" active-class="custom-underline">File Manager</router-link>
             </a>
           </li>
           <li class="rounded-sm">
@@ -112,8 +112,8 @@
                   fill="#282828"
                 />
               </svg>
+              <router-link to="/device" class="underline-ho" active-class="custom-underline">Device</router-link>
 
-              <span>Device</span>
             </a>
           </li>
         </ul>
@@ -143,7 +143,7 @@
                   fill="#282828"
                 />
               </svg>
-              <router-link to="/admin">Management</router-link>
+              <router-link to="/admin" class="underline-ho" active-class="custom-underline">Management</router-link>
             </a>
           </li>
           <li class="rounded-sm">
@@ -180,7 +180,9 @@
                 </defs>
               </svg>
 
-              <span class="font-semibold" style="color: #f00">Emergency</span>
+              <router-link to="/emergency" class="underline-ho-em font-semibold" active-class="custom-underline-em" style="color: #f00">Emergency</router-link>
+
+              <span class="hover:border-b-2  hover:border-rose  font-semibold" active-class="custom-underline" style="color: #f00"></span>
             </a>
           </li>
         </ul>
@@ -190,7 +192,7 @@
     <!-- <UserInfo /> -->
     <div
       class="flex h-14 w-full p-5 items-center justify-between"
-      style="border-top: 1px solid #aaa; "
+      style="border-top: 1px solid #aaa;"
     >
       <div class="flex flex-row gap-1 items-center">
         <svg
@@ -297,5 +299,17 @@ export default defineComponent({
 }
 .logout-bt:hover .logout-icon {
   stroke: #fff; 
+}
+.custom-underline{
+    border-bottom: 1px solid #282828;
+}
+.underline-ho:hover{
+    border-bottom: 1px solid #8c8c8c;
+}
+.custom-underline-em{
+    border-bottom: 1px solid #f00;
+}
+.underline-ho-em:hover{
+    border-bottom: 1px solid #f00;
 }
 </style>
