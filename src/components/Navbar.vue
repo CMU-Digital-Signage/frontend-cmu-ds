@@ -5,7 +5,7 @@
       v-if="$route.path === '/admin'"
       class="flex justify-between"
     >
-      <li class="text-lg font-semibold text-gray-800 pt-3.5">Management</li>
+      <li class="text-lg font-semibold text-gray-800 pt-3.5 text-[20px]">Management</li>
       <li class="ml-auto pt-2" v-if="!click">
         <button
           class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold"

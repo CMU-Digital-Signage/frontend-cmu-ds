@@ -1,7 +1,7 @@
 <template>
   <!-- Rectangle -->
   <div class="rectangle">
-    <ul class="flex gap-10 pl-6  pt-5">
+    <ul class="flex gap-8 pt-5 text-[18px] ">
       <li
         class="bold-ho cursor-pointer"
         :class="{ 'activer-link': click }"
@@ -17,7 +17,7 @@
         Device
       </li>
     </ul>
-    <div class="border-t-[1px] w-12/12 border-[#282828] mt-[-1px] ml-6"></div>
+    <div class="border-t-[1.5px] w-12/12 border-[#C4C4C4] mt-[-1px] "></div>
     <Admin v-if="click"> </Admin>
     <Device v-if="!click"></Device>
   </div>
@@ -53,8 +53,9 @@ export default defineComponent({
 /* Add styles for the rectangle */
 .rectangle {
   background-color: #b18b8b00; /* Adjust the background color as needed */
-  height: calc(100vh - 3.5rem);
+  /* height: calc(100vh - 3.5rem); */
   padding-right: 1.5rem;
+  padding-left: 1.5rem;
 }
 
 .bold-ho:hover {
