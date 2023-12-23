@@ -34,7 +34,7 @@
             </g>
             <defs>
               <clipPath id="clip0_181_143">
-                <rect width="20" height="20" fill="white" />
+                <rect width="40" height="20" fill="white" />
               </clipPath>
             </defs>
           </svg>
@@ -53,7 +53,7 @@
             <a
               href="#"
               class="flex space-x-3 rounded-md"
-              :class="openSidebar == true ? ' p-2' : ' pt-4 '"
+              :class="openSidebar == true ? ' p-2' : ' pt-5 px-1 '"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,7 @@
               <router-link
                 to="/"
                 class="underline-ho"
-                active-class="custom-underline"
+                active-class="active-link"
                 v-show="openSidebar"
                 >Dashboard</router-link
               >
@@ -83,7 +83,7 @@
             <a
               href="#"
               class="flex space-x-3 rounded-md"
-              :class="openSidebar == true ? ' p-2' : ' pt-4 '"
+              :class="openSidebar == true ? ' p-2' : ' pt-5 px-1 '"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@
               <router-link
                 to="/file"
                 class="underline-ho"
-                active-class="custom-underline"
+                active-class="active-link"
                 v-show="openSidebar"
                 >File Manager</router-link
               >
@@ -126,7 +126,7 @@
             <a
               href="#"
               class="flex items-center space-x-3 rounded-md"
-              :class="openSidebar == true ? ' p-2 ' : 'pt-4 '"
+              :class="openSidebar == true ? ' p-2 ' : 'pt-5 px-1 '"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +143,7 @@
               <router-link
                 to="/device"
                 class="underline-ho"
-                active-class="custom-underline"
+                active-class="active-link"
                 v-show="openSidebar"
                 >Device</router-link
               >
@@ -152,7 +152,7 @@
         </ul>
         <div
           class="border-t w-11/12 border-[#aaaa]"
-          :class="openSidebar == true ? 'pb-1 ml-2 ' : 'pt-4 ml-1'"
+          :class="openSidebar == true ? 'pb-1 ml-2 ' : 'mx-1'"
         ></div>
       </div>
 
@@ -169,7 +169,7 @@
             <a
               href="#"
               class="flex items-center space-x-2 rounded-md"
-              :class="openSidebar == true ? ' pl-2 ' : ''"
+              :class="openSidebar == true ? ' pl-2 ' : 'px-1'"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -186,14 +186,14 @@
               <router-link
                 to="/admin"
                 class="underline-ho"
-                active-class="custom-underline"
+                active-class="active-link"
                 v-show="openSidebar"
                 >Management</router-link
               >
             </a>
           </li>
           <li class="rounded-sm">
-            <a href="#" class="flex items-center  space-x-2 rounded-md"   :class="openSidebar == true ? ' p-2 ' : 'pt-4 pr-2'">
+            <a href="#" class="flex items-center  space-x-2 rounded-md"   :class="openSidebar == true ? ' pt-4 px-2  ' : 'pt-4 px-0.5'">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -228,8 +228,8 @@
 
               <router-link
                 to="/emergency"
-                class="underline-ho-em font-semibold text-[#f00] hover:border-b-2 hover:border-rose"
-                active-class="custom-underline-em"
+                class="underline-ho-em text-[#f00] hover:border-b-2 hover:border-rose"
+                active-class="active-link-em"
                 v-show="openSidebar"
                 >Emergency</router-link
               >
@@ -244,7 +244,7 @@
       class="flex h-14 w-full p-5 items-center justify-between"
       style="border-top: 1px solid #aaa"
     >
-      <div class="flex flex-row gap-1 items-center">
+      <div class="flex flex-row gap-1 items-center" v-show="openSidebar">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="38"
@@ -257,7 +257,7 @@
             fill="black"
           />
         </svg>
-        <div class="flex flex-col items-start text-[15px]" v-show="openSidebar">
+        <div class="flex flex-col items-start text-[15px]">
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
@@ -278,7 +278,7 @@
           </p>
         </div>
       </div>
-      <button @click="signOut()" v-show="openSidebar">
+      <button @click="signOut()" :class="openSidebar ? 'px-0.5' : 'p-2'">
         <div class="flex justify-center items-center logout-bt">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -359,14 +359,16 @@ export default defineComponent({
 .logout-bt:hover .logout-icon {
   stroke: #fff;
 }
-.custom-underline {
+.active-link {
   border-bottom: 1px solid #282828;
+  font-weight:900;
 }
 .underline-ho:hover {
-  border-bottom: 1px solid #8c8c8c;
+  border-bottom: 0.7px solid #8c8c8c;
 }
-.custom-underline-em {
+.active-link-em {
   border-bottom: 1px solid #f00;
+  font-weight:900;
 }
 .underline-ho-em:hover {
   border-bottom: 1px solid #f00;
@@ -380,6 +382,6 @@ export default defineComponent({
   width: 15rem;
 }
 .side-bar-close {
-  width: 5rem;
+  width: 90px;
 }
 </style>
