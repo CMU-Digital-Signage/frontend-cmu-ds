@@ -11,6 +11,7 @@ const defaultUser = {
 export default createStore({
   state: {
     userInfo: defaultUser,
+    adminManage: true,
   },
   getters: {},
   mutations: {
@@ -19,6 +20,12 @@ export default createStore({
     },
     resetUser(state) {
       state.userInfo = defaultUser;
+    },
+    setAdminManage(state) {
+      state.adminManage = true;
+    },
+    setDeviceManage(state) {
+      state.adminManage = false;
     },
   },
   actions: {},

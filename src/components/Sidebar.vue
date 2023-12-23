@@ -370,7 +370,7 @@ export default defineComponent({
   stroke: #fff;
 }
 .active-link {
-  border-bottom: 1px solid #282828;
+  border-bottom: 2px solid #282828;
   font-weight: 900;
 }
 .underline-ho:hover {
