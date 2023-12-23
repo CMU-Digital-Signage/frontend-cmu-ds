@@ -15,7 +15,13 @@
           />
           <p class="font-bold text-[20px]" v-show="openSidebar">CPE Signage</p>
         </div>
-        <button @click="toggleSidebar()" :class="{ 'scale-x-[-1]': !openSidebar }">
+        <button
+          @click="toggleSidebar()"
+          :class="{
+            'scale-x-[-1]': !openSidebar,
+            'translate-y-1': openSidebar,
+          }"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -193,7 +199,11 @@
             </a>
           </li>
           <li class="rounded-sm">
-            <a href="#" class="flex items-center  space-x-2 rounded-md"   :class="openSidebar == true ? ' pt-4 px-2  ' : 'pt-4 px-0.5'">
+            <a
+              href="#"
+              class="flex items-center space-x-2 rounded-md"
+              :class="openSidebar == true ? ' pt-4 px-2  ' : 'pt-4 px-0.5'"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -241,7 +251,7 @@
 
     <!-- <UserInfo /> -->
     <div
-      class="flex h-14 w-full p-5 items-center justify-between"
+      class="flex h-14 w-full p-3 items-center justify-between"
       style="border-top: 1px solid #aaa"
     >
       <div class="flex flex-row gap-1 items-center" v-show="openSidebar">
@@ -257,7 +267,7 @@
             fill="black"
           />
         </svg>
-        <div class="flex flex-col items-start text-[15px]">
+        <div class="flex flex-col items-start text-[14px]">
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
@@ -361,14 +371,14 @@ export default defineComponent({
 }
 .active-link {
   border-bottom: 1px solid #282828;
-  font-weight:900;
+  font-weight: 900;
 }
 .underline-ho:hover {
   border-bottom: 0.7px solid #8c8c8c;
 }
 .active-link-em {
   border-bottom: 1px solid #f00;
-  font-weight:900;
+  font-weight: 900;
 }
 .underline-ho-em:hover {
   border-bottom: 1px solid #f00;
@@ -379,7 +389,7 @@ export default defineComponent({
 }
 
 .side-bar-open {
-  width: 15rem;
+  width: 18rem;
 }
 .side-bar-close {
   width: 90px;
