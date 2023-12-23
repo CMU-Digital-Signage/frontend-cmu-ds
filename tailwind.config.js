@@ -22,6 +22,8 @@ module.exports = {
       teal: "#36BFA7",
       charcoal: "#4A484C",
       darkGray: "#2D2E2F",
+      while: "#FFFFFF",
+      black: "#000",
     },
   },
 };
