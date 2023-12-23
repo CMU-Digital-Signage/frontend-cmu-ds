@@ -1,7 +1,10 @@
 <template>
   <div class="flex" v-if="!$route.meta.hideSidebar && user.email">
     <Sidebar />
-    <router-view />
+    <div class="w-screen">
+      <Navbar />
+      <router-view />
+    </div>
   </div>
   <router-view v-else />
 </template>
@@ -10,9 +13,10 @@
 import { defineComponent } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import store from "./store";
+import Navbar from "./components/Navbar.vue";
 
 export default defineComponent({
-  components: { Sidebar },
+  components: { Sidebar, Navbar },
   computed: {
     user() {
       return store.state.userInfo;
