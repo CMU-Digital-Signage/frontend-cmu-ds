@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import store from "@/store";
+import { getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
@@ -6,10 +8,17 @@ import FileManage from "../views/FileManage.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
 import AdminDashboard from "../views/AdminView.vue";
-import store from "@/store";
-import { getUserInfo } from "@/services";
+import Mac from "@/views/device/[mac].vue";
 
 const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/device/:mac",
+    name: "DeviceView",
+    component: Mac,
+    meta: {
+      hideSidebar: true,
+    },
+  },
   {
     path: "/login",
     name: "Login",
@@ -42,7 +51,7 @@ const routes: Array<RouteRecordRaw> = [
     component: FileManage,
   },
   {
-    path: "/device",
+    path: "/deviceManage",
     name: "Device",
     component: DeviceManage,
   },
@@ -50,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/emergency",
     name: "Emergency",
     component: EmergencyManage,
-  }
+  },
 ];
 
 const router = createRouter({

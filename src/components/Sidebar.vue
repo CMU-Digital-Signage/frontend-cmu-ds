@@ -147,7 +147,7 @@
                 />
               </svg>
               <router-link
-                to="/device"
+                to="/deviceManage"
                 class="underline-ho"
                 active-class="active-link"
                 v-show="openSidebar"
