@@ -32,7 +32,7 @@ export default {
       </li>
       <div class="ml-auto pt-2 cursor-pointer" v-if="!click">
         <button
-          class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold"
+          class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
           @click="showPopup = true"
         >
           <svg
@@ -88,7 +88,7 @@ export default {
           v-model:visible="showPopup"
           :close-on-escape="true"
           close-icon="false"
-          class="w-auto h-auto bg-white pt-2 pb-2 rounded-lg"
+          class="w-auto h-auto bg-white pb-1 rounded-lg"
           :pt="{
             mask: {
               style:
@@ -97,10 +97,10 @@ export default {
           }"
         >
           <div
-            className="bg-white flex border-b-2 w-full"
+            className="bg-[#F6F6F6] flex border-b-2 w-full rounded-t-lg"
             style="border-color: rgba(0, 0, 0, 0.1)"
           >
-            <p className="text-black font-semibold text-[20px] pl-5 pb-1">
+            <p className="text-black font-semibold text-[20px] pl-5 pb-3 pt-3">
               Add Device
             </p>
           </div>
@@ -164,12 +164,12 @@ export default {
                 label="Cancel"
                 text
                 @click="showPopup = false"
-                class="flex-1 border-1 border-white-alpha-30 bold-ho"
+                class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2"
               ></Button>
               <Button
                 label="Add"
                 text
-                class="flex-1 border-1 border-white-alpha-30 bold-ho"
+                class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
                 @click="() => {addDevice(); showPopup = false}"
               ></Button>
             </div>
@@ -206,5 +206,12 @@ export default {
 .bold-ho:hover {
   font-weight: 900;
   text-decoration: underline;
+  background-color: #e2e2e2;
+}
+
+.bold-ho-add:hover {
+  font-weight: 900;
+  text-decoration: underline;
+  background-color: #a9ddf8;
 }
 </style>
