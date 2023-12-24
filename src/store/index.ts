@@ -1,16 +1,17 @@
+import { User } from "@/types";
 import { createStore } from "vuex";
 
-const defaultUser = {
+const defaultUser: User = {
   id: null,
   firstName: null,
   lastName: null,
   email: null,
   isAdmin: null,
-};
+}; 
 
 export default createStore({
   state: {
-    userInfo: defaultUser,
+    userInfo: defaultUser as User,
     adminManage: true,
   },
   getters: {},

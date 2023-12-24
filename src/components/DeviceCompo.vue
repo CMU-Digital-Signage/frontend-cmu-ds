@@ -2,7 +2,7 @@
     
     <div class="rectangle5">
         <ul class="flex gap-44 pt-12 text-[16px] text-[#575757]">
-      <li
+      <li class="pl-2"
       >
         Device Name
       </li>
@@ -11,7 +11,7 @@
         Room
       </li>
     </ul>
-        <div class="border-t-[1px] w-12/12 border-[#575757] "></div>
+        <div class="border-t-[2px] w-12/12 border-[#575757] "></div>
     </div>
 </template>
 
