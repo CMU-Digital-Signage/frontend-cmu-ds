@@ -7,6 +7,7 @@
     </div>
   </div>
   <router-view v-else />
+  
 </template>
 
 <script lang="ts">
@@ -45,4 +46,5 @@ nav {
     }
   }
 }
+
 </style>

@@ -1,14 +1,39 @@
+<script lang="ts">
+import store from "@/store";
+import { ref } from "vue";
+import Dialog from "primevue/dialog";
+
+export default {
+  name: "NavBar",
+  data() {
+    return {
+      showPopup: false,
+    };
+  },
+  computed: {
+    click() {
+      return store.state.adminManage;
+    },
+  },
+  methods: {
+    addDevice() {
+      console.log();
+    }
+  }
+};
+</script>
+
 <template>
   <div class="bg-[#F6F6F6] border-b border-[#c7bbbb] h-14 px-6">
     <!-- "Management" -->
-    <ul
-      v-if="$route.path === '/admin'"
-      class="flex justify-between"
-    >
-      <li class="text-lg font-semibold text-gray-800 pt-3.5 text-[20px]">Management</li>
-      <li class="ml-auto pt-2" v-if="!click">
+    <ul v-if="$route.path === '/admin'" class="flex justify-between">
+      <li class="text-lg font-semibold text-gray-800 pt-3.5 text-[20px]">
+        Management
+      </li>
+      <div class="ml-auto pt-2 cursor-pointer" v-if="!click">
         <button
           class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold"
+          @click="showPopup = true"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -57,25 +82,129 @@
               </filter>
             </defs>
           </svg>
-
           Add Device
         </button>
-      </li>
+        <Dialog
+          v-model:visible="showPopup"
+          :close-on-escape="true"
+          close-icon="false"
+          class="w-auto h-auto bg-white pt-2 pb-2 rounded-lg"
+          :pt="{
+            mask: {
+              style:
+                'backdrop-filter: blur(1px); background-color: rgba(0, 0, 0, 0.6);', // Grey color with 20% opacity
+            },
+          }"
+        >
+          <div
+            className="bg-white flex border-b-2 w-full"
+            style="border-color: rgba(0, 0, 0, 0.1)"
+          >
+            <p className="text-black font-semibold text-[20px] pl-5 pb-1">
+              Add Device
+            </p>
+          </div>
+          <div
+            class="flex flex-col px-8 py-5 gap-4"
+            style="border-radius: 12px"
+          >
+            <div class="flex flex-col gap-2">
+              <div class="inline-block">
+                <label for="deviceName" class="text-primary-50 font-medium"
+                  >Device Name</label
+                >
+                <label for="deviceName" class="text-[#FF0000] font-medium"
+                  >*</label
+                >
+              </div>
+              <InputText
+                id="deviceName"
+                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
+                placeholder="cpe01"
+              ></InputText>
+            </div>
+            <div class="flex flex-col gap-2">
+              <div class="inline-block">
+                <label for="deviceName" class="text-primary-50 font-medium"
+                  >MAC Address</label
+                >
+                <label for="deviceName" class="text-[#FF0000] font-medium"
+                  >*</label
+                >
+              </div>
+              <InputText
+                id="macAddress"
+                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
+                placeholder="00:00:00:00:00:00"
+              ></InputText>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="macAddress" class="text-primary-50 font-medium"
+                >Room</label
+              >
+              <InputText
+                id="room"
+                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
+                placeholder="(Optional)"
+                a
+              ></InputText>
+            </div>
+            <div class="flex flex-col gap-1">
+              <label for="macAddress" class="text-primary-50 font-medium"
+                >Description</label
+              >
+              <InputText
+                id="description"
+                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
+                placeholder="(Optional)"
+              ></InputText>
+            </div>
+            <div class="flex flex-row gap-4 pt-3">
+              <Button
+                label="Cancel"
+                text
+                @click="showPopup = false"
+                class="flex-1 border-1 border-white-alpha-30 bold-ho"
+              ></Button>
+              <Button
+                label="Add"
+                text
+                class="flex-1 border-1 border-white-alpha-30 bold-ho"
+                @click="() => {addDevice(); showPopup = false}"
+              ></Button>
+            </div>
+          </div>
+        </Dialog>
+      </div>
     </ul>
   </div>
 </template>
 
-<script lang="ts">
-import store from "@/store";
+<style scoped>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust the transparency as needed */
+  z-index: 999; /* Make sure it's above other elements */
+}
 
-export default {
-  name: "NavBar",
-  computed: {
-    click() {
-      return store.state.adminManage;
-    },
-  },
-};
-</script>
+.popup-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* Make sure it's above the overlay */
+}
 
-<style></style>
+.bold-ho:hover {
+  font-weight: 900;
+  text-decoration: underline;
+}
+</style>
