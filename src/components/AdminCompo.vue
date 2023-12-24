@@ -113,7 +113,6 @@ export default defineComponent({
   background-color: #e0caca00; /* Adjust the background color as needed */
   height: calc(100vh - 14rem);
   padding-bottom: 0.5rem;
-  padding-left: 1.5rem;
   overflow-y: scroll;
   margin-top: 10px;
 }
