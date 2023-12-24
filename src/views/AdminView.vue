@@ -53,7 +53,6 @@ export default defineComponent({
 /* Add styles for the rectangle */
 .rectangle {
   background-color: #b18b8b00; /* Adjust the background color as needed */
-  /* height: calc(100vh - 3.5rem); */
   padding-right: 1.5rem;
   padding-left: 1.5rem;
 }
