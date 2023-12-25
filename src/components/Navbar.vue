@@ -23,6 +23,15 @@ export default {
     addDevice() {
       console.log();
     },
+    customDateFormatter(date: Date) {
+      if (!date) return "";
+
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear();
+
+      return `${day}-${month}-${year}`;
+    },
   },
 };
 </script>
@@ -219,9 +228,14 @@ export default {
           placeholder="English firstname"
         ></InputText>
         <div class="inline-flex">
-        <label for="macAddress" class="font-medium">Upload Date </label>
-        <VueDatePicker v-model="date" class="custom-date-picker ml-3 pb-10 h-10" ></VueDatePicker>
-      </div>
+          <label for="macAddress" class="font-medium">Upload Date </label>
+          <VueDatePicker
+            v-model="date"
+            class="custom-date-picker ml-3 pb-10 h-10"
+            :enable-time-picker="false"
+            :formatter="customDateFormatter"
+          ></VueDatePicker>
+        </div>
       </div>
     </ul>
   </div>
@@ -250,12 +264,11 @@ export default {
   z-index: 1000; /* Make sure it's above the overlay */
 }
 
-
-  /* Adjust the width as needed */
-  .custom-date-picker {
-    width: 200px; /* Set the desired width */
-    height: 1.75rem;
-  }
+/* Adjust the width as needed */
+.custom-date-picker {
+  width: 200px; /* Set the desired width */
+  height: 1.75rem;
+}
 
 .bold-ho:hover {
   font-weight: 900;
