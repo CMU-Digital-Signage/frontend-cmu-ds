@@ -2,12 +2,16 @@
 import store from "@/store";
 import { ref } from "vue";
 import Dialog from "primevue/dialog";
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 export default {
   name: "NavBar",
+  components: { VueDatePicker },
   data() {
     return {
       showPopup: false,
+      date: null,
     };
   },
   computed: {
@@ -18,13 +22,13 @@ export default {
   methods: {
     addDevice() {
       console.log();
-    }
-  }
+    },
+  },
 };
 </script>
 
 <template>
-  <div class="bg-[#F6F6F6] border-b border-[#c7bbbb] h-14 px-6">
+  <div class="bg-[#F6F6F6] border-b border-[#c7bbbb] h-14 px-6 items-center">
     <!-- "Management" -->
     <ul v-if="$route.path === '/admin'" class="flex justify-between">
       <li class="text-lg font-semibold text-gray-800 pt-3.5 text-[20px]">
@@ -170,11 +174,54 @@ export default {
                 label="Add"
                 text
                 class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
-                @click="() => {addDevice(); showPopup = false}"
+                @click="
+                  () => {
+                    addDevice();
+                    showPopup = false;
+                  }
+                "
               ></Button>
             </div>
           </div>
         </Dialog>
+      </div>
+    </ul>
+
+    <!-- "Emergency" -->
+    <ul v-if="$route.path === '/emergency'" class="flex justify-between">
+      <li class="text-lg font-semibold text-[#FF0000] pt-3.5 text-[20px]">
+        Emergency Activation
+      </li>
+    </ul>
+
+    <!-- "Device" -->
+    <ul v-if="$route.path === '/deviceManage'" class="flex justify-between">
+      <li class="text-lg font-semibold text-black pt-3.5 text-[20px]">
+        Device
+      </li>
+    </ul>
+
+    <!-- "File Manage" -->
+    <ul v-if="$route.path === '/file'" class="flex items-center">
+      <div
+        class="text-lg font-normal text-black items-center pt-3 text-[13px] flex-col"
+      >
+        <label for="macAddress" class="font-medium">Title </label>
+        <InputText
+          id="email"
+          class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-40 rounded-lg"
+          placeholder="Search Poster Title"
+        ></InputText>
+        <label for="macAddress" class="font-medium">Uploader </label>
+        <InputText
+          id="email"
+          class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-40 rounded-lg"
+          placeholder="English firstname"
+        ></InputText>
+        <div class="inline-flex">
+        <label for="macAddress" class="font-medium">Upload Date </label>
+        <VueDatePicker v-model="date" class="custom-date-picker ml-3 pb-10 h-10" ></VueDatePicker>
+      </div>
       </div>
     </ul>
   </div>
@@ -202,6 +249,13 @@ export default {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000; /* Make sure it's above the overlay */
 }
+
+
+  /* Adjust the width as needed */
+  .custom-date-picker {
+    width: 200px; /* Set the desired width */
+    height: 1.75rem;
+  }
 
 .bold-ho:hover {
   font-weight: 900;

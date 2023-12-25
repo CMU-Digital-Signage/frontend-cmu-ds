@@ -20,13 +20,18 @@
     <div class="border-t-[2px] w-12/12 border-[#575757]"></div>
     <div class="rectangle3">
       <div v-for="(e, i) in admin" :key="i">
-        <ul class="box-admin">
+        <ul class="box-admin flex items-center">
           <div class="circle text-white text-xl">
             <div>{{ (e?.firstName || "").charAt(0) }}</div>
           </div>
           <div class="pl-5">
             <p>{{ e.firstName }} {{ e.lastName }}</p>
           </div>
+          <Button
+            label="Delete"
+            text
+            class="border-1 border-white-alpha-30 text-[#FF0000] underline rounded-lg py-2 ml-auto"
+          ></Button>
         </ul>
       </div>
     </div>
@@ -123,7 +128,8 @@ export default defineComponent({
   padding-left: 1.5rem;
   height: 75px;
   align-items: center;
-  border-bottom: 2px solid #dbdbdb; /* Specify the border style, width, and color */
+  border-bottom: 2px solid #dbdbdb;
+  padding-right: 4.5rem;
 }
 
 .circle {
