@@ -42,7 +42,7 @@
 import { ref, defineComponent, onMounted } from "vue";
 import store from "@/store";
 import router from "@/router";
-import { getUserInfo, signOut, getAdmin } from "@/services";
+import { getUserInfo, signOut, getAdmin, addAdmin } from "@/services";
 import { Admin } from "@/types";
 
 export default defineComponent({
@@ -69,36 +69,6 @@ export default defineComponent({
 
     onMounted(() => {
       fetchData();
-      admin.value = [
-        {
-          firstName: "Sawit",
-          lastName: "Charuekpoonpol",
-        },
-        {
-          firstName: "Thanaporn",
-          lastName: "Chanchanayothin",
-        },
-        {
-          firstName: "Worapitcha",
-          lastName: "Muangyot",
-        },
-        {
-          firstName: "Thidayu",
-          lastName: "Puengtham",
-        },
-        {
-          firstName: "Pattharapon",
-          lastName: "Takham",
-        },
-        {
-          firstName: "Jedsadakorn",
-          lastName: "Kritsadakul",
-        },
-        {
-          firstName: "Nutthachai",
-          lastName: "Singkaewvong",
-        },
-      ];
     });
 
     return { admin };
