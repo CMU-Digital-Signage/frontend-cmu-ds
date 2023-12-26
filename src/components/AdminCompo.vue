@@ -1,6 +1,6 @@
 <template>
   <div class="rectangle4">
-    <div class="flex flex-row pt-5 gap-2">
+    <div class="flex flex-row  gap-2">
       <label for="macAddress" class="text-primary-50 font-medium pt-1.5"
         >Email:
       </label>
@@ -93,6 +93,14 @@ export default defineComponent({
         {
           firstName: "Jedsadakorn",
           lastName: "Kritsadakul",
+        },
+        {
+          firstName: "Nutthachai",
+          lastName: "Singkaewvong",
+        },
+        {
+          firstName: "Nutthachai",
+          lastName: "Singkaewvong",
         },
         {
           firstName: "Nutthachai",

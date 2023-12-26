@@ -1,6 +1,10 @@
 <template>
   <div>
-    <h1>This is an Dashboard page</h1>
+    ll
+    <!-- <TabView>
+      <TabPanel header="kkkk"></TabPanel>
+      <TabPanel header="kkkk"></TabPanel>
+    </TabView> -->
   </div>
 </template>
 
@@ -8,6 +12,8 @@
 import { defineComponent } from "vue";
 import router from "@/router";
 import store from "@/store";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
 
 export default defineComponent({
   name: "DashboardView",

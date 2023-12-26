@@ -2,12 +2,11 @@
 import store from "@/store";
 import { ref } from "vue";
 import Dialog from "primevue/dialog";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
+
 
 export default {
   name: "NavBar",
-  components: { VueDatePicker },
+  components: {  },
   data() {
     return {
       showPopup: false,
@@ -43,7 +42,7 @@ export default {
       <li class="text-lg font-semibold text-gray-800 pt-3.5 text-[20px]">
         Management
       </li>
-      <div class="ml-auto pt-2 cursor-pointer" v-if="!click">
+      <div class="ml-auto pt-2 cursor-pointer" v-if="click === 1">
         <button
           class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
           @click="showPopup = true"
