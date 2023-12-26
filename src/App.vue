@@ -1,13 +1,12 @@
 <template>
-  <div class="flex" v-if="!$route.meta.hideSidebar && user.email">
+  <div class="flex flex-row h-screen" v-if="!$route.meta.hideSidebar && user.email">
     <Sidebar />
-    <div class="w-screen">
+    <div class="w-screen h-screen">
       <Navbar />
       <router-view />
     </div>
   </div>
   <router-view v-else />
-  
 </template>
 
 <script lang="ts">
@@ -32,19 +31,5 @@ export default defineComponent({
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #000000;
 }
-
-nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
 </style>

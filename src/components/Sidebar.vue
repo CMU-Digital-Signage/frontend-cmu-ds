@@ -329,7 +329,7 @@
 import { ref, defineComponent } from "vue";
 import store from "@/store";
 import router from "@/router";
-import { getUserInfo, signOut } from "@/services";
+import { signOut } from "@/services";
 
 export default defineComponent({
   name: "SideBar",
@@ -344,7 +344,6 @@ export default defineComponent({
     },
     toggleSidebar() {
       this.openSidebar = !this.openSidebar;
-      console.log(this.openSidebar);
     },
   },
   data() {
