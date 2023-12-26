@@ -1,7 +1,7 @@
 <template>
     
     <div class="rectangle5">
-        <ul class="flex gap-44 pt-12 text-[16px] text-[#575757]">
+        <ul class="flex gap-44 text-[16px] text-[#575757]">
       <li class="pl-2"
       >
         Device Name

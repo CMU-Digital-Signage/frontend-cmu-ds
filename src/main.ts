@@ -7,6 +7,10 @@ import PrimeVue from "primevue/config";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+import 'primevue/resources/themes/bootstrap4-light-blue/theme.css'
+    
 
 createApp(App)
   .use(store)
@@ -15,4 +19,6 @@ createApp(App)
   .component("Dialog", Dialog)
   .component("Button", Button)
   .component("InputText", InputText)
+  .component("TabView", TabView)
+  .component("TabPanel", TabPanel)
   .mount("#app");

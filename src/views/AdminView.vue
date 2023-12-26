@@ -1,25 +1,15 @@
 <template>
   <!-- Rectangle -->
   <div class="rectangle">
-    <ul class="flex gap-8 pt-5 text-[18px] ">
-      <li
-        class="bold-ho cursor-pointer"
-        :class="{ 'activer-link': click }"
-        @click="admin"
-      >
-        Admin
-      </li>
-      <li
-        class="bold-ho cursor-pointer"
-        :class="{ 'activer-link': !click }"
-        @click="device"
-      >
-        Device
-      </li>
-    </ul>
-    <div class="border-t-[1.5px] w-12/12 border-[#C4C4C4] mt-[-1px] "></div>
-    <Admin v-if="click"> </Admin>
-    <Device v-if="!click"></Device>
+    <TabView v-model:active-index="click" class="pt-1" >
+      <TabPanel header="Admin" >
+        <Admin />
+      </TabPanel>
+      <TabPanel header="Device">
+        <Device />
+      </TabPanel>
+    </TabView>
+    <div class="border-t-[1.5px] w-12/12 border-[#C4C4C4] mt-[-1px]"></div>
   </div>
 </template>
 
@@ -28,24 +18,32 @@ import { defineComponent, ref } from "vue";
 import router from "@/router";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
-import Device from "@/components/DeviceCompo.vue"
+import Device from "@/components/DeviceCompo.vue";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+
+
 
 export default defineComponent({
   name: "AdminView",
   components: { Admin, Device },
-  computed: {
-    click() {
-      return store.state.adminManage
-    }
+  setup() {
+    const tabs = ref(
+      Array.from({ length: 3 }, (_, i) => ({
+        title: `Header ${i + 1}`,
+        content: `Tab ${i + 1} Content`,
+      }))
+    );
+    return {tabs}
   },
-  methods: {
-    admin() {
-      store.commit("setAdminManage")
-    },
-    device() {
-      store.commit("setDeviceManage")
-    },
-  }
+  data() {
+    return {
+      click: store.state.adminManage,
+    };
+  },
+  updated() {
+    store.commit("setAdminManage", this.click);
+  },
 });
 </script>
 
@@ -69,10 +67,11 @@ export default defineComponent({
 
 .activer-link:hover {
   color: #282828;
-  background-color: #f0f0f0; /* Optional: change background color on hover */
+  background-color: #f0f0f014; /* Optional: change background color on hover */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: add box shadow on hover */
 }
 
-
-
+.gaptt {
+  gap: 8px;
+}
 </style>
