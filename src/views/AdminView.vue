@@ -2,7 +2,7 @@
   <!-- Rectangle -->
   <div class="rectangle">
     <TabView v-model:active-index="click" class="pt-1" >
-      <TabPanel header="Admin" >
+      <TabPanel header="Admin">
         <Admin />
       </TabPanel>
       <TabPanel header="Device">
@@ -21,8 +21,6 @@ import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-
-
 
 export default defineComponent({
   name: "AdminView",
@@ -51,8 +49,7 @@ export default defineComponent({
 /* Add styles for the rectangle */
 .rectangle {
   background-color: #b18b8b00; /* Adjust the background color as needed */
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
+  padding-inline: 1.5rem;
 }
 
 .bold-ho:hover {

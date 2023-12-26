@@ -1,6 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+  @tailwind variants;
+}
 
 @font-face {
   font-family: "SF Pro";
@@ -28,11 +36,4 @@
   src: url("~@/assets/fonts/NotoSansThai.ttf") format("opentype");
   font-weight: normal;
   font-style: normal;
-}
-
-
-@layer base {
-  html {
-    font-family: "SF Pro";
-  }
 }

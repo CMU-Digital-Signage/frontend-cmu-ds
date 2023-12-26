@@ -1,12 +1,12 @@
 <template>
   <div class="rectangle4">
-    <div class="flex flex-row  gap-2">
+    <div class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-medium pt-1.5"
         >Email:
       </label>
       <InputText
         id="email"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-96 rounded-xl"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-48 rounded-xl"
         placeholder="domain @cmu.ac.th only"
       ></InputText>
       <Button
@@ -22,12 +22,16 @@
       <div v-for="(e, i) in admin" :key="i">
         <ul class="box-admin flex items-center">
           <div class="circle text-white text-xl">
-            <div>{{ (e?.firstName || "").charAt(0) }}</div>
+            <div>{{ (e.firstName || "").charAt(0) }}</div>
           </div>
           <div class="pl-5">
-            <p>{{ e.firstName }} {{ e.lastName }}</p>
+            <p v-if="isCurrentUser(e)">
+              {{ e.firstName }} {{ e.lastName }} (You)
+            </p>
+            <p v-else>{{ e.firstName }} {{ e.lastName }}</p>
           </div>
           <Button
+            v-if="!isCurrentUser(e)"
             label="Delete"
             text
             class="border-1 border-white-alpha-30 text-[#FF0000] underline rounded-lg py-2 ml-auto"
@@ -42,74 +46,37 @@
 import { ref, defineComponent, onMounted } from "vue";
 import store from "@/store";
 import router from "@/router";
-import { getUserInfo, signOut, getAdmin } from "@/services";
-import { Admin } from "@/types";
+import { getAdmin } from "@/services";
+import { Admin, User } from "@/types";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "AdminCompo",
-  computed: {
-    user() {
-      return store.state.userInfo;
-    },
-  },
   setup() {
+    const store = useStore();
+    const user = ref<User>(store.state.userInfo);
     const admin = ref<Admin[]>([]);
 
     const fetchData = async () => {
-      try {
-        const res = await getAdmin();
-        if (res.ok) {
-          admin.value = res.admin as Admin[];
-        }
-      } catch (error) {
-        // Handle errors if needed
-        console.error(error);
+      const res = await getAdmin();
+      if (res.ok) {
+        admin.value = res.admin as Admin[];
+        admin.value.sort((a, b) => {
+          if (isCurrentUser(a)) return -1;
+          if (isCurrentUser(b)) return 1;
+          return 0;
+        });
       }
     };
 
     onMounted(() => {
       fetchData();
-      admin.value = [
-        {
-          firstName: "Sawit",
-          lastName: "Charuekpoonpol",
-        },
-        {
-          firstName: "Thanaporn",
-          lastName: "Chanchanayothin",
-        },
-        {
-          firstName: "Worapitcha",
-          lastName: "Muangyot",
-        },
-        {
-          firstName: "Thidayu",
-          lastName: "Puengtham",
-        },
-        {
-          firstName: "Pattharapon",
-          lastName: "Takham",
-        },
-        {
-          firstName: "Jedsadakorn",
-          lastName: "Kritsadakul",
-        },
-        {
-          firstName: "Nutthachai",
-          lastName: "Singkaewvong",
-        },
-        {
-          firstName: "Nutthachai",
-          lastName: "Singkaewvong",
-        },
-        {
-          firstName: "Nutthachai",
-          lastName: "Singkaewvong",
-        },
-      ];
     });
 
-    return { admin };
+    const isCurrentUser = (admin: Admin) => {
+      return admin.id === user.value.id;
+    };
+    return { admin, user, isCurrentUser };
   },
 });
 </script>
@@ -117,14 +84,12 @@ export default defineComponent({
 <style>
 .rectangle4 {
   background-color: #904b4b00; /* Adjust the background color as needed */
-  height: calc(100vh - 6.5rem);
   padding-bottom: 2rem;
   padding-left: 1.5rem;
 }
 
 .rectangle3 {
   background-color: #e0caca00; /* Adjust the background color as needed */
-  height: calc(100vh - 14rem);
   padding-bottom: 0.5rem;
   overflow-y: scroll;
   margin-top: 10px;
@@ -132,7 +97,12 @@ export default defineComponent({
 
 .box-admin {
   display: flex;
-  background-color: rgba(157, 199, 80, 0); /* Adjust the background color as needed */
+  background-color: rgba(
+    157,
+    199,
+    80,
+    0
+  ); /* Adjust the background color as needed */
   padding-left: 1.5rem;
   height: 75px;
   align-items: center;

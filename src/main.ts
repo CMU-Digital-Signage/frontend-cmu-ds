@@ -9,7 +9,7 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import 'primevue/resources/themes/bootstrap4-light-blue/theme.css'
+import 'primevue/resources/themes/lara-light-green/theme.css'
     
 
 createApp(App)
