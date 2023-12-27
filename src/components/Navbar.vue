@@ -239,14 +239,17 @@ export default {
     </ul>
 
     <!-- "calendar dashboard"-->
-    <ul v-if="$route.path === '/'" class="">
+    <ul
+      v-if="$route.path === '/'"
+      class="flex items-center justify-between w-full"
+    >
       <div class="text-lg font-normal text-[13px] flex items-center">
-        <!-- show month -->
         <div class="flex gap-2 items-center text-[#777]">
           <label class="font-normal; text-[18px]">November 2023 </label>
           <i class="pi pi-angle-left"></i>
           <i class="pi pi-angle-right"></i>
         </div>
+
         <div class="flex items-center gap-4 pl-2">
           <button
             class="border-[1px] rounded-xl border-[#878787] text-[#878787] w-[60px] h-[25px] text-[14px] font-normal flex items-center justify-center"
@@ -280,6 +283,31 @@ export default {
           </svg>
         </div>
       </div>
+      <router-link to="/searchfile"
+        ><i class="pi pi-search text-[#878787]"></i
+      ></router-link>
+    </ul>
+
+     <!-- "search file"-->
+    <ul
+      v-if="$route.path === '/searchfile'"
+      class="flex items-center w-full"
+    >
+    <div class="flex gap-2 items-center">
+        <label for="macAddress" class="font-medium">Search</label>
+        <div>
+          <InputText
+          id="email"
+          class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-60  rounded-l-lg rounded-r-none"
+          placeholder="Search File"
+        ></InputText>
+        <div class="w-40 h-full bg-[#CCCCCC]">
+           
+        </div>
+        </div>
+   
+      </div>
+
     </ul>
   </div>
 </template>

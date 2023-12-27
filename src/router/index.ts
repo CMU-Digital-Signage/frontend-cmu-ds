@@ -7,6 +7,7 @@ import Dashboard from "../views/DashboardView.vue";
 import FileManage from "../views/FileManage.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
+import SearchPage from "../views/SearchFileView.vue"
 import AdminDashboard from "../views/AdminView.vue";
 import Mac from "@/views/device/[mac].vue";
 
@@ -59,6 +60,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/emergency",
     name: "Emergency",
     component: EmergencyManage,
+  },
+  {
+    path: "/searchfile",
+    name: "SearchFile",
+    component: SearchPage,
   },
 ];
 
