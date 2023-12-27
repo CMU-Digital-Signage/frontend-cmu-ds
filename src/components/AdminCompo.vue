@@ -14,13 +14,12 @@
         class="flex ml-4 items-center justify-center px-5 border-1 border-white-alpha-30 rounded-xl py-1.5 bg-[#36BFA7] text-white font-semibold"
       ></Button>
     </div>
-    <ul class="flex gap-44 pt-4 text-[16px] text-[#575757]">
+    <!-- <ul class="flex gap-44 pt-4 text-[16px] text-[#575757]">
       <li class="pl-2">Name</li>
     </ul>
-    <div class="border-t-[2px] w-12/12 border-[#575757]"></div>
+    <div class="border-t-[2px] w-12/12 border-[#575757]"></div> -->
     <div class="rectangle3">
-      <div v-for="(e, i) in admin" :key="i">
-        <ul class="box-admin flex items-center">
+      <!-- <ul class="box-admin flex items-center">
           <div class="circle text-white text-xl">
             <div>{{ (e.firstName || "").charAt(0) }}</div>
           </div>
@@ -30,14 +29,26 @@
             </p>
             <p v-else>{{ e.firstName }} {{ e.lastName }}</p>
           </div>
-          <Button
-            v-if="!isCurrentUser(e)"
-            label="Delete"
-            text
-            class="border-1 border-white-alpha-30 text-[#FF0000] underline rounded-lg py-2 ml-auto"
-          ></Button>
-        </ul>
-      </div>
+
+        </ul> -->
+      <!-- {{admin.map((e, i) => {
+
+        })}} -->
+      <DataTable :value="admin" tableStyle="min-width: 20rem">
+        <Column field="firstName" header="Name" sortable></Column>
+        <Column field="lastName" style=""></Column>
+        <Column :exportable="false" style="min-width: 8rem">
+          <!-- <template #body="slotProps">
+            <Button
+              icon="pi pi-trash"
+              outlined
+              rounded
+              severity="danger"
+              @click="delete"
+            />
+          </template> -->
+        </Column>
+      </DataTable>
     </div>
   </div>
 </template>
@@ -83,9 +94,10 @@ export default defineComponent({
 
 <style>
 .rectangle4 {
-  background-color: #904b4b00; /* Adjust the background color as needed */
+  background-color: #904b4b8c; /* Adjust the background color as needed */
   padding-bottom: 2rem;
   padding-left: 1.5rem;
+  height: calc(100vh - 10rem);
 }
 
 .rectangle3 {
