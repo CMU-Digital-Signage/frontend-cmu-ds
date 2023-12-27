@@ -1,7 +1,7 @@
 <template>
   <!-- Rectangle -->
   <div class="rectangle">
-    <TabView v-model:active-index="click" class="pt-1" >
+    <TabView v-model:active-index="click" class="pt-1">
       <TabPanel header="Admin">
         <Admin />
       </TabPanel>
@@ -25,15 +25,6 @@ import TabPanel from "primevue/tabpanel";
 export default defineComponent({
   name: "AdminView",
   components: { Admin, Device },
-  setup() {
-    const tabs = ref(
-      Array.from({ length: 3 }, (_, i) => ({
-        title: `Header ${i + 1}`,
-        content: `Tab ${i + 1} Content`,
-      }))
-    );
-    return {tabs}
-  },
   data() {
     return {
       click: store.state.adminManage,
