@@ -6,8 +6,8 @@
     :class="openSidebar == true ? 'side-bar-open' : 'side-bar-close'"
     style="background-color: #f6f6f6; border-right: 1px solid #c7bbbb"
   >
-    <div class="space-y-5 p-4 font-sf-pro">
-      <div class="flex justify-between items-start">
+    <div class="space-y-5 font-sf-pro" :class="{ 'p-4': openSidebar }">
+      <div class="flex justify-between items-start" :class="{ 'p-4': !openSidebar }">
         <div class="flex items-center gap-2">
           <img
             class="w-6 items-center"
@@ -15,7 +15,7 @@
             src="../assets/images/cpe-mini-logo.png"
           />
           <p
-            :class="{ 'font-bold': openSidebar, 'text-[20px]': openSidebar }"
+            :class="{ 'font-bold text-[20px]': openSidebar}"
             v-show="openSidebar"
             class="fixed left-12"
           >
@@ -53,17 +53,18 @@
         </button>
       </div>
 
-      <div class="-ml-1 pt-5">
+      <div class="mb-1" :class="openSidebar == true ? '-ml-1 pt-5': 'pt-10 flex justify-center '">
         <p
-          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
+          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828] "
           v-show="openSidebar"
         >
           Menu
         </p>
-        <ul class="pt-1 mr-3 pb-5 space-y-2 text-[15px] ml-5 text-left">
+        <ul class="py-1 space-y-2 text-[15px] text-left "
+            :class="openSidebar ? 'ml-4':  'flex flex-col justify-center'">
           <router-link to="/">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] mb-1"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] "
               v-if="openSidebar"
               label="Dashboard"
               icon="pi pi-microsoft"
@@ -81,7 +82,7 @@
 
           <router-link to="/file">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] mb-1"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px]"
               v-if="openSidebar"
               label="File Manager"
               icon="pi pi-file"
@@ -117,14 +118,15 @@
       </div>
 
       <!-- admin management sidebar -->
-      <div v-if="user?.isAdmin" class="-ml-1">
+      <div v-if="user?.isAdmin" :class="openSidebar == true ? '-ml-1 pt-5': 'pt-10 flex justify-center '">
         <p
           class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
           v-show="openSidebar"
         >
           Admin
         </p>
-        <ul class="pt-1 ml-4 pb-4 space-y-2 text-left ml-5">
+        <ul class="py-1 space-y-2 text-[15px] text-left "
+            :class="openSidebar ? 'ml-4':  'flex flex-col justify-center'">
           <router-link to="/admin">
             <Button
               class="bg-[#f6f6f6] text-black font-sf-pro text-[18px]"
