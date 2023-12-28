@@ -40,11 +40,14 @@ export default {
     class="bg-[#F6F6F6] border-b border-[#c7bbbb] h-14 px-6 flex items-center"
   >
     <!-- "Management" -->
-    <ul v-if="$route.path === '/admin'" class="flex justify-between">
+    <ul
+      v-if="$route.path === '/admin'"
+      class="flex items-center justify-between w-full"
+    >
       <div class="text-lg font-semibold text-gray-800 text-[20px]">
         Management
       </div>
-      <div class="ml-auto pt-2 cursor-pointer" v-if="click === 1">
+      <div class="ml-auto cursor-pointer" v-if="click === 1">
         <button
           class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
           @click="showPopup = true"
@@ -288,26 +291,19 @@ export default {
       ></router-link>
     </ul>
 
-     <!-- "search file"-->
-    <ul
-      v-if="$route.path === '/searchfile'"
-      class="flex items-center w-full"
-    >
-    <div class="flex gap-2 items-center">
+    <!-- "search file"-->
+    <ul v-if="$route.path === '/searchfile'" class="flex items-center w-full">
+      <div class="flex gap-2 items-center">
         <label for="macAddress" class="font-medium">Search</label>
         <div>
           <InputText
-          id="email"
-          class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-60  rounded-l-lg rounded-r-none"
-          placeholder="Search File"
-        ></InputText>
-        <div class="w-40 h-full bg-[#CCCCCC]">
-           
+            id="email"
+            class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-60 rounded-l-lg rounded-r-none"
+            placeholder="Search File"
+          ></InputText>
+          <div class="w-40 h-full bg-[#CCCCCC]"></div>
         </div>
-        </div>
-   
       </div>
-
     </ul>
   </div>
 </template>
