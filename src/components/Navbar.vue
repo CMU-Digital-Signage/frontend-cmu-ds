@@ -1,20 +1,28 @@
 <script setup lang="ts">
 import store from "@/store";
-import { onMounted, onUpdated, ref, toRef } from "vue";
+import { ref } from "vue";
 import Dialog from "primevue/dialog";
 import "primeicons/primeicons.css";
 import FileUpload from "primevue/fileupload";
 import { useToast } from "primevue/usetoast";
-import { useStore } from "vuex";
+
+const month = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 const showPopup = ref(false);
 const date = ref(new Date());
-const click = ref(store.state.adminManage);
-
-
-
-
-
 
 const toast = useToast();
 const onUpload = () => {
@@ -49,7 +57,7 @@ const customDateFormatter = (date: Date) => {
       <div class="text-lg font-semibold text-gray-800 text-[20px]">
         Management
       </div>
-      <div class="ml-auto cursor-pointer" v-if="click === 1">
+      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 1">
         <button
           class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
           @click="showPopup = true"
@@ -187,7 +195,6 @@ const customDateFormatter = (date: Date) => {
               class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
               @click="
                 () => {
-                  addDevice();
                   showPopup = false;
                 }
               "
@@ -245,7 +252,9 @@ const customDateFormatter = (date: Date) => {
     >
       <div class="text-lg font-normal text-[13px] flex items-center">
         <div class="flex gap-2 items-center text-[#777]">
-          <label class="font-normal; text-[18px]">November 2023 </label>
+          <label class="font-normal; text-[18px]"
+            >{{ month[date.getMonth()] }} {{ date.getFullYear() }}</label
+          >
           <i class="pi pi-angle-left"></i>
           <i class="pi pi-angle-right"></i>
         </div>
@@ -283,9 +292,10 @@ const customDateFormatter = (date: Date) => {
           </svg>
         </div>
       </div>
-      <router-link to="/searchfile"
+      <button class="pi pi-search text-[#878787] rounded-full p-2 hover:bg-[#b9b9b9]"></button>
+      <!-- <router-link to="/searchfile"
         ><i class="pi pi-search text-[#878787]"></i
-      ></router-link>
+      ></router-link> -->
     </ul>
 
     <!-- "search file"-->
