@@ -1,12 +1,12 @@
 <template>
-  <div class="rectangle4 flex-1">
+  <div class="rectangle4 flex-1 font-sf-pro">
     <form @submit.prevent="add" class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-medium pt-1.5"
         >Email:
       </label>
       <InputText
         id="email"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-48 rounded-xl"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-60 rounded-xl font-sf-pro"
         placeholder="domain @cmu.ac.th only"
         type="text"
         v-model="email"
@@ -18,36 +18,39 @@
       ></Button>
     </form>
     <div class="rectangle3">
-    <DataTable
-      :value="admin"
-      scrollDirection="vertical"
-      :scrollable="true"
-    >
-      <Column
-        field="firstName"
-        header="Name"
-        sortable
-        class="max-w-fit"
-      ></Column>
-      <Column field="lastName" style=""></Column>
-      <Column :field="'isCurrentUser'">
-        <template #body="slotProps">
-          <span v-if="isCurrentUser(slotProps.data)"> (You) </span>
-        </template>
-      </Column>
-      <Column :exportable="false" class="w-full text-center">
-        <template #body="slotProps">
-          <Button
-            v-if="!isCurrentUser(slotProps.data)"
-            icon="pi pi-trash"
-            outlined
-            rounded
-            severity="danger"
-            @click="del(slotProps.data.email)"
-          />
-        </template>
-      </Column>
-    </DataTable>
+      <DataTable
+        :value="admin"
+        scrollDirection="vertical"
+        scrollable
+        scrollHeight="calc(100vh - 200px)"
+        class="font-sf-pro"
+      >
+        <Column
+          field="firstName"
+          header="Name"
+          sortable
+          class="max-w-fit"
+          headerStyle=" font-bold"
+        ></Column>
+        <Column field="lastName" style=""></Column>
+        <Column :field="'isCurrentUser'">
+          <template #body="slotProps">
+            <div v-if="isCurrentUser(slotProps.data)" class="py-1">(You)</div>
+          </template>
+        </Column>
+        <Column :exportable="false" class="w-full text-center">
+          <template #body="slotProps">
+            <Button
+              v-if="!isCurrentUser(slotProps.data)"
+              icon="pi pi-trash"
+              rounded
+              class="w-9 h-9"
+              severity="danger"
+              @click="del(slotProps.data.email)"
+            />
+          </template>
+        </Column>
+      </DataTable>
     </div>
   </div>
 </template>
@@ -76,6 +79,12 @@ export default defineComponent({
       } else {
         this.message = newAdmin.message;
       }
+    },
+    calculateScrollHeight() {
+      // Use this.$el to get the height of the component's container
+      const containerHeight = this.$el.clientHeight;
+      // Adjust the multiplier as needed
+      return `${containerHeight * 0.8}px`;
     },
   },
   setup() {
@@ -117,7 +126,6 @@ export default defineComponent({
 .rectangle4 {
   background-color: #904b4b00; /* Adjust the background color as needed */
   padding-bottom: 2rem;
-  /* padding-left: 1.5rem; */
 }
 
 .rectangle3 {
