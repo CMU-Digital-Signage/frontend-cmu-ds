@@ -5,7 +5,7 @@
   >
     <Sidebar />
     <div class="w-screen flex flex-col">
-      <Navbar />
+      <NavBar />
       <router-view />
     </div>
   </div>
@@ -16,10 +16,10 @@
 import { defineComponent } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import store from "./store";
-import Navbar from "./components/Navbar.vue";
+import NavBar from "./components/NavBar.vue";
 
 export default defineComponent({
-  components: { Sidebar, Navbar },
+  components: { Sidebar, NavBar },
   computed: {
     user() {
       return store.state.userInfo;
