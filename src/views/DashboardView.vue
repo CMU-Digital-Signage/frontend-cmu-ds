@@ -1,6 +1,6 @@
 <template>
   <div>
-    ll
+    this is Dashboard page
     <!-- <TabView>
       <TabPanel header="kkkk"></TabPanel>
       <TabPanel header="kkkk"></TabPanel>

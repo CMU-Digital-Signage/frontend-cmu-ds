@@ -1,6 +1,6 @@
 <template>
   <div class="rectangle4">
-    <div class="flex flex-row gap-2">
+    <form @submit.prevent="add" class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-medium pt-1.5"
         >Email:
       </label>
@@ -8,19 +8,21 @@
         id="email"
         class="border border-[#C6C6C6] p-2 h-9 ml-2 w-48 rounded-xl"
         placeholder="domain @cmu.ac.th only"
+        type="text"
+        v-model="email"
       ></InputText>
       <Button
         label="Add"
+        type="submit"
         class="flex ml-4 items-center justify-center px-5 border-1 border-white-alpha-30 rounded-xl py-1.5 bg-[#36BFA7] text-white font-semibold"
       ></Button>
-    </div>
-    <ul class="flex gap-44 pt-4 text-[16px] text-[#575757]">
+    </form>
+    <!-- <ul class="flex gap-44 pt-4 text-[16px] text-[#575757]">
       <li class="pl-2">Name</li>
     </ul>
-    <div class="border-t-[2px] w-12/12 border-[#575757]"></div>
+    <div class="border-t-[2px] w-12/12 border-[#575757]"></div> -->
     <div class="rectangle3">
-      <div v-for="(e, i) in admin" :key="i">
-        <ul class="box-admin flex items-center">
+      <!-- <ul class="box-admin flex items-center">
           <div class="circle text-white text-xl">
             <div>{{ (e.firstName || "").charAt(0) }}</div>
           </div>
@@ -30,14 +32,32 @@
             </p>
             <p v-else>{{ e.firstName }} {{ e.lastName }}</p>
           </div>
-          <Button
-            v-if="!isCurrentUser(e)"
-            label="Delete"
-            text
-            class="border-1 border-white-alpha-30 text-[#FF0000] underline rounded-lg py-2 ml-auto"
-          ></Button>
-        </ul>
-      </div>
+
+        </ul> -->
+      <!-- {{admin.map((e, i) => {
+
+        })}} -->
+      <DataTable :value="admin" tableStyle="min-width: 20rem">
+        <Column field="firstName" header="Name" sortable></Column>
+        <Column field="lastName" style=""></Column>
+        <Column :field="'isCurrentUser'" :style="'min-width: 4rem'">
+          <template #body="slotProps">
+            <span v-if="isCurrentUser(slotProps.data)"> (You) </span>
+          </template>
+        </Column>
+        <Column :exportable="false" style="min-width: 8rem">
+          <template #body="slotProps">
+            <Button
+              v-if="!isCurrentUser(slotProps.data)"
+              icon="pi pi-trash"
+              outlined
+              rounded
+              severity="danger"
+              @click="del(slotProps.data.email)"
+            />
+          </template>
+        </Column>
+      </DataTable>
     </div>
   </div>
 </template>
@@ -46,46 +66,79 @@
 import { ref, defineComponent, onMounted } from "vue";
 import store from "@/store";
 import router from "@/router";
+<<<<<<< HEAD
 import { getAdmin, addAdmin } from "@/services";
 import { Admin, User } from "@/types";
+=======
+import { getAdmin, addAdmin, deleteAdmin } from "@/services";
+import { User } from "@/types";
+>>>>>>> 14efc6c68c71d7e93c5cdee43b7bda2d446e7b43
 import { useStore } from "vuex";
 
 export default defineComponent({
   name: "AdminCompo",
+  data() {
+    return {
+      email: "",
+    };
+  },
+  methods: {
+    async add() {
+      const newAdmin = await addAdmin(this.email);
+      if (newAdmin.ok) {
+        this.admin.push(newAdmin.admin);
+        this.email = "";
+      } else {
+        this.message = newAdmin.message;
+      }
+    },
+  },
   setup() {
     const store = useStore();
     const user = ref<User>(store.state.userInfo);
-    const admin = ref<Admin[]>([]);
+    const admin = ref<User[]>([]);
+    const message = ref();
 
     const fetchData = async () => {
       const res = await getAdmin();
       if (res.ok) {
-        admin.value = res.admin as Admin[];
-        admin.value.sort((a, b) => {
-          if (isCurrentUser(a)) return -1;
-          if (isCurrentUser(b)) return 1;
-          return 0;
-        });
+        admin.value = res.admin as User[];
       }
     };
 
     onMounted(() => {
       fetchData();
     });
+<<<<<<< HEAD
     
     const isCurrentUser = (admin: Admin) => {
+=======
+
+    const isCurrentUser = (admin: User) => {
+>>>>>>> 14efc6c68c71d7e93c5cdee43b7bda2d446e7b43
       return admin.id === user.value.id;
     };
-    return { admin, user, isCurrentUser };
+
+    const del = async (email: string) => {
+      const newAdmin = await deleteAdmin(email);
+      if (newAdmin.ok) {
+        admin.value = admin.value.filter((e) => e.email !== email);
+      } else {
+        message.value = newAdmin.message;
+      }
+    };
+
+    return { message, admin, user, isCurrentUser, del };
   },
 });
 </script>
 
 <style>
 .rectangle4 {
-  background-color: #904b4b00; /* Adjust the background color as needed */
+  background-color: #904b4b8c; /* Adjust the background color as needed */
   padding-bottom: 2rem;
   padding-left: 1.5rem;
+  height: calc(100vh - 10rem);
 }
 
 .rectangle3 {
