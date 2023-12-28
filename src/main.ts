@@ -15,11 +15,14 @@ import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';                   // optional
 import 'primevue/resources/themes/saga-green/theme.css'
 import 'primeicons/primeicons.css'
+import FileUpload from "primevue/fileupload";
+import ToastService from 'primevue/toastservice';
 
 createApp(App)
   .use(store)
   .use(router)
   .use(PrimeVue)
+  .use(ToastService)
   .component("Dialog", Dialog)
   .component("Button", Button)
   .component("InputText", InputText)
@@ -29,4 +32,5 @@ createApp(App)
   .component("Column", Column)
   .component("ColumnGroup", ColumnGroup)
   .component("Row", Row)
+  .component('fileUpload', FileUpload)
   .mount("#app");

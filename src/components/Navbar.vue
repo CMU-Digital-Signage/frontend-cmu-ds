@@ -1,37 +1,39 @@
-<script lang="ts">
+<script setup lang="ts">
 import store from "@/store";
-import { ref } from "vue";
+import { onMounted, onUpdated, ref, toRef } from "vue";
 import Dialog from "primevue/dialog";
 import "primeicons/primeicons.css";
+import FileUpload from "primevue/fileupload";
+import { useToast } from "primevue/usetoast";
+import { useStore } from "vuex";
 
-export default {
-  name: "NavBar",
-  components: {},
-  data() {
-    return {
-      showPopup: false,
-      date: null,
-    };
-  },
-  computed: {
-    click() {
-      return store.state.adminManage;
-    },
-  },
-  methods: {
-    addDevice() {
-      console.log();
-    },
-    customDateFormatter(date: Date) {
-      if (!date) return "";
+const showPopup = ref(false);
+const date = ref(new Date());
+const click = ref(store.state.adminManage);
 
-      const day = date.getDate().toString().padStart(2, "0");
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const year = date.getFullYear();
 
-      return `${day}-${month}-${year}`;
-    },
-  },
+
+
+
+
+const toast = useToast();
+const onUpload = () => {
+  toast.add({
+    severity: "info",
+    summary: "Success",
+    detail: "File Uploaded",
+    life: 3000,
+  });
+};
+
+const customDateFormatter = (date: Date) => {
+  if (!date) return "";
+
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
 };
 </script>
 
@@ -103,98 +105,93 @@ export default {
         </button>
         <Dialog
           v-model:visible="showPopup"
+          header="Add Device"
+          class="w-auto h-auto"
+          modal
           :close-on-escape="true"
-          close-icon="false"
-          class="w-auto h-auto bg-white pb-1 rounded-lg"
-          :pt="{
-            mask: {
-              style:
-                'backdrop-filter: blur(1px); background-color: rgba(0, 0, 0, 0.6);', // Grey color with 20% opacity
-            },
-          }"
         >
-          <div
-            className="bg-[#F6F6F6] flex border-b-2 w-full rounded-t-lg"
-            style="border-color: rgba(0, 0, 0, 0.1)"
-          >
-            <p className="text-black font-semibold text-[20px] pl-5 pb-3 pt-3">
-              Add Device
-            </p>
+          <div class="flex flex-col gap-2">
+            <div class="inline-block">
+              <label for="deviceName" class="text-primary-50 font-medium"
+                >Device Name</label
+              >
+              <label for="deviceName" class="text-[#FF0000] font-medium"
+                >*</label
+              >
+            </div>
+            <InputText
+              id="deviceName"
+              class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+              placeholder="cpe01"
+            ></InputText>
           </div>
-          <div
-            class="flex flex-col px-8 py-5 gap-4"
-            style="border-radius: 12px"
-          >
-            <div class="flex flex-col gap-2">
-              <div class="inline-block">
-                <label for="deviceName" class="text-primary-50 font-medium"
-                  >Device Name</label
-                >
-                <label for="deviceName" class="text-[#FF0000] font-medium"
-                  >*</label
-                >
-              </div>
-              <InputText
-                id="deviceName"
-                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
-                placeholder="cpe01"
-              ></InputText>
-            </div>
-            <div class="flex flex-col gap-2">
-              <div class="inline-block">
-                <label for="deviceName" class="text-primary-50 font-medium"
-                  >MAC Address</label
-                >
-                <label for="deviceName" class="text-[#FF0000] font-medium"
-                  >*</label
-                >
-              </div>
-              <InputText
-                id="macAddress"
-                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
-                placeholder="00:00:00:00:00:00"
-              ></InputText>
-            </div>
-            <div class="flex flex-col gap-2">
-              <label for="macAddress" class="text-primary-50 font-medium"
-                >Room</label
+          <div class="flex flex-col gap-2">
+            <div class="inline-block">
+              <label for="deviceName" class="text-primary-50 font-medium"
+                >MAC Address</label
               >
-              <InputText
-                id="room"
-                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
-                placeholder="(Optional)"
-                a
-              ></InputText>
-            </div>
-            <div class="flex flex-col gap-1">
-              <label for="macAddress" class="text-primary-50 font-medium"
-                >Description</label
+              <label for="deviceName" class="text-[#FF0000] font-medium"
+                >*</label
               >
-              <InputText
-                id="description"
-                class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg"
-                placeholder="(Optional)"
-              ></InputText>
             </div>
-            <div class="flex flex-row gap-4 pt-3">
-              <Button
-                label="Cancel"
-                text
-                @click="showPopup = false"
-                class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2"
-              ></Button>
-              <Button
-                label="Add"
-                text
-                class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
-                @click="
-                  () => {
-                    addDevice();
-                    showPopup = false;
-                  }
-                "
-              ></Button>
-            </div>
+            <InputText
+              id="macAddress"
+              class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+              placeholder="00:00:00:00:00:00"
+            ></InputText>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="macAddress" class="text-primary-50 font-medium"
+              >Room</label
+            >
+            <InputText
+              id="room"
+              class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+              placeholder="(Optional)"
+              a
+            ></InputText>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="macAddress" class="text-primary-50 font-medium"
+              >Location Description</label
+            >
+            <InputText
+              id="description location"
+              class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+              placeholder="(Optional)"
+            ></InputText>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="macAddress" class="text-primary-50 font-medium"
+              >Location Photo</label
+            >
+            <FileUpload
+              mode="basic"
+              name="demo[]"
+              url="/api/upload"
+              accept="image/*"
+              :maxFileSize="1000000"
+              @upload="onUpload"
+            />
+          </div>
+          <div class="flex flex-row gap-4 pt-3">
+            <Button
+              label="Cancel"
+              text
+              @click="showPopup = false"
+              class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2"
+            ></Button>
+            <Button
+              label="Add"
+              text
+              class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
+              @click="
+                () => {
+                  addDevice();
+                  showPopup = false;
+                }
+              "
+            ></Button>
           </div>
         </Dialog>
       </div>
@@ -309,28 +306,6 @@ export default {
 </template>
 
 <style scoped>
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Adjust the transparency as needed */
-  z-index: 999; /* Make sure it's above other elements */
-}
-
-.popup-content {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000; /* Make sure it's above the overlay */
-}
-
 /* Adjust the width as needed */
 .custom-date-picker {
   width: 200px; /* Set the desired width */
@@ -338,13 +313,13 @@ export default {
 }
 
 .bold-ho:hover {
-  font-weight: 900;
+  font-weight: 600;
   text-decoration: underline;
   background-color: #e2e2e2;
 }
 
 .bold-ho-add:hover {
-  font-weight: 900;
+  font-weight: 600;
   text-decoration: underline;
   background-color: #a9ddf8;
 }
