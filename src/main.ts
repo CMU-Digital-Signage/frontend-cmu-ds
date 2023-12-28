@@ -20,9 +20,9 @@ import ToastService from "primevue/toastservice";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCircle, faBarChart } from "@fortawesome/free-regular-svg-icons";
+import { faBell } from "@fortawesome/free-regular-svg-icons";
 
-library.add(faCircle, faBarChart);
+library.add(faBell);
 
 createApp(App)
   .use(store)
