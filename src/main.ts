@@ -9,20 +9,27 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import ColumnGroup from 'primevue/columngroup';   // optional
-import Row from 'primevue/row';                   // optional
-import 'primevue/resources/themes/saga-green/theme.css'
-import 'primeicons/primeicons.css'
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import ColumnGroup from "primevue/columngroup"; // optional
+import Row from "primevue/row"; // optional
+import "primevue/resources/themes/saga-green/theme.css";
+import "primeicons/primeicons.css";
 import FileUpload from "primevue/fileupload";
-import ToastService from 'primevue/toastservice';
+import ToastService from "primevue/toastservice";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faCircle, faBarChart } from "@fortawesome/free-regular-svg-icons";
+
+library.add(faCircle, faBarChart);
 
 createApp(App)
   .use(store)
   .use(router)
   .use(PrimeVue)
   .use(ToastService)
+  .component("font-awesome-icon", FontAwesomeIcon)
   .component("Dialog", Dialog)
   .component("Button", Button)
   .component("InputText", InputText)
@@ -32,5 +39,5 @@ createApp(App)
   .component("Column", Column)
   .component("ColumnGroup", ColumnGroup)
   .component("Row", Row)
-  .component('fileUpload', FileUpload)
+  .component("fileUpload", FileUpload)
   .mount("#app");
