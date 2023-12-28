@@ -1,13 +1,15 @@
 <template>
-              <font-awesome-icon icon="fa-brands fa-twitter" />
+  <font-awesome-icon icon="fa-brands fa-twitter" />
   <div
-    class="flex flex-col justify-between h-screen shadow"
-    id="side-bar"
+    class="flex flex-col justify-between h-screen shadow side-bar"
     :class="openSidebar == true ? 'side-bar-open' : 'side-bar-close'"
     style="background-color: #f6f6f6; border-right: 1px solid #c7bbbb"
   >
     <div class="space-y-5 font-sf-pro" :class="{ 'p-4': openSidebar }">
-      <div class="flex justify-between items-start" :class="{ 'p-4': !openSidebar }">
+      <div
+        class="flex justify-between items-start"
+        :class="{ 'p-4': !openSidebar }"
+      >
         <div class="flex items-center gap-2">
           <img
             class="w-6 items-center"
@@ -15,7 +17,7 @@
             src="../assets/images/cpe-mini-logo.png"
           />
           <p
-            :class="{ 'font-bold text-[20px]': openSidebar}"
+            :class="{ 'font-bold text-[20px]': openSidebar }"
             v-show="openSidebar"
             class="fixed left-12"
           >
@@ -53,18 +55,25 @@
         </button>
       </div>
 
-      <div class="mb-1" :class="openSidebar == true ? '-ml-1 pt-5': 'pt-10 flex justify-center '">
+      <div
+        class="mb-1"
+        :class="
+          openSidebar == true ? '-ml-1 pt-5' : 'pt-10 flex justify-center '
+        "
+      >
         <p
-          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828] "
+          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
           v-show="openSidebar"
         >
           Menu
         </p>
-        <ul class="py-1 space-y-2 text-[15px] text-left "
-            :class="openSidebar ? 'ml-4':  'flex flex-col justify-center'">
+        <ul
+          class="flex flex-col py-1 space-y-2 text-[15px] text-left"
+          :class="openSidebar ? 'ml-3' : 'justify-center'"
+        >
           <router-link to="/">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] "
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] flex gap-1"
               v-if="openSidebar"
               label="Dashboard"
               icon="pi pi-microsoft"
@@ -82,7 +91,7 @@
 
           <router-link to="/file">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px]"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] fixed flex gap-1"
               v-if="openSidebar"
               label="File Manager"
               icon="pi pi-file"
@@ -97,9 +106,9 @@
             >
             </Button>
           </router-link>
-          <router-link to="/deviceManage">
+          <router-link to="/deviceManage" :class="{ 'pt-10': openSidebar }">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] mb-1"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] mb-1 flex gap-1"
               v-if="openSidebar"
               label="Device"
               icon="pi pi-desktop"
@@ -117,19 +126,30 @@
         </ul>
       </div>
 
+      <div v-if="!openSidebar" class="pt-4">
+        <p class="border-t border-[#AAA] mx-3"></p>
+      </div>
+
       <!-- admin management sidebar -->
-      <div v-if="user?.isAdmin" :class="openSidebar == true ? '-ml-1 pt-5': 'pt-10 flex justify-center '">
+      <div
+        v-if="user?.isAdmin"
+        :class="
+          openSidebar == true ? '-ml-1 pt-1' : 'pt-3 flex justify-center '
+        "
+      >
         <p
           class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
           v-show="openSidebar"
         >
           Admin
         </p>
-        <ul class="py-1 space-y-2 text-[15px] text-left "
-            :class="openSidebar ? 'ml-4':  'flex flex-col justify-center'">
+        <ul
+          class="py-1 space-y-2 text-[15px] text-left"
+          :class="openSidebar ? 'ml-4' : 'flex flex-col justify-center -pt-3'"
+        >
           <router-link to="/admin">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px]"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] flex gap-1"
               v-if="openSidebar"
               label="Management"
               icon="pi pi-users"
@@ -146,13 +166,12 @@
           </router-link>
           <router-link to="/emergency">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px]"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] flex gap-1"
               v-if="openSidebar"
               label="Emergency"
-             icon="pi pi-exclamation-triangle"
-             link
+              icon="pi pi-exclamation-triangle"
+              link
             >
-            
             </Button>
             <Button
               class="bg-[#f6f6f6] text-black"
@@ -161,7 +180,6 @@
               link
             >
             </Button>
-            
           </router-link>
         </ul>
       </div>
@@ -169,10 +187,10 @@
 
     <!-- <UserInfo /> -->
     <div
-      class="flex h-14 w-full p-3 items-center justify-between"
+      class="flex h-14 w-full px-4 items-center justify-between "
       style="border-top: 1px solid #aaa"
     >
-      <div class="flex flex-row gap-1 items-center" v-show="openSidebar">
+      <div class="flex flex-row gap-2 items-center" v-show="openSidebar">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="38"
@@ -185,33 +203,26 @@
             fill="black"
           />
         </svg>
-        <div class="flex flex-col items-start text-[14px]">
+        <div class="flex flex-col items-start text-[14px] fixed left-14">
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
-          <p
-            v-if="user?.isAdmin"
-            class="-mt-1 text-[#0094ff] text-[13px]"
-            style="font-weight: 700"
-            v-show="openSidebar"
+          <div
+            class="-mt-1 text-[#0094ff] text-[13px] font-700"
           >
-            Admin
-          </p>
-          <p
-            v-if="!user?.isAdmin"
-            class="-mt-1"
-            style="color: #0094ff; font-size: 13px; font-weight: 700"
-          >
-            Instructor
-          </p>
+            <p  v-if="user?.isAdmin">Admin</p>
+            <p  v-if="!user?.isAdmin"> Instructor</p>
+          </div>
+
+       
         </div>
       </div>
       <button @click="signOut()" :class="openSidebar ? 'px-0.5' : 'p-2'">
-        <div class="flex justify-center items-center logout-bt">
+        <div class="flex justify-center items-center logout-bt 'translate-x-0'">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="22"
+            width="18"
+            height="20"
             viewBox="0 0 20 22"
             fill="none"
           >
@@ -249,7 +260,6 @@ import store from "@/store";
 import router from "@/router";
 import { signOut } from "@/services";
 
-
 export default defineComponent({
   name: "SideBar",
   computed: {
@@ -278,7 +288,7 @@ export default defineComponent({
   width: 36px;
   height: 36px;
   border-radius: 11.52px;
-  background: #eee;
+  background: #e5e4e4;
   transition: 0.1s;
 }
 .logout-bt:hover {
@@ -301,9 +311,9 @@ export default defineComponent({
 .underline-ho-em:hover {
   border-bottom: 1px solid #f00;
 }
-#side-bar {
+.side-bar {
   overflow: hidden;
-  transition: 300ms;
+  transition: all 300ms ease-in-out;
 }
 
 .side-bar-open {
