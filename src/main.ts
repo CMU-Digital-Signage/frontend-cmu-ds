@@ -14,7 +14,7 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';                   // optional
 import 'primevue/resources/themes/lara-light-blue/theme.css'
-    
+import 'primeicons/primeicons.css'
 
 createApp(App)
   .use(store)

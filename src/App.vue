@@ -1,7 +1,10 @@
 <template>
-  <div class="flex flex-row h-screen" v-if="!$route.meta.hideSidebar && user.email">
+  <div
+    class="flex flex-row h-screen"
+    v-if="!$route.meta.hideSidebar && user.email"
+  >
     <Sidebar />
-    <div class="w-screen h-screen">
+    <div class="w-screen flex flex-col">
       <Navbar />
       <router-view />
     </div>
@@ -31,5 +34,9 @@ export default defineComponent({
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+
+router-view {
+  flex: 1;
 }
 </style>
