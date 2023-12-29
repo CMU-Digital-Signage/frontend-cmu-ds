@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import store from "@/store";
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import Dialog from "primevue/dialog";
+import Dropdown from "primevue/dropdown";
 import "primeicons/primeicons.css";
 import FileUpload from "primevue/fileupload";
 import { useToast } from "primevue/usetoast";
+import router from "@/router";
 
 const month = [
   "January",
@@ -23,6 +25,14 @@ const month = [
 
 const showPopup = ref(false);
 const date = ref(new Date());
+const clickSearch = ref(false);
+const searchP = ref("");
+
+const devices = ref([
+  { deviceName: "cpe01", macAddress: "b8:27:eb:4f:e1:9e" },
+  { deviceName: "cpe02", macAddress: "b8:f7:eb:4f:e1:ae" },
+]);
+const selectedDevice = ref(devices.value[0]);
 
 const toast = useToast();
 const onUpload = () => {
@@ -42,6 +52,13 @@ const customDateFormatter = (date: Date) => {
   const year = date.getFullYear();
 
   return `${day}-${month}-${year}`;
+};
+
+const search = () => {
+  // nextTick(() => ref.search.focus())
+  console.log(searchP.value);
+  clickSearch.value = false;
+  router.push("/searchfile");
 };
 </script>
 
@@ -250,7 +267,10 @@ const customDateFormatter = (date: Date) => {
       v-if="$route.path === '/'"
       class="flex items-center justify-between w-full"
     >
-      <div class="text-lg font-normal text-[13px] flex items-center">
+      <div
+        class="text-lg font-normal text-[13px] flex items-center"
+        v-if="!clickSearch"
+      >
         <div class="flex gap-2 items-center text-[#777]">
           <label class="font-normal; text-[18px]"
             >{{ month[date.getMonth()] }} {{ date.getFullYear() }}</label
@@ -292,23 +312,60 @@ const customDateFormatter = (date: Date) => {
           </svg>
         </div>
       </div>
-      <button class="pi pi-search text-[#878787] rounded-full p-2 hover:bg-[#b9b9b9]"></button>
+
+      <div class="flex items-center">
+        <form v-if="clickSearch" @submit.prevent="search">
+          <InputText
+            id="search"
+            v-model="searchP"
+            placeholder="Search Poster"
+            :autofocus="true"
+            class="drop-shadow-md rounded-lg max-w-full w-fit"
+          ></InputText>
+          <button
+            class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#b9b9b9] ml-3"
+            type="submit"
+          ></button>
+        </form>
+      </div>
+      <div class="items-center">
+        <button
+          v-if="!clickSearch"
+          class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#b9b9b9] mr-3"
+          @click="
+            clickSearch = true;
+            searchP = '';
+          "
+        ></button>
+        <Dropdown
+          v-model="selectedDevice"
+          :options="devices"
+          optionLabel="deviceName"
+          class="w-fit rounded-lg"
+        />
+      </div>
       <!-- <router-link to="/searchfile"
         ><i class="pi pi-search text-[#878787]"></i
       ></router-link> -->
     </ul>
-
     <!-- "search file"-->
     <ul v-if="$route.path === '/searchfile'" class="flex items-center w-full">
       <div class="flex gap-2 items-center">
         <label for="macAddress" class="font-medium">Search</label>
         <div>
-          <InputText
-            id="email"
-            class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-60 rounded-l-lg rounded-r-none"
-            placeholder="Search File"
-          ></InputText>
-          <div class="w-40 h-full bg-[#CCCCCC]"></div>
+          <form @submit.prevent="search">
+            <InputText
+              :value="searchP"
+              id="search"
+              v-model="searchP"
+              class="border text-[13px] font-normal border-[#C6C6C6] ml-1 pl-3 h-7 py-4 w-60 rounded-l-lg rounded-r-none"
+              placeholder="Search Poster"
+            ></InputText>
+            <button
+              class="h-full bg-[#CCCCCC] pi pi-search p-2 text-white rounded-r-lg rounded-l-none"
+              type="submit"
+            ></button>
+          </form>
         </div>
       </div>
     </ul>
