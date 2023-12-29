@@ -2,7 +2,7 @@
   <font-awesome-icon icon="fa-brands fa-twitter" />
   <div
     class="flex flex-col justify-between h-screen shadow side-bar"
-    :class="openSidebar == true ? 'side-bar-open' : 'side-bar-close'"
+    :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
     style="background-color: #f6f6f6; border-right: 1px solid #c7bbbb"
   >
     <div class="space-y-5 font-sf-pro" :class="{ 'p-4': openSidebar }">
@@ -56,35 +56,35 @@
       </div>
 
       <div
-        class="mb-1"
         :class="
           openSidebar == true ? '-ml-1 pt-5' : 'pt-10 flex justify-center '
         "
       >
         <p
-          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
+          class="flex pb-2 font-semibold text-[18px] color-[#282828]"
           v-show="openSidebar"
         >
           Menu
         </p>
         <ul
           class="flex flex-col py-1 space-y-2 text-[15px] text-left"
-          :class="openSidebar ? 'ml-3' : 'justify-center'"
+          :class="openSidebar ? '' : 'justify-center'"
         >
           <router-link to="/">
             <Button
-              class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] flex gap-1 side-bar"
+              class="bg-[#f6f6f6] menu-ho w-full space-x-2 text-black font-sf-pro text-[16px] flex gap-1 side-bar rounded-lg"
               v-if="openSidebar"
               link
+              :style="{
+                'background-color': $route.path === '/' ? '#e2e2e2' : '',
+              }"
             >
               <i class="pi pi-microsoft"></i>
-              <span class="menu-ho" :class="{ underline: $route.path === '/' }"
-                >Dashboard</span
-              >
+              <span>Dashboard</span>
             </Button>
             <Button
-              class="text-black rounded-full h-10 w-10 flex items-center justify-center"
-              :class="{ 'bg-[#cfcfcf]': $route.path === '/' }"
+              class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+              :class="{ 'bg-[#e2e2e2]': $route.path === '/' }"
               v-else
               link
             >
@@ -95,20 +95,19 @@
           <router-link to="/file">
             <div>
               <Button
-                class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] fixed flex gap-1"
+                class="bg-[#f6f6f6] w-full space-x-2 text-black font-sf-pro text-[16px] flex gap-1 menu-ho rounded-lg"
                 v-if="openSidebar"
                 link
+                :style="{
+                  'background-color': $route.path === '/file' ? '#e2e2e2' : '',
+                }"
               >
                 <i class="pi pi-file"></i>
-                <span
-                  class="menu-ho"
-                  :class="{ underline: $route.path === '/file' }"
-                  >File Manager</span
-                >
+                <span>File</span>
               </Button>
               <Button
-                class="text-black rounded-full h-10 w-10 flex items-center justify-center"
-                :class="{ 'bg-[#cfcfcf]': $route.path === '/file' }"
+                class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+                :class="{ 'bg-[#e2e2e2]': $route.path === '/file' }"
                 v-else
                 icon="pi pi-file"
                 link
@@ -116,22 +115,22 @@
               </Button>
             </div>
           </router-link>
-          <router-link to="/deviceManage" :class="{ 'pt-10': openSidebar }">
+          <router-link to="/deviceManage">
             <Button
-              class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] mb-1 flex gap-1"
+              class="bg-[#f6f6f6] w-full space-x-2 text-black font-sf-pro text-[16px] flex gap-1 menu-ho rounded-lg"
               v-if="openSidebar"
               link
+              :style="{
+                'background-color':
+                  $route.path === '/deviceManage' ? '#e2e2e2' : '',
+              }"
             >
               <i class="pi pi-desktop"></i>
-              <span
-                class="menu-ho"
-                :class="{ underline: $route.path === '/deviceManage' }"
-                >Device</span
-              >
+              <span>Device</span>
             </Button>
             <Button
-              class="text-black rounded-full h-10 w-10 flex items-center justify-center"
-              :class="{ 'bg-[#cfcfcf]': $route.path === '/deviceManage' }"
+              class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+              :class="{ 'bg-[#e2e2e2]': $route.path === '/deviceManage' }"
               v-else
               icon="pi pi-desktop"
               link
@@ -139,10 +138,6 @@
             </Button>
           </router-link>
         </ul>
-      </div>
-
-      <div v-if="!openSidebar" class="pt-4">
-        <p class="border-t border-[#AAA] mx-3"></p>
       </div>
 
       <!-- admin management sidebar -->
@@ -153,31 +148,30 @@
         "
       >
         <p
-          class="flex ml-3 pb-2 font-semibold text-[16px] color-[#282828]"
+          class="flex pb-2 font-semibold text-[18px] color-[#282828]"
           v-show="openSidebar"
         >
           Admin
         </p>
         <ul
-          class="py-1 space-y-2 text-[15px] text-left"
-          :class="openSidebar ? 'ml-4' : 'flex flex-col justify-center -pt-3'"
+          class="flex flex-col py-1 space-y-2 text-[15px] text-left"
+          :class="openSidebar ? '' : 'flex flex-col justify-center -pt-3'"
         >
           <router-link to="/admin">
             <Button
-              class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] flex gap-1 outline-none"
+              class="bg-[#f6f6f6] space-x-2 w-full text-black font-sf-pro text-[16px] flex gap-1 outline-none menu-ho rounded-lg"
               v-if="openSidebar"
               link
+              :style="{
+                'background-color': $route.path === '/admin' ? '#e2e2e2' : '',
+              }"
             >
               <i class="pi pi-users"></i>
-              <span
-                class="menu-ho"
-                :class="{ underline: $route.path === '/admin' }"
-                >Management</span
-              >
+              <span>Management</span>
             </Button>
             <Button
-            class=" text-black rounded-full  h-10 w-10 flex items-center justify-center "
-              :class="{'bg-[#cfcfcf]': $route.path === '/admin' }"
+              class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+              :class="{ 'bg-[#e2e2e2]': $route.path === '/admin' }"
               v-else
               icon="pi pi-users"
               link
@@ -186,20 +180,22 @@
           </router-link>
           <router-link to="/emergency">
             <Button
-              class="bg-[#f6f6f6] space-x-2 text-[#f00] font-sf-pro text-[16px] flex gap-1 underline-label"
+              class="bg-[#f6f6f6] space-x-2 w-full text-[#f00] font-sf-pro text-[16px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
               v-if="openSidebar"
               link
+              :style="{
+                'background-color':
+                  $route.path === '/emergency' ? '#fbcfcf' : '',
+              }"
             >
               <i class="pi pi-exclamation-triangle"></i>
-              <span
-                class="menu-ho"
-                :class="{ underline: $route.path === '/emergency' }"
-                >Emergency</span
-              >
+              <span>Emergency</span>
             </Button>
             <Button
-            class=" text-[#f00]  rounded-full  h-10 w-10 flex items-center justify-center -mt-2 "
-              :class="{'bg-[#cfcfcf] text-black': $route.path === '/emergency' }"
+              class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center -mt-2 menu-ho-emergency"
+              :class="{
+                'bg-[#ffcfcf] text-[#f00]': $route.path === '/emergency',
+              }"
               v-else
               icon="pi pi-exclamation-triangle"
               link
@@ -212,7 +208,7 @@
 
     <!-- <UserInfo /> -->
     <div
-      class="flex h-14 w-full px-4 items-center justify-between"
+      class="flex h-14 w-full pl-2 pr-4 items-center justify-between"
       style="border-top: 1px solid #aaa"
     >
       <div class="flex flex-row gap-2 items-center" v-show="openSidebar">
@@ -228,49 +224,30 @@
             fill="black"
           />
         </svg>
-        <div class="flex flex-col items-start text-[14px] fixed left-14">
+        <div
+          class="flex flex-col items-start font-semibold text-[13px] fixed left-14"
+        >
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
           <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
-            <p v-if="user?.isAdmin">Admin</p>
-            <p v-if="!user?.isAdmin">Instructor</p>
+            <p v-if="user?.isAdmin" class="pt-0.5">Admin</p>
+            <p v-if="!user?.isAdmin" class="pt-0.5">Instructor</p>
           </div>
         </div>
       </div>
-      <button @click="signOut()" :class="openSidebar ? 'px-0.5' : 'p-2'">
-        <div class="flex justify-center items-center logout-bt 'translate-x-0'">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="20"
-            viewBox="0 0 20 22"
-            fill="none"
-          >
-            <path
-              d="M13.0801 3.86007V2.84007C13.0801 2.27674 12.6235 1.82007 12.0601 1.82007H2.88011C2.31677 1.82007 1.86011 2.27674 1.86011 2.84007V19.1601C1.86011 19.7234 2.31678 20.1801 2.88011 20.1801H12.0601C12.6235 20.1801 13.0801 19.7234 13.0801 19.1601V18.1401"
-              stroke="#282828"
-              class="logout-icon"
-              stroke-width="1.74857"
-              stroke-linecap="round"
-            />
-            <path
-              d="M6.96021 11H12.5702H18.1802"
-              stroke="#282828"
-              class="logout-icon"
-              stroke-width="1.74857"
-              stroke-linecap="round"
-            />
-            <path
-              d="M14.6104 7.43005L18.1804 11.0001L14.6104 14.5701"
-              stroke="#282828"
-              class="logout-icon"
-              stroke-width="1.74857"
-              stroke-linecap="round"
-            />
-          </svg>
-        </div>
-      </button>
+      <div class="flex justify-center items-center">
+        <button
+          @click="signOut()"
+          class="pi pi-sign-out"
+          style="color: red"
+          :class="
+            openSidebar
+              ? 'px-0.5 menu-ho-emergency rounded-full h-10 w-10'
+              : 'ml-3.5 rounded-full menu-ho-emergency-slide h-10 w-10'
+          "
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -310,17 +287,26 @@ Button {
 }
 
 .menu-ho:hover {
-  text-decoration: underline;
+  background-color: #e2e2e2;
 }
+
+.menu-ho-emergency:hover {
+  background-color: #fbcfcf;
+}
+
+.menu-ho-emergency-slide:hover {
+  background-color: #fbcfcf;
+}
+
 .logout-bt {
   width: 36px;
   height: 36px;
   border-radius: 11.52px;
-  background: #e5e4e4;
+
   transition: 0.1s;
 }
 .logout-bt:hover {
-  background: #ff5252;
+  background: #ffcfcf;
 }
 .logout-bt:hover .logout-icon {
   stroke: #fff;
