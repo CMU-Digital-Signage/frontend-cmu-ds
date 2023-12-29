@@ -271,7 +271,7 @@ const search = () => {
         class="text-lg font-normal text-[13px] flex items-center"
         v-if="!clickSearch"
       >
-        <div class="flex gap-2 items-center text-[#777]">
+        <div class="flex gap-2 items-center text-[#777] font-bold">
           <label class="font-normal; text-[18px]"
             >{{ month[date.getMonth()] }} {{ date.getFullYear() }}</label
           >
@@ -312,61 +312,146 @@ const search = () => {
           </svg>
         </div>
       </div>
-
-      <div class="flex items-center">
-        <form v-if="clickSearch" @submit.prevent="search">
-          <InputText
-            id="search"
-            v-model="searchP"
-            placeholder="Search Poster"
-            :autofocus="true"
-            class="drop-shadow-md rounded-lg max-w-full w-fit"
-          ></InputText>
-          <button
-            class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#b9b9b9] ml-3"
-            type="submit"
-          ></button>
-        </form>
-      </div>
-      <div class="items-center">
-        <button
-          v-if="!clickSearch"
-          class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#b9b9b9] mr-3"
-          @click="
-            clickSearch = true;
-            searchP = '';
-          "
-        ></button>
+      <div class="flex gap-3 items-center">
+        <router-link to="/searchfile"
+          ><i class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2 "></i
+        ></router-link>
         <Dropdown
+          v-if="$route.path === '/'"
           v-model="selectedDevice"
           :options="devices"
           optionLabel="deviceName"
-          class="w-fit rounded-lg"
+          class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center"
         />
+        <button
+          class="flex bg-while pr-3 pl-1 bg-white w-38 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
+          @click="showPopup = true"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="28 28"
+            fill="none"
+          >
+            <g filter="url(#filter0_d_701_79)">
+              <ellipse
+                cx="16.5067"
+                cy="14.5"
+                rx="11.5913"
+                ry="11.5"
+                fill="#039BE5"
+              />
+              <path
+                d="M17.523 8.84783C17.523 8.62297 17.4329 8.40732 17.2727 8.24832C17.1124 8.08932 16.8951 8 16.6684 8C16.4418 8 16.2244 8.08932 16.0641 8.24832C15.9039 8.40732 15.8139 8.62297 15.8139 8.84783V13.6522H10.9714C10.7447 13.6522 10.5274 13.7415 10.3671 13.9005C10.2069 14.0595 10.1168 14.2751 10.1168 14.5C10.1168 14.7249 10.2069 14.9405 10.3671 15.0995C10.5274 15.2585 10.7447 15.3478 10.9714 15.3478H15.8139V20.1522C15.8139 20.377 15.9039 20.5927 16.0641 20.7517C16.2244 20.9107 16.4418 21 16.6684 21C16.8951 21 17.1124 20.9107 17.2727 20.7517C17.4329 20.5927 17.523 20.377 17.523 20.1522V15.3478H22.3654C22.5921 15.3478 22.8094 15.2585 22.9697 15.0995C23.13 14.9405 23.22 14.7249 23.22 14.5C23.22 14.2751 23.13 14.0595 22.9697 13.9005C22.8094 13.7415 22.5921 13.6522 22.3654 13.6522H17.523V8.84783Z"
+                fill="white"
+              />
+            </g>
+            <defs>
+              <filter
+                id="filter0_d_701_79"
+                x="0.915405"
+                y="0"
+                width="31.1825"
+                height="31"
+                filterUnits="userSpaceOnUse"
+                color-interpolation-filters="sRGB"
+              >
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feColorMatrix
+                  in="SourceAlpha"
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  result="hardAlpha"
+                />
+                <feComposite in2="hardAlpha" operator="out" />
+                <feColorMatrix
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+                />
+                <feBlend mode="normal" in2="BackgroundImageFix" />
+                <feBlend mode="normal" in="SourceGraphic" result="shape" />
+              </filter>
+            </defs>
+          </svg>
+          Upload File
+        </button>
       </div>
-      <!-- <router-link to="/searchfile"
-        ><i class="pi pi-search text-[#878787]"></i
-      ></router-link> -->
     </ul>
     <!-- "search file"-->
-    <ul v-if="$route.path === '/searchfile'" class="flex items-center w-full">
-      <div class="flex gap-2 items-center">
-        <label for="macAddress" class="font-medium">Search</label>
-        <div>
-          <form @submit.prevent="search">
-            <InputText
-              :value="searchP"
-              id="search"
-              v-model="searchP"
-              class="border text-[13px] font-normal border-[#C6C6C6] ml-1 pl-3 h-7 py-4 w-60 rounded-l-lg rounded-r-none"
-              placeholder="Search Poster"
-            ></InputText>
-            <button
-              class="h-full bg-[#CCCCCC] pi pi-search p-2 text-white rounded-r-lg rounded-l-none"
-              type="submit"
-            ></button>
-          </form>
-        </div>
+    
+    <ul
+      v-if="$route.path === '/searchfile'"
+      class="flex items-center justify-between w-full"
+    >
+      <form @submit.prevent="search" class="flex items-center">
+        <p for="macAddress" class="font-bold">Search</p>
+        <InputText
+          :value="searchP"
+          id="search"
+          v-model="searchP"
+          class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
+          placeholder="Search Poster"
+        ></InputText>
+        <button
+          class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3 "
+          type="submit"
+        ></button>
+      </form>
+      <div class="ml-auto cursor-pointer">
+        <button
+          class="flex bg-while pr-3 ml-3 pl-1 bg-white w-38 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
+          @click="showPopup = true"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="28 28"
+            fill="none"
+          >
+            <g filter="url(#filter0_d_701_79)">
+              <ellipse
+                cx="16.5067"
+                cy="14.5"
+                rx="11.5913"
+                ry="11.5"
+                fill="#039BE5"
+              />
+              <path
+                d="M17.523 8.84783C17.523 8.62297 17.4329 8.40732 17.2727 8.24832C17.1124 8.08932 16.8951 8 16.6684 8C16.4418 8 16.2244 8.08932 16.0641 8.24832C15.9039 8.40732 15.8139 8.62297 15.8139 8.84783V13.6522H10.9714C10.7447 13.6522 10.5274 13.7415 10.3671 13.9005C10.2069 14.0595 10.1168 14.2751 10.1168 14.5C10.1168 14.7249 10.2069 14.9405 10.3671 15.0995C10.5274 15.2585 10.7447 15.3478 10.9714 15.3478H15.8139V20.1522C15.8139 20.377 15.9039 20.5927 16.0641 20.7517C16.2244 20.9107 16.4418 21 16.6684 21C16.8951 21 17.1124 20.9107 17.2727 20.7517C17.4329 20.5927 17.523 20.377 17.523 20.1522V15.3478H22.3654C22.5921 15.3478 22.8094 15.2585 22.9697 15.0995C23.13 14.9405 23.22 14.7249 23.22 14.5C23.22 14.2751 23.13 14.0595 22.9697 13.9005C22.8094 13.7415 22.5921 13.6522 22.3654 13.6522H17.523V8.84783Z"
+                fill="white"
+              />
+            </g>
+            <defs>
+              <filter
+                id="filter0_d_701_79"
+                x="0.915405"
+                y="0"
+                width="31.1825"
+                height="31"
+                filterUnits="userSpaceOnUse"
+                color-interpolation-filters="sRGB"
+              >
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feColorMatrix
+                  in="SourceAlpha"
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  result="hardAlpha"
+                />
+                <feComposite in2="hardAlpha" operator="out" />
+                <feColorMatrix
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+                />
+                <feBlend mode="normal" in2="BackgroundImageFix" />
+                <feBlend mode="normal" in="SourceGraphic" result="shape" />
+              </filter>
+            </defs>
+          </svg>
+          Upload File
+        </button>
       </div>
     </ul>
   </div>
