@@ -73,7 +73,7 @@
         >
           <router-link to="/">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] flex gap-1"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] flex gap-1 side-bar"
               v-if="openSidebar"
               label="Dashboard"
               icon="pi pi-microsoft"
@@ -89,9 +89,11 @@
             </Button>
           </router-link>
 
-          <router-link to="/file">
+          <router-link to="/file" >
+            <div @click="toggleButton()">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] fixed flex gap-1"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] fixed flex gap-1"
+              :class="{'active': clickButton}"
               v-if="openSidebar"
               label="File Manager"
               icon="pi pi-file"
@@ -105,10 +107,11 @@
               link
             >
             </Button>
+          </div>
           </router-link>
           <router-link to="/deviceManage" :class="{ 'pt-10': openSidebar }">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] mb-1 flex gap-1"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] mb-1 flex gap-1"
               v-if="openSidebar"
               label="Device"
               icon="pi pi-desktop"
@@ -138,7 +141,7 @@
         "
       >
         <p
-          class="flex ml-3 pb-2 font-semibold text-[18px] color-[#282828]"
+          class="flex ml-3 pb-2 font-semibold text-[16px] color-[#282828]"
           v-show="openSidebar"
         >
           Admin
@@ -149,7 +152,7 @@
         >
           <router-link to="/admin">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] flex gap-1"
+              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] flex gap-1 outline-none"
               v-if="openSidebar"
               label="Management"
               icon="pi pi-users"
@@ -164,9 +167,9 @@
             >
             </Button>
           </router-link>
-          <router-link to="/emergency">
+          <router-link to="/emergency" >
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[18px] flex gap-1"
+              class="bg-[#f6f6f6] text-[#f00] font-sf-pro text-[16px] flex gap-1 "
               v-if="openSidebar"
               label="Emergency"
               icon="pi pi-exclamation-triangle"
@@ -274,16 +277,26 @@ export default defineComponent({
     toggleSidebar() {
       this.openSidebar = !this.openSidebar;
     },
+    toggleButton() {
+      this.clickButton = !this.clickButton;
+    },
   },
   data() {
     return {
       openSidebar: true,
+      clickButton: false
     };
   },
 });
 </script>
 
 <style>
+Button{
+  border: none;
+}
+.active-button {
+  text-decoration: underline;
+}
 .logout-bt {
   width: 36px;
   height: 36px;
@@ -296,17 +309,6 @@ export default defineComponent({
 }
 .logout-bt:hover .logout-icon {
   stroke: #fff;
-}
-.active-link {
-  border-bottom: 2px solid #282828;
-  font-weight: 900;
-}
-.underline-ho:hover {
-  border-bottom: 0.7px solid #8c8c8c;
-}
-.active-link-em {
-  border-bottom: 1px solid #f00;
-  font-weight: 900;
 }
 .underline-ho-em:hover {
   border-bottom: 1px solid #f00;
