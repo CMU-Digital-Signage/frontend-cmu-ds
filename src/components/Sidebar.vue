@@ -73,53 +73,65 @@
         >
           <router-link to="/">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] flex gap-1 side-bar"
+              class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] flex gap-1 side-bar"
               v-if="openSidebar"
-              label="Dashboard"
-              icon="pi pi-microsoft"
               link
             >
+              <i class="pi pi-microsoft"></i>
+              <span class="menu-ho" :class="{ underline: $route.path === '/' }"
+                >Dashboard</span
+              >
             </Button>
             <Button
-              class="bg-[#f6f6f6] text-black"
+              class="text-black rounded-full h-10 w-10 flex items-center justify-center"
+              :class="{ 'bg-[#cfcfcf]': $route.path === '/' }"
               v-else
-              icon="pi pi-microsoft"
               link
             >
+              <i class="pi pi-microsoft"></i>
             </Button>
           </router-link>
 
-          <router-link to="/file" >
-            <div @click="toggleButton()">
-            <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] fixed flex gap-1"
-              :class="{'active': clickButton}"
-              v-if="openSidebar"
-              label="File Manager"
-              icon="pi pi-file"
-              link
-            >
-            </Button>
-            <Button
-              class="bg-[#f6f6f6] text-black"
-              v-else
-              icon="pi pi-file"
-              link
-            >
-            </Button>
-          </div>
+          <router-link to="/file">
+            <div>
+              <Button
+                class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] fixed flex gap-1"
+                v-if="openSidebar"
+                link
+              >
+                <i class="pi pi-file"></i>
+                <span
+                  class="menu-ho"
+                  :class="{ underline: $route.path === '/file' }"
+                  >File Manager</span
+                >
+              </Button>
+              <Button
+                class="text-black rounded-full h-10 w-10 flex items-center justify-center"
+                :class="{ 'bg-[#cfcfcf]': $route.path === '/file' }"
+                v-else
+                icon="pi pi-file"
+                link
+              >
+              </Button>
+            </div>
           </router-link>
           <router-link to="/deviceManage" :class="{ 'pt-10': openSidebar }">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] mb-1 flex gap-1"
+              class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] mb-1 flex gap-1"
               v-if="openSidebar"
-              label="Device"
-              icon="pi pi-desktop"
               link
             >
+              <i class="pi pi-desktop"></i>
+              <span
+                class="menu-ho"
+                :class="{ underline: $route.path === '/deviceManage' }"
+                >Device</span
+              >
             </Button>
             <Button
-              class="bg-[#f6f6f6] text-black"
+              class="text-black rounded-full h-10 w-10 flex items-center justify-center"
+              :class="{ 'bg-[#cfcfcf]': $route.path === '/deviceManage' }"
               v-else
               icon="pi pi-desktop"
               link
@@ -137,7 +149,7 @@
       <div
         v-if="user?.isAdmin"
         :class="
-          openSidebar == true ? '-ml-1 pt-1' : 'pt-3 flex justify-center '
+          openSidebar == true ? '-ml-1 pt-1' : 'pt-1 flex justify-center '
         "
       >
         <p
@@ -152,32 +164,42 @@
         >
           <router-link to="/admin">
             <Button
-              class="bg-[#f6f6f6] text-black font-sf-pro text-[16px] flex gap-1 outline-none"
+              class="bg-[#f6f6f6] space-x-2 text-black font-sf-pro text-[16px] flex gap-1 outline-none"
               v-if="openSidebar"
-              label="Management"
-              icon="pi pi-users"
               link
             >
+              <i class="pi pi-users"></i>
+              <span
+                class="menu-ho"
+                :class="{ underline: $route.path === '/admin' }"
+                >Management</span
+              >
             </Button>
             <Button
-              class="bg-[#f6f6f6] text-black"
+            class=" text-black rounded-full  h-10 w-10 flex items-center justify-center "
+              :class="{'bg-[#cfcfcf]': $route.path === '/admin' }"
               v-else
               icon="pi pi-users"
               link
             >
             </Button>
           </router-link>
-          <router-link to="/emergency" >
+          <router-link to="/emergency">
             <Button
-              class="bg-[#f6f6f6] text-[#f00] font-sf-pro text-[16px] flex gap-1 "
+              class="bg-[#f6f6f6] space-x-2 text-[#f00] font-sf-pro text-[16px] flex gap-1 underline-label"
               v-if="openSidebar"
-              label="Emergency"
-              icon="pi pi-exclamation-triangle"
               link
             >
+              <i class="pi pi-exclamation-triangle"></i>
+              <span
+                class="menu-ho"
+                :class="{ underline: $route.path === '/emergency' }"
+                >Emergency</span
+              >
             </Button>
             <Button
-              class="bg-[#f6f6f6] text-black"
+            class=" text-[#f00]  rounded-full  h-10 w-10 flex items-center justify-center -mt-2 "
+              :class="{'bg-[#cfcfcf] text-black': $route.path === '/emergency' }"
               v-else
               icon="pi pi-exclamation-triangle"
               link
@@ -190,7 +212,7 @@
 
     <!-- <UserInfo /> -->
     <div
-      class="flex h-14 w-full px-4 items-center justify-between "
+      class="flex h-14 w-full px-4 items-center justify-between"
       style="border-top: 1px solid #aaa"
     >
       <div class="flex flex-row gap-2 items-center" v-show="openSidebar">
@@ -210,14 +232,10 @@
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
-          <div
-            class="-mt-1 text-[#0094ff] text-[13px] font-700"
-          >
-            <p  v-if="user?.isAdmin">Admin</p>
-            <p  v-if="!user?.isAdmin"> Instructor</p>
+          <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
+            <p v-if="user?.isAdmin">Admin</p>
+            <p v-if="!user?.isAdmin">Instructor</p>
           </div>
-
-       
         </div>
       </div>
       <button @click="signOut()" :class="openSidebar ? 'px-0.5' : 'p-2'">
@@ -277,24 +295,21 @@ export default defineComponent({
     toggleSidebar() {
       this.openSidebar = !this.openSidebar;
     },
-    toggleButton() {
-      this.clickButton = !this.clickButton;
-    },
   },
   data() {
     return {
       openSidebar: true,
-      clickButton: false
     };
   },
 });
 </script>
 
 <style>
-Button{
-  border: none;
+Button {
+  box-shadow: none;
 }
-.active-button {
+
+.menu-ho:hover {
   text-decoration: underline;
 }
 .logout-bt {
