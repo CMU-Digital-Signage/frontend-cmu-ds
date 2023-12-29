@@ -7,7 +7,6 @@
       <Device />
     </TabPanel>
   </TabView>
-  <div class="border-t-[1.5px] w-12/12 border-[#C4C4C4] mt-[-1px]"></div>
 </template>
 
 <script lang="ts">
@@ -38,7 +37,6 @@ export default defineComponent({
 .rectangle {
   background-color: #b18b8b00; /* Adjust the background color as needed */
   padding-inline: 1.5rem;
-  height: 100%;
   overflow: hidden;
 }
 

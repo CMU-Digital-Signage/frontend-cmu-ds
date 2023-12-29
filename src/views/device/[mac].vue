@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getDeviceMac, getDevicePoster } from "@/services";
+import { getDeviceMac } from "@/services";
 import router from "@/router";
 import store from "@/store";
 import { onMounted, ref } from "vue";

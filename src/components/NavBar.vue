@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import store from "@/store";
-import { nextTick, ref } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import "primeicons/primeicons.css";
-import FileUpload from "primevue/fileupload";
+import FileUpload, { FileUploadUploadEvent } from "primevue/fileupload";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
+import { addDevice } from "@/services";
+import { Device } from "@/types";
 
 const month = [
   "January",
@@ -22,7 +24,15 @@ const month = [
   "November",
   "December",
 ];
-
+const form = reactive({
+  data: {
+    MACaddress: "",
+    deviceName: "",
+    room: "",
+    location: "" as any,
+    description: "",
+  } as Device,
+});
 const showPopup = ref(false);
 const date = ref(new Date());
 const clickSearch = ref(false);
@@ -34,8 +44,23 @@ const devices = ref([
 ]);
 const selectedDevice = ref(devices.value[0]);
 
+watchEffect(() => {
+  // if (router.currentRoute.value.path === "/") {
+  //   clickSearch.value = false;
+  //   searchP.value = "";
+  // }
+});
+
 const toast = useToast();
-const onUpload = () => {
+const onUpload = async (e: any) => {
+  const file = e.files[0];
+  const reader = new FileReader();
+  let blob = await fetch(file.objectURL).then((r) => r.blob());
+  reader.readAsDataURL(blob);
+  reader.onloadend = function () {
+    form.data.location = reader.result;
+  };
+
   toast.add({
     severity: "info",
     summary: "Success",
@@ -55,10 +80,27 @@ const customDateFormatter = (date: Date) => {
 };
 
 const search = () => {
-  // nextTick(() => ref.search.focus())
   console.log(searchP.value);
-  clickSearch.value = false;
-  router.push("/searchfile");
+};
+
+const add = async () => {
+  form.data.MACaddress = (
+    document.getElementById("MACaddress") as HTMLInputElement
+  ).value;
+  form.data.deviceName = (
+    document.getElementById("deviceName") as HTMLInputElement
+  ).value;
+  form.data.room = (document.getElementById("room") as HTMLInputElement).value;
+  if (!form.data.MACaddress && !form.data.deviceName) {
+    alert("MAC Address or Device Name Invalid");
+    return;
+  }
+  form.data.description = (
+    document.getElementById("locationDescription") as HTMLInputElement
+  ).value;
+
+  const res = await addDevice(form.data);
+  console.log(res);
 };
 </script>
 
@@ -76,7 +118,7 @@ const search = () => {
       </div>
       <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 1">
         <button
-          class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
+          class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
           @click="showPopup = true"
         >
           <svg
@@ -160,7 +202,7 @@ const search = () => {
               >
             </div>
             <InputText
-              id="macAddress"
+              id="MACaddress"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
               placeholder="00:00:00:00:00:00"
             ></InputText>
@@ -181,7 +223,7 @@ const search = () => {
               >Location Description</label
             >
             <InputText
-              id="description location"
+              id="locationDescription"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
               placeholder="(Optional)"
             ></InputText>
@@ -193,10 +235,9 @@ const search = () => {
             <FileUpload
               mode="basic"
               name="demo[]"
-              url="/api/upload"
               accept="image/*"
-              :maxFileSize="1000000"
-              @upload="onUpload"
+              customUpload
+              @select="onUpload"
             />
           </div>
           <div class="flex flex-row gap-4 pt-3">
@@ -210,11 +251,7 @@ const search = () => {
               label="Add"
               text
               class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
-              @click="
-                () => {
-                  showPopup = false;
-                }
-              "
+              @click="add"
             ></Button>
           </div>
         </Dialog>
@@ -264,7 +301,7 @@ const search = () => {
 
     <!-- "calendar dashboard"-->
     <ul
-      v-if="$route.path === '/'"
+      v-if="$route.path === '/' || $route.path === '/searchfile'"
       class="flex items-center justify-between w-full"
     >
       <div
@@ -278,7 +315,6 @@ const search = () => {
           <i class="pi pi-angle-left"></i>
           <i class="pi pi-angle-right"></i>
         </div>
-
         <div class="flex items-center gap-4 pl-2">
           <button
             class="border-[1px] rounded-xl border-[#878787] text-[#878787] w-[60px] h-[25px] text-[14px] font-normal flex items-center justify-center"
@@ -312,10 +348,39 @@ const search = () => {
           </svg>
         </div>
       </div>
+      <TransitionGroup :duration="{ enter: 500, leave: 800 }">
+        <form
+          v-if="clickSearch"
+          @submit.prevent="search"
+          class="flex items-center"
+        >
+          <p for="macAddress" class="font-bold">Search</p>
+          <InputText
+            :value="searchP"
+            id="search"
+            v-model="searchP"
+            :autofocus="true"
+            class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
+            placeholder="Search Poster"
+          ></InputText>
+          <button
+            class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3"
+            type="submit"
+          ></button>
+        </form>
+      </TransitionGroup>
       <div class="flex gap-3 items-center">
-        <router-link to="/searchfile"
-          ><i class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2 "></i
-        ></router-link>
+        <button
+          v-if="$route.path === '/'"
+          @click="
+            clickSearch = true;
+            router.push('/searchfile');
+          "
+        >
+          <i
+            class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2"
+          ></i>
+        </button>
         <Dropdown
           v-if="$route.path === '/'"
           v-model="selectedDevice"
@@ -378,26 +443,32 @@ const search = () => {
         </button>
       </div>
     </ul>
+
     <!-- "search file"-->
-    
-    <ul
+    <!-- <ul
       v-if="$route.path === '/searchfile'"
       class="flex items-center justify-between w-full"
     >
-      <form @submit.prevent="search" class="flex items-center">
-        <p for="macAddress" class="font-bold">Search</p>
-        <InputText
-          :value="searchP"
-          id="search"
-          v-model="searchP"
-          class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
-          placeholder="Search Poster"
-        ></InputText>
-        <button
-          class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3 "
-          type="submit"
-        ></button>
-      </form>
+      <Transition>
+        <form
+          v-if="clickSearch"
+          @submit.prevent="search"
+          class="flex items-center"
+        >
+          <p for="macAddress" class="font-bold">Search</p>
+          <InputText
+            :value="searchP"
+            id="search"
+            v-model="searchP"
+            class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
+            placeholder="Search Poster"
+          ></InputText>
+          <button
+            class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3"
+            type="submit"
+          ></button>
+        </form>
+      </Transition>
       <div class="ml-auto cursor-pointer">
         <button
           class="flex bg-while pr-3 ml-3 pl-1 bg-white w-38 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
@@ -453,7 +524,7 @@ const search = () => {
           Upload File
         </button>
       </div>
-    </ul>
+    </ul> -->
   </div>
 </template>
 

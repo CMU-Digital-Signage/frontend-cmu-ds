@@ -1,4 +1,5 @@
 import store from "@/store";
+import { Device } from "@/types";
 import axios from "axios";
 
 export async function getDeviceMac(mac: string) {
@@ -19,11 +20,15 @@ export async function getDeviceMac(mac: string) {
   }
 }
 
-export async function getDevicePoster() {
+export async function addDevice(data: Device) {
   try {
-    const res = await axios.get(
-      `${process.env.VUE_APP_API_BASE_URL}/device/poster`,
+    const res = await axios.put(
+      `${process.env.VUE_APP_API_BASE_URL}/device`,
+      data,
       {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
         withCredentials: true,
       }
     );
