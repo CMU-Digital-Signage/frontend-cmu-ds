@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
-import { getUserInfo } from "@/services";
+import { getDevice, getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
 import FileManage from "../views/FileManage.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
-import SearchPage from "../views/SearchFileView.vue"
+import SearchPage from "../views/SearchFileView.vue";
 import AdminDashboard from "../views/AdminView.vue";
 import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
@@ -84,7 +84,12 @@ router.beforeEach(async (to, from, next) => {
     const res = await getUserInfo();
     if (res.ok) {
       store.commit("setUserInfo", res.user);
-      next();
+      const res2 = await getDevice();
+      if (res2.ok) {
+        res2.data.sort((a:any, b:any) => a.deviceName.localeCompare(b.deviceName));
+        store.commit("setDevices", res2.data);
+        next();
+      }
     } else {
       next({ name: "Login", replace: true });
     }

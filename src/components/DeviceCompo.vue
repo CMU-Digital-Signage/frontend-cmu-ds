@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch } from "vue";
+import { ref, onMounted, reactive, watch, computed } from "vue";
 import store from "@/store";
 import router from "@/router";
 import { getDevice } from "@/services";
@@ -17,16 +17,17 @@ const form = reactive({
   } as Device,
 });
 
-const device = ref<Device[]>();
+const device = computed(() => store.state.devices);
 const showPopup = ref(false);
 const message = ref();
 
-onMounted(async () => {
-  const res = await getDevice();
-  if (res.ok) {
-    device.value = res.data;
-  }
-});
+// onMounted(async () => {
+//   const res = await getDevice();
+//   if (res.ok) {
+//     device.value = res.data;
+//     store.commit("setDevices", res.data)
+//   }
+// });
 
 const toggleOverlay = (e: any, panel: any) => {
   panel.toggle(e);
@@ -68,7 +69,8 @@ const edit = async () => {
 
 const del = async (MACaddress: any) => {
   const res = await deleteDevice(MACaddress);
-  device.value = device.value?.filter((e) => e.MACaddress !== MACaddress);
+  const temp = device.value?.filter((e) => e.MACaddress !== MACaddress);
+  store.commit("setDevices", temp)
   message.value = res.message;
 };
 </script>

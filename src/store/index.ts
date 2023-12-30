@@ -1,4 +1,4 @@
-import { User } from "@/types";
+import { Device, User } from "@/types";
 import { createStore } from "vuex";
 
 const defaultUser: User = {
@@ -9,9 +9,18 @@ const defaultUser: User = {
   isAdmin: null,
 }; 
 
+const defaultDevice: Device[] = [{
+  MACaddress: '',
+  deviceName: '',
+  room: '',
+  location: null,
+  description: '',
+}]; 
+
 export default createStore({
   state: {
     userInfo: defaultUser as User,
+    devices: defaultDevice as Device[],
     adminManage: 0 as number,
   },
   getters: {},
@@ -25,6 +34,9 @@ export default createStore({
     setAdminManage(state, value) {
       state.adminManage = value;
     },
+    setDevices(state, devices) {
+      state.devices = devices;
+    }
   },
   actions: {},
   modules: {},
