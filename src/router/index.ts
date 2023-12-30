@@ -9,6 +9,7 @@ import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
 import SearchPage from "../views/SearchFileView.vue"
 import AdminDashboard from "../views/AdminView.vue";
+import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -65,6 +66,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/searchfile",
     name: "SearchFile",
     component: SearchPage,
+  },
+  {
+    path: "/uploadfile",
+    name: "UploadFile",
+    component: UploadFile,
   },
 ];
 
