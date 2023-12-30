@@ -21,6 +21,7 @@ import OverlayPanel from "primevue/overlaypanel";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
+import Checkbox from "primevue/checkbox";
 
 library.add(faBell);
 
@@ -41,4 +42,5 @@ createApp(App)
   .component("Row", Row)
   .component("FileUpload", FileUpload)
   .component("OverlayPanel", OverlayPanel)
+  .component("Checkbox", Checkbox)
   .mount("#app");

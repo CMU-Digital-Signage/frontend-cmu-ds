@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { ref, defineComponent, computed } from "vue";
+import store from "@/store";
+import router from "@/router";
+import { signOut } from "@/services";
+
+const user = computed(() => store.state.userInfo);
+const device = computed(() => store.state.devices);
+const openSidebar = ref(true);
+const toggleSidebar = () => {
+  openSidebar.value = !openSidebar.value;
+};
+</script>
+
 <template>
   <font-awesome-icon icon="fa-brands fa-twitter" />
   <div
@@ -29,6 +43,7 @@
           :class="{
             'scale-x-[-1]': !openSidebar,
           }"
+          v-if="$route.path !== '/searchfile'"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -53,12 +68,20 @@
             </defs>
           </svg>
         </button>
+        <button
+          @click="$router.push('/')"
+          :class="{
+            'scale-x-[-1]': !openSidebar,
+          }"
+          v-if="$route.path === '/searchfile'"
+        >
+          <i class="pi pi-times" />
+        </button>
       </div>
 
       <div
-        :class="
-          openSidebar == true ? '-ml-1 pt-5' : 'pt-10 flex justify-center '
-        "
+        v-if="$route.path !== '/searchfile'"
+        :class="openSidebar == true ? ' pt-5' : 'pt-10 flex justify-center '"
       >
         <p
           class="flex pb-2 font-semibold text-[18px] color-[#282828]"
@@ -142,10 +165,8 @@
 
       <!-- admin management sidebar -->
       <div
-        v-if="user?.isAdmin"
-        :class="
-          openSidebar == true ? '-ml-1 pt-1' : 'pt-1 flex justify-center '
-        "
+        v-if="user?.isAdmin && $route.path !== '/searchfile'"
+        :class="openSidebar == true ? ' pt-1' : 'pt-1 flex justify-center '"
       >
         <p
           class="flex pb-2 font-semibold text-[18px] color-[#282828]"
@@ -204,6 +225,28 @@
           </router-link>
         </ul>
       </div>
+
+      <!-- searchfile -->
+      <div v-if="$route.path === '/searchfile'">
+        <div
+          class="text-lg font-semibold text-black flex pb-2 text-[18px] color-[#282828]"
+        >
+          Device
+        </div>
+        <div
+          v-for="item of device"
+          :key="item.deviceName"
+          class="flex align-items-center"
+        >
+          <Checkbox
+            v-model="item.MACaddress"
+            :inputId="item.deviceName"
+            name="category"
+            :value="item.deviceName"
+          />
+          <label :for="item.deviceName">{{ item.deviceName }}</label>
+        </div>
+      </div>
     </div>
 
     <!-- <UserInfo /> -->
@@ -251,35 +294,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { ref, defineComponent } from "vue";
-import store from "@/store";
-import router from "@/router";
-import { signOut } from "@/services";
-
-export default defineComponent({
-  name: "SideBar",
-  computed: {
-    user() {
-      return store.state.userInfo;
-    },
-  },
-  methods: {
-    signOut() {
-      signOut();
-    },
-    toggleSidebar() {
-      this.openSidebar = !this.openSidebar;
-    },
-  },
-  data() {
-    return {
-      openSidebar: true,
-    };
-  },
-});
-</script>
 
 <style>
 Button {

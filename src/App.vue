@@ -3,7 +3,7 @@
     class="flex flex-row h-screen font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.email"
   >
-    <Sidebar />
+    <SideBar />
     <div class="w-screen flex flex-col">
       <NavBar />
       <router-view />
@@ -14,12 +14,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Sidebar from "@/components/Sidebar.vue";
+import SideBar from "./components/SideBar.vue";
 import store from "./store";
 import NavBar from "./components/NavBar.vue";
 
 export default defineComponent({
-  components: { Sidebar, NavBar },
+  components: { SideBar, NavBar },
   computed: {
     user() {
       return store.state.userInfo;
