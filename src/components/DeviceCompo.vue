@@ -28,10 +28,8 @@ onMounted(async () => {
   }
 });
 
-const overlays = ref<OverlayPanel[]>([]);
-
-const toggleOverlay = (e: any, i: number) => {
-  overlays.value[i].toggle(e);
+const toggleOverlay = (e: any, panel: any) => {
+  panel.toggle(e);
 };
 
 const onUpload = async (e: any) => {
@@ -97,16 +95,14 @@ const del = async (MACaddress: any) => {
             <p>{{ rowData.data.deviceName }}</p>
             <i
               class="pi pi-info-circle cursor-pointer"
-              @click="(e) => toggleOverlay(e, rowData.index)"
+              @click="(e) => toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])"
             />
             <OverlayPanel
-              v-for="item in device"
-              ref="overlays"
-              :key="item.MACaddress"
+            :ref="`overlay_${rowData.data.MACaddress}`"
               class="w-fit h-fit max-w-md max-h-max"
             >
-              <img :src="item.location" alt="location" class="object-cover" />
-              <p>{{ item.description }}</p>
+              <img :src="rowData.data.location" alt="location" class="object-cover" />
+              <p>{{ rowData.data.description }}</p>
             </OverlayPanel>
           </div>
         </template>
