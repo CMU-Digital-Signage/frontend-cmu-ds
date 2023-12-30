@@ -225,7 +225,7 @@
           />
         </svg>
         <div
-          class="flex flex-col items-start font-semibold text-[13px] fixed left-14"
+          class="flex flex-col items-start font-normal text-[13px] fixed left-14"
         >
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.

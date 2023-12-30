@@ -309,20 +309,20 @@ const add = async () => {
         class="text-lg font-normal text-[13px] flex items-center"
         v-if="!clickSearch"
       >
-        <div class="flex gap-2 items-center text-[#777] font-bold">
-          <label class="font-normal; text-[18px]"
+        <div class="flex gap-2 items-center text-[#777]">
+          <label class="font-semibold ; text-[18px]"
             >{{ month[date.getMonth()] }} {{ date.getFullYear() }}</label
           >
           <i class="pi pi-angle-left"></i>
           <i class="pi pi-angle-right"></i>
         </div>
-        <div class="flex items-center gap-4 pl-2">
+        <div class="flex items-center gap-4 pl-3">
           <button
             class="border-[1px] rounded-xl border-[#878787] text-[#878787] w-[60px] h-[25px] text-[14px] font-normal flex items-center justify-center"
           >
             Today
           </button>
-          <!-- หาใน primevue แล้วรู้สึกดูอยากกว่าของ figma -->
+          <!-- หาใน primevue แล้วรู้สึกดูยากกว่าของ figma -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="26"
@@ -390,10 +390,15 @@ const add = async () => {
           class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center"
         />
         <button
-          class="flex bg-while pr-3 pl-1 bg-white w-38 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
-          @click="showPopup = true"
+          class="flex bg-while p-2 bg-white w-38 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho "
+          v-if="$route.path === '/'"
+          @click="
+            showPopup = true;
+            router.push('/uploadfile');
+          "
         >
-          <svg
+          <!-- <svg
+
             xmlns="http://www.w3.org/2000/svg"
             width="28"
             height="28"
@@ -439,11 +444,22 @@ const add = async () => {
                 <feBlend mode="normal" in="SourceGraphic" result="shape" />
               </filter>
             </defs>
-          </svg>
+          </svg> -->
+          <div
+            class="h-7 w-7 rounded-full bg-[#039BE5] flex items-center justify-center"
+          >
+              <i class="pi pi-plus text-white "></i>
+          </div>
           Upload File
         </button>
       </div>
     </ul>
+
+    <!-- "Upload File" -->
+      <ul v-if="$route.path === '/uploadfile'" class="flex justify-between">
+      <li class="text-lg font-semibold text-black text-[20px]">Add File</li>
+    </ul>
+
 
     <!-- "search file"-->
     <!-- <ul
@@ -538,7 +554,6 @@ const add = async () => {
 
 .bold-ho:hover {
   font-weight: 600;
-  text-decoration: underline;
   background-color: #e2e2e2;
 }
 
