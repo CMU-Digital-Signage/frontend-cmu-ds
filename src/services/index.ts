@@ -1,6 +1,6 @@
 import { getUserInfo, signOut } from "./user";
 import { getAdmin, addAdmin, deleteAdmin } from "./admin";
-import { getDeviceMac, addDevice } from "./device";
+import { getDeviceMac, getDevice, addOrEditDevice } from "./device";
 
 export {
   getUserInfo,
@@ -9,5 +9,6 @@ export {
   addAdmin,
   deleteAdmin,
   getDeviceMac,
-  addDevice,
+  getDevice,
+  addOrEditDevice,
 };

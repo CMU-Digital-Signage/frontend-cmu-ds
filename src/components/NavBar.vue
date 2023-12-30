@@ -4,10 +4,9 @@ import { reactive, ref, watchEffect } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import "primeicons/primeicons.css";
-import FileUpload, { FileUploadUploadEvent } from "primevue/fileupload";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
-import { addDevice } from "@/services";
+import { addOrEditDevice } from "@/services";
 import { Device } from "@/types";
 
 const month = [
@@ -37,6 +36,7 @@ const showPopup = ref(false);
 const date = ref(new Date());
 const clickSearch = ref(false);
 const searchP = ref("");
+const message = ref();
 
 const devices = ref([
   { deviceName: "cpe01", macAddress: "b8:27:eb:4f:e1:9e" },
@@ -99,8 +99,9 @@ const add = async () => {
     document.getElementById("locationDescription") as HTMLInputElement
   ).value;
 
-  const res = await addDevice(form.data);
-  console.log(res);
+  const res = await addOrEditDevice(form.data);
+  message.value = res.message;
+  showPopup.value = false;
 };
 </script>
 

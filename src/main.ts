@@ -17,7 +17,7 @@ import "primevue/resources/themes/saga-green/theme.css";
 import "primeicons/primeicons.css";
 import FileUpload from "primevue/fileupload";
 import ToastService from "primevue/toastservice";
-
+import OverlayPanel from "primevue/overlaypanel";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
@@ -39,5 +39,6 @@ createApp(App)
   .component("Column", Column)
   .component("ColumnGroup", ColumnGroup)
   .component("Row", Row)
-  .component("fileUpload", FileUpload)
+  .component("FileUpload", FileUpload)
+  .component("OverlayPanel", OverlayPanel)
   .mount("#app");

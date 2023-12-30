@@ -20,7 +20,25 @@ export async function getDeviceMac(mac: string) {
   }
 }
 
-export async function addDevice(data: Device) {
+export async function getDevice() {
+  try {
+    const res = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/device`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (err: any) {
+    if (!err.response) {
+      return "Cannot connect to API Server. Please try again later.";
+    }
+    return err.response.data;
+  }
+}
+
+export async function addOrEditDevice(data: Device) {
   try {
     const res = await axios.put(
       `${process.env.VUE_APP_API_BASE_URL}/device`,
@@ -28,6 +46,30 @@ export async function addDevice(data: Device) {
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        withCredentials: true,
+      }
+    );
+
+    return res.data;
+  } catch (err: any) {
+    if (!err.response) {
+      return "Cannot connect to API Server. Please try again later.";
+    }
+    return err.response.data;
+  }
+}
+
+export async function deleteDevice(MACaddress: string) {
+  try {
+    const res = await axios.delete(
+      `${process.env.VUE_APP_API_BASE_URL}/device`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: {
+          MACaddress,
         },
         withCredentials: true,
       }
