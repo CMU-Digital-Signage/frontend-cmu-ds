@@ -118,8 +118,8 @@ const add = async () => {
         Management
       </div>
       <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 1">
-        <button
-          class="flex bg-while pr-2 pl-1 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
+        <Button
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
           @click="showPopup = true"
         >
           <div
@@ -128,7 +128,7 @@ const add = async () => {
             <i class="pi pi-plus text-white"></i>
           </div>
           Add Device
-        </button>
+        </Button>
         <Dialog
           v-model:visible="showPopup"
           header="Add Device"
@@ -347,8 +347,8 @@ const add = async () => {
           optionLabel="deviceName"
           class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center"
         />
-        <button
-          class="flex bg-while p-2 bg-white w-38 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho"
+        <Button
+          class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho"
           v-if="$route.path === '/'"
           @click="
             showPopup = true;
@@ -361,7 +361,7 @@ const add = async () => {
             <i class="pi pi-plus text-white"></i>
           </div>
           Upload File
-        </button>
+        </Button>
       </div>
     </ul>
 

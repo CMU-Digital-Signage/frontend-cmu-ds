@@ -13,7 +13,7 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row"; // optional
-import "primevue/resources/themes/saga-green/theme.css";
+import "primevue/resources/themes/saga-blue/theme.css";
 import "primeicons/primeicons.css";
 import FileUpload from "primevue/fileupload";
 import ToastService from "primevue/toastservice";
