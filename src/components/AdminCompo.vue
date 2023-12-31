@@ -14,7 +14,7 @@
       <Button
         label="Add"
         type="submit"
-        class="flex ml-4 items-center justify-center px-5 border-1 border-white-alpha-30 rounded-xl py-1.5 bg-[#36BFA7] text-white font-semibold"
+        class="flex ml-4 items-center justify-center px-5  rounded-xl py-1.5 bg-[#1878F7] text-white font-semibold custom-button"
       ></Button>
     </form>
     <div class="rectangle3">
@@ -155,4 +155,8 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
 }
+
+.custom-button:hover {
+    background-color: #1369DA;
+  }
 </style>
