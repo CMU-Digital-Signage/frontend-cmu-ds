@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import store from "@/store";
-import { reactive, ref, watchEffect } from "vue";
+import { reactive, ref, watch  } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import "primeicons/primeicons.css";
@@ -44,12 +44,18 @@ const devices = ref([
 ]);
 const selectedDevice = ref(devices.value[0]);
 
-watchEffect(() => {
-  if (router.currentRoute.value.path === "/") {
-    clickSearch.value = false;
-    searchP.value = "";
+
+watch(
+  () => router.currentRoute.value.path,
+  (newPath, oldPath) => {
+    if (newPath === "/" && newPath !== oldPath) {
+
+      clickSearch.value = false;
+      searchP.value = "";
+    }
   }
-});
+);
+
 
 const toast = useToast();
 const onUpload = async (e: any) => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row gap-10 -mx-4 font-sf-pro">
+  <div class="rectangle9 font-sf-pro">
     <div class="flex flex-col justify-start w-full h-full gap-5">
       <InputText
         v-model="titleValue"
@@ -84,4 +84,15 @@ export default defineComponent({
     width: 542px;
     height: 129px;
 }
+
+.rectangle9 {
+  background-color: #b2c19600; 
+  padding-bottom: 2rem;
+  display: flex;
+  flex-direction: row; 
+  gap: 1rem;
+  margin: 0 -1rem; 
+
+}
+
 </style>
