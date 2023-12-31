@@ -7,6 +7,7 @@ import { signOut } from "@/services";
 const user = computed(() => store.state.userInfo);
 const device = computed(() => store.state.devices);
 const openSidebar = ref(true);
+
 const toggleSidebar = () => {
   openSidebar.value = !openSidebar.value;
 };

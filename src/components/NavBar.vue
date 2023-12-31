@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import store from "@/store";
-import { reactive, ref, watch  } from "vue";
+import { reactive, ref, watch } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import "primeicons/primeicons.css";
@@ -44,18 +44,15 @@ const devices = ref([
 ]);
 const selectedDevice = ref(devices.value[0]);
 
-
 watch(
   () => router.currentRoute.value.path,
   (newPath, oldPath) => {
     if (newPath === "/" && newPath !== oldPath) {
-
       clickSearch.value = false;
       searchP.value = "";
     }
   }
 );
-
 
 const toast = useToast();
 const onUpload = async (e: any) => {
@@ -313,12 +310,11 @@ const add = async () => {
           </svg>
         </div>
       </div>
-      <TransitionGroup :duration="{ enter: 500, leave: 800 }">
-        <form
-          v-if="clickSearch"
-          @submit.prevent="search"
-          class="flex items-center"
-        >
+      <TransitionGroup
+        v-if="clickSearch"
+        :duration="{ enter: 500, leave: 800 }"
+      >
+        <form @submit.prevent="search" class="flex items-center">
           <p for="macAddress" class="font-bold">Search</p>
           <InputText
             :value="searchP"
