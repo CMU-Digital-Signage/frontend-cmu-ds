@@ -38,50 +38,40 @@ const toggleSidebar = () => {
             CPE Signage
           </p>
         </div>
-        <button
+        <Button
           @click="toggleSidebar()"
-          :class="{
-            'scale-x-[-1]': !openSidebar,
+          link
+          class="text-black bg-[#f6f6f600] rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
+          :style="{
+            transform: openSidebar ? '' : 'translateX(8px)',
+            marginLeft: openSidebar ? '' : '-8px',
           }"
-          v-if="$route.path !== '/searchfile'"
+          v-if="$route.path !== '/searchfile' && $route.path !== '/uploadfile'"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-          >
-            <g clip-path="url(#clip0_181_143)">
-              <path
-                d="M3.33325 5H17.8787M6.06052 12.2727H17.8787M8.7878 19.5455H17.8787"
-                stroke="#5B5B5B"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </g>
-            <defs>
-              <clipPath id="clip0_181_143">
-                <rect width="40" height="20" fill="white" />
-              </clipPath>
-            </defs>
-          </svg>
-        </button>
-        <button
+          <i
+            :class="{
+              'pi pi-align-left': !openSidebar,
+              'pi pi-align-right': openSidebar,
+            }"
+          ></i>
+        </Button>
+
+        <Button
           @click="$router.push('/')"
-          :class="{
-            'scale-x-[-1]': !openSidebar,
-          }"
-          v-if="$route.path === '/searchfile'"
+          class="text-black bg-[#f6f6f6] rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
+          v-if="$route.path === '/searchfile' || $route.path === '/uploadfile'"
+          link
         >
-          <i class="pi pi-times" />
-        </button>
+          <i class="pi pi-times"></i>
+        </Button>
       </div>
 
       <div
         v-if="$route.path !== '/searchfile'"
-        :class="openSidebar == true ? ' pt-5' : 'pt-10 flex justify-center '"
+        :class="{
+          'pt-5': openSidebar,
+          'pt-10 flex justify-center': !openSidebar,
+        }"
       >
         <p
           class="flex pb-2 font-semibold text-[18px] color-[#282828]"
@@ -229,7 +219,7 @@ const toggleSidebar = () => {
       <!-- searchfile -->
       <div v-if="$route.path === '/searchfile'">
         <div
-          class="text-lg font-semibold text-black flex pb-2 text-[18px] color-[#282828]"
+          class="pt-5 text-lg font-semibold text-black flex pb-2 text-[18px] color-[#282828]"
         >
           Device
         </div>
