@@ -7,15 +7,17 @@ const defaultUser: User = {
   lastName: null,
   email: null,
   isAdmin: null,
-}; 
+};
 
-const defaultDevice: Device[] = [{
-  MACaddress: '',
-  deviceName: '',
-  room: '',
-  location: null,
-  description: '',
-}]; 
+const defaultDevice: Device[] = [
+  {
+    MACaddress: "",
+    deviceName: "",
+    room: "",
+    location: null,
+    description: "",
+  },
+];
 
 export default createStore({
   state: {
