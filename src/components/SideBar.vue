@@ -70,12 +70,12 @@ const toggleSidebar = () => {
       <div
         v-if="$route.path !== '/searchfile'"
         :class="{
-          'pt-5': openSidebar,
-          'pt-10 flex justify-center': !openSidebar,
+          'pt-3': openSidebar,
+          'pt-5 flex justify-center': !openSidebar,
         }"
       >
         <p
-          class="flex pb-2 font-semibold text-[18px] color-[#282828]"
+          class="flex pb-1 font-semibold text-[14px] text-[#615F5F]"
           v-show="openSidebar"
         >
           Menu
@@ -86,11 +86,12 @@ const toggleSidebar = () => {
         >
           <router-link to="/">
             <Button
-              class="bg-[#f6f6f6] menu-ho w-full space-x-2 text-black font-sf-pro text-[16px] flex gap-1 side-bar rounded-lg"
+              class="bg-[#f6f6f6] menu-ho w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/' ? '#e2e2e2' : '',
+                'background-color': $route.path === '/' ? '#70aaeb2c' : '',
+                color: $route.path === '/' ? '#1b7be8' : '',
               }"
             >
               <i class="pi pi-microsoft"></i>
@@ -109,11 +110,13 @@ const toggleSidebar = () => {
           <router-link to="/file">
             <div>
               <Button
-                class="bg-[#f6f6f6] w-full space-x-2 text-black font-sf-pro text-[16px] flex gap-1 menu-ho rounded-lg"
+                class="bg-[#f6f6f6] w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
                 v-if="openSidebar"
                 link
                 :style="{
-                  'background-color': $route.path === '/file' ? '#e2e2e2' : '',
+                  'background-color':
+                    $route.path === '/file' ? '#70aaeb2c' : '',
+                  color: $route.path === '/file' ? '#1b7be8' : '',
                 }"
               >
                 <i class="pi pi-file"></i>
@@ -121,7 +124,7 @@ const toggleSidebar = () => {
               </Button>
               <Button
                 class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-                :class="{ 'bg-[#e2e2e2]': $route.path === '/file' }"
+                :class="{ 'bg-[#70aaeb2c]': $route.path === '/file' }"
                 v-else
                 icon="pi pi-file"
                 link
@@ -131,12 +134,13 @@ const toggleSidebar = () => {
           </router-link>
           <router-link to="/deviceManage">
             <Button
-              class="bg-[#f6f6f6] w-full space-x-2 text-black font-sf-pro text-[16px] flex gap-1 menu-ho rounded-lg"
+              class="bg-[#f6f6f6] w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
                 'background-color':
-                  $route.path === '/deviceManage' ? '#e2e2e2' : '',
+                  $route.path === '/deviceManage' ? '#70aaeb2c' : '',
+                color: $route.path === '/deviceManage' ? '#1b7be8' : '',
               }"
             >
               <i class="pi pi-desktop"></i>
@@ -144,7 +148,7 @@ const toggleSidebar = () => {
             </Button>
             <Button
               class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-              :class="{ 'bg-[#e2e2e2]': $route.path === '/deviceManage' }"
+              :class="{ 'bg-[#70aaeb2c]': $route.path === '/deviceManage' }"
               v-else
               icon="pi pi-desktop"
               link
@@ -157,10 +161,10 @@ const toggleSidebar = () => {
       <!-- admin management sidebar -->
       <div
         v-if="user?.isAdmin && $route.path !== '/searchfile'"
-        :class="openSidebar == true ? ' pt-1' : 'pt-1 flex justify-center '"
+        :class="openSidebar == true ? '' : ' flex justify-center '"
       >
         <p
-          class="flex pb-2 font-semibold text-[18px] color-[#282828]"
+          class="flex pb-1 font-semibold text-[14px] text-[#615F5F]"
           v-show="openSidebar"
         >
           Admin
@@ -171,19 +175,20 @@ const toggleSidebar = () => {
         >
           <router-link to="/admin">
             <Button
-              class="bg-[#f6f6f6] space-x-2 w-full text-black font-sf-pro text-[16px] flex gap-1 outline-none menu-ho rounded-lg"
+              class="bg-[#f6f6f6] space-x-2 w-full text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/admin' ? '#e2e2e2' : '',
+                'background-color': $route.path === '/admin' ? '#70aaeb2c' : '',
+                color: $route.path === '/admin' ? '#1b7be8' : '',
               }"
             >
               <i class="pi pi-users"></i>
               <span>Management</span>
             </Button>
             <Button
-              class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-              :class="{ 'bg-[#e2e2e2]': $route.path === '/admin' }"
+              class="text-black rounded-full h-10 w-10 mb-2 flex items-center justify-center menu-ho"
+              :class="{ 'bg-[#70aaeb2c]': $route.path === '/admin' }"
               v-else
               icon="pi pi-users"
               link
@@ -192,7 +197,7 @@ const toggleSidebar = () => {
           </router-link>
           <router-link to="/emergency">
             <Button
-              class="bg-[#f6f6f6] space-x-2 w-full text-[#f00] font-sf-pro text-[16px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
+              class="bg-[#f6f6f6] space-x-2 w-full text-[#f00] font-sf-pro font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -292,7 +297,8 @@ Button {
 }
 
 .menu-ho:hover {
-  background-color: #e2e2e2;
+  background-color: #70aaeb2c;
+  color: #1b7be8;
 }
 
 .menu-ho-emergency:hover {
