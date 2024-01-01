@@ -129,7 +129,7 @@ export default defineComponent({
 }
 
 .rectangle3 {
-  background-color: #e0caca00; /* Adjust the background color as needed */
+  background-color: #e0cacad4; /* Adjust the background color as needed */
   padding-bottom: 0.5rem;
   margin-top: 10px;
   height: 100%;

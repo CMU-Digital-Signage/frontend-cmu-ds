@@ -1,12 +1,74 @@
 <script setup lang="ts">
+import { ref } from "vue";
 
+const date = new Date();
+const month = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const day = [
+  "SUN",
+  "MON",
+  "TUE",
+  "WED",
+  "THR",
+  "FRI",
+  "SAT",
+];
+
+
+
+const mock = ref([
+  {
+    test: "123",
+    date: date.getDate(),
+    month: month[date.getMonth()],
+    year: date.getFullYear(),
+    day: day[date.getDay()],
+  },
+]);
 </script>
 
 <template>
-  <p>Search Page</p>
+  <div class="bg-[#b18b8b00] py-4 px-4 flex-1">
+    <div class="h-full overflow-y-auto border-2 border-[#878787] rounded-xl">
+      <div class="rectangle3">
+        <DataTable
+          columnResizeMode="fit"
+          scrollDirection="vertical"
+          scrollable
+          scrollHeight="calc(100vh - 200px)"
+          class="font-sf-pro rounded-2xl h-12"
+          :value="mock"
+        >
+          <Column field="date" class="w-fit px-8 text-black font-bold text-[20px]" header=""></Column>
+          <Column class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6" header="">
+            <template #body="item">
+              <div class="flex flex-row gap-1">
+                <p>{{ item.data.month }} </p>
+                <p>{{ item.data.year }},</p>
+                <p>{{ item.data.day }}</p>
+              </div>
+            </template>
+          </Column>
+          <Column field="time" class="w-fit" header=""></Column>
+          <Column field="test" class="w-fit" header=""></Column>
+          <Column field="namePoster" class="w-full" header=""></Column>
+        </DataTable>
+      </div>
+    </div>
+  </div>
 </template>
 
-
-<style>
-
-</style>
+<style></style>
