@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import InputText from "primevue/inputtext";
-import { TabView, TabPanel } from "primevue/tabview";
 import { Poster } from "@/types";
 
 const form = reactive({
@@ -33,10 +32,6 @@ const add_file = async () => {
 
 export default defineComponent({
   name: "UploadCompo",
-  components: {
-    TabView,
-    TabPanel,
-  },
   data() {
     return {
       scheduleTabs: [{ header: "Schedule 1" }],
