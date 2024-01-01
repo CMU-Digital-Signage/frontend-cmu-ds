@@ -13,3 +13,15 @@ export interface Device {
   location: any;
   description: string;
 }
+
+export interface Poster {
+  title: string;
+  id: number;
+  duration: number;
+  recurrence: string;
+  description: string;
+  image: any;
+  createdAt: Date;
+  updatedAt: Date;
+  MACaddress: string;
+}
