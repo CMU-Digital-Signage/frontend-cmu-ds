@@ -16,7 +16,7 @@ const toggleSidebar = () => {
 <template>
   <font-awesome-icon icon="fa-brands fa-twitter" />
   <div
-    class="flex flex-col justify-between h-screen shadow side-bar"
+    class="flex flex-col justify-between h-screen shadow side-bar sticky"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
     style="background-color: #f6f6f6; border-right: 1px solid #c7bbbb"
   >
@@ -264,7 +264,7 @@ const toggleSidebar = () => {
           />
         </svg>
         <div
-          class="flex flex-col items-start font-normal text-[13px] fixed left-14"
+          class="flex flex-col items-start font-normal text-[13px]  left-14"
         >
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.

@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import Checkbox from "primevue/checkbox";
 
+
 library.add(faBell);
 
 createApp(App)
