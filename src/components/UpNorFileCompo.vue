@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import InputText from "primevue/inputtext";
+import { TabView, TabPanel } from "primevue/tabview";
 import { Poster } from "@/types";
 
 const form = reactive({
@@ -32,12 +33,23 @@ const add_file = async () => {
 
 export default defineComponent({
   name: "UploadCompo",
-  // data() {
-  //   return {
-  //     titleValue: "",
-  //     descriptionValue: "",
-  //   };
-  // },
+  components: {
+    TabView,
+    TabPanel,
+  },
+  data() {
+    return {
+      scheduleTabs: [{ header: "Schedule 1" }],
+    };
+  },
+  methods: {
+    addSchedule() {
+      const newSchedule = {
+        header: `${this.scheduleTabs.length + 1}`,
+      };
+      this.scheduleTabs.push(newSchedule);
+    },
+  },
 });
 </script>
 
@@ -62,11 +74,11 @@ export default defineComponent({
       <FileUpload mode="basic" name="demo[]" accept="image/*" customUpload />
 
       <div class="flex flex-col gap-2">
-          <label
-            for="Description"
-            class="text-[#282828] font-semibold text-[18px] flex justify-start"
-            >Description</label
-          >
+        <label
+          for="Description"
+          class="text-[#282828] font-semibold text-[18px] flex justify-start"
+          >Description</label
+        >
         <InputText
           id="Description"
           type="text"
@@ -79,8 +91,23 @@ export default defineComponent({
         >Save</Button
       >
     </div>
+    <div class="w-full">
+      <div class="rectangle8 flex-1 font-sf-pro">
+        <TabView class="rectangle flex flex-col">
+          <TabPanel
+            v-for="(schedule, index) in scheduleTabs"
+            :key="index"
+            :header="schedule.header"
+          >
+            <p>Schedule {{ index + 1 }}</p>
+          </TabPanel>
+        </TabView>
 
-    <div class="bg-red w-full h-full">md</div>
+        <button @click="addSchedule">
+          <i class="pi pi-plus text-black"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
