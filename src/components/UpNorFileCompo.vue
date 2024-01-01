@@ -1,66 +1,88 @@
+<script lang="ts">
+import { defineComponent, reactive } from "vue";
+import InputText from "primevue/inputtext";
+import { Poster } from "@/types";
+
+const form = reactive({
+  data: {
+    title: "",
+    id: 0,
+    duration: 0,
+    recurrence: "",
+    description: "",
+    image: "" as any,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    MACaddress: "",
+  } as Poster,
+} as { data: Poster });
+
+const add_file = async () => {
+  form.data.title = (
+    document.getElementById("Title") as HTMLInputElement
+  ).value;
+  form.data.description = (
+    document.getElementById("Description") as HTMLInputElement
+  ).value;
+  if (!form.data.image && !form.data.title) {
+    alert("Poster File or Poster Name Invalid");
+    return;
+  }
+};
+
+export default defineComponent({
+  name: "UploadCompo",
+  // data() {
+  //   return {
+  //     titleValue: "",
+  //     descriptionValue: "",
+  //   };
+  // },
+});
+</script>
+
 <template>
   <div class="rectangle9 font-sf-pro">
     <div class="flex flex-col justify-start w-full h-full gap-5">
       <InputText
-        v-model="titleValue"
+        id="Title"
         type="text"
         placeholder="Add Title"
         class="title-input"
       />
-      <p class="text-[#282828] font-semibold text-[18px] flex justify-start">
-        Upload File
-      </p>
 
-      <!-- <FileUpload
-        name="demo[]"
-        url="/api/upload"
-        @upload="onTemplatedUpload($event)"
-        :multiple="true"
-        accept="image/*"
-        :maxFileSize="1000000"
-        @select="onSelectedFiles"
-        class="custom-file-upload-style"
+      <div class="flex flex-ro">
+        <label
+          for="Description"
+          class="text-[#282828] font-semibold text-[18px] flex justify-start"
+          >Upload File</label
+        >
+        <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
+      </div>
+      <FileUpload mode="basic" name="demo[]" accept="image/*" customUpload />
+
+      <div class="flex flex-col gap-2">
+          <label
+            for="Description"
+            class="text-[#282828] font-semibold text-[18px] flex justify-start"
+            >Description</label
+          >
+        <InputText
+          id="Description"
+          type="text"
+          class="description-input"
+        ></InputText>
+      </div>
+
+      <Button
+        class="bg-[#176EE2] text-white w-20 h-10 rounded-lg flex items-center justify-center"
+        >Save</Button
       >
-        
-      </FileUpload>    -->
-      <p class="text-[#282828] font-semibold text-[18px] flex justify-start">
-        Description
-      </p>
-      <InputText
-        v-model="descriptionValue"
-        type="text"
-        placeholder="Add Title"
-        class="description-input"
-      />
-
     </div>
+
     <div class="bg-red w-full h-full">md</div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import InputText from "primevue/inputtext";
-
-export default defineComponent({
-  name: "UploadCompo",
-  data() {
-    return {
-      titleValue: "",
-      descriptionValue: "",
-    };
-  },
-  //   methods: {
-  //   onSelectedFiles(event) {
-  //     console.log('Selected Files:', event);
-  //     // Your code here
-  //   },
-  //   onTemplatedUpload(event) {
-  //     console.log('Upload Event:', event);
-  //     // Your code here
-  //   }
-});
-</script>
 
 <style>
 .title-input {
@@ -78,21 +100,19 @@ export default defineComponent({
 }
 
 .description-input {
-    box-shadow: none;
-    border-radius: 10px;
-    border: 1px solid #4a484c;
-    width: 542px;
-    height: 129px;
+  box-shadow: none;
+  border-radius: 10px;
+  border: 1px solid #4a484c;
+  width: 542px;
+  height: 129px;
 }
 
 .rectangle9 {
-  background-color: #b2c19600; 
+  background-color: #b2c19600;
   padding-bottom: 2rem;
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   gap: 1rem;
-  margin: 0 -1rem; 
-
+  margin: 0 -1rem;
 }
-
 </style>
