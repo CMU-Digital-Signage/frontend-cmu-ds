@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
+import SetFile from "@/components/DateFileSetCompo.vue";
 import InputText from "primevue/inputtext";
 import { Poster } from "@/types";
 
@@ -15,7 +16,7 @@ const form = reactive({
     updatedAt: new Date(),
     MACaddress: "",
   } as Poster,
-} as { data: Poster });
+});
 
 const add_file = async () => {
   form.data.title = (
@@ -32,6 +33,7 @@ const add_file = async () => {
 
 export default defineComponent({
   name: "UploadCompo",
+  components: { SetFile },
   data() {
     return {
       scheduleTabs: [{ header: "Schedule 1" }],
@@ -86,21 +88,26 @@ export default defineComponent({
         >Save</Button
       >
     </div>
+
     <div class="w-full">
-      <div class="rectangle8 flex-1 font-sf-pro">
-        <TabView class="rectangle flex flex-col">
+      <div class="rectangle8 font-sf-pro flex items-start gap-3">
+        <TabView
+          class="rectangleflex flex-row flex-1 justify-between max-w-[445px] scroll-x"
+        >
           <TabPanel
             v-for="(schedule, index) in scheduleTabs"
             :key="index"
             :header="schedule.header"
           >
-            <p>Schedule {{ index + 1 }}</p>
+            <SetFile /><p>{{ index + 1 }}</p>
           </TabPanel>
         </TabView>
 
-        <button @click="addSchedule">
-          <i class="pi pi-plus text-black"></i>
-        </button>
+        <Button
+          @click="addSchedule"
+          class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
+          ><i class="pi pi-plus text-white"></i
+        ></Button>
       </div>
     </div>
   </div>
