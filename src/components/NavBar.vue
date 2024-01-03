@@ -1,28 +1,15 @@
 <script setup lang="ts">
 import store from "@/store";
-import { reactive, ref, watch } from "vue";
+import { computed, reactive, ref, watchEffect } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import "primeicons/primeicons.css";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
-import { addOrEditDevice } from "@/services";
+import { addOrEditDevice, getPoster } from "@/services";
 import { Device } from "@/types";
+import { fullMonth } from "../utils/constant";
 
-const month = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 const form = reactive({
   data: {
     MACaddress: "",
@@ -32,6 +19,8 @@ const form = reactive({
     description: "",
   } as Device,
 });
+
+const posters = computed(() => store.state.posters);
 const showPopup = ref(false);
 const date = ref(new Date());
 const clickSearch = ref(false);
@@ -44,15 +33,14 @@ const devices = ref([
 ]);
 const selectedDevice = ref(devices.value[0]);
 
-watch(
-  () => router.currentRoute.value.path,
-  (newPath, oldPath) => {
-    if (newPath === "/" && newPath !== oldPath) {
-      clickSearch.value = false;
-      searchP.value = "";
-    }
+watchEffect(() => {
+  if (router.currentRoute.value.path === "/searchfile") {
+    clickSearch.value = true;
+  } else {
+    clickSearch.value = false;
+    searchP.value = "";
   }
-);
+});
 
 const toast = useToast();
 const onUpload = async (e: any) => {
@@ -63,13 +51,6 @@ const onUpload = async (e: any) => {
   reader.onloadend = function () {
     form.data.location = reader.result;
   };
-
-  toast.add({
-    severity: "info",
-    summary: "Success",
-    detail: "File Uploaded",
-    life: 3000,
-  });
 };
 
 const customDateFormatter = (date: Date) => {
@@ -82,8 +63,12 @@ const customDateFormatter = (date: Date) => {
   return `${day}-${month}-${year}`;
 };
 
-const search = () => {
-  console.log(searchP.value);
+const search = async () => {
+  const res = await getPoster(searchP.value);
+  if (res.ok) {
+    store.commit("setPosters", res.poster);
+    console.log(posters.value);
+  }
 };
 
 const add = async () => {
@@ -272,7 +257,7 @@ const add = async () => {
       >
         <div class="flex gap-2 items-center text-[#777]">
           <label class="font-semibold ; text-[18px]"
-            >{{ month[date.getMonth()] }} {{ date.getFullYear() }}</label
+            >{{ fullMonth[date.getMonth()] }} {{ date.getFullYear() }}</label
           >
           <i class="pi pi-angle-left"></i>
           <i class="pi pi-angle-right"></i>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineComponent, computed } from "vue";
+import { ref, computed } from "vue";
 import store from "@/store";
 import router from "@/router";
 import { signOut } from "@/services";
@@ -263,9 +263,7 @@ const toggleSidebar = () => {
             fill="black"
           />
         </svg>
-        <div
-          class="flex flex-col items-start font-normal text-[13px]  left-14"
-        >
+        <div class="flex flex-col items-start font-normal text-[13px] left-14">
           <p v-if="user">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
