@@ -26,6 +26,19 @@ watchEffect(() => {
       });
     }
   });
+  temp.sort((a: any, b: any) => {
+    const dateA = new Date(a.year, a.month, a.date);
+    const dateB = new Date(b.year, b.month, b.date);
+    if (dateA < dateB) return -1;
+    if (dateA > dateB) return 1;
+
+    const timeA = new Date(`1970-01-01T${a.startTime}`);
+    const timeB = new Date(`1970-01-01T${b.startTime}`);
+    if (timeA < timeB) return -1;
+    if (timeA > timeB) return 1;
+
+    return 0;
+  });
   data.value = temp;
 });
 </script>
