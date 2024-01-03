@@ -21,7 +21,11 @@ export interface Poster {
   recurrence: string;
   description: string;
   image: any;
-  createdAt: Date | null;
-  updatedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
   MACaddress: string;
+  startDate: Date;
+  endDate: Date;
+  startTime: Date;
+  endTime: Date;
 }

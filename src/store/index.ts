@@ -27,9 +27,13 @@ const defaultPoster: Poster[] = [
     recurrence: "",
     description: "",
     image: null,
-    createdAt: null,
-    updatedAt: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
     MACaddress: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    startTime: new Date(),
+    endTime: new Date(),
   },
 ];
 
