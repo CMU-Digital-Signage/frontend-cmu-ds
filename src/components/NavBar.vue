@@ -7,7 +7,7 @@ import "primeicons/primeicons.css";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { addOrEditDevice, getPoster } from "@/services";
-import { Device } from "@/types";
+import { Device, Poster } from "@/types";
 import { fullMonth } from "../utils/constant";
 
 const form = reactive({
@@ -66,8 +66,16 @@ const customDateFormatter = (date: Date) => {
 const search = async () => {
   const res = await getPoster(searchP.value);
   if (res.ok) {
+    res.poster.forEach((e: any) => {
+      e.createdAt = new Date(e.createdAt);
+      e.updatedAt = new Date(e.updatedAt);
+      e.startDate = new Date(e.startDate);
+      e.endDate = new Date(e.endDate);
+      e.startTime = new Date(e.startTime);
+      e.endTime = new Date(e.endTime);
+    });
+    res.poster.sort((a: any, b: any) => a.startDate - b.startDate);
     store.commit("setPosters", res.poster);
-    console.log(posters.value);
   }
 };
 
