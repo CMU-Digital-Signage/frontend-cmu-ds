@@ -1,33 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import store from "@/store";
+import { computed, ref } from "vue";
+import { month, day } from "../utils/constant";
 
+const posters = computed(() => store.state.posters);
 const date = new Date();
-const month = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const day = [
-  "SUN",
-  "MON",
-  "TUE",
-  "WED",
-  "THR",
-  "FRI",
-  "SAT",
-];
-
-
 
 const mock = ref([
   {
@@ -50,13 +27,20 @@ const mock = ref([
           scrollable
           scrollHeight="calc(100vh - 200px)"
           class="font-sf-pro rounded-2xl h-12"
-          :value="mock"
+          :value="posters"
         >
-          <Column field="date" class="w-fit px-8 text-black font-bold text-[20px]" header=""></Column>
-          <Column class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6" header="">
+          <Column
+            field="date"
+            class="w-fit px-8 text-black font-bold text-[20px]"
+            header=""
+          ></Column>
+          <Column
+            class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6"
+            header=""
+          >
             <template #body="item">
               <div class="flex flex-row gap-1">
-                <p>{{ item.data.month }} </p>
+                <p>{{ item.data.month }}</p>
                 <p>{{ item.data.year }},</p>
                 <p>{{ item.data.day }}</p>
               </div>
@@ -64,7 +48,7 @@ const mock = ref([
           </Column>
           <Column field="time" class="w-fit" header=""></Column>
           <Column field="test" class="w-fit" header=""></Column>
-          <Column field="namePoster" class="w-full" header=""></Column>
+          <Column field="title" class="w-full" header=""></Column>
         </DataTable>
       </div>
     </div>

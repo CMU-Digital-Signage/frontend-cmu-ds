@@ -1,4 +1,4 @@
-import { Device, User } from "@/types";
+import { Device, Poster, User } from "@/types";
 import { createStore } from "vuex";
 
 const defaultUser: User = {
@@ -19,10 +19,25 @@ const defaultDevice: Device[] = [
   },
 ];
 
+const defaultPoster: Poster[] = [
+  {
+    title: "",
+    id: 0,
+    duration: 0,
+    recurrence: "",
+    description: "",
+    image: null,
+    createdAt: null,
+    updatedAt: null,
+    MACaddress: "",
+  },
+];
+
 export default createStore({
   state: {
     userInfo: defaultUser as User,
     devices: defaultDevice as Device[],
+    posters: defaultPoster as Poster[],
     adminManage: 0 as number,
   },
   getters: {},
@@ -38,7 +53,10 @@ export default createStore({
     },
     setDevices(state, devices) {
       state.devices = devices;
-    }
+    },
+    setPosters(state, posters) {
+      state.posters = posters;
+    },
   },
   actions: {},
   modules: {},
