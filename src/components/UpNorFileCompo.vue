@@ -56,7 +56,7 @@ export default defineComponent({
       <InputText
         id="Title"
         type="text"
-        placeholder="Add Title"
+        placeholder="Title"
         class="title-input"
       />
 
@@ -68,7 +68,100 @@ export default defineComponent({
         >
         <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
       </div>
-      <FileUpload mode="basic" name="demo[]" accept="image/*" customUpload />
+      <FileUpload
+        name="demo[]"
+        url="/api/upload"
+        accept="image/*"
+        :multiple="true"
+        :maxFileSize="1000000"
+      >
+        <template #header="{ chooseCallback, clearCallback, files }">
+          <div
+            class="flex flex-wrap justify-content-between align-items-center flex-1 gap-2"
+          >
+            <div class="flex gap-2">
+              <Button
+                icon="pi pi-images"
+                @click="chooseCallback()"
+                rounded
+                outlined
+              ></Button>
+              <Button
+                icon="pi pi-times"
+                @click="clearCallback()"
+                rounded
+                outlined
+                severity="danger"
+                :disabled="!files || files.length === 0"
+              ></Button>
+            </div>
+            <ProgressBar
+              :showValue="false"
+              :class="['md:w-20rem h-1rem w-full md:ml-auto']"
+              ><span class="white-space-nowrap"></span
+            ></ProgressBar>
+          </div>
+        </template>
+        <template #content="{ files, uploadedFiles }">
+          <div v-if="files.length > 0">
+            <h5>Pending</h5>
+            <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+              <div
+                v-for="file of files"
+                :key="file.name + file.type + file.size"
+                class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3"
+              >
+                <div>
+                  <img
+                    role="presentation"
+                    width="100"
+                    height="50"
+                    class="shadow-2"
+                  />
+                </div>
+                <span class="font-semibold">{{ file.name }}</span>
+
+                <Badge value="Pending" severity="warning" />
+                <Button icon="pi pi-times" outlined rounded severity="danger" />
+              </div>
+            </div>
+          </div>
+
+          <div v-if="uploadedFiles.length > 0">
+            <h5>Completed</h5>
+            <div class="flex flex-wrap p-0 sm:p-5 gap-5">
+              <div
+                v-for="file of uploadedFiles"
+                :key="file.name + file.type + file.size"
+                class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3"
+              >
+                <div>
+                  <img
+                    role="presentation"
+                    width="100"
+                    height="50"
+                    class="shadow-2"
+                  />
+                </div>
+                <span class="font-semibold">{{ file.name }}</span>
+
+                <Badge value="Completed" class="mt-3" severity="success" />
+                <Button icon="pi pi-times" outlined rounded severity="danger" />
+              </div>
+            </div>
+          </div>
+        </template>
+        <template #empty>
+          <div
+            class="flex align-items-center justify-content-center flex-column"
+          >
+            <i
+              class="pi pi-cloud-upload border-2 border-circle p-5 text-8xl text-400 border-400"
+            />
+            <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
+          </div>
+        </template>
+      </FileUpload>
 
       <div class="flex flex-col gap-2">
         <label
@@ -99,7 +192,8 @@ export default defineComponent({
             :key="index"
             :header="schedule.header"
           >
-            <SetFile /><p>{{ index + 1 }}</p>
+            <SetFile />
+            <p>{{ index + 1 }}</p>
           </TabPanel>
         </TabView>
 
@@ -119,13 +213,14 @@ export default defineComponent({
   border: none;
   border-radius: 0%;
   border-bottom: 2px solid #aaa;
-  /* border: none; */
-  color: #aaa;
+  padding: 1px;
+  color: #000000;
   font-family: SF Pro Display;
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
   width: 100%;
+  margin-top: 16px;
 }
 
 .description-input {
