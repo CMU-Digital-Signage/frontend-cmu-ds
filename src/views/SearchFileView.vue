@@ -3,11 +3,11 @@ import store from "@/store";
 import { computed, ref, watchEffect } from "vue";
 import { month, day } from "../utils/constant";
 
-const posters = computed(() => store.state.posters);
+const searchPosters = computed(() => store.state.searchPosters);
 const data = ref();
 watchEffect(() => {
   let temp = [] as any;
-  posters.value.forEach((e: any) => {
+  searchPosters.value.forEach((e: any) => {
     const startDate = new Date(e.startDate);
     const endDate = new Date(e.endDate);
     for (

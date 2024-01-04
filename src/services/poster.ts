@@ -19,3 +19,25 @@ export async function getPoster(title: string) {
     return err.response.data;
   }
 }
+
+export async function getPosterEachDevice(mac: string) {
+  try {
+    const res = await axios.get(
+      `${process.env.VUE_APP_API_BASE_URL}/poster/device`,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        params: { mac },
+        withCredentials: true,
+      }
+    );
+
+    return res.data;
+  } catch (err: any) {
+    if (!err.response) {
+      return "Cannot connect to API Server. Please try again later.";
+    }
+    return err.response.data;
+  }
+}
