@@ -21,7 +21,7 @@ const form = reactive({
 });
 
 const devices = computed(() => store.state.devices);
-const posters = computed(() => store.state.posters);
+const searchPosters = computed(() => store.state.searchPosters);
 const showPopup = ref(false);
 const date = ref(new Date());
 const clickSearch = ref(false);
@@ -72,7 +72,7 @@ const search = async () => {
       e.endTime = new Date(e.endTime);
     });
     res.poster.sort((a: any, b: any) => a.startDate - b.startDate);
-    store.commit("setPosters", res.poster);
+    store.commit("setSearchPosters", res.poster);
   }
 };
 

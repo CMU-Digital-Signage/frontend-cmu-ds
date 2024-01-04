@@ -9,39 +9,12 @@ const defaultUser: User = {
   isAdmin: null,
 };
 
-const defaultDevice: Device[] = [
-  {
-    MACaddress: "",
-    deviceName: "",
-    room: "",
-    location: null,
-    description: "",
-  },
-];
-
-const defaultPoster: Poster[] = [
-  {
-    title: "",
-    id: 0,
-    duration: 0,
-    recurrence: "",
-    description: "",
-    image: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    MACaddress: "",
-    startDate: new Date(),
-    endDate: new Date(),
-    startTime: new Date(),
-    endTime: new Date(),
-  },
-];
-
 export default createStore({
   state: {
     userInfo: defaultUser as User,
-    devices: defaultDevice as Device[],
-    posters: defaultPoster as Poster[],
+    devices: <Device[]>[],
+    posters: <Poster[]>[],
+    searchPosters: <Poster[]>[],
     adminManage: 0 as number,
   },
   getters: {},
@@ -60,6 +33,9 @@ export default createStore({
     },
     setPosters(state, posters) {
       state.posters = posters;
+    },
+    setSearchPosters(state, posters) {
+      state.searchPosters = posters;
     },
   },
   actions: {},
