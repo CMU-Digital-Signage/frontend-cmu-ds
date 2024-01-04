@@ -4,7 +4,7 @@ import store from "@/store";
 import router from "@/router";
 import { getDevice } from "@/services";
 import { Device } from "@/types";
-import { addOrEditDevice, deleteDevice } from "@/services/device";
+import { editDevice, deleteDevice } from "@/services/device";
 import OverlayPanel from "primevue/overlaypanel";
 
 const form = reactive({
@@ -20,14 +20,6 @@ const form = reactive({
 const device = computed(() => store.state.devices);
 const showPopup = ref(false);
 const message = ref();
-
-// onMounted(async () => {
-//   const res = await getDevice();
-//   if (res.ok) {
-//     device.value = res.data;
-//     store.commit("setDevices", res.data)
-//   }
-// });
 
 const toggleOverlay = (e: any, panel: any) => {
   panel.toggle(e);
@@ -59,18 +51,19 @@ const edit = async () => {
     document.getElementById("locationDescription") as HTMLInputElement
   ).value;
 
-  const res = await addOrEditDevice(form.data);
+  const res = await editDevice(form.data);
   device.value?.map((e) =>
     e.MACaddress === form.data.MACaddress ? { ...e, ...form.data } : e
   );
   message.value = res.message;
   showPopup.value = false;
+  console.log(message.value);
 };
 
 const del = async (MACaddress: any) => {
   const res = await deleteDevice(MACaddress);
   const temp = device.value?.filter((e) => e.MACaddress !== MACaddress);
-  store.commit("setDevices", temp)
+  store.commit("setDevices", temp);
   message.value = res.message;
 };
 </script>
@@ -97,13 +90,20 @@ const del = async (MACaddress: any) => {
             <p>{{ rowData.data.deviceName }}</p>
             <i
               class="pi pi-info-circle cursor-pointer"
-              @click="(e) => toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])"
+              @click="
+                (e) =>
+                  toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])
+              "
             />
             <OverlayPanel
-            :ref="`overlay_${rowData.data.MACaddress}`"
+              :ref="`overlay_${rowData.data.MACaddress}`"
               class="w-fit h-fit max-w-md max-h-max"
             >
-              <img :src="rowData.data.location" alt="location" class="object-cover" />
+              <img
+                :src="rowData.data.location"
+                alt="location"
+                class="object-cover"
+              />
               <p>{{ rowData.data.description }}</p>
             </OverlayPanel>
           </div>
@@ -171,8 +171,8 @@ const del = async (MACaddress: any) => {
       <InputText
         id="MACaddress"
         :value="form.data.MACaddress"
-        class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
-        placeholder="00:00:00:00:00:00"
+        class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3 cursor-not-allowed"
+        :disabled="true"
       ></InputText>
     </div>
     <div class="flex flex-col gap-2">
@@ -216,7 +216,7 @@ const del = async (MACaddress: any) => {
         class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2"
       ></Button>
       <Button
-        label="Add"
+        label="Done"
         text
         class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
         @click="edit"
