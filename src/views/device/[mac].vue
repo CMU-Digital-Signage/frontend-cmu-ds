@@ -12,7 +12,7 @@ const message = ref();
 const fetchData = async () => {
   const res = await getPosterEachDevice(route.params.mac as string);
   if (res.ok) {
-    image.value = res.image;
+    image.value = res.poster;
   } else {
     message.value = res.message;
   }
