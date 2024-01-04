@@ -6,7 +6,7 @@ import Dropdown from "primevue/dropdown";
 import "primeicons/primeicons.css";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
-import { addOrEditDevice, getPoster } from "@/services";
+import { addDevice, getPoster } from "@/services";
 import { Device, Poster } from "@/types";
 import { fullMonth } from "../utils/constant";
 
@@ -20,6 +20,7 @@ const form = reactive({
   } as Device,
 });
 
+const devices = computed(() => store.state.devices);
 const posters = computed(() => store.state.posters);
 const showPopup = ref(false);
 const date = ref(new Date());
@@ -27,10 +28,6 @@ const clickSearch = ref(false);
 const searchP = ref("");
 const message = ref();
 
-const devices = ref([
-  { deviceName: "cpe01", macAddress: "b8:27:eb:4f:e1:9e" },
-  { deviceName: "cpe02", macAddress: "b8:f7:eb:4f:e1:ae" },
-]);
 const selectedDevice = ref(devices.value[0]);
 
 watchEffect(() => {
@@ -95,9 +92,15 @@ const add = async () => {
     document.getElementById("locationDescription") as HTMLInputElement
   ).value;
 
-  const res = await addOrEditDevice(form.data);
-  message.value = res.message;
+  const res = await addDevice(form.data);
+  if (res.ok) {
+    devices.value.push(res.device);
+    message.value = "Add device successfully.";
+  } else {
+    message.value = res.message;
+  }
   showPopup.value = false;
+  console.log(message.value);
 };
 </script>
 

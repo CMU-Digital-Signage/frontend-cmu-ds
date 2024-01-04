@@ -86,7 +86,12 @@ router.beforeEach(async (to, from, next) => {
       store.commit("setUserInfo", res.user);
       const res2 = await getDevice();
       if (res2.ok) {
-        res2.data.sort((a:any, b:any) => a.deviceName.localeCompare(b.deviceName));
+        console.log(res2.data);
+        res2.data = res2.data.filter((e: any) => e.deviceName !== null);
+        res2.data.sort((a: any, b: any) =>
+          a.deviceName.localeCompare(b.deviceName)
+        );
+        console.log(res2.data);
         store.commit("setDevices", res2.data);
         next();
       }
