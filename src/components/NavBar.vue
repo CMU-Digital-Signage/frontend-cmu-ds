@@ -9,6 +9,7 @@ import router from "@/router";
 import { addDevice, getPoster } from "@/services";
 import { Device, Poster } from "@/types";
 import { fullMonth } from "../utils/constant";
+import Compressor from "compressorjs";
 
 const form = reactive({
   data: {
@@ -42,12 +43,19 @@ watchEffect(() => {
 const toast = useToast();
 const onUpload = async (e: any) => {
   const file = e.files[0];
-  const reader = new FileReader();
-  let blob = await fetch(file.objectURL).then((r) => r.blob());
-  reader.readAsDataURL(blob);
-  reader.onloadend = function () {
-    form.data.location = reader.result;
-  };
+  if (!file) return;
+
+  new Compressor(file, {
+    quality: 0.6,
+    async success(result) {
+      console.log(result);
+      const reader = new FileReader();
+      reader.readAsDataURL(result);
+      reader.onloadend = function () {
+        form.data.location = reader.result;
+      };
+    },
+  });
 };
 
 const customDateFormatter = (date: Date) => {
@@ -349,7 +357,6 @@ const add = async () => {
           class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho"
           v-if="$route.path === '/'"
           @click="
-            showPopup = true;
             router.push('/uploadfile');
           "
         >

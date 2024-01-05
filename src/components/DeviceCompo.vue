@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, reactive, watch, computed } from "vue";
+import { ref, reactive, computed } from "vue";
 import store from "@/store";
 import router from "@/router";
 import { getDevice } from "@/services";
 import { Device } from "@/types";
 import { editDevice, deleteDevice } from "@/services/device";
 import OverlayPanel from "primevue/overlaypanel";
+import Compressor from "compressorjs";
 
 const form = reactive({
   data: {
@@ -25,14 +26,21 @@ const toggleOverlay = (e: any, panel: any) => {
   panel.toggle(e);
 };
 
-const onUpload = async (e: any) => {
+const onUpload = (e: any) => {
   const file = e.files[0];
-  const reader = new FileReader();
-  let blob = await fetch(file.objectURL).then((r) => r.blob());
-  reader.readAsDataURL(blob);
-  reader.onloadend = function () {
-    form.data.location = reader.result;
-  };
+  if (!file) return;
+
+  new Compressor(file, {
+    quality: 0.6,
+    async success(result) {
+      console.log(result);
+      const reader = new FileReader();
+      reader.readAsDataURL(result);
+      reader.onloadend = function () {
+        form.data.location = reader.result;
+      };
+    },
+  });
 };
 
 const edit = async () => {
@@ -100,6 +108,7 @@ const del = async (MACaddress: any) => {
               class="w-fit h-fit max-w-md max-h-max"
             >
               <img
+                v-if="rowData.data.location"
                 :src="rowData.data.location"
                 alt="location"
                 class="object-cover"
@@ -145,7 +154,7 @@ const del = async (MACaddress: any) => {
     header="Edit Device"
     class="w-auto h-auto"
     modal
-    :close-on-escape="true"
+    close-on-escape
   >
     <div class="flex flex-col gap-2">
       <div class="inline-block">
@@ -172,7 +181,7 @@ const del = async (MACaddress: any) => {
         id="MACaddress"
         :value="form.data.MACaddress"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3 cursor-not-allowed"
-        :disabled="true"
+        disabled
       ></InputText>
     </div>
     <div class="flex flex-col gap-2">

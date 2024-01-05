@@ -91,7 +91,6 @@ router.beforeEach(async (to, from, next) => {
         res2.data.sort((a: any, b: any) =>
           a.deviceName.localeCompare(b.deviceName)
         );
-        console.log(res2.data);
         store.commit("setDevices", res2.data);
         next();
       }
