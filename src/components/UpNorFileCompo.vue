@@ -135,7 +135,7 @@ const addSchedule = () => {
     <div class="w-full">
       <div class="rectangle8 font-sf-pro flex items-start gap-3">
         <TabView
-          class="rectangleflex flex-row flex-1 justify-between max-w-[445px] scroll-x"
+          class="rectangleflex flex-row flex-1 justify-between max-w-lg     scroll-x"
         >
           <TabPanel
             v-for="(schedule, index) in scheduleTabs"
