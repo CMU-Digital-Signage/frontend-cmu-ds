@@ -1,25 +1,17 @@
+<script setup lang="ts">
+import UpNorFileCompo from "@/components/UpNorFileCompo.vue";
+</script>
+
 <template>
   <div class="rectangle8 flex-1 font-sf-pro">
     <TabView class="rectangle flex flex-col">
       <TabPanel header="Normal File">
-        <UploadNormal />
+        <UpNorFileCompo />
       </TabPanel>
-      <TabPanel class="text-[#f00]" header="Emergency File">
-
-      </TabPanel>
+      <TabPanel class="text-[#f00]" header="Emergency File"> </TabPanel>
     </TabView>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import UploadNormal from "@/components/UpNorFileCompo.vue";
-
-export default defineComponent({
-  name: "UploadView",
-  components: { UploadNormal },
-});
-</script>
 
 <style>
 .rectangle8 {

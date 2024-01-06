@@ -2,66 +2,48 @@
 import { ref, reactive, computed } from "vue";
 import store from "@/store";
 import router from "@/router";
-import { getDevice } from "@/services";
-import { Device } from "@/types";
-import { editDevice, deleteDevice } from "@/services/device";
+import { editDevice, deleteDevice } from "@/services";
 import OverlayPanel from "primevue/overlaypanel";
 import Compressor from "compressorjs";
+import { filesize } from "filesize";
+import { initialFormDevice, onUpload } from "@/utils/constant";
 
-const form = reactive({
-  data: {
-    MACaddress: "",
-    deviceName: "",
-    room: "",
-    location: "" as any,
-    description: "",
-  } as Device,
-});
+const form = reactive({ ...initialFormDevice });
 
 const device = computed(() => store.state.devices);
+const chooseFile = ref();
+const oldFile = ref<File>();
+const notChoose = ref(true);
 const showPopup = ref(false);
 const message = ref();
+
+const setForm = (i: number) => {
+  Object.assign(form, device.value[i]);
+  oldFile.value = new File([form.location], "locationImage");
+};
+
+const resetForm = () => {
+  Object.assign(form, initialFormDevice);
+  notChoose.value = true;
+};
 
 const toggleOverlay = (e: any, panel: any) => {
   panel.toggle(e);
 };
 
-const onUpload = (e: any) => {
-  const file = e.files[0];
-  if (!file) return;
-
-  new Compressor(file, {
-    quality: 0.6,
-    async success(result) {
-      console.log(result);
-      const reader = new FileReader();
-      reader.readAsDataURL(result);
-      reader.onloadend = function () {
-        form.data.location = reader.result;
-      };
-    },
-  });
-};
-
 const edit = async () => {
-  form.data.MACaddress = (
-    document.getElementById("MACaddress") as HTMLInputElement
-  ).value;
-  form.data.deviceName = (
-    document.getElementById("deviceName") as HTMLInputElement
-  ).value;
-  form.data.room = (document.getElementById("room") as HTMLInputElement).value;
-  if (!form.data.MACaddress && !form.data.deviceName) {
-    alert("MAC Address or Device Name Invalid");
+  const check = form.deviceName?.replace(" ", "").length;
+  if (!check) {
+    alert("Device Name Invalid");
     return;
   }
-  form.data.description = (
-    document.getElementById("locationDescription") as HTMLInputElement
-  ).value;
+  if (chooseFile.value) {
+    form.location = chooseFile.value;
+  }
 
-  const res = await editDevice(form.data);
+  const res = await editDevice(form);
   device.value?.map((e) =>
-    e.MACaddress === form.data.MACaddress ? { ...e, ...form.data } : e
+    e.MACaddress === form.MACaddress ? { ...e, ...form } : e
   );
   message.value = res.message;
   showPopup.value = false;
@@ -134,7 +116,7 @@ const del = async (MACaddress: any) => {
               severity="warning"
               @click="
                 showPopup = true;
-                form.data = rowData.data;
+                setForm(rowData.index);
               "
             />
             <Button
@@ -152,9 +134,10 @@ const del = async (MACaddress: any) => {
   <Dialog
     v-model:visible="showPopup"
     header="Edit Device"
-    class="w-auto h-auto"
+    class="w-min h-auto"
     modal
     close-on-escape
+    @after-hide="resetForm()"
   >
     <div class="flex flex-col gap-2">
       <div class="inline-block">
@@ -164,8 +147,7 @@ const del = async (MACaddress: any) => {
         <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
       </div>
       <InputText
-        id="deviceName"
-        :value="form.data.deviceName"
+        v-model="form.deviceName"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
         placeholder="cpe01"
       ></InputText>
@@ -178,8 +160,7 @@ const del = async (MACaddress: any) => {
         <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
       </div>
       <InputText
-        id="MACaddress"
-        :value="form.data.MACaddress"
+        v-model="form.MACaddress"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3 cursor-not-allowed"
         disabled
       ></InputText>
@@ -187,11 +168,9 @@ const del = async (MACaddress: any) => {
     <div class="flex flex-col gap-2">
       <label for="macAddress" class="text-primary-50 font-medium">Room</label>
       <InputText
-        id="room"
-        :value="form.data.room"
+        v-model="form.room"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
         placeholder="(Optional)"
-        a
       ></InputText>
     </div>
     <div class="flex flex-col gap-1">
@@ -199,23 +178,82 @@ const del = async (MACaddress: any) => {
         >Location Description</label
       >
       <InputText
-        id="locationDescription"
-        :value="form.data.description"
+        v-model="form.description"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
         placeholder="(Optional)"
       ></InputText>
     </div>
     <div class="flex flex-col gap-1">
       <label for="macAddress" class="text-primary-50 font-medium"
-        >Location Photo</label
+        >Location Photo (jpeg)</label
       >
       <FileUpload
-        mode="basic"
-        name="demo[]"
-        accept="image/*"
+        accept="image/jpeg"
         customUpload
-        @select="onUpload"
-      />
+        :show-upload-button="false"
+        :show-cancel-button="false"
+        :multiple="false"
+        @select="
+          async (e) => {
+            chooseFile = await onUpload(e);
+            console.log(chooseFile, e.files[0]);
+          }
+        "
+      >
+        <template #header="{ chooseCallback, clearCallback }">
+          <div class="flex items-center">
+            <Button
+              @click="
+                clearCallback();
+                chooseFile = null;
+                chooseCallback();
+              "
+              icon="pi pi-plus"
+              label="Choose File"
+              rounded
+              outlined
+            ></Button>
+          </div>
+        </template>
+        <template #content="{ files, removeFileCallback }">
+          <div
+            v-if="files[0] && chooseFile"
+            class="flex justify-between items-center w-full"
+          >
+            <img alt="locationImage" :src="chooseFile" class="w-2/4 h-2/4" />
+            <div class="w-fit">{{ filesize(files[0].size) }}</div>
+            <Button
+              icon="pi pi-times"
+              @click="removeFileCallback(0)"
+              outlined
+              rounded
+              severity="danger"
+            />
+          </div>
+          <div v-else></div>
+        </template>
+        <template #empty>
+          <div
+            v-if="notChoose"
+            class="flex justify-between items-center w-full"
+          >
+            <img alt="locationImage" :src="form.location" class="w-2/4 h-2/4" />
+            <Button
+              icon="pi pi-times"
+              @click="notChoose = false"
+              outlined
+              rounded
+              severity="danger"
+            />
+          </div>
+          <div v-else class="flex flex-col text-center items-center">
+            <i
+              class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
+            />
+            <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
+          </div>
+        </template>
+      </FileUpload>
     </div>
     <div class="flex flex-row gap-4 pt-3">
       <Button

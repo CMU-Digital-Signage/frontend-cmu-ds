@@ -1,17 +1,10 @@
 import { Device, Poster, User } from "@/types";
 import { createStore } from "vuex";
 
-const defaultUser: User = {
-  id: null,
-  firstName: null,
-  lastName: null,
-  email: null,
-  isAdmin: null,
-};
-
 export default createStore({
   state: {
-    userInfo: defaultUser as User,
+    userInfo: <User>{},
+    macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
     searchPosters: <Poster[]>[],
@@ -22,11 +15,14 @@ export default createStore({
     setUserInfo(state, userInfo) {
       state.userInfo = userInfo;
     },
-    resetUser(state) {
-      state.userInfo = defaultUser;
+    clearUser(state) {
+      state.userInfo = {} as User;
     },
     setAdminManage(state, value) {
       state.adminManage = value;
+    },
+    setMacNotUse(state, mac) {
+      state.macNotUse = mac;
     },
     setDevices(state, devices) {
       state.devices = devices;
@@ -36,6 +32,9 @@ export default createStore({
     },
     setSearchPosters(state, posters) {
       state.searchPosters = posters;
+    },
+    clearSearchPosters(state) {
+      state.searchPosters = [] as Poster[];
     },
   },
   actions: {},
