@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { defineComponent, ref, computed } from "vue";
+import Calendar from "primevue/calendar";
+import Checkbox from "primevue/checkbox";
+import InputNumber from "primevue/inputnumber";
+import store from "@/store";
+import { all } from "axios";
+
+const device = computed(() => store.state.devices);
+
+const timeAllDay = ref();
+const startDate = ref(null);
+const endDate = ref(null);
+const Stime = ref();
+const Etime = ref();
+const duration = ref();
+const handleDurationInput = () => {
+  if (duration.value > 60) {
+    duration.value = 60;
+  }
+};
+const allDevice = ref();
+</script>
+
 <template>
   <div class="font-sf-pro flex flex-col justify-start gap-6">
     <!-- Date -->
@@ -37,7 +61,7 @@
       </label>
       <div class="flex gap-3 items-center">
         <Checkbox v-model="timeAllDay" value="0:00-23:59" />
-        <label>All-Day</label>
+        <label>All-day</label>
       </div>
       <!-- Time Range -->
       <div class="flex flex-row gap-4">
@@ -83,7 +107,7 @@
       >
         Display Duration
       </label>
-      <div class="flex flex-row items-center gap-4 text-[16px] text-[#000] ">
+      <div class="flex flex-row items-center gap-4 text-[16px] text-[#000]">
         <InputNumber
           v-model="duration"
           inputId="minmax-buttons"
@@ -91,7 +115,6 @@
           showButtons
           :min="0"
           :max="60"
-          
         >
         </InputNumber>
         <p>sec</p>
@@ -99,53 +122,40 @@
     </div>
 
     <!-- Device -->
-    <div class="">
+    <div class="flex flex-col gap-3">
       <label
-        for="Duration"
+        for="Device"
         class="flex justify-start font-semibold text-[18px] text-[#282828]"
       >
         Device
       </label>
+      <div class="flex flex-col gap-4 text-[16px] text-black">
+        <div class="flex gap-3 items-center">
+          <Checkbox v-model="allDevice" :value="all" />
+          <label>All Device</label>
+        </div>
+
+        <div class="flex flex-wrap">
+          <div
+            v-for="(item, index) in device"
+            :key="index"
+            class="flex gap-3 items-center w-1/4"
+          >
+            <div v-if="item.deviceName" class="flex gap-3 items-center">
+              <Checkbox
+                :key="index"
+                v-model="item.MACaddress"
+                :inputId="item.deviceName"
+                name="category"
+                :value="item.deviceName"
+              />
+              <label :for="item.deviceName">{{ item.deviceName }}</label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import Calendar from "primevue/calendar";
-import Checkbox from "primevue/checkbox";
-import InputNumber from "primevue/inputnumber";
-
-export default defineComponent({
-  components: {
-    Calendar,
-    Checkbox,
-    InputNumber,
-  },
-  setup() {
-    const timeAllDay = ref();
-    const startDate = ref(null);
-    const endDate = ref(null);
-    const Stime = ref();
-    const Etime = ref();
-    const duration = ref();
-    const handleDurationInput = () => {
-      if (duration.value > 60) {
-        duration.value = 60;
-      }
-    };
-
-    return {
-      startDate,
-      endDate,
-      timeAllDay,
-      Stime,
-      Etime,
-      duration,
-      handleDurationInput,
-    };
-  },
-});
-</script>
 
 <style></style>
