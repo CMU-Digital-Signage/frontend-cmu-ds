@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import SetFile from "@/components/DateFileSetCompo.vue";
+import SetFile from "@/components/ScheduleForm.vue";
 import InputText from "primevue/inputtext";
 import { Poster } from "@/types";
 import { filesize } from "filesize";
@@ -143,7 +143,6 @@ const addSchedule = () => {
             :header="schedule.header"
           >
             <SetFile />
-            <p>{{ index + 1 }}</p>
           </TabPanel>
         </TabView>
 
