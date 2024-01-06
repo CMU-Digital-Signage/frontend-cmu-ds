@@ -230,17 +230,19 @@ const toggleSidebar = () => {
           Device
         </div>
         <div
-          v-for="item of device"
-          :key="item.deviceName"
+          v-for="(item, index) in device"
+          :key="index"
           class="flex align-items-center"
         >
-          <Checkbox
-            v-model="item.MACaddress"
-            :inputId="item.deviceName"
-            name="category"
-            :value="item.deviceName"
-          />
-          <label :for="item.deviceName">{{ item.deviceName }}</label>
+          <div v-if="item.deviceName" class="flex gap-3 items-center">
+            <Checkbox
+              v-model="item.MACaddress"
+              :inputId="item.deviceName"
+              name="category"
+              :value="item.deviceName"
+            />
+            <label :for="item.deviceName">{{ item.deviceName }}</label>
+          </div>
         </div>
       </div>
     </div>

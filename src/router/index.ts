@@ -11,6 +11,7 @@ import SearchPage from "../views/SearchFileView.vue";
 import AdminDashboard from "../views/AdminView.vue";
 import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
+import { Device } from "@/types";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -86,8 +87,12 @@ router.beforeEach(async (to, from, next) => {
       store.commit("setUserInfo", res.user);
       const res2 = await getDevice();
       if (res2.ok) {
-        console.log(res2.data);
-        res2.data = res2.data.filter((e: any) => e.deviceName !== null);
+        const macNotUse = [] as any;
+        res2.data.map((e: any) =>
+          e.deviceName ? "" : macNotUse.push(e.MACaddress)
+        );
+        store.commit("setMacNotUse", macNotUse);
+        res2.data = res2.data.filter((e: any) => e.deviceName);
         res2.data.sort((a: any, b: any) =>
           a.deviceName.localeCompare(b.deviceName)
         );

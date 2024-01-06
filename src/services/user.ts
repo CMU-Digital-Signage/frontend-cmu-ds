@@ -22,6 +22,6 @@ export async function getUserInfo() {
 
 export function signOut() {
   localStorage.removeItem("token");
-  store.commit("resetUser");
+  store.commit("clearUser");
   router.replace("/login");
 }

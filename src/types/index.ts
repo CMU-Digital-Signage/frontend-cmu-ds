@@ -7,11 +7,11 @@ export interface User {
 }
 
 export interface Device {
-  MACaddress: string;
-  deviceName: string;
-  room: number | string;
+  MACaddress: string | null;
+  deviceName: string | null;
+  room: string | null;
   location: any;
-  description: string;
+  description: string | null;
 }
 
 export interface Poster {

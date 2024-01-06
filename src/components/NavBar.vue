@@ -3,26 +3,18 @@ import store from "@/store";
 import { computed, reactive, ref, watchEffect } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
-import "primeicons/primeicons.css";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { addDevice, getPoster } from "@/services";
-import { Device, Poster } from "@/types";
-import { fullMonth } from "../utils/constant";
-import Compressor from "compressorjs";
+import { fullMonth, initialFormDevice, onUpload } from "@/utils/constant";
+import { filesize } from "filesize";
 
-const form = reactive({
-  data: {
-    MACaddress: "",
-    deviceName: "",
-    room: "",
-    location: "" as any,
-    description: "",
-  } as Device,
-});
+const form = reactive({ ...initialFormDevice });
 
+const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
 const searchPosters = computed(() => store.state.searchPosters);
+const chooseFile = ref();
 const showPopup = ref(false);
 const date = ref(new Date());
 const clickSearch = ref(false);
@@ -40,23 +32,11 @@ watchEffect(() => {
   }
 });
 
-const toast = useToast();
-const onUpload = async (e: any) => {
-  const file = e.files[0];
-  if (!file) return;
-
-  new Compressor(file, {
-    quality: 0.6,
-    async success(result) {
-      console.log(result);
-      const reader = new FileReader();
-      reader.readAsDataURL(result);
-      reader.onloadend = function () {
-        form.data.location = reader.result;
-      };
-    },
-  });
+const resetForm = () => {
+  Object.assign(form, initialFormDevice);
 };
+
+const toast = useToast();
 
 const customDateFormatter = (date: Date) => {
   if (!date) return "";
@@ -85,30 +65,26 @@ const search = async () => {
 };
 
 const add = async () => {
-  form.data.MACaddress = (
-    document.getElementById("MACaddress") as HTMLInputElement
-  ).value;
-  form.data.deviceName = (
-    document.getElementById("deviceName") as HTMLInputElement
-  ).value;
-  form.data.room = (document.getElementById("room") as HTMLInputElement).value;
-  if (!form.data.MACaddress && !form.data.deviceName) {
+  const check = form.deviceName?.replace(" ", "").length;
+  if (!form.MACaddress || !check) {
     alert("MAC Address or Device Name Invalid");
     return;
   }
-  form.data.description = (
-    document.getElementById("locationDescription") as HTMLInputElement
-  ).value;
+  if (chooseFile.value) {
+    form.location = chooseFile.value;
+  }
 
-  const res = await addDevice(form.data);
+  const res = await addDevice(form);
   if (res.ok) {
-    devices.value.push(res.device);
+    const temp = macNotUse.value.filter((e) => e !== form.MACaddress);
+    store.commit("setMacNotUse", temp);
+    store.state.devices.push(res.device);
     message.value = "Add device successfully.";
+    resetForm();
   } else {
     message.value = res.message;
   }
   showPopup.value = false;
-  console.log(message.value);
 };
 </script>
 
@@ -139,9 +115,10 @@ const add = async () => {
         <Dialog
           v-model:visible="showPopup"
           header="Add Device"
-          class="w-auto h-auto"
+          class="w-min h-auto"
           modal
-          :close-on-escape="true"
+          close-on-escape
+          @after-hide="resetForm()"
         >
           <div class="flex flex-col gap-2">
             <div class="inline-block">
@@ -153,7 +130,7 @@ const add = async () => {
               >
             </div>
             <InputText
-              id="deviceName"
+              v-model:model-value="form.deviceName"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
               placeholder="cpe01"
             ></InputText>
@@ -167,21 +144,29 @@ const add = async () => {
                 >*</label
               >
             </div>
-            <InputText
+            <Dropdown
+              v-model:model-value="form.MACaddress"
+              :options="macNotUse"
+              :placeholder="
+                macNotUse.length
+                  ? 'Select a MAC Address'
+                  : 'All Device has already been added'
+              "
+            />
+            <!-- <InputText
               id="MACaddress"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
               placeholder="00:00:00:00:00:00"
-            ></InputText>
+            ></InputText> -->
           </div>
           <div class="flex flex-col gap-2">
             <label for="macAddress" class="text-primary-50 font-medium"
               >Room</label
             >
             <InputText
-              id="room"
+              v-model:model-value="form.room"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
               placeholder="(Optional)"
-              a
             ></InputText>
           </div>
           <div class="flex flex-col gap-1">
@@ -189,35 +174,93 @@ const add = async () => {
               >Location Description</label
             >
             <InputText
-              id="locationDescription"
+              v-model:model-value="form.description"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
               placeholder="(Optional)"
             ></InputText>
           </div>
           <div class="flex flex-col gap-1">
             <label for="macAddress" class="text-primary-50 font-medium"
-              >Location Photo</label
+              >Location Photo (jpeg)</label
             >
             <FileUpload
-              mode="basic"
-              name="demo[]"
-              accept="image/*"
+              accept="image/jpeg"
               customUpload
-              @select="onUpload"
-            />
+              :show-upload-button="false"
+              :show-cancel-button="false"
+              :multiple="false"
+              @select="
+                async (e) => {
+                  chooseFile = await onUpload(e);
+                  console.log(chooseFile, e.files[0]);
+                }
+              "
+            >
+              <template #header="{ chooseCallback, clearCallback }">
+                <div class="flex items-center">
+                  <Button
+                    @click="
+                      clearCallback();
+                      chooseFile = null;
+                      chooseCallback();
+                    "
+                    icon="pi pi-plus"
+                    label="Choose File"
+                    rounded
+                    outlined
+                  ></Button>
+                </div>
+              </template>
+              <template #content="{ files, removeFileCallback }">
+                <div
+                  v-if="files[0] && chooseFile"
+                  class="flex justify-between items-center w-full"
+                >
+                  <img
+                    :alt="files[0].name"
+                    :src="chooseFile"
+                    class="w-2/4 h-2/4"
+                  />
+                  <div class="w-fit">{{ filesize(files[0].size) }}</div>
+                  <Button
+                    icon="pi pi-times"
+                    @click="removeFileCallback(0)"
+                    outlined
+                    rounded
+                    severity="danger"
+                  />
+                </div>
+                <div v-else></div>
+              </template>
+              <template #empty>
+                <div class="flex flex-col text-center items-center">
+                  <i
+                    class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
+                  />
+                  <p class="mt-4 mb-0">
+                    Drag and drop files to here to upload.
+                  </p>
+                </div>
+              </template>
+            </FileUpload>
           </div>
           <div class="flex flex-row gap-4 pt-3">
             <Button
               label="Cancel"
               text
-              @click="showPopup = false"
+              @click="
+                showPopup = false;
+                resetForm();
+              "
               class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2"
             ></Button>
             <Button
               label="Add"
               text
               class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
+              :class="`${!macNotUse.length ? 'cursor-not-allowed' : ''}`"
               @click="add"
+              :disabled="!macNotUse.length"
             ></Button>
           </div>
         </Dialog>
@@ -356,9 +399,7 @@ const add = async () => {
         <Button
           class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho"
           v-if="$route.path === '/'"
-          @click="
-            router.push('/uploadfile');
-          "
+          @click="router.push('/uploadfile')"
         >
           <div
             class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center"
