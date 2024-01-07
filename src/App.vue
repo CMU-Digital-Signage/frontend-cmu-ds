@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex flex-row h-screen font-sf-pro"
-    v-if="!$route.meta.hideSidebar && user.email"
+    v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar />
     <div class="w-screen flex flex-col">

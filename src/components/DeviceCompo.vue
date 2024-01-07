@@ -65,8 +65,8 @@ const del = async (MACaddress: any) => {
       v-else
       scrollDirection="vertical"
       scrollable
-      scrollHeight="calc(100vh - 200px)"
-      class="font-sf-pro"
+      scrollHeight="calc(100vh - 235px)"
+      class="font-sf-pro mt-2"
       :value="device"
     >
       <Column

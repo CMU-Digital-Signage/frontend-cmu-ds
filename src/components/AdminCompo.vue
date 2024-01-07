@@ -1,12 +1,12 @@
 <template>
   <div class="rectangle4 flex-1 font-sf-pro">
     <form @submit.prevent="add" class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-semibold pt-1.5"
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
         >Email:
       </label>
       <InputText
         id="email"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 rounded-lg font-sf-pro"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 mt-1 rounded-lg font-sf-pro"
         placeholder="@cmu.ac.th only (CPE Staff)"
         type="text"
         v-model="email"
@@ -22,8 +22,8 @@
         :value="admin"
         scrollDirection="vertical"
         scrollable
-        scrollHeight="calc(100vh - 200px)"
-        class="font-sf-pro"
+        scrollHeight="calc(100vh - 225px)"
+        class="font-sf-pro mt-2"
       >
         <Column
           field="firstName"
@@ -81,9 +81,7 @@ export default defineComponent({
       }
     },
     calculateScrollHeight() {
-      // Use this.$el to get the height of the component's container
       const containerHeight = this.$el.clientHeight;
-      // Adjust the multiplier as needed
       return `${containerHeight * 0.8}px`;
     },
   },
@@ -96,7 +94,7 @@ export default defineComponent({
     const fetchData = async () => {
       const res = await getAdmin();
       if (res.ok) {
-        admin.value = res.admin as User[];
+        admin.value = res.admin.filter((e: User) => e.isAdmin) as User[];
       }
     };
 
@@ -109,12 +107,12 @@ export default defineComponent({
     };
 
     const del = async (email: string) => {
-      const newAdmin = await deleteAdmin(email);
-      if (newAdmin.ok) {
-        admin.value = admin.value.filter((e) => e.email !== email);
-      } else {
-        message.value = newAdmin.message;
-      }
+      // const newAdmin = await deleteAdmin(email);
+      // if (newAdmin.ok) {
+      //   admin.value = admin.value.filter((e) => e.email !== email);
+      // } else {
+      //   message.value = newAdmin.message;
+      // }
     };
 
     return { message, admin, user, isCurrentUser, del };

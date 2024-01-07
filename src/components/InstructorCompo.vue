@@ -1,23 +1,23 @@
 <template>
     <div class="rectangle4 flex-1 font-sf-pro">
       <form @submit.prevent="add" class="flex flex-row gap-2">
-        <label for="macAddress" class="text-primary-50 font-semibold pt-1.5"
+        <label for="macAddress" class="text-primary-50 font-semibold pt-2"
           >Search:
         </label>
         <InputText
           id="email"
-          class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 rounded-lg font-sf-pro"
+          class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-72 rounded-lg font-sf-pro"
           placeholder="Name"
           type="text"
         ></InputText>
       </form>
       <div class="rectangle3">
         <DataTable
-          :value="admin"
+          :value="instructor"
           scrollDirection="vertical"
           scrollable
-          scrollHeight="calc(100vh - 200px)"
-          class="font-sf-pro"
+          scrollHeight="calc(100vh - 235px)"
+          class="font-sf-pro mt-2"
         >
           <Column
             field="firstName"
@@ -40,7 +40,7 @@
                 label="Admin"
                 class="w-fit h-9 rounded-md"
                 severity="info"
-                @click="del(slotProps.data.email)"
+                @click="del(slotProps.data.id)"
               />
             </template>
           </Column>
@@ -68,7 +68,7 @@
       async add() {
         const newAdmin = await addAdmin(this.email);
         if (newAdmin.ok) {
-          this.admin.push(newAdmin.admin);
+          this.instructor.push(newAdmin.admin);
           this.email = "";
         } else {
           this.message = newAdmin.message;
@@ -84,13 +84,13 @@
     setup() {
       const store = useStore();
       const user = ref<User>(store.state.userInfo);
-      const admin = ref<User[]>([]);
+      const instructor = ref<User[]>([]);
       const message = ref();
   
       const fetchData = async () => {
         const res = await getAdmin();
         if (res.ok) {
-          admin.value = res.admin as User[];
+          instructor.value = res.admin.filter((e:User) => !e.isAdmin) as User[];
         }
       };
   
@@ -98,20 +98,20 @@
         fetchData();
       });
   
-      const isCurrentUser = (admin: User) => {
-        return admin.id === user.value.id;
+      const isCurrentUser = (instructor: User) => {
+        return instructor.id === user.value.id;
       };
   
-      const del = async (email: string) => {
-        const newAdmin = await deleteAdmin(email);
-        if (newAdmin.ok) {
-          admin.value = admin.value.filter((e) => e.email !== email);
-        } else {
-          message.value = newAdmin.message;
-        }
+      const del = async (id: number) => {
+        // const newAdmin = await deleteAdmin(id);
+        // if (newAdmin.ok) {
+        //   admin.value = admin.value.filter((e) => e.id !== id);
+        // } else {
+        //   message.value = newAdmin.message;
+        // }
       };
   
-      return { message, admin, user, isCurrentUser, del };
+      return { message, instructor, user, isCurrentUser, del };
     },
   });
   </script>
