@@ -8,6 +8,7 @@ import { all } from "axios";
 
 const device = computed(() => store.state.devices);
 
+
 const timeAllDay = ref();
 const startDate = ref(null);
 const endDate = ref(null);
@@ -20,6 +21,7 @@ const handleDurationInput = () => {
   }
 };
 const allDevice = ref();
+
 </script>
 
 <template>
