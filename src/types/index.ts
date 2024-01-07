@@ -1,9 +1,8 @@
 export interface User {
-  id: number | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string | null;
-  isAdmin: boolean | null;
+  id: number;
+  firstName: string;
+  lastName: string;
+  isAdmin: boolean;
 }
 
 export interface Device {

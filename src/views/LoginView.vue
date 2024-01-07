@@ -51,7 +51,7 @@ export default defineComponent({
     },
   },
   async beforeRouteEnter(to, from, next) {
-    if (!store.state.userInfo.email && localStorage.getItem("token")) {
+    if (!store.state.userInfo.id && localStorage.getItem("token")) {
       const res = await getUserInfo();
       if (res.ok) {
         store.commit("setUserInfo", res.user);

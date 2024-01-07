@@ -81,7 +81,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (!to.meta.hideSidebar && !store.state.userInfo.email) {
+  if (!to.meta.hideSidebar && !store.state.userInfo.id) {
     const res = await getUserInfo();
     if (res.ok) {
       store.commit("setUserInfo", res.user);

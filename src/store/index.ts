@@ -4,7 +4,12 @@ import { createStore } from "vuex";
 export default createStore({
   state: {
     openSidebar: true,
-    userInfo: <User>{},
+    userInfo: <User>{
+      id: 0,
+      firstName: '',
+      lastName: '',
+      isAdmin: false
+    }, 
     macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
