@@ -46,12 +46,15 @@ export const onUpload = (e: any): Promise<string | undefined> => {
     const file = e.files[0];
     if (!file) reject("No file selected");
 
-    const reader = new FileReader();
-
+    let quality = 1;
+    if (file.size > 1000000) {
+      quality = 0.6;
+    }
     new Compressor(file, {
-      quality: 0.6,
+      quality: quality,
       async success(result) {
         e.files[0] = new File([result], "locationImage");
+        const reader = new FileReader();
         reader.readAsDataURL(result);
         reader.onloadend = function () {
           console.log(reader.result);

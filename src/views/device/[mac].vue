@@ -1,43 +1,83 @@
-<script setup lang="ts">
-import { getPosterEachDevice } from "@/services";
-import router from "@/router";
-import store from "@/store";
-import { computed, ref, watchEffect } from "vue";
-import { useRoute } from "vue-router";
-
-const route = useRoute();
-const poster = computed(() => store.state.posters);
-const image = ref<any>([]);
-const message = ref();
-const fetchData = async () => {
-  const res = await getPosterEachDevice(route.params.mac as string);
-  if (res.ok) {
-    image.value = res.poster;
-  } else {
-    message.value = res.message;
-  }
-  console.log(image.value);
-};
-
-watchEffect(() => {
-  fetchData();
-});
-</script>
 <script lang="ts">
 export default {
   name: "MacView",
 };
 </script>
+<script setup lang="ts">
+import { getPosterEachDevice } from "@/services";
+import { onMounted, onUnmounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { Poster } from "@/types";
+
+const route = useRoute();
+const posters = ref<Poster[]>([]);
+const image = ref<string>();
+let currentIndex = 0;
+
+const fetchData = async () => {
+  const { ok, poster, message } = await getPosterEachDevice(
+    route.params.mac as string
+  );
+  if (ok) {
+    const date = new Date();
+    posters.value = poster.filter(
+      (e: Poster) =>
+        new Date(e.startDate) <= date && new Date(e.endDate) >= date
+    );
+    if (posters.value.length > 0) {
+      showCurrentPoster();
+    }
+  } else {
+    console.log(message);
+  }
+};
+
+const showCurrentPoster = () => {
+  const updatePosterInterval = () => {
+    image.value = posters.value[currentIndex].image;
+    setTimeout(
+      updatePosterInterval,
+      posters.value[currentIndex].duration * 1000
+    );
+    currentIndex = (currentIndex + 1) % posters.value.length;
+  };
+
+  updatePosterInterval();
+};
+
+onMounted(() => {
+  fetchData();
+});
+</script>
 
 <template>
-  <div v-if="message">{{ message }}</div>
-  <div class="w-screen h-screen bg-black">
-    <img
-      class="max-w-full max-h-full m-auto"
-      alt="poster"
-      :src="image[0]?.image"
-    />
+  <!-- <div v-if="message">{{ message }}</div> -->
+  <div class="w-screen h-screen bg-black overflow-hidden">
+    <transition name="fade">
+      <img
+        v-if="image"
+        class="max-w-screen h-screen m-auto transition-opacity"
+        alt="poster"
+        :key="currentIndex"
+        :src="image"
+      />
+    </transition>
   </div>
 </template>
 
-<style></style>
+<style>
+.fade-enter-active {
+  transition: opacity 0.5s;
+}
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.v-enter-to {
+  position: relative;
+  opacity: 1;
+}
+.v-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
