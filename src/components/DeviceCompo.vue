@@ -185,7 +185,7 @@ const del = async (MACaddress: any) => {
     </div>
     <div class="flex flex-col gap-1">
       <label for="macAddress" class="text-primary-50 font-medium"
-        >Location Photo (jpeg)</label
+        >Location Photo (JPEG)</label
       >
       <FileUpload
         accept="image/jpeg"
@@ -260,12 +260,12 @@ const del = async (MACaddress: any) => {
         label="Cancel"
         text
         @click="showPopup = false"
-        class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2"
+        class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 bold-ho"
       ></Button>
       <Button
         label="Done"
         text
-        class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
+        class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2 bold-ho-add"
         @click="edit"
       ></Button>
     </div>
@@ -277,4 +277,16 @@ const del = async (MACaddress: any) => {
   background-color: #b2c19600; /* Adjust the background color as needed */
   padding-bottom: 2rem;
 }
+
+.bold-ho:hover {
+  font-weight: 600;
+  background-color: #e2e2e2;
+}
+
+.bold-ho-add:hover {
+  font-weight: 600;
+  text-decoration: underline;
+  background-color: #a9ddf8;
+}
+
 </style>
