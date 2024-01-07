@@ -6,10 +6,10 @@ import { signOut } from "@/services";
 
 const user = computed(() => store.state.userInfo);
 const device = computed(() => store.state.devices);
-const openSidebar = ref(true);
+const openSidebar = computed(() => store.state.openSidebar);
 
 const toggleSidebar = () => {
-  openSidebar.value = !openSidebar.value;
+  store.commit("setOpenSidebar", !openSidebar.value)
 };
 </script>
 
@@ -61,6 +61,10 @@ const toggleSidebar = () => {
           @click="$router.push('/')"
           class="text-black bg-[#f6f6f6] rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
           v-if="$route.path === '/searchfile' || $route.path === '/uploadfile'"
+          :style="{
+            transform: openSidebar ? '' : 'translateX(8px)',
+            marginLeft: openSidebar ? '' : '-8px',
+          }"
           link
         >
           <i class="pi pi-times"></i>
@@ -99,7 +103,7 @@ const toggleSidebar = () => {
             </Button>
             <Button
               class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-              :class="{ 'bg-[#e2e2e2]': $route.path === '/' }"
+              :class="{ 'bg-[#70aaeb2c]': $route.path === '/' }"
               v-else
               link
             >
