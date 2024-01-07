@@ -1,3 +1,22 @@
+<script setup lang="ts">
+import { computed, defineComponent, onUpdated, ref } from "vue";
+import router from "@/router";
+import store from "@/store";
+import Admin from "@/components/AdminCompo.vue";
+import Device from "@/components/DeviceCompo.vue";
+import Instructor from "@/components/InstructorCompo.vue"
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+
+const click = computed(()=>store.state.adminManage)
+
+onUpdated(()=>{
+  store.commit("setAdminManage", click.value);
+})
+
+</script>
+
+
 <template>
   <TabView v-model:active-index="click" class="rectangle flex flex-col">
     <TabPanel header="Admin">
@@ -11,30 +30,6 @@
     </TabPanel>
   </TabView>
 </template>
-
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import router from "@/router";
-import store from "@/store";
-import Admin from "@/components/AdminCompo.vue";
-import Device from "@/components/DeviceCompo.vue";
-import Instructor from "@/components/InstructorCompo.vue"
-import TabView from "primevue/tabview";
-import TabPanel from "primevue/tabpanel";
-
-export default defineComponent({
-  name: "AdminView",
-  components: { Admin, Device, Instructor },
-  data() {
-    return {
-      click: store.state.adminManage,
-    };
-  },
-  updated() {
-    store.commit("setAdminManage", this.click);
-  },
-});
-</script>
 
 <style scoped>
 /* Add styles for the rectangle */

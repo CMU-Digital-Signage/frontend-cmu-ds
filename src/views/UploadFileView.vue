@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import UpNorFileCompo from "@/components/UpNorFileCompo.vue";
+
 </script>
 
 <template>
-  <div class="rectangle8 flex-1 font-sf-pro">
-    <TabView class="rectangle flex flex-col">
+  <div class="rectangle8 flex-1 font-sf-pro ">
+    <TabView class="rectangle flex flex-col font-sf-pro overflow-y-auto ">
       <TabPanel header="Normal File">
         <UpNorFileCompo />
       </TabPanel>

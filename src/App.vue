@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import SideBar from "./components/SideBar.vue";
+import store from "./store";
+import NavBar from "./components/NavBar.vue";
+import NavbarBelow from "./components/NavbarBelowCompo.vue";
+import UploadFile from "../views/UploadFileView.vue";
+import { computed } from "vue";
+
+const user = computed(() => store.state.userInfo);
+
+</script>
+
 <template>
   <div
     class="flex flex-row h-screen font-sf-pro"
@@ -7,26 +19,11 @@
     <div class="w-screen flex flex-col">
       <NavBar />
       <router-view />
+      <div v-if="$route.path === '/uploadfile'"><NavbarBelow /></div>
     </div>
   </div>
   <router-view v-else />
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import SideBar from "./components/SideBar.vue";
-import store from "./store";
-import NavBar from "./components/NavBar.vue";
-
-export default defineComponent({
-  components: { SideBar, NavBar },
-  computed: {
-    user() {
-      return store.state.userInfo;
-    },
-  },
-});
-</script>
 
 <style lang="scss">
 #app {
