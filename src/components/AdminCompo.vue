@@ -1,20 +1,20 @@
 <template>
   <div class="rectangle4 flex-1 font-sf-pro">
     <form @submit.prevent="add" class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-medium pt-1.5"
+      <label for="macAddress" class="text-primary-50 font-semibold pt-1.5"
         >Email:
       </label>
       <InputText
         id="email"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-60 rounded-xl font-sf-pro"
-        placeholder="domain @cmu.ac.th only"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 rounded-lg font-sf-pro"
+        placeholder="@cmu.ac.th only (CPE Staff)"
         type="text"
         v-model="email"
       ></InputText>
       <Button
         label="Add"
         type="submit"
-        class="flex ml-4 items-center justify-center px-5  rounded-xl py-1.5 bg-[#1878F7] text-white font-semibold custom-button"
+        class="flex ml-4 items-center justify-center px-5 rounded-xl py-1 bg-[#1878F7] text-white font-semibold custom-button"
       ></Button>
     </form>
     <div class="rectangle3">
@@ -41,11 +41,11 @@
         <Column :exportable="false" class="w-full text-center">
           <template #body="slotProps">
             <Button
+              label="Instructor"
               v-if="!isCurrentUser(slotProps.data)"
-              icon="pi pi-trash"
-              rounded
-              class="w-9 h-9"
-              severity="danger"
+              icon="pi pi-arrow-right-arrow-left"
+              class="w-fit h-9 rounded-md"
+              severity="info"
               @click="del(slotProps.data.email)"
             />
           </template>
