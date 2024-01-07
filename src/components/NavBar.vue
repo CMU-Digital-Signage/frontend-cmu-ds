@@ -187,7 +187,7 @@ const add = async () => {
           </div>
           <div class="flex flex-col gap-1">
             <label for="macAddress" class="text-primary-50 font-medium"
-              >Location Photo (jpeg)</label
+              >Location Photo (JPEG)</label
             >
             <FileUpload
               accept="image/jpeg"
