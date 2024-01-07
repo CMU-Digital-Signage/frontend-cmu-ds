@@ -3,6 +3,9 @@
     <TabPanel header="Admin">
       <Admin />
     </TabPanel>
+    <TabPanel header="Instructor">
+      <Instructor />
+    </TabPanel>
     <TabPanel header="Device">
       <Device />
     </TabPanel>
@@ -15,12 +18,13 @@ import router from "@/router";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
+import Instructor from "@/components/InstructorCompo.vue"
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 
 export default defineComponent({
   name: "AdminView",
-  components: { Admin, Device },
+  components: { Admin, Device, Instructor },
   data() {
     return {
       click: store.state.adminManage,

@@ -100,7 +100,7 @@ const add = async () => {
       <div class="text-lg font-semibold text-gray-800 text-[20px]">
         Management
       </div>
-      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 1">
+      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 2">
         <Button
           class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
           @click="showPopup = true"
