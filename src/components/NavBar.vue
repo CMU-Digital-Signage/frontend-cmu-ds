@@ -48,6 +48,12 @@ const customDateFormatter = (date: Date) => {
   return `${day}-${month}-${year}`;
 };
 
+const goToSearch = () => {
+  store.commit("setOpenSidebar", true);
+  clickSearch.value = true;
+  router.push("/searchfile");
+};
+
 const search = async () => {
   const res = await getPoster(searchP.value);
   if (res.ok) {
@@ -378,13 +384,7 @@ const add = async () => {
         </form>
       </TransitionGroup>
       <div class="flex gap-3 items-center">
-        <button
-          v-if="$route.path === '/'"
-          @click="
-            clickSearch = true;
-            router.push('/searchfile');
-          "
-        >
+        <button v-if="$route.path === '/'" @click="goToSearch">
           <i
             class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2"
           ></i>

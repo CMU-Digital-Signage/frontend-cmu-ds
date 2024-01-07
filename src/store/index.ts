@@ -3,6 +3,7 @@ import { createStore } from "vuex";
 
 export default createStore({
   state: {
+    openSidebar: true,
     userInfo: <User>{},
     macNotUse: [],
     devices: <Device[]>[],
@@ -12,6 +13,9 @@ export default createStore({
   },
   getters: {},
   mutations: {
+    setOpenSidebar(state, value) {
+      state.openSidebar = value;
+    },
     setUserInfo(state, userInfo) {
       state.userInfo = userInfo;
     },
