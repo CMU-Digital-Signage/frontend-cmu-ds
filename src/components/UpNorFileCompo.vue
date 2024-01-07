@@ -39,11 +39,12 @@ const addSchedule = () => {
   };
   scheduleTabs.push(newSchedule);
 };
+
 </script>
 
 <template>
-  <div class="rectangle9 font-sf-pro">
-    <div class="flex flex-col justify-start w-full h-full gap-5">
+  <div class="flex flex-row justify-between gap-3 mx-1 font-sf-pro h-screen">
+    <div class="flex flex-col justify-start w-full max-w-4xl h-full gap-5 ">
       <InputText
         id="Title"
         type="text"
@@ -51,14 +52,7 @@ const addSchedule = () => {
         class="title-input"
       />
 
-      <div class="flex flex-ro">
-        <label
-          for="Description"
-          class="text-[#282828] font-semibold text-[18px] flex justify-start"
-          >Upload File</label
-        >
-        <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
-      </div>
+      <!-- File Upload -->
       <FileUpload
         accept="image/jpeg"
         customUpload
@@ -87,33 +81,37 @@ const addSchedule = () => {
             ></Button>
           </div>
         </template>
+
         <template #content="{ files, removeFileCallback }">
           <div
             v-if="files[0] && chooseFile"
-            class="flex justify-between items-center w-full"
+            class="flex justify-between items-center w-11/12  max-h-40 px-10"
           >
-            <img :alt="files[0].name" :src="chooseFile" class="w-2/4 h-2/4" />
+           
             <div class="w-fit">{{ filesize(files[0].size) }}</div>
+             <img :alt="files[0].name" :src="chooseFile" class=" w-1/4  h-1/4 " />
             <Button
               icon="pi pi-times"
               @click="removeFileCallback(0)"
               outlined
               rounded
               severity="danger"
-            />
+            ></Button>
           </div>
           <div v-else></div>
         </template>
         <template #empty>
-          <div class="flex flex-col text-center items-center">
+          <div class="flex flex-col text-center items-center h-40    ">
             <i
-              class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
-            />
+              class="pi pi-cloud-upload border-2 rounded-full text-7xl w-fit p-5"
+            ></i>
             <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
           </div>
         </template>
       </FileUpload>
-      <div class="flex flex-col gap-2">
+
+      <!-- Description -->
+      <div class="flex flex-col gap-2  w-full ">
         <label
           for="Description"
           class="text-[#282828] font-semibold text-[18px] flex justify-start"
@@ -122,20 +120,20 @@ const addSchedule = () => {
         <InputText
           id="Description"
           type="text"
-          class="description-input"
+          class="description-input min-h-32 max-h-56  "
         ></InputText>
       </div>
 
       <Button
-        class="bg-[#176EE2] text-white w-20 h-10 rounded-lg flex items-center justify-center"
-        >Save</Button
+        class="bg-[#176EE2] text-white w-24  h-10 rounded-lg flex items-center justify-center"
+        >Upload</Button
       >
     </div>
 
-    <div class="w-full">
+    <div class="w-full max-w-4xl ">
       <div class="rectangle8 font-sf-pro flex items-start gap-3">
         <TabView
-          class="rectangleflex flex-row flex-1 justify-between max-w-lg     scroll-x"
+          class="rectangleflex flex-row flex-1 justify-between w-52      scroll-x"
         >
           <TabPanel
             v-for="(schedule, index) in scheduleTabs"
@@ -176,16 +174,6 @@ const addSchedule = () => {
   box-shadow: none;
   border-radius: 10px;
   border: 1px solid #4a484c;
-  width: 542px;
-  height: 129px;
 }
 
-.rectangle9 {
-  background-color: #b2c19600;
-  padding-bottom: 2rem;
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  margin: 0 -1rem;
-}
 </style>

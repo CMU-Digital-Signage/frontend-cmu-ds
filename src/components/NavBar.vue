@@ -413,7 +413,7 @@ const add = async () => {
 
     <!-- "Upload File" -->
     <ul v-if="$route.path === '/uploadfile'" class="flex justify-between">
-      <li class="text-lg font-semibold text-black text-[20px]">Add File</li>
+      <li class="text-lg font-semibold text-black text-[20px]">Upload File</li>
     </ul>
 
     <!-- "search file"-->
