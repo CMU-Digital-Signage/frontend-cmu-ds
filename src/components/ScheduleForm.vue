@@ -5,18 +5,19 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import Calendar from "primevue/calendar";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
 import store from "@/store";
 import { all } from "axios";
+import { customDateFormatter } from "@/utils/constant";
 
 const device = computed(() => store.state.devices);
 
 const timeAllDay = ref();
-const startDate = ref(null);
-const endDate = ref(null);
+const startDate = ref();
+const endDate = ref();
 const Stime = ref();
 const Etime = ref();
 const duration = ref();
@@ -26,6 +27,17 @@ const handleDurationInput = () => {
   }
 };
 const allDevice = ref();
+watch(startDate, (newValue) => {
+  if (newValue) {
+    endDate.value = null;
+  }
+});
+watch(timeAllDay, (newValue) => {
+  if (newValue) {
+    Stime.value = null;
+    Etime.value = null;
+  }
+});
 </script>
 
 <template>
@@ -40,6 +52,8 @@ const allDevice = ref();
           v-model="startDate"
           showIcon
           inputId="startDate"
+          :minDate="new Date()"
+          :dateFormat="customDateFormatter(startDate)"
           class="flex justify-start w-[170px]"
         />
       </div>
@@ -52,21 +66,24 @@ const allDevice = ref();
           v-model="endDate"
           showIcon
           inputId="EndDate"
+          :dateFormat="customDateFormatter(endDate)"
+          :minDate="startDate"
           class="flex justify-start w-[170px]"
+          :disabled="!startDate"
         />
       </div>
     </div>
 
     <!-- Time -->
-    <div class="flex flex-col justify-start gap-4">
+    <div class="flex flex-col justify-start gap-2">
       <label
         for="Time"
         class="flex justify-start font-semibold text-[18px] text-[#282828]"
       >
         Time
       </label>
-      <div class="flex gap-3 items-center">
-        <Checkbox v-model="timeAllDay" value="0:00-23:59" />
+      <div class="flex gap-4 items-center">
+        <Checkbox v-model="timeAllDay" value="" :binary="true" />
         <label>All-day</label>
       </div>
       <!-- Time Range -->
@@ -74,13 +91,17 @@ const allDevice = ref();
         <div
           class="flex flex-row gap-4 items-center text-[18px] text-[#282828]"
         >
+        
           <Calendar
             v-model="Stime"
             showIcon
             iconDisplay="input"
             timeOnly
             inputId="Stime"
+            :stepMinute="60"
             class="w-[170px]"
+            :disabled="timeAllDay"
+        
           >
             <template #inputicon="{ clickCallback }">
               <i class="pi pi-clock" @click="clickCallback" />
@@ -93,7 +114,9 @@ const allDevice = ref();
             iconDisplay="input"
             timeOnly
             inputId="Etime"
+            :stepMinute="60"
             class="w-[170px]"
+            :disabled="!Stime"
           >
             <template #inputicon="{ clickCallback }">
               <i class="pi pi-clock" @click="clickCallback" />
