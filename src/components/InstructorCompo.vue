@@ -8,11 +8,16 @@ export default defineComponent({
 import { ref, computed } from "vue";
 import { addAdmin } from "@/services";
 import store from "@/store";
+
 const instructor = computed(() =>
-  store.state.allUser.filter((e) => !e.isAdmin)
+  store.state.allUser.filter(
+    (e) =>
+      !e.isAdmin &&
+      e.firstName.toLowerCase().includes(search.value?.toLowerCase())
+  )
 );
 const message = ref();
-const searchName = ref();
+const search = ref("");
 
 const add = async (id: number) => {
   const newAdmin = await addAdmin({ id });
@@ -26,15 +31,17 @@ const add = async (id: number) => {
 
 <template>
   <div class="rectangle4 flex-1 font-sf-pro">
-    <label for="macAddress" class="text-primary-50 font-semibold pt-2"
-      >Search:
-    </label>
-    <InputText
-      v-model="searchName"
-      class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-72 rounded-lg font-sf-pro"
-      placeholder="Name"
-      type="text"
-    ></InputText>
+    <div class="flex flex-row gap-2">
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
+        >Search:
+      </label>
+      <InputText
+        v-model="search"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-72 rounded-lg font-sf-pro"
+        placeholder="Name"
+        type="text"
+      ></InputText>
+    </div>
     <div class="rectangle3">
       <DataTable
         :value="instructor"
