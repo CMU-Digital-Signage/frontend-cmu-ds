@@ -1,7 +1,8 @@
 import { getUserInfo, getAllUser, signOut } from "./user";
 import { addAdmin, deleteAdmin } from "./admin";
 import { getDevice, addDevice, editDevice, deleteDevice } from "./device";
-import { getPoster, getPosterEachDevice } from "./poster";
+import { getPoster } from "./poster";
+import { getPosterEachDevice } from "./pi";
 
 export {
   getUserInfo,
