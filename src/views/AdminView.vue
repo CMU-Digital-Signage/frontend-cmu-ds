@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUpdated, watch } from "vue";
+import { computed } from "vue";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
@@ -7,10 +7,13 @@ import Instructor from "@/components/InstructorCompo.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 
-const click = computed(() => store.state.adminManage);
-
-onUpdated(() => {
-  store.commit("setAdminManage", click.value);
+const click = computed({
+  get() {
+    return store.state.adminManage;
+  },
+  set(val) {
+    store.commit("setAdminManage", val);
+  },
 });
 </script>
 
