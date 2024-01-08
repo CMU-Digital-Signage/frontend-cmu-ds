@@ -1,13 +1,14 @@
+<script lang="ts">
+export default defineComponent({
+  name: "DeviceCompo",
+});
+</script>
 <script setup lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, defineComponent } from "vue";
 import store from "@/store";
-import router from "@/router";
 import { editDevice, deleteDevice } from "@/services";
-import OverlayPanel from "primevue/overlaypanel";
-import Compressor from "compressorjs";
 import { filesize } from "filesize";
 import { initialFormDevice, onUpload } from "@/utils/constant";
-
 const form = reactive({ ...initialFormDevice });
 
 const device = computed(() => store.state.devices);
@@ -288,5 +289,4 @@ const del = async (MACaddress: any) => {
   text-decoration: underline;
   background-color: #a9ddf8;
 }
-
 </style>

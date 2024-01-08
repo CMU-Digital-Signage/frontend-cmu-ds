@@ -1,12 +1,11 @@
 <script lang="ts">
-import { defineComponent } from "vue";
 export default defineComponent({
-  name: "UploadFileNormal",
+  name: "UploadNormal",
 });
 </script>
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import SetFile from "@/components/ScheduleForm.vue";
+import { defineComponent, reactive, ref } from "vue";
+import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
 import { Poster } from "@/types";
 import { filesize } from "filesize";
@@ -71,7 +70,7 @@ const addSchedule = () => {
           }
         "
       >
-      <template #header="{ chooseCallback, clearCallback }">
+        <template #header="{ chooseCallback, clearCallback }">
           <div class="flex items-center">
             <Button
               @click="
@@ -89,7 +88,7 @@ const addSchedule = () => {
         <template #content="{ files, removeFileCallback }">
           <div
             v-if="files[0] && chooseFile"
-            class="flex justify-between items-center w-11/12 max-h-64   px-10"
+            class="flex justify-between items-center w-11/12 max-h-64 px-10"
           >
             <div class="w-fit">{{ filesize(files[0].size) }}</div>
             <img :alt="files[0].name" :src="chooseFile" class="w-1/4 h-1/4" />
@@ -104,17 +103,16 @@ const addSchedule = () => {
           <div v-else></div>
         </template>
         <template #empty>
-          <div class="flex flex-col text-center items-center h-48   ">
+          <div class="flex flex-col text-center items-center h-48">
             <i
               class="pi pi-cloud-upload border-2 rounded-full text-5xl w-fit p-5"
             ></i>
             <p class="mt-4 mb-0">Drag and drop files to here.</p>
             <p class="text-[#176EE2] red">Support JPEG only.</p>
-            
           </div>
         </template>
       </FileUpload>
- 
+
       <!-- Description -->
       <div class="flex flex-col gap-2 w-full h-full">
         <label
@@ -140,7 +138,7 @@ const addSchedule = () => {
             :key="index"
             :header="schedule.header"
           >
-            <SetFile />
+            <ScheduleForm />
           </TabPanel>
         </TabView>
 

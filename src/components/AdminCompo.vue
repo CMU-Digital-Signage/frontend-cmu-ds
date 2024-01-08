@@ -1,15 +1,61 @@
+<script lang="ts">
+export default defineComponent({
+  name: "AdminCompo",
+});
+</script>
+<script setup lang="ts">
+import { defineComponent, ref, computed, reactive } from "vue";
+import { addAdmin, deleteAdmin } from "@/services";
+import { User } from "@/types";
+import store from "@/store";
+const form = reactive({
+  firstName: null,
+  lastName: null,
+});
+const user = ref<User>(store.state.userInfo);
+const admin = computed(() => store.state.allUser.filter((e) => e.isAdmin));
+const message = ref();
+
+const add = async () => {
+  if (form.firstName && form.lastName) {
+    const newAdmin = await addAdmin({
+      firstName: form.firstName,
+      lastName: form.lastName,
+    });
+    if (newAdmin.ok) {
+      store.state.allUser.push(newAdmin.admin);
+    } else {
+      message.value = newAdmin.message;
+    }
+  }
+};
+
+const isCurrentUser = (admin: User) => {
+  return admin.id === user.value.id;
+};
+
+const del = async (id: number) => {
+  const res = await deleteAdmin(id);
+  if (res.ok) {
+    store.commit("setAdmin", { id, isAdmin: false });
+  } else {
+    message.value = res.message;
+  }
+};
+</script>
+
 <template>
-  <div class="rectangle4 flex-1 font-sf-pro">
+  <div ref="containerRef" class="rectangle4 flex-1 font-sf-pro">
     <form @submit.prevent="add" class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-semibold pt-2"
-        >Email:
+        >Name:
       </label>
       <InputText
         id="email"
         class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 mt-1 rounded-lg font-sf-pro"
         placeholder="@cmu.ac.th only (CPE Staff)"
         type="text"
-        v-model="email"
+        v-model="form.firstName"
       ></InputText>
       <Button
         label="Add"
@@ -46,7 +92,7 @@
               icon="pi pi-arrow-right-arrow-left"
               class="w-fit h-9 rounded-md"
               severity="info"
-              @click="del(slotProps.data.email)"
+              @click="del(slotProps.data.id)"
             />
           </template>
         </Column>
@@ -54,71 +100,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { ref, defineComponent, onMounted } from "vue";
-import store from "@/store";
-import router from "@/router";
-import { getAdmin, addAdmin, deleteAdmin } from "@/services";
-import { User } from "@/types";
-import { useStore } from "vuex";
-
-export default defineComponent({
-  name: "AdminCompo",
-  data() {
-    return {
-      email: "",
-    };
-  },
-  methods: {
-    async add() {
-      const newAdmin = await addAdmin(this.email);
-      if (newAdmin.ok) {
-        this.admin.push(newAdmin.admin);
-        this.email = "";
-      } else {
-        this.message = newAdmin.message;
-      }
-    },
-    calculateScrollHeight() {
-      const containerHeight = this.$el.clientHeight;
-      return `${containerHeight * 0.8}px`;
-    },
-  },
-  setup() {
-    const store = useStore();
-    const user = ref<User>(store.state.userInfo);
-    const admin = ref<User[]>([]);
-    const message = ref();
-
-    const fetchData = async () => {
-      const res = await getAdmin();
-      if (res.ok) {
-        admin.value = res.admin.filter((e: User) => e.isAdmin) as User[];
-      }
-    };
-
-    onMounted(() => {
-      fetchData();
-    });
-
-    const isCurrentUser = (admin: User) => {
-      return admin.id === user.value.id;
-    };
-
-    const del = async (email: string) => {
-      // const newAdmin = await deleteAdmin(email);
-      // if (newAdmin.ok) {
-      //   admin.value = admin.value.filter((e) => e.email !== email);
-      // } else {
-      //   message.value = newAdmin.message;
-      // }
-    };
-
-    return { message, admin, user, isCurrentUser, del };
-  },
-});
-</script>
 
 <style>
 .rectangle4 {
@@ -155,6 +136,6 @@ export default defineComponent({
 }
 
 .custom-button:hover {
-    background-color: #1369DA;
-  }
+  background-color: #1369da;
+}
 </style>

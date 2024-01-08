@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
-import { getDevice, getUserInfo } from "@/services";
+import { getAllUser, getDevice, getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
@@ -81,10 +81,14 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  console.log();
+
   if (!to.meta.hideSidebar && !store.state.userInfo.id) {
     const res = await getUserInfo();
     if (res.ok) {
       store.commit("setUserInfo", res.user);
+      const all = await getAllUser();
+      store.commit("setAllUser", all.user);
       const res2 = await getDevice();
       if (res2.ok) {
         const macNotUse = [] as any;
@@ -93,13 +97,11 @@ router.beforeEach(async (to, from, next) => {
         );
         store.commit("setMacNotUse", macNotUse);
         res2.data = res2.data.filter((e: any) => e.deviceName);
-        res2.data.sort((a: any, b: any) =>
-          a.deviceName.localeCompare(b.deviceName)
-        );
         store.commit("setDevices", res2.data);
         next();
       }
     } else {
+      console.log(res.message);
       next({ name: "Login", replace: true });
     }
   } else {

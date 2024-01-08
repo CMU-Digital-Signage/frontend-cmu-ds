@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import { computed, defineComponent, onUpdated, ref } from "vue";
-import router from "@/router";
+import { computed, onUpdated, watch } from "vue";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
-import Instructor from "@/components/InstructorCompo.vue"
+import Instructor from "@/components/InstructorCompo.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 
-const click = computed(()=>store.state.adminManage)
+const click = computed(() => store.state.adminManage);
 
-onUpdated(()=>{
+onUpdated(() => {
   store.commit("setAdminManage", click.value);
-})
-
+});
 </script>
-
 
 <template>
   <TabView v-model:active-index="click" class="rectangle flex flex-col">

@@ -1,5 +1,10 @@
+<script lang="ts">
+export default defineComponent({
+  name: "ScheduleForm",
+});
+</script>
 <script setup lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { ref, computed, defineComponent } from "vue";
 import Calendar from "primevue/calendar";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
@@ -7,7 +12,6 @@ import store from "@/store";
 import { all } from "axios";
 
 const device = computed(() => store.state.devices);
-
 
 const timeAllDay = ref();
 const startDate = ref(null);
@@ -21,7 +25,6 @@ const handleDurationInput = () => {
   }
 };
 const allDevice = ref();
-
 </script>
 
 <template>

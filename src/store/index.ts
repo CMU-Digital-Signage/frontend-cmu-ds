@@ -1,20 +1,23 @@
 import { Device, Poster, User } from "@/types";
 import { createStore } from "vuex";
 
+const defaultUser = {
+  id: 0,
+  firstName: "",
+  lastName: "",
+  isAdmin: false,
+} as User;
+
 export default createStore({
   state: {
     openSidebar: true,
-    userInfo: <User>{
-      id: 0,
-      firstName: '',
-      lastName: '',
-      isAdmin: false
-    }, 
+    userInfo: defaultUser,
+    allUser: <User[]>[],
+    adminManage: 0 as number,
     macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
     searchPosters: <Poster[]>[],
-    adminManage: 0 as number,
   },
   getters: {},
   mutations: {
@@ -25,7 +28,13 @@ export default createStore({
       state.userInfo = userInfo;
     },
     clearUser(state) {
-      state.userInfo = {} as User;
+      state.userInfo = defaultUser;
+    },
+    setAllUser(state, value) {
+      state.allUser = value;
+    },
+    setAdmin(state, { id, isAdmin }) {
+      state.allUser.find((e) => (e.id === id ? (e.isAdmin = isAdmin) : ""));
     },
     setAdminManage(state, value) {
       state.adminManage = value;
