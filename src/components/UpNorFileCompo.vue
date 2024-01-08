@@ -60,46 +60,70 @@ const addSchedule = () => {
       <!-- File Upload -->
       <FileUpload
         accept="image/jpeg"
-        customUpload
         :show-upload-button="false"
-        :show-cancel-button="false"
         :multiple="false"
         @select="
           async (e) => {
             chooseFile = await onUpload(e);
-            console.log(chooseFile, e.files[0]);
           }
         "
       >
         <template #header="{ chooseCallback, clearCallback }">
-          <div class="flex items-center">
-            <Button
-              @click="
-                clearCallback();
-                chooseFile = null;
-                chooseCallback();
-              "
-              icon="pi pi-plus"
-              label="Choose File"
-              rounded
-              outlined
-            ></Button>
+          <div class="flex w-full gap-3 items-center justify-between">
+            <div class="flex gap-3 items-center">
+              <Button
+                @click="
+                  clearCallback();
+                  chooseFile = null;
+                  chooseCallback();
+                  console.log(chooseFile);
+                "
+                icon="pi pi-plus"
+                label="Choose File"
+                rounded
+                outlined
+              />
+              <Button
+                @click="
+                  () => {
+                    clearCallback();
+                    chooseFile = null;
+                  }
+                "
+                :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
+                icon="pi pi-times"
+                label="Cancle"
+                rounded
+                outlined
+                severity="danger"
+                :disabled="!chooseFile"
+              />
+            </div>
+            <div class="flex gap-3 items-center">
+              <Button
+                :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
+                icon="pi pi-replay"
+                rounded
+                outlined
+                :disabled="!chooseFile"
+              />
+              <Button
+                :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
+                icon="pi pi-refresh"
+                rounded
+                outlined
+                :disabled="!chooseFile"
+              />
+            </div>
           </div>
         </template>
-        <template #content="{ files, removeFileCallback }">
+        <template #content="{ files }">
           <div
             v-if="files[0] && chooseFile"
-            class="flex justify-between items-center w-11/12 max-h-64 px-10"
+            class="border-2 border-black w-[2160px - 2000px] h-[3840px - 2000px]"
           >
-            <div class="w-fit">{{ filesize(files[0].size) }}</div>
+            <!-- <div class="w-fit">{{ filesize(files[0].size) }}</div> -->
             <img :alt="files[0].name" :src="chooseFile" class="w-1/4 h-1/4" />
-            <Button
-              icon="pi pi-times"
-              @click="removeFileCallback(0)"
-              outlined
-              rounded
-              severity="danger"
-            ></Button>
           </div>
           <div v-else></div>
         </template>
@@ -154,6 +178,11 @@ const addSchedule = () => {
 </template>
 
 <style>
+.screen {
+  width: 2160px ;
+  height: 3840px ;
+}
+
 .title-input {
   box-shadow: none;
   border: none;

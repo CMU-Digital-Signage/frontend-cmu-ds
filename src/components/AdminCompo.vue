@@ -9,6 +9,7 @@ import { ref, computed, reactive } from "vue";
 import { addAdmin, deleteAdmin } from "@/services";
 import { User } from "@/types";
 import store from "@/store";
+
 const form = reactive({
   firstName: null,
   lastName: null,
@@ -77,9 +78,20 @@ const del = async (id: number) => {
           header="Name"
           sortable
           class="max-w-fit"
-          headerStyle=" font-bold"
-        ></Column>
-        <Column field="lastName" style=""></Column>
+          headerStyle="font-bold"
+        >
+          <template #sorticon="slotProps">
+            <i
+              class="m-3 pi"
+              :class="{
+                'pi-sort-alt': slotProps.sortOrder === 0,
+                'pi-sort-alpha-down': slotProps.sortOrder === 1,
+                'pi-sort-alpha-up': slotProps.sortOrder === -1,
+              }"
+            ></i>
+          </template>
+        </Column>
+        <Column field="lastName"></Column>
         <Column :field="'isCurrentUser'">
           <template #body="slotProps">
             <div v-if="isCurrentUser(slotProps.data)" class="py-1">(You)</div>

@@ -23,13 +23,27 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import Checkbox from "primevue/checkbox";
 
-
 library.add(faBell);
 
 createApp(App)
   .use(store)
   .use(router)
-  .use(PrimeVue)
+  .use(PrimeVue, {
+    pt: {
+      column: {
+        sorticon: (slotProps: any) => ({
+          class: [
+            "m-3 pi",
+            {
+              "pi-sort-alt": slotProps.props.sortOrder === 0,
+              "pi-sort-alpha-down": slotProps.props.sortOrder === 1,
+              "pi-sort-alpha-up": slotProps.props.sortOrder === -1,
+            },
+          ],
+        }),
+      },
+    },
+  })
   .use(ToastService)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component("Dialog", Dialog)
