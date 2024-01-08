@@ -3,7 +3,7 @@ import axios from "axios";
 export async function getPosterEachDevice(mac: string) {
   try {
     const res = await axios.get(
-      `${process.env.VUE_APP_API_BASE_URL}/poster`,
+      `${process.env.VUE_APP_API_BASE_URL}/pi`,
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
