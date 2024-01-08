@@ -1,10 +1,11 @@
 <script lang="ts">
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "UploadNormal",
 });
 </script>
 <script setup lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
 import { Poster } from "@/types";

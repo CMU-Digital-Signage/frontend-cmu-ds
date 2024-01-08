@@ -1,10 +1,11 @@
 <script lang="ts">
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "InstructorCompo",
 });
 </script>
 <script setup lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { addAdmin } from "@/services";
 import store from "@/store";
 const instructor = computed(() =>

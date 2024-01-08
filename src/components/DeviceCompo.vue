@@ -1,10 +1,11 @@
 <script lang="ts">
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "DeviceCompo",
 });
 </script>
 <script setup lang="ts">
-import { ref, reactive, computed, defineComponent } from "vue";
+import { ref, reactive, computed } from "vue";
 import store from "@/store";
 import { editDevice, deleteDevice } from "@/services";
 import { filesize } from "filesize";
