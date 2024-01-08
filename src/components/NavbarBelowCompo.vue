@@ -1,10 +1,11 @@
 <script lang="ts">
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "NavBarBottom",
 });
 </script>
 <script setup lang="ts">
-import { defineComponent } from "vue";
+
 </script>
 
 <template>

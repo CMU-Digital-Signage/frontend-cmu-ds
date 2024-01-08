@@ -1,10 +1,11 @@
 <script lang="ts">
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "ScheduleForm",
 });
 </script>
 <script setup lang="ts">
-import { ref, computed, defineComponent } from "vue";
+import { ref, computed } from "vue";
 import Calendar from "primevue/calendar";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";

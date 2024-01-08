@@ -1,10 +1,11 @@
 <script lang="ts">
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "AdminCompo",
 });
 </script>
 <script setup lang="ts">
-import { defineComponent, ref, computed, reactive } from "vue";
+import { ref, computed, reactive } from "vue";
 import { addAdmin, deleteAdmin } from "@/services";
 import { User } from "@/types";
 import store from "@/store";
