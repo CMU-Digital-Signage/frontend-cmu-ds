@@ -1,13 +1,11 @@
 <script lang="ts">
-import { defineComponent } from "vue";
 export default defineComponent({
   name: "SideBar",
 });
 </script>
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed, defineComponent } from "vue";
 import store from "@/store";
-import router from "@/router";
 import { signOut } from "@/services";
 
 const user = computed(() => store.state.userInfo);
@@ -15,7 +13,7 @@ const device = computed(() => store.state.devices);
 const openSidebar = computed(() => store.state.openSidebar);
 
 const toggleSidebar = () => {
-  store.commit("setOpenSidebar", !openSidebar.value)
+  store.commit("setOpenSidebar", !openSidebar.value);
 };
 </script>
 
