@@ -81,8 +81,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  console.log();
-
   if (!to.meta.hideSidebar && !store.state.userInfo.id) {
     const res = await getUserInfo();
     if (res.ok) {
@@ -98,6 +96,12 @@ router.beforeEach(async (to, from, next) => {
         store.commit("setMacNotUse", macNotUse);
         res2.data = res2.data.filter((e: any) => e.deviceName);
         store.commit("setDevices", res2.data);
+        // if(!store.state.userInfo.isAdmin){
+        //   next({name: "Dashboard", replace: true})
+        // }
+        // else{
+        //   next()
+        // }
         next();
       }
     } else {

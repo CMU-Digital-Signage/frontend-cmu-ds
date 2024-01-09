@@ -1,18 +1,23 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { faLightbulb } from "@fortawesome/free-regular-svg-icons";
 export default defineComponent({
   name: "UploadNormal",
 });
 </script>
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
 import { Poster } from "@/types";
 import { filesize } from "filesize";
 import { onUpload } from "@/utils/constant";
 
-const scheduleTabs = reactive([{ header: "Schedule 1" }]);
+const scheduleTabs = reactive([
+  { header: "Schedule 1", 
+   content: ScheduleForm 
+},
+]);
 
 const form = reactive({
   title: "",
@@ -27,6 +32,7 @@ const form = reactive({
 } as Poster);
 
 const chooseFile = ref();
+const currentI = ref(0);
 
 const add_file = async () => {
   form.title = (document.getElementById("Title") as HTMLInputElement).value;
@@ -42,8 +48,34 @@ const add_file = async () => {
 const addSchedule = () => {
   const newSchedule = {
     header: `${scheduleTabs.length + 1}`,
+    content: ScheduleForm,
   };
   scheduleTabs.push(newSchedule);
+};
+
+watch(currentI, () => {
+  console.log(currentI);
+});
+
+const handleDeleteButtonClick = (index: number) => {
+  
+  if (index >= 0 && index < scheduleTabs.length) {
+    const removedTabs = scheduleTabs.splice(index, 1);
+    scheduleTabs.at(index)?.content.destroyed
+    scheduleTabs.splice(index, 1);
+    const removedContent = removedTabs[0].content;
+      if (removedContent) {
+        removedContent.destroyed
+      }
+
+    if (scheduleTabs.length > 1) {
+      scheduleTabs.forEach((schedule, i) => {
+        if (i > 0) {
+          schedule.header = `${i + 1}`;
+        }
+      });
+    }
+  }
 };
 </script>
 
@@ -157,16 +189,23 @@ const addSchedule = () => {
       <div class="rectangle8 font-sf-pro flex items-start gap-3">
         <TabView
           class="rectangleflex flex-row flex-1 justify-between w-52 font-sf-pro scroll-x"
+          v-model:active-index="currentI"
         >
           <TabPanel
             v-for="(schedule, index) in scheduleTabs"
             :key="index"
             :header="schedule.header"
           >
-            <ScheduleForm />
+            <!-- <ScheduleForm /> -->
+            <component :key="index" :is="schedule.content" />
           </TabPanel>
         </TabView>
-
+        <Button
+          @click="handleDeleteButtonClick(currentI)"
+          class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
+          severity="danger"
+          ><i class="pi pi-trash text-white"></i
+        ></Button>
         <Button
           @click="addSchedule"
           class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
@@ -179,8 +218,8 @@ const addSchedule = () => {
 
 <style>
 .screen {
-  width: 2160px ;
-  height: 3840px ;
+  width: 2160px;
+  height: 3840px;
 }
 
 .title-input {
