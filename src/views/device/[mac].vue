@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { getPosterEachDevice } from "@/services";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Poster } from "@/types";
 

@@ -1,5 +1,6 @@
 import { Device } from "@/types";
 import Compressor from "compressorjs";
+import { FileUploadSelectEvent } from "primevue/fileupload";
 
 export const fullMonth = [
   "January",
@@ -43,7 +44,6 @@ export const customDateFormatter = (date: Date | undefined) => {
   return `${day}/${month}/${year}`;
 };
 
-
 export const initialFormDevice = {
   MACaddress: null,
   deviceName: null,
@@ -52,7 +52,9 @@ export const initialFormDevice = {
   description: null,
 } as Device;
 
-export const onUpload = (e: any): Promise<string | undefined> => {
+export const onUpload = (
+  e: FileUploadSelectEvent
+): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
     const file = e.files[0];
     if (!file) reject("No file selected");
@@ -68,10 +70,44 @@ export const onUpload = (e: any): Promise<string | undefined> => {
         const reader = new FileReader();
         reader.readAsDataURL(result);
         reader.onloadend = function () {
-          console.log(reader.result);
           resolve(reader.result as string);
         };
       },
     });
   });
+};
+
+export const rotate = (file: File, currentDeg: number, deg: number) => {
+  return new Promise<{ imageDataUrl: string; newDeg: number }>(
+    (resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = function () {
+        const img = new Image();
+        img.src = reader.result as string;
+
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d")!;
+
+          const newDeg = currentDeg + deg;
+
+          // Rotate the image
+          canvas.width = img.height;
+          canvas.height = img.width;
+          ctx.translate(canvas.width / 2, canvas.height / 2);
+          ctx.rotate((newDeg * Math.PI) / 180);
+          ctx.drawImage(img, -img.width / 2, -img.height / 2);
+          ctx.drawImage(img, 0, 0);
+
+
+          // Convert the rotated image to base64
+          const imageDataUrl = canvas.toDataURL("image/jpeg", 1.0);
+          console.log(imageDataUrl);
+          
+          resolve({ imageDataUrl, newDeg });
+        };
+      };
+    }
+  );
 };

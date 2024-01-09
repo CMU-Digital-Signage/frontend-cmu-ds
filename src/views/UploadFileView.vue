@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import UpNorFileCompo from "@/components/UpNorFileCompo.vue";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+import { ref } from "vue";
 
+const click = ref(0);
 </script>
 
 <template>
-  <div class="rectangle8 flex-1 font-sf-pro ">
-    <TabView class="rectangle flex flex-col font-sf-pro overflow-y-auto ">
+  <div class="rectangle8 flex-1 font-sf-pro">
+    <TabView
+      v-model:active-index="click"
+      class="rectangle flex flex-col font-sf-pro overflow-y-auto"
+    >
       <TabPanel header="Normal File">
         <UpNorFileCompo />
       </TabPanel>

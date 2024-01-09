@@ -19,7 +19,6 @@ const toggleSidebar = () => {
 </script>
 
 <template>
-  <font-awesome-icon icon="fa-brands fa-twitter" />
   <div
     class="flex flex-col justify-between h-screen shadow side-bar sticky"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
