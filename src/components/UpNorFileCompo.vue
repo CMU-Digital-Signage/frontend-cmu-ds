@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { faLightbulb } from "@fortawesome/free-regular-svg-icons";
 export default defineComponent({
   name: "UploadNormal",
 });
@@ -10,13 +9,13 @@ import { reactive, ref, watch } from "vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
 import { Poster } from "@/types";
-import { filesize } from "filesize";
-import { onUpload } from "@/utils/constant";
+import { onUpload, rotate } from "@/utils/constant";
 
 const scheduleTabs = reactive([
-  { header: "Schedule 1", 
-   content: ScheduleForm 
-},
+  {
+    header: "Schedule 1",
+    // content: ScheduleForm,
+  },
 ]);
 
 const form = reactive({
@@ -32,6 +31,7 @@ const form = reactive({
 } as Poster);
 
 const chooseFile = ref();
+const currentDeg = ref(0);
 const currentI = ref(0);
 
 const add_file = async () => {
@@ -48,7 +48,7 @@ const add_file = async () => {
 const addSchedule = () => {
   const newSchedule = {
     header: `${scheduleTabs.length + 1}`,
-    content: ScheduleForm,
+    // content: ScheduleForm,
   };
   scheduleTabs.push(newSchedule);
 };
@@ -58,15 +58,13 @@ watch(currentI, () => {
 });
 
 const handleDeleteButtonClick = (index: number) => {
-  
   if (index >= 0 && index < scheduleTabs.length) {
     const removedTabs = scheduleTabs.splice(index, 1);
-    scheduleTabs.at(index)?.content.destroyed
-    scheduleTabs.splice(index, 1);
-    const removedContent = removedTabs[0].content;
-      if (removedContent) {
-        removedContent.destroyed
-      }
+    // const removedContent = removedTabs[0].content;
+
+    // if (removedContent) {
+    //   removedContent.destroyed;
+    // }
 
     if (scheduleTabs.length > 1) {
       scheduleTabs.forEach((schedule, i) => {
@@ -100,7 +98,7 @@ const handleDeleteButtonClick = (index: number) => {
           }
         "
       >
-        <template #header="{ chooseCallback, clearCallback }">
+        <template #header="{ files, chooseCallback, clearCallback }">
           <div class="flex w-full gap-3 items-center justify-between">
             <div class="flex gap-3 items-center">
               <Button
@@ -133,6 +131,17 @@ const handleDeleteButtonClick = (index: number) => {
             </div>
             <div class="flex gap-3 items-center">
               <Button
+                @click="
+                  async () => {
+                    const { imageDataUrl, newDeg } = await rotate(
+                      files[0],
+                      currentDeg,
+                      -90
+                    );
+                    chooseFile = imageDataUrl;
+                    currentDeg = newDeg;
+                  }
+                "
                 :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
                 icon="pi pi-replay"
                 rounded
@@ -140,6 +149,17 @@ const handleDeleteButtonClick = (index: number) => {
                 :disabled="!chooseFile"
               />
               <Button
+                @click="
+                  async () => {
+                    const { imageDataUrl, newDeg } = await rotate(
+                      files[0],
+                      currentDeg,
+                      90
+                    );
+                    chooseFile = imageDataUrl;
+                    currentDeg = newDeg;
+                  }
+                "
                 :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
                 icon="pi pi-refresh"
                 rounded
@@ -150,12 +170,13 @@ const handleDeleteButtonClick = (index: number) => {
           </div>
         </template>
         <template #content="{ files }">
-          <div
-            v-if="files[0] && chooseFile"
-            class="border-2 border-black w-[2160px - 2000px] h-[3840px - 2000px]"
-          >
-            <!-- <div class="w-fit">{{ filesize(files[0].size) }}</div> -->
-            <img :alt="files[0].name" :src="chooseFile" class="w-1/4 h-1/4" />
+          <div v-if="files[0] && chooseFile" class="flex flex-row items-center">
+            <i class="pi pi-power-off"></i>
+            <div
+              class="border-2 border-black w-[2160px - 2000px] h-[3840px - 2000px]"
+            >
+              <img :alt="files[0].name" :src="chooseFile" class="max-w-full max-h-full" />
+            </div>
           </div>
           <div v-else></div>
         </template>
@@ -196,8 +217,8 @@ const handleDeleteButtonClick = (index: number) => {
             :key="index"
             :header="schedule.header"
           >
-            <!-- <ScheduleForm /> -->
-            <component :key="index" :is="schedule.content" />
+            <ScheduleForm />
+            <!-- <component :key="index" :is="schedule.content" /> -->
           </TabPanel>
         </TabView>
         <Button

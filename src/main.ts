@@ -22,6 +22,10 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import Checkbox from "primevue/checkbox";
+import InputNumber from "primevue/inputnumber";
+import Calendar from "primevue/calendar";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 library.add(faBell);
 
@@ -45,9 +49,12 @@ createApp(App)
     },
   })
   .use(ToastService)
+  .component('VueDatePicker', VueDatePicker)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component("Dialog", Dialog)
   .component("Button", Button)
+  .component("Calendar", Calendar)
+  .component("InputNumber", InputNumber)
   .component("InputText", InputText)
   .component("TabView", TabView)
   .component("TabPanel", TabPanel)
