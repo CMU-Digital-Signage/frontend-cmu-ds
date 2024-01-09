@@ -20,17 +20,62 @@ const startDate = ref();
 const endDate = ref();
 const duration = ref();
 const allDevice = ref();
-const timeRanges = ref([{ startTime: null, endTime: null, allDay: false }]);
+const timeRanges = ref([
+  {
+    startTime: new Date("2024-01-01T08:00:00"),
+    endTime: new Date("2024-01-01T09:00:00"),
+  },
+]);
 
 const addTimeRange = () => {
-  timeRanges.value.push({ startTime: null, endTime: null, allDay: false });
+  const newStartTime = timeRanges.value[timeRanges.value.length - 1].endTime;
+  newStartTime.setHours(newStartTime.getHours() + 1);
+  const newEndTime = new Date(newStartTime);
+  newEndTime.setHours(newEndTime.getHours() + 1);
+  timeRanges.value.push({ startTime: newStartTime, endTime: newEndTime });
 };
+const calculateMinHourStart = (index: number): Date | undefined => {
+  if (index >= 0 && timeRanges.value.length > index) {
+    const currentRange = timeRanges.value[index];
+
+    const minStartTime = new Date(currentRange.endTime.getTime());
+    minStartTime.setHours(minStartTime.getHours() + 1);
+
+    return minStartTime;
+  }
+  return undefined;
+};
+const calculateMinHour = (index: number): Date | undefined => {
+  if (index >= 0 && timeRanges.value.length > index) {
+    const currentRange = timeRanges.value[index];
+
+    if (currentRange.startTime !== null) {
+      const minEndTime = new Date(currentRange.startTime.getTime());
+      minEndTime.setHours(minEndTime.getHours() + 1);
+
+      return minEndTime;
+    }
+  }
+  return undefined;
+};
+const calculateMaxHour = (index: number): Date | undefined => {
+  if (index >= 0 && timeRanges.value.length > index) {
+    const currentRange = timeRanges.value[index];
+
+    if (currentRange.endTime !== null) {
+      const maxEndTime = new Date(currentRange.endTime.getTime());
+      maxEndTime.setHours(maxEndTime.getHours() - 1);
+      return maxEndTime;
+    }
+  }
+  return undefined;
+};
+
 watch(startDate, (newStartDate) => {
   if (newStartDate) {
     endDate.value = null;
   }
 });
-
 </script>
 
 <template>
@@ -95,6 +140,8 @@ watch(startDate, (newStartDate) => {
                   :inputId="'Stime_' + index"
                   :stepMinute="60"
                   class="w-[170px]"
+                  :maxDate="calculateMaxHour(index)"
+                  :minDate="calculateMinHourStart(index)"
                   :disabled="timeAllDay"
                 >
                   <template #inputicon="{ clickCallback }">
@@ -110,6 +157,7 @@ watch(startDate, (newStartDate) => {
                   :inputId="'Etime_' + index"
                   :stepMinute="60"
                   class="w-[170px]"
+                  :minDate="calculateMinHour(index)"
                   :disabled="!timeRange.startTime || timeAllDay"
                 >
                   <template #inputicon="{ clickCallback }">
