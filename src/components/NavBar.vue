@@ -127,7 +127,7 @@ const add = async () => {
         <Dialog
           v-model:visible="showPopup"
           header="Add Device"
-          class="w-min h-auto"
+          class="w-[600px]  h-auto"
           modal
           close-on-escape
           @after-hide="resetForm()"
@@ -143,7 +143,7 @@ const add = async () => {
             </div>
             <InputText
               v-model:model-value="form.deviceName"
-              class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+              class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
               placeholder="cpe01"
             ></InputText>
           </div>
@@ -157,6 +157,7 @@ const add = async () => {
               >
             </div>
             <Dropdown
+            class="mb-3"
               v-model:model-value="form.MACaddress"
               :options="macNotUse"
               :placeholder="
@@ -171,13 +172,13 @@ const add = async () => {
               placeholder="00:00:00:00:00:00"
             ></InputText> -->
           </div>
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-1">
             <label for="macAddress" class="text-primary-50 font-medium"
               >Room</label
             >
             <InputText
               v-model:model-value="form.room"
-              class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+              class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
               placeholder="(Optional)"
             ></InputText>
           </div>
@@ -187,12 +188,12 @@ const add = async () => {
             >
             <InputText
               v-model:model-value="form.description"
-              class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+              class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
               placeholder="(Optional)"
             ></InputText>
           </div>
           <div class="flex flex-col gap-1">
-            <label for="macAddress" class="text-primary-50 font-medium"
+            <label for="macAddress" class="text-primary-50 font-medium "
               >Location Photo (JPEG)</label
             >
             <FileUpload
@@ -264,12 +265,12 @@ const add = async () => {
                 showPopup = false;
                 resetForm();
               "
-              class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2"
+              class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
             ></Button>
             <Button
               label="Add"
               text
-              class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2"
+              class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
               :class="`${!macNotUse.length ? 'cursor-not-allowed' : ''}`"
               @click="add"
               :disabled="!macNotUse.length"

@@ -58,6 +58,14 @@ const del = async (MACaddress: any) => {
   store.commit("setDevices", temp);
   message.value = res.message;
 };
+
+const calculateScreenHeight = () => {
+  const screenHeight = window.innerHeight;
+  const multiplier = 0.71;
+  const scrollHeight = screenHeight * multiplier;
+  return `${scrollHeight}px`;
+}
+
 </script>
 
 <template>
@@ -67,7 +75,7 @@ const del = async (MACaddress: any) => {
       v-else
       scrollDirection="vertical"
       scrollable
-      scrollHeight="calc(100vh - 235px)"
+      :scrollHeight=calculateScreenHeight()
       class="font-sf-pro mt-2"
       :value="device"
     >
@@ -75,6 +83,7 @@ const del = async (MACaddress: any) => {
         field="deviceName"
         header="Device Name"
         sortable
+        class="font-semibold"
         headerStyle="font-bold"
       >
         <template #body="rowData">
@@ -106,6 +115,7 @@ const del = async (MACaddress: any) => {
         field="room"
         header="Room"
         sortable
+        class="font-semibold"
         headerStyle="font-bold"
       ></Column>
       <Column :exportable="false">
@@ -136,7 +146,7 @@ const del = async (MACaddress: any) => {
   <Dialog
     v-model:visible="showPopup"
     header="Edit Device"
-    class="w-min h-auto"
+    class="w-[600px] h-auto"
     modal
     close-on-escape
     @after-hide="resetForm()"
@@ -150,7 +160,7 @@ const del = async (MACaddress: any) => {
       </div>
       <InputText
         v-model="form.deviceName"
-        class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+        class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
         placeholder="cpe01"
       ></InputText>
     </div>
@@ -163,7 +173,7 @@ const del = async (MACaddress: any) => {
       </div>
       <InputText
         v-model="form.MACaddress"
-        class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3 cursor-not-allowed"
+        class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3 cursor-not-allowed"
         disabled
       ></InputText>
     </div>
@@ -171,7 +181,7 @@ const del = async (MACaddress: any) => {
       <label for="macAddress" class="text-primary-50 font-medium">Room</label>
       <InputText
         v-model="form.room"
-        class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+        class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
         placeholder="(Optional)"
       ></InputText>
     </div>
@@ -181,7 +191,7 @@ const del = async (MACaddress: any) => {
       >
       <InputText
         v-model="form.description"
-        class="border border-[#C6C6C6] p-2 text-primary-50 w-96 rounded-lg mb-3"
+        class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
         placeholder="(Optional)"
       ></InputText>
     </div>
@@ -262,12 +272,12 @@ const del = async (MACaddress: any) => {
         label="Cancel"
         text
         @click="showPopup = false"
-        class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 bold-ho"
+        class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 bold-ho mt-2"
       ></Button>
       <Button
         label="Done"
         text
-        class="flex-1 border-1 border-white-alpha-30 bold-ho-add rounded-lg py-2 bold-ho-add"
+        class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 bold-ho-add mt-2"
         @click="edit"
       ></Button>
     </div>
