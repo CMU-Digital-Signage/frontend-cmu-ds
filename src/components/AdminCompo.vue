@@ -44,25 +44,33 @@ const del = async (id: number) => {
     message.value = res.message;
   }
 };
+
+const calculateScreenHeight = () => {
+  const screenHeight = window.innerHeight;
+  const multiplier = 0.71;
+  const scrollHeight = screenHeight * multiplier;
+  return `${scrollHeight}px`;
+}
+
 </script>
 
 <template>
   <div ref="containerRef" class="rectangle4 flex-1 font-sf-pro">
     <form @submit.prevent="add" class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-semibold pt-2"
-        >Name:
+        >Fullname:
       </label>
       <InputText
         id="email"
         class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 mt-1 rounded-lg font-sf-pro"
-        placeholder="@cmu.ac.th only (CPE Staff)"
+        placeholder="Ex.Prayut Chan-O-Cha"
         type="text"
         v-model="form.firstName"
       ></InputText>
       <Button
         label="Add"
         type="submit"
-        class="flex ml-4 items-center justify-center px-5 rounded-xl py-1 bg-[#1878F7] text-white font-semibold custom-button"
+        class="flex ml-4 items-center justify-center px-5 rounded-xl py-1 mt-1 text-white font-semibold custom-button"
       ></Button>
     </form>
     <div class="rectangle3">
@@ -70,14 +78,14 @@ const del = async (id: number) => {
         :value="admin"
         scrollDirection="vertical"
         scrollable
-        scrollHeight="calc(100vh - 225px)"
+        :scrollHeight=calculateScreenHeight()
         class="font-sf-pro mt-2"
       >
         <Column
           field="firstName"
           header="Name"
           sortable
-          class="max-w-fit"
+          class="max-w-fit font-semibold"
           headerStyle="font-bold"
         >
           <template #sorticon="slotProps">
@@ -91,7 +99,7 @@ const del = async (id: number) => {
             ></i>
           </template>
         </Column>
-        <Column field="lastName"></Column>
+        <Column field="lastName" class="font-semibold"></Column>
         <Column :field="'isCurrentUser'">
           <template #body="slotProps">
             <div v-if="isCurrentUser(slotProps.data)" class="py-1">(You)</div>
@@ -103,8 +111,7 @@ const del = async (id: number) => {
               label="Instructor"
               v-if="!isCurrentUser(slotProps.data)"
               icon="pi pi-arrow-right-arrow-left"
-              class="w-fit h-9 rounded-md"
-              severity="info"
+              class="w-fit h-9 rounded-md bg-[#00AEA4]"
               @click="del(slotProps.data.id)"
             />
           </template>

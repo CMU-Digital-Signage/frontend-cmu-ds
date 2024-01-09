@@ -29,6 +29,14 @@ const add = async (id: number) => {
     message.value = newAdmin.message;
   }
 };
+
+const calculateScreenHeight = () => {
+  const screenHeight = window.innerHeight;
+  const multiplier = 0.71;
+  const scrollHeight = screenHeight * multiplier;
+  return `${scrollHeight}px`;
+}
+
 </script>
 
 <template>
@@ -49,24 +57,23 @@ const add = async (id: number) => {
         :value="instructor"
         scrollDirection="vertical"
         scrollable
-        scrollHeight="calc(100vh - 235px)"
+        :scrollHeight=calculateScreenHeight()
         class="font-sf-pro mt-2"
       >
         <Column
           field="firstName"
           header="Name"
           sortable
-          class="max-w-fit"
+          class="max-w-fit h-8 font-bold"
           headerStyle=" font-bold"
         ></Column>
-        <Column field="lastName" style=""></Column>
+        <Column field="lastName" class=" font-bold"></Column>
         <Column :exportable="false" class="w-full text-center">
           <template #body="slotProps">
             <Button
               icon="pi pi-arrow-right-arrow-left"
               label="Admin"
-              class="w-fit h-9 rounded-md"
-              severity="info"
+              class="w-fit h-9 rounded-md bg-[#0094FF]"
               @click="add(slotProps.data.id)"
             />
           </template>

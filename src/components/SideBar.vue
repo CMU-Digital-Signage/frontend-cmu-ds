@@ -275,12 +275,14 @@ const toggleSidebar = () => {
           />
         </svg>
         <div class="flex flex-col items-start font-normal text-[13px] left-14">
-          <p v-if="user">
+          <p v-if="user" class="font-bold">
             {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
           </p>
           <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
-            <p v-if="user?.isAdmin" class="pt-0.5">Admin</p>
-            <p v-if="!user?.isAdmin" class="pt-0.5">Instructor</p>
+            <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
+          </div>
+          <div class="-mt-1 text-[#00AEA4] text-[13px] font-700">
+            <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">Instructor</p>
           </div>
         </div>
       </div>
