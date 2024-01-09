@@ -14,12 +14,12 @@
         class="absolute top-40 left-0 w-auto px-14 h-1/2 ml-20 rounded-[15px] flex flex-col items-center justify-center text-center"
       >
         <span
-          class="text-3xl mb-6 font-medium text-[#000000] font-sf-pro-rounded"
-          >Digital Signage</span
+          class="text-4xl mb-6 font-medium text-[#000000] font-sf-pro-rounded"
+          >CPE Digital Signage</span
         >
         <span class="text-lg mb-3 font-notoThai">ลงชื่อเข้าสู่ระบบ</span>
         <button
-          class="flex items-center justify-center w-auto p-5 h-12 relative rounded-[10px] bg-periwinkle font-sf-pro text-white text-2xl"
+          class="flex items-center justify-center w-auto p-5 h-11 relative rounded-[10px] bg-periwinkle font-sf-pro text-white text-2xl button-container"
           @click="redirectToOAuth()"
         >
           <img
@@ -51,7 +51,7 @@ export default defineComponent({
     },
   },
   async beforeRouteEnter(to, from, next) {
-    if (!store.state.userInfo.email && localStorage.getItem("token")) {
+    if (!store.state.userInfo.id && localStorage.getItem("token")) {
       const res = await getUserInfo();
       if (res.ok) {
         store.commit("setUserInfo", res.user);
@@ -66,4 +66,10 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style>
+
+.button-container:hover {
+  background-color: #545787;
+}
+
+</style>

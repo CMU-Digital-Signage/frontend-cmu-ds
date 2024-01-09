@@ -1,46 +1,46 @@
-<template>
-  <!-- Rectangle -->
-  <div class="rectangle">
-    <TabView v-model:active-index="click" class="pt-1">
-      <TabPanel header="Admin">
-        <Admin />
-      </TabPanel>
-      <TabPanel header="Device">
-        <Device />
-      </TabPanel>
-    </TabView>
-    <div class="border-t-[1.5px] w-12/12 border-[#C4C4C4] mt-[-1px]"></div>
-  </div>
-</template>
-
-<script lang="ts">
-import { defineComponent, ref } from "vue";
-import router from "@/router";
+<script setup lang="ts">
+import { computed } from "vue";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
+import Instructor from "@/components/InstructorCompo.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 
-export default defineComponent({
-  name: "AdminView",
-  components: { Admin, Device },
-  data() {
-    return {
-      click: store.state.adminManage,
-    };
+const click = computed({
+  get() {
+    return store.state.adminManage;
   },
-  updated() {
-    store.commit("setAdminManage", this.click);
+  set(val) {
+    store.commit("setAdminManage", val);
   },
 });
 </script>
+
+<template>
+  <TabView v-model:active-index="click" class="rectangle flex flex-col">
+    <TabPanel header="Admin">
+      <Admin />
+    </TabPanel>
+    <TabPanel header="Instructor">
+      <Instructor />
+    </TabPanel>
+    <TabPanel header="Device">
+      <Device />
+    </TabPanel>
+  </TabView>
+</template>
 
 <style scoped>
 /* Add styles for the rectangle */
 .rectangle {
   background-color: #b18b8b00; /* Adjust the background color as needed */
   padding-inline: 1.5rem;
+  overflow: hidden;
+}
+
+TabPanel {
+  flex: 1;
 }
 
 .bold-ho:hover {

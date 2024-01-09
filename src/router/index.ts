@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
-import { getUserInfo } from "@/services";
+import { getAllUser, getDevice, getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
 import FileManage from "../views/FileManage.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
-import SearchPage from "../views/SearchFileView.vue"
+import SearchPage from "../views/SearchFileView.vue";
 import AdminDashboard from "../views/AdminView.vue";
+import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
+import { Device } from "@/types";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -66,6 +68,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "SearchFile",
     component: SearchPage,
   },
+  {
+    path: "/uploadfile",
+    name: "UploadFile",
+    component: UploadFile,
+  },
 ];
 
 const router = createRouter({
@@ -74,12 +81,31 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (!to.meta.hideSidebar && !store.state.userInfo.email) {
+  if (!to.meta.hideSidebar && !store.state.userInfo.id) {
     const res = await getUserInfo();
     if (res.ok) {
       store.commit("setUserInfo", res.user);
-      next();
+      const all = await getAllUser();
+      store.commit("setAllUser", all.user);
+      const res2 = await getDevice();
+      if (res2.ok) {
+        const macNotUse = [] as any;
+        res2.data.map((e: any) =>
+          e.deviceName ? "" : macNotUse.push(e.MACaddress)
+        );
+        store.commit("setMacNotUse", macNotUse);
+        res2.data = res2.data.filter((e: any) => e.deviceName);
+        store.commit("setDevices", res2.data);
+        // if(!store.state.userInfo.isAdmin){
+        //   next({name: "Dashboard", replace: true})
+        // }
+        // else{
+        //   next()
+        // }
+        next();
+      }
     } else {
+      console.log(res.message);
       next({ name: "Login", replace: true });
     }
   } else {

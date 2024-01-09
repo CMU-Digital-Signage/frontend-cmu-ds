@@ -1,59 +1,118 @@
+<script lang="ts">
+import { defineComponent } from "vue";
+export default defineComponent({
+  name: "AdminCompo",
+});
+</script>
+<script setup lang="ts">
+import { ref, computed, reactive } from "vue";
+import { addAdmin, deleteAdmin } from "@/services";
+import { User } from "@/types";
+import store from "@/store";
+
+const form = reactive({
+  firstName: null,
+  lastName: null,
+});
+const user = ref<User>(store.state.userInfo);
+const admin = computed(() => store.state.allUser.filter((e) => e.isAdmin));
+const message = ref();
+
+const add = async () => {
+  if (form.firstName && form.lastName) {
+    const newAdmin = await addAdmin({
+      firstName: form.firstName,
+      lastName: form.lastName,
+    });
+    if (newAdmin.ok) {
+      store.state.allUser.push(newAdmin.admin);
+    } else {
+      message.value = newAdmin.message;
+    }
+  }
+};
+
+const isCurrentUser = (admin: User) => {
+  return admin.id === user.value.id;
+};
+
+const del = async (id: number) => {
+  const res = await deleteAdmin(id);
+  if (res.ok) {
+    store.commit("setAdmin", { id, isAdmin: false });
+  } else {
+    message.value = res.message;
+  }
+};
+
+const calculateScreenHeight = () => {
+  const screenHeight = window.innerHeight;
+  const multiplier = 0.71;
+  const scrollHeight = screenHeight * multiplier;
+  return `${scrollHeight}px`;
+}
+
+</script>
+
 <template>
-  <div class="rectangle4">
+  <div ref="containerRef" class="rectangle4 flex-1 font-sf-pro">
     <form @submit.prevent="add" class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-medium pt-1.5"
-        >Email:
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
+        >Fullname:
       </label>
       <InputText
         id="email"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-48 rounded-xl"
-        placeholder="domain @cmu.ac.th only"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 mt-1 rounded-lg font-sf-pro"
+        placeholder="Ex.Prayut Chan-O-Cha"
         type="text"
-        v-model="email"
+        v-model="form.firstName"
       ></InputText>
       <Button
         label="Add"
         type="submit"
-        class="flex ml-4 items-center justify-center px-5 border-1 border-white-alpha-30 rounded-xl py-1.5 bg-[#36BFA7] text-white font-semibold"
+        class="flex ml-4 items-center justify-center px-5 rounded-xl py-1 mt-1 text-white font-semibold custom-button"
       ></Button>
     </form>
-    <!-- <ul class="flex gap-44 pt-4 text-[16px] text-[#575757]">
-      <li class="pl-2">Name</li>
-    </ul>
-    <div class="border-t-[2px] w-12/12 border-[#575757]"></div> -->
     <div class="rectangle3">
-      <!-- <ul class="box-admin flex items-center">
-          <div class="circle text-white text-xl">
-            <div>{{ (e.firstName || "").charAt(0) }}</div>
-          </div>
-          <div class="pl-5">
-            <p v-if="isCurrentUser(e)">
-              {{ e.firstName }} {{ e.lastName }} (You)
-            </p>
-            <p v-else>{{ e.firstName }} {{ e.lastName }}</p>
-          </div>
-
-        </ul> -->
-      <!-- {{admin.map((e, i) => {
-
-        })}} -->
-      <DataTable :value="admin" tableStyle="min-width: 20rem">
-        <Column field="firstName" header="Name" sortable></Column>
-        <Column field="lastName" style=""></Column>
-        <Column :field="'isCurrentUser'" :style="'min-width: 4rem'">
-          <template #body="slotProps">
-            <span v-if="isCurrentUser(slotProps.data)"> (You) </span>
+      <DataTable
+        :value="admin"
+        scrollDirection="vertical"
+        scrollable
+        :scrollHeight=calculateScreenHeight()
+        class="font-sf-pro mt-2"
+      >
+        <Column
+          field="firstName"
+          header="Name"
+          sortable
+          class="max-w-fit font-semibold"
+          headerStyle="font-bold"
+        >
+          <template #sorticon="slotProps">
+            <i
+              class="m-3 pi"
+              :class="{
+                'pi-sort-alt': slotProps.sortOrder === 0,
+                'pi-sort-alpha-down': slotProps.sortOrder === 1,
+                'pi-sort-alpha-up': slotProps.sortOrder === -1,
+              }"
+            ></i>
           </template>
         </Column>
-        <Column :exportable="false" style="min-width: 8rem">
+        <Column field="lastName" class="font-semibold"></Column>
+        <Column :field="'isCurrentUser'">
+          <template #body="slotProps">
+            <div v-if="isCurrentUser(slotProps.data)" class="py-1">(You)</div>
+          </template>
+        </Column>
+        <Column :exportable="false" class="w-full text-center">
           <template #body="slotProps">
             <Button
+              label="Instructor"
               v-if="!isCurrentUser(slotProps.data)"
-              icon="pi pi-trash"
-              outlined
-              rounded
-              severity="danger"
-              @click="del(slotProps.data.email)"
+              icon="pi pi-arrow-right-arrow-left"
+              class="w-fit h-9 rounded-md bg-[#00AEA4]"
+              @click="del(slotProps.data.id)"
             />
           </template>
         </Column>
@@ -62,6 +121,7 @@
   </div>
 </template>
 
+<<<<<<< HEAD
 <script lang="ts">
 import { ref, defineComponent, onMounted } from "vue";
 import store from "@/store";
@@ -133,29 +193,25 @@ export default defineComponent({
 });
 </script>
 
+=======
+>>>>>>> 1d20848325e1254eb69ca835dbb098e6ab3ad6b8
 <style>
 .rectangle4 {
-  background-color: #904b4b8c; /* Adjust the background color as needed */
+  background-color: #904b4b00; /* Adjust the background color as needed */
   padding-bottom: 2rem;
-  padding-left: 1.5rem;
-  height: calc(100vh - 10rem);
 }
 
 .rectangle3 {
   background-color: #e0caca00; /* Adjust the background color as needed */
   padding-bottom: 0.5rem;
-  overflow-y: scroll;
   margin-top: 10px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .box-admin {
   display: flex;
-  background-color: rgba(
-    157,
-    199,
-    80,
-    0
-  ); /* Adjust the background color as needed */
+  background-color: #9dc75000; /* Adjust the background color as needed */
   padding-left: 1.5rem;
   height: 75px;
   align-items: center;
@@ -171,5 +227,9 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.custom-button:hover {
+  background-color: #1369da;
 }
 </style>
