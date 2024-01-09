@@ -281,7 +281,7 @@ const toggleSidebar = () => {
           <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
             <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
           </div>
-          <div class="-mt-1 text-[#00AEA4] text-[13px] font-700">
+          <div class=" text-[#00AEA4] text-[13px] font-700">
             <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">Instructor</p>
           </div>
         </div>
