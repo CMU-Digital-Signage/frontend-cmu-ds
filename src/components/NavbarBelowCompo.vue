@@ -5,7 +5,25 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
+import { addEmergency } from "@/services/emergency";
+import store from "@/store";
+import { computed, ref } from "vue";
 
+const message = ref();
+const formNor = computed(() => store.state.formNor);
+const formEmer = computed(() => store.state.formEmer);
+
+const addPoster = async () => {
+  if (!formEmer.value.incidentName || !formEmer.value.emergencyImage) {
+    alert("Title Invalid or Not Choose File Image.");
+  }
+  const res = await addEmergency(formEmer.value);
+  if (res.ok) {
+    store.commit("resetForm");
+  } else {
+    message.value = res.message;
+  }
+};
 </script>
 
 <template>
@@ -17,6 +35,7 @@ export default defineComponent({
       class="flex items-center justify-end w-full"
     >
       <Button
+        @click="addPoster"
         class="bg-teal border-teal font-semibold font-sf-pro text-white w-24 h-10 rounded-lg flex items-center justify-center"
         >Upload</Button
       >

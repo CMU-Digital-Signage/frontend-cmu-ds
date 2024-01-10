@@ -3,11 +3,9 @@ import SideBar from "./components/SideBar.vue";
 import store from "./store";
 import NavBar from "./components/NavBar.vue";
 import NavbarBelow from "./components/NavbarBelowCompo.vue";
-import UploadFile from "../views/UploadFileView.vue";
 import { computed } from "vue";
 
 const user = computed(() => store.state.userInfo);
-
 </script>
 
 <template>
@@ -19,7 +17,9 @@ const user = computed(() => store.state.userInfo);
     <div class="w-screen flex flex-col">
       <NavBar />
       <router-view />
-      <div v-if="$route.path === '/uploadfile'"><NavbarBelow /></div>
+      <div v-if="$route.path === '/uploadfile'">
+        <NavbarBelow />
+      </div>
     </div>
   </div>
   <router-view v-else />

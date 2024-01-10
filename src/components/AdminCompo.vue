@@ -10,22 +10,21 @@ import { addAdmin, deleteAdmin } from "@/services";
 import { User } from "@/types";
 import store from "@/store";
 
-const form = reactive({
-  firstName: null,
-  lastName: null,
-});
+const form = ref("");
 const user = ref<User>(store.state.userInfo);
 const admin = computed(() => store.state.allUser.filter((e) => e.isAdmin));
 const message = ref();
 
 const add = async () => {
-  if (form.firstName && form.lastName) {
+  if (form.value.length) {
+    const fullName = form.value.split(" ");
     const newAdmin = await addAdmin({
-      firstName: form.firstName,
-      lastName: form.lastName,
+      firstName: fullName[0],
+      lastName: fullName[1],
     });
     if (newAdmin.ok) {
       store.state.allUser.push(newAdmin.admin);
+      form.value = "";
     } else {
       message.value = newAdmin.message;
     }
@@ -50,8 +49,7 @@ const calculateScreenHeight = () => {
   const multiplier = 0.71;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
-}
-
+};
 </script>
 
 <template>
@@ -61,11 +59,10 @@ const calculateScreenHeight = () => {
         >Fullname:
       </label>
       <InputText
-        id="email"
         class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 mt-1 rounded-lg font-sf-pro"
         placeholder="Ex.Prayut Chan-O-Cha"
         type="text"
-        v-model="form.firstName"
+        v-model="form"
       ></InputText>
       <Button
         label="Add"
@@ -78,7 +75,7 @@ const calculateScreenHeight = () => {
         :value="admin"
         scrollDirection="vertical"
         scrollable
-        :scrollHeight=calculateScreenHeight()
+        :scrollHeight="calculateScreenHeight()"
         class="font-sf-pro mt-2"
       >
         <Column

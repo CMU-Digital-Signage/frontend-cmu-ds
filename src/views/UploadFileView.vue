@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import UpNorFileCompo from "@/components/UpNorFileCompo.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import UpNorFileCompo from "@/components/UpNorFileCompo.vue";
+import UpEmerFileCompo from "@/components/UpEmerFileCompo.vue";
+import store from "@/store";
 
 const click = ref(0);
 </script>
@@ -10,13 +12,23 @@ const click = ref(0);
 <template>
   <div class="rectangle8 flex-1 font-sf-pro">
     <TabView
-      v-model:active-index="click"
+      v-model:activeIndex="click"
       class="rectangle flex flex-col font-sf-pro overflow-y-auto"
     >
       <TabPanel header="Normal File">
         <UpNorFileCompo />
       </TabPanel>
-      <TabPanel class="text-[#f00]" header="Emergency File"> </TabPanel>
+      <TabPanel
+        v-if="store.state.userInfo.isAdmin"
+        header="Emergency File"
+        :pt="{
+          headerAction: {
+            class: `${click != 0 ? 'text-[#f00] border-[#f00]' : ''}`,
+          },
+        }"
+      >
+        <UpEmerFileCompo />
+      </TabPanel>
     </TabView>
   </div>
 </template>
