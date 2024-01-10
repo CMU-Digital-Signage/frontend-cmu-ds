@@ -368,8 +368,6 @@ const add = async () => {
         <form @submit.prevent="search" class="flex items-center">
           <p for="macAddress" class="font-bold">Search</p>
           <InputText
-            :value="searchP"
-            id="search"
             v-model="searchP"
             :autofocus="true"
             class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
@@ -381,14 +379,13 @@ const add = async () => {
           ></button>
         </form>
       </TransitionGroup>
-      <div class="flex gap-3 items-center">
-        <button v-if="$route.path === '/'" @click="goToSearch">
+      <div v-if="$route.path === '/'" class="flex gap-3 items-center">
+        <button @click="goToSearch">
           <i
             class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2"
           ></i>
         </button>
         <Dropdown
-          v-if="$route.path === '/'"
           v-model="selectedDevice"
           :options="devices"
           optionLabel="deviceName"
@@ -396,7 +393,6 @@ const add = async () => {
         />
         <Button
           class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho"
-          v-if="$route.path === '/'"
           @click="router.push('/uploadfile')"
         >
           <div

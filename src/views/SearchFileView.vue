@@ -7,6 +7,7 @@ const searchPosters = computed(() => store.state.searchPosters);
 const data = ref();
 watchEffect(() => {
   let temp = [] as any;
+  
   searchPosters.value.forEach((e: any) => {
     const startDate = new Date(e.startDate);
     const endDate = new Date(e.endDate);
@@ -16,10 +17,10 @@ watchEffect(() => {
       currentDate.setDate(currentDate.getDate() + 1)
     ) {
       temp.push({
-        date: currentDate.getUTCDate(),
-        month: currentDate.getUTCMonth(),
-        year: currentDate.getUTCFullYear(),
-        day: currentDate.getUTCDay(),
+        date: currentDate.getDate(),
+        month: currentDate.getMonth(),
+        year: currentDate.getFullYear(),
+        day: currentDate.getDay(),
         startTime: e.startTime,
         endTime: e.endTime,
         title: e.title,
@@ -72,14 +73,14 @@ watchEffect(() => {
             <template #body="item">
               <div class="flex flex-row gap-1">
                 <p>
-                  {{ ("0" + item.data.startTime.getUTCHours()).slice(-2) }}:{{
-                    ("0" + item.data.startTime.getUTCMinutes()).slice(-2)
+                  {{ ("0" + item.data.startTime.getHours()).slice(-2) }}:{{
+                    ("0" + item.data.startTime.getMinutes()).slice(-2)
                   }}
                 </p>
                 <p>-</p>
                 <p>
-                  {{ ("0" + item.data.endTime.getUTCHours()).slice(-2) }}:{{
-                    ("0" + item.data.endTime.getUTCMinutes()).slice(-2)
+                  {{ ("0" + item.data.endTime.getHours()).slice(-2) }}:{{
+                    ("0" + item.data.endTime.getMinutes()).slice(-2)
                   }}
                 </p>
               </div>

@@ -1,23 +1,18 @@
-import { Device, Poster, User } from "@/types";
+import { Device, Emergency, Poster, User } from "@/types";
 import { createStore } from "vuex";
-
-const defaultUser = {
-  id: "",
-  firstName: "",
-  lastName: "",
-  isAdmin: false,
-} as User;
 
 export default createStore({
   state: {
     openSidebar: true,
-    userInfo: defaultUser,
+    userInfo: <User>{},
     allUser: <User[]>[],
     adminManage: 0 as number,
     macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
     searchPosters: <Poster[]>[],
+    formNor: <Poster>{},
+    formEmer: <Emergency>{},
   },
   getters: {},
   mutations: {
@@ -28,7 +23,7 @@ export default createStore({
       state.userInfo = userInfo;
     },
     clearUser(state) {
-      state.userInfo = defaultUser;
+      state.userInfo = <User>{};
     },
     setAllUser(state, value) {
       state.allUser = value;
@@ -53,6 +48,16 @@ export default createStore({
     },
     clearSearchPosters(state) {
       state.searchPosters = [] as Poster[];
+    },
+    setFormNor(state, value) {
+      state.formNor = value;
+    },
+    setFormEmer(state, value) {
+      state.formEmer = value;
+    },
+    resetForm(state) {
+      state.formNor = <Poster>{};
+      state.formEmer = <Emergency>{};
     },
   },
   actions: {},

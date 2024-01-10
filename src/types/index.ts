@@ -29,3 +29,10 @@ export interface Poster {
   startTime: Date;
   endTime: Date;
 }
+
+export interface Emergency {
+  incidentName: string;
+  emergencyImage: any;
+  description: string | null;
+  status: boolean;
+}
