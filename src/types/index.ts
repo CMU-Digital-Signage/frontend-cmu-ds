@@ -1,5 +1,5 @@
 export interface User {
-  id: number;
+  id: string;
   firstName: string;
   lastName: string;
   isAdmin: boolean;
@@ -14,15 +14,16 @@ export interface Device {
 }
 
 export interface Poster {
+  MACaddress: string;
+  posterId: string;
+  id: string;
   title: string;
-  id: number;
   duration: number;
   recurrence: string;
   description: string;
   image: any;
   createdAt: Date;
   updatedAt: Date;
-  MACaddress: string;
   startDate: Date;
   endDate: Date;
   startTime: Date;

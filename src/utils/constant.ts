@@ -59,21 +59,47 @@ export const onUpload = (
     const file = e.files[0];
     if (!file) reject("No file selected");
 
+    const targetSize = 700 * 1024; // 700 kb
     let quality = 1;
-    if (file.size > 1000000) {
-      quality = 0.6;
-    }
-    new Compressor(file, {
-      quality: quality,
-      async success(result) {
-        e.files[0] = new File([result], "locationImage");
-        const reader = new FileReader();
-        reader.readAsDataURL(result);
-        reader.onloadend = function () {
-          resolve(reader.result as string);
-        };
-      },
-    });
+
+    const compressFile = async (compressionQuality: number) => {
+      return new Promise<void>((resolve, reject) => {
+        new Compressor(file, {
+          quality: compressionQuality,
+          async success(result) {
+            e.files[0] = new File([result], "locationImage");
+            resolve();
+          },
+          error(error) {
+            reject(error);
+          },
+        });
+      });
+    };
+
+    const attemptCompression = async () => {
+      try {
+        await compressFile(quality);
+        if (e.files[0].size < targetSize) {
+          const reader = new FileReader();
+          reader.readAsDataURL(e.files[0]);
+          reader.onloadend = function () {
+            resolve(reader.result as string);
+          };
+        } else {
+          quality = quality * 0.6;
+          if (quality > 0.1) {
+            attemptCompression();
+          } else {
+            reject("Unable to compress below the target size");
+          }
+        }
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    attemptCompression();
   });
 };
 
@@ -83,28 +109,32 @@ export const rotate = (file: File, currentDeg: number, deg: number) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onloadend = function () {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d")!;
+
         const img = new Image();
         img.src = reader.result as string;
 
         img.onload = function () {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d")!;
-
-          const newDeg = currentDeg + deg;
+          let newDeg = currentDeg + deg;
+          if (Math.abs(newDeg) === 360) {
+            newDeg = 0;
+          }
 
           // Rotate the image
-          canvas.width = img.height;
-          canvas.height = img.width;
+          if (Math.abs(newDeg) === 180 || Math.abs(newDeg) === 0) {
+            canvas.width = img.width;
+            canvas.height = img.height;
+          } else {
+            canvas.width = img.height;
+            canvas.height = img.width;
+          }
           ctx.translate(canvas.width / 2, canvas.height / 2);
           ctx.rotate((newDeg * Math.PI) / 180);
           ctx.drawImage(img, -img.width / 2, -img.height / 2);
-          ctx.drawImage(img, 0, 0);
-
 
           // Convert the rotated image to base64
           const imageDataUrl = canvas.toDataURL("image/jpeg", 1.0);
-          console.log(imageDataUrl);
-          
           resolve({ imageDataUrl, newDeg });
         };
       };

@@ -10,6 +10,7 @@ import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
 import { Poster } from "@/types";
 import { onUpload, rotate } from "@/utils/constant";
+import store from "@/store";
 
 const scheduleTabs = reactive([
   {
@@ -20,7 +21,7 @@ const scheduleTabs = reactive([
 
 const form = reactive({
   title: "",
-  id: 0,
+  id: store.state.userInfo.id,
   duration: 0,
   recurrence: "",
   description: "",
@@ -105,8 +106,8 @@ const handleDeleteButtonClick = (index: number) => {
                 @click="
                   clearCallback();
                   chooseFile = null;
+                  currentDeg = 0;
                   chooseCallback();
-                  console.log(chooseFile);
                 "
                 icon="pi pi-plus"
                 label="Choose File"
@@ -118,6 +119,7 @@ const handleDeleteButtonClick = (index: number) => {
                   () => {
                     clearCallback();
                     chooseFile = null;
+                    currentDeg = 0;
                   }
                 "
                 :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
@@ -170,23 +172,43 @@ const handleDeleteButtonClick = (index: number) => {
           </div>
         </template>
         <template #content="{ files }">
-          <div v-if="files[0] && chooseFile" class="flex flex-row items-center">
+          <div
+            v-if="files[0] && chooseFile"
+            class="flex flex-row justify-center text-center items-center gap-3"
+          >
             <i class="pi pi-power-off"></i>
             <div
-              class="border-2 border-black w-[2160px - 2000px] h-[3840px - 2000px]"
+              class="flex justify-center border-2 border-black bg-black"
+              :style="{
+                width: `${2160 / 20}px`,
+                height: `${3840 / 20}px`,
+              }"
             >
-              <img :alt="files[0].name" :src="chooseFile" class="max-w-full max-h-full" />
+              <img
+                :alt="files[0].name"
+                :src="chooseFile"
+                class="max-w-full max-h-full m-auto"
+              />
             </div>
           </div>
           <div v-else></div>
         </template>
         <template #empty>
-          <div class="flex flex-col text-center items-center h-48">
-            <i
-              class="pi pi-cloud-upload border-2 rounded-full text-5xl w-fit p-5"
-            ></i>
-            <p class="mt-4 mb-0">Drag and drop files to here.</p>
-            <p class="text-[#176EE2] red">Support JPEG only.</p>
+          <div class="flex flex-row justify-center items-center h-48 gap-3">
+            <i class="pi pi-power-off"></i>
+            <div
+              class="border-2 border-black"
+              :style="{
+                width: `${2160 / 20}px`,
+                height: `${3840 / 20}px`,
+              }"
+            >
+              <i
+                class="pi pi-cloud-upload border-2 rounded-full text-4xl w-fit p-4 mt-1"
+              ></i>
+              <p class="mt-3 mb-0">Drag and drop files to here.</p>
+              <p class="text-[#176EE2] red">Support JPEG only.</p>
+            </div>
           </div>
         </template>
       </FileUpload>
@@ -238,11 +260,6 @@ const handleDeleteButtonClick = (index: number) => {
 </template>
 
 <style>
-.screen {
-  width: 2160px;
-  height: 3840px;
-}
-
 .title-input {
   box-shadow: none;
   border: none;

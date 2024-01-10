@@ -2,7 +2,7 @@ import { Device, Poster, User } from "@/types";
 import { createStore } from "vuex";
 
 const defaultUser = {
-  id: 0,
+  id: "",
   firstName: "",
   lastName: "",
   isAdmin: false,
