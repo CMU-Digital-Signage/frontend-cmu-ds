@@ -233,9 +233,9 @@ const handleDeleteButtonClick = (index: number) => {
     </div>
 
     <div class="w-full max-w-4xl">
-      <div class="rectangle8 font-sf-pro flex items-start gap-3">
+      <div class="rectangle8 font-sf-pro flex items-start">
         <TabView
-          class="rectangleflex flex-row flex-1 justify-between w-52 font-sf-pro scroll-x"
+          class="rectangleflex flex-row flex-1 justify-between w-56 font-sf-pro scroll-x"
           v-model:active-index="currentI"
         >
           <TabPanel
@@ -243,21 +243,26 @@ const handleDeleteButtonClick = (index: number) => {
             :key="index"
             :header="schedule.header"
           >
-            <ScheduleForm />
+            <keep-alive>
+              <ScheduleForm v-if="currentI === index" :key="index" />
+            </keep-alive>
             <!-- <component :key="index" :is="schedule.content" /> -->
           </TabPanel>
         </TabView>
-        <Button
-          @click="handleDeleteButtonClick(currentI)"
-          class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
-          severity="danger"
-          ><i class="pi pi-trash text-white"></i
-        ></Button>
-        <Button
-          @click="addSchedule"
-          class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
-          ><i class="pi pi-plus text-white"></i
-        ></Button>
+        <div class="flex flex-col justify-center ml-5">
+          <Button
+            @click="addSchedule"
+            class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
+            ><i class="pi pi-plus text-white"></i
+          ></Button>
+          <Button
+            v-if="currentI !== 0"
+            @click="handleDeleteButtonClick(currentI)"
+            class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
+            severity="danger"
+            ><i class="pi pi-trash text-white"></i
+          ></Button>
+        </div>
       </div>
     </div>
   </div>
