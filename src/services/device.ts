@@ -72,9 +72,7 @@ export async function deleteDevice(MACaddress: string) {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-        params: {
-          MACaddress,
-        },
+        params: { MACaddress },
         withCredentials: true,
       }
     );

@@ -55,6 +55,7 @@ const goToSearch = () => {
 };
 
 const search = async () => {
+  store.commit("setSearchPosters", []);
   const res = await getPoster(searchP.value);
   if (res.ok) {
     res.poster.forEach((e: any) => {
@@ -82,15 +83,15 @@ const add = async () => {
 
   const res = await addDevice(form);
   if (res.ok) {
+    store.state.devices.push({ ...form });
+    showPopup.value = false;
     const temp = macNotUse.value.filter((e) => e !== form.MACaddress);
     store.commit("setMacNotUse", temp);
-    store.state.devices.push(res.device);
     message.value = "Add device successfully.";
     resetForm();
   } else {
     message.value = res.message;
   }
-  showPopup.value = false;
 };
 </script>
 
@@ -159,6 +160,7 @@ const add = async () => {
                   ? 'Select a MAC Address'
                   : 'All Device has already been added'
               "
+              :disabled="!macNotUse.length"
             />
           </div>
           <div class="flex flex-col gap-1">

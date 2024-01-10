@@ -11,7 +11,6 @@ import SearchPage from "../views/SearchFileView.vue";
 import AdminDashboard from "../views/AdminView.vue";
 import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
-import { Device } from "@/types";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -44,11 +43,6 @@ const routes: Array<RouteRecordRaw> = [
     component: Dashboard,
   },
   {
-    path: "/admin",
-    name: "Admin",
-    component: AdminDashboard,
-  },
-  {
     path: "/file",
     name: "File",
     component: FileManage,
@@ -57,6 +51,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/deviceManage",
     name: "Device",
     component: DeviceManage,
+  },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: AdminDashboard,
   },
   {
     path: "/emergency",
@@ -81,31 +80,38 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (!to.meta.hideSidebar && !store.state.userInfo.id) {
-    const res = await getUserInfo();
-    if (res.ok) {
-      store.commit("setUserInfo", res.user);
-      const all = await getAllUser();
-      store.commit("setAllUser", all.user);
-      const res2 = await getDevice();
-      if (res2.ok) {
-        const macNotUse = [] as any;
-        res2.data.map((e: any) =>
-          e.deviceName ? "" : macNotUse.push(e.MACaddress)
-        );
-        store.commit("setMacNotUse", macNotUse);
-        res2.data = res2.data.filter((e: any) => e.deviceName);
-        store.commit("setDevices", res2.data);
-        // if(!store.state.userInfo.isAdmin){
-        //   next({name: "Dashboard", replace: true})
-        // }
-        // else{
-        //   next()
-        // }
+  const shouldFetchData = !to.meta.hideSidebar && !store.state.devices.length;
+  if (shouldFetchData) {
+    if (!store.state.userInfo.id) {
+      const userInfoRes = await getUserInfo();
+      if (userInfoRes.ok) store.commit("setUserInfo", userInfoRes.user);
+      else next({ name: "Login", replace: true });
+    }
+
+    const [allUserRes, deviceRes] = await Promise.all([
+      getAllUser(),
+      getDevice(),
+    ]);
+    store.commit("setAllUser", allUserRes.user);
+
+    if (deviceRes.ok) {
+      const macNotUse = deviceRes.data
+        .filter((e: any) => !e.deviceName)
+        .map((e: any) => e.MACaddress);
+      store.commit("setMacNotUse", macNotUse);
+
+      const filteredDevices = deviceRes.data.filter((e: any) => e.deviceName);
+      store.commit("setDevices", filteredDevices);
+
+      if (
+        (to.path === "/admin" || to.path === "/emergency") &&
+        !store.state.userInfo.isAdmin
+      ) {
+        next({ name: "Dashboard", replace: true });
+      } else {
         next();
       }
     } else {
-      console.log(res.message);
       next({ name: "Login", replace: true });
     }
   } else {

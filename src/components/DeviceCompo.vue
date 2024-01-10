@@ -10,6 +10,7 @@ import store from "@/store";
 import { editDevice, deleteDevice } from "@/services";
 import { filesize } from "filesize";
 import { initialFormDevice, onUpload } from "@/utils/constant";
+
 const form = reactive({ ...initialFormDevice });
 
 const device = computed(() => store.state.devices);
@@ -44,12 +45,15 @@ const edit = async () => {
   }
 
   const res = await editDevice(form);
-  device.value?.map((e) =>
-    e.MACaddress === form.MACaddress ? { ...e, ...form } : e
-  );
+  if (res.ok) {
+    const temp = device.value?.map((e) =>
+      e.MACaddress === form.MACaddress ? { ...e, ...form } : e
+    );
+    store.commit("setDevices", temp);
+    showPopup.value = false;
+  }
+
   message.value = res.message;
-  showPopup.value = false;
-  console.log(message.value);
 };
 
 const del = async (MACaddress: any) => {
@@ -64,8 +68,7 @@ const calculateScreenHeight = () => {
   const multiplier = 0.71;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
-}
-
+};
 </script>
 
 <template>
@@ -75,7 +78,7 @@ const calculateScreenHeight = () => {
       v-else
       scrollDirection="vertical"
       scrollable
-      :scrollHeight=calculateScreenHeight()
+      :scrollHeight="calculateScreenHeight()"
       class="font-sf-pro mt-2"
       :value="device"
     >
@@ -205,12 +208,7 @@ const calculateScreenHeight = () => {
         :show-upload-button="false"
         :show-cancel-button="false"
         :multiple="false"
-        @select="
-          async (e) => {
-            chooseFile = await onUpload(e);
-            console.log(chooseFile, e.files[0]);
-          }
-        "
+        @select="async (e) => (chooseFile = await onUpload(e))"
       >
         <template #header="{ chooseCallback, clearCallback }">
           <div class="flex items-center">
