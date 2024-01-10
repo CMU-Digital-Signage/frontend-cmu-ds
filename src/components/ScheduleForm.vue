@@ -34,6 +34,11 @@ const addTimeRange = () => {
   newEndTime.setHours(newEndTime.getHours() + 1);
   timeRanges.value.push({ startTime: newStartTime, endTime: newEndTime });
 };
+
+const deleteTimeRange = (index: number) => {
+  timeRanges.value.splice(index, 1);
+};
+
 const calculateMinHourStart = (index: number): Date | undefined => {
   if (index >= 0 && timeRanges.value.length > index) {
     const currentRange = timeRanges.value[index];
@@ -79,7 +84,7 @@ watch(startDate, (newStartDate) => {
 </script>
 
 <template>
-  <div class="overflow-y-auto">
+  <div class="mt-5">
     <div class="font-sf-pro flex flex-col justify-start gap-5">
       <!-- Date -->
       <div class="flex flex-row gap-4 items-center text-[18px] text-[#282828]">
@@ -126,53 +131,64 @@ watch(startDate, (newStartDate) => {
           <label>All-day</label>
         </div>
         <!-- Time Range -->
-        <div class="flex flex-row items-start gap-3">
+        <div class="flex flex-row items-star gap-3">
           <div class="flex flex-col gap-4">
             <div v-for="(timeRange, index) in timeRanges" :key="index">
-              <div
-                class="flex flex-row gap-4 items-center text-[18px] text-[#282828]"
-              >
-                <Calendar
-                  v-model="timeRange.startTime"
-                  showIcon
-                  iconDisplay="input"
-                  timeOnly
-                  :inputId="'Stime_' + index"
-                  :stepMinute="60"
-                  class="w-[170px]"
-                  :maxDate="calculateMaxHour(index)"
-                  :minDate="calculateMinHourStart(index)"
-                  :disabled="timeAllDay"
+              <div class="flex flex-row gap-2 items-center">
+                <div
+                  class="flex flex-row gap-4 items-center text-[18px] text-[#282828]"
                 >
-                  <template #inputicon="{ clickCallback }">
-                    <i class="pi pi-clock" @click="clickCallback" />
-                  </template>
-                </Calendar>
-                <p>to</p>
-                <Calendar
-                  v-model="timeRange.endTime"
-                  showIcon
-                  iconDisplay="input"
-                  timeOnly
-                  :inputId="'Etime_' + index"
-                  :stepMinute="60"
-                  class="w-[170px]"
-                  :minDate="calculateMinHour(index)"
-                  :disabled="!timeRange.startTime || timeAllDay"
-                >
-                  <template #inputicon="{ clickCallback }">
-                    <i class="pi pi-clock" @click="clickCallback"></i>
-                  </template>
-                </Calendar>
+                  <Calendar
+                    v-model="timeRange.startTime"
+                    showIcon
+                    iconDisplay="input"
+                    timeOnly
+                    :inputId="'Stime_' + index"
+                    :stepMinute="60"
+                    class="w-[170px]"
+                    :maxDate="calculateMaxHour(index)"
+                    :minDate="calculateMinHourStart(index)"
+                    :disabled="timeAllDay"
+                  >
+                    <template #inputicon="{ clickCallback }">
+                      <i class="pi pi-clock" @click="clickCallback" />
+                    </template>
+                  </Calendar>
+                  <p>to</p>
+                  <Calendar
+                    v-model="timeRange.endTime"
+                    showIcon
+                    iconDisplay="input"
+                    timeOnly
+                    :inputId="'Etime_' + index"
+                    :stepMinute="60"
+                    class="w-[170px]"
+                    :minDate="calculateMinHour(index)"
+                    :disabled="!timeRange.startTime || timeAllDay"
+                  >
+                    <template #inputicon="{ clickCallback }">
+                      <i class="pi pi-clock" @click="clickCallback"></i>
+                    </template>
+                  </Calendar>
+                </div>
+                <Button
+                  v-if="index === 0"
+                  icon="pi pi-plus"
+                  @click="addTimeRange"
+                  class="w-8 h-8 rounded-lg"
+                ></Button>
+                <Button
+                  v-if="index !== 0"
+                  icon="pi pi-minus"
+                  @click="deleteTimeRange(index)"
+                  severity="danger"
+                  class="w-8 h-8 rounded-lg"
+                ></Button>
               </div>
             </div>
           </div>
           <!-- add time range -->
-          <Button
-            icon="pi pi-plus"
-            @click="addTimeRange"
-            class="w-15 rounded-lg"
-          ></Button>
+          <div></div>
         </div>
       </div>
 
@@ -184,9 +200,7 @@ watch(startDate, (newStartDate) => {
         >
           Display Duration
         </label>
-        <div
-          class="flex flex-row items-center gap-4 text-[16px] text-[#000] w-[10px]"
-        >
+        <div class="flex flex-row items-center gap-4 text-[16px] text-[#000]">
           <InputNumber
             v-model="duration"
             inputId="minmax-buttons"
@@ -194,6 +208,7 @@ watch(startDate, (newStartDate) => {
             showButtons
             :min="0"
             :max="60"
+            :inputStyle="{ width: '80px' }"
           >
           </InputNumber>
           <p>sec</p>
