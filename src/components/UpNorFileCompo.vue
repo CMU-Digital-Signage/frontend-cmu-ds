@@ -187,7 +187,11 @@ const handleDeleteButtonClick = (index: number) => {
               <img
                 :alt="files[0].name"
                 :src="chooseFile"
-                class="max-w-full max-h-full m-auto"
+                class="max-w-full max-h-full m-auto rotate-90"
+                :style="{
+                  maxWidth: `${3840 / 20}px`,
+                  maxHeight: `${2160 / 20}px`,
+                }"
               />
             </div>
           </div>
