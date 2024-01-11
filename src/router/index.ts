@@ -107,16 +107,12 @@ router.beforeEach(async (to, from, next) => {
         (to.path === "/admin" || to.path === "/emergency") &&
         !store.state.userInfo.isAdmin
       ) {
-        next({ name: "Dashboard", replace: true });
-      } else {
-        next();
-      }
+        next({ path: "/", replace: true });
+      } else next();
     } else {
-      next({ name: "Login", replace: true });
+      next({ path: "/login", replace: true });
     }
-  } else {
-    next();
-  }
+  } else next();
 });
 
 export default router;

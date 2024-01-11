@@ -96,9 +96,7 @@ const add = async () => {
 </script>
 
 <template>
-  <div
-    class="bg-[#F6F6F6] border-b border-[#c7bbbb] h-14 px-6 flex items-center"
-  >
+  <div class="h-14 px-6 flex items-center z-10 shadow-lg">
     <!-- "Management" -->
     <ul
       v-if="$route.path === '/admin'"

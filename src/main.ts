@@ -24,8 +24,8 @@ import { faBell } from "@fortawesome/free-regular-svg-icons";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
 import Calendar from "primevue/calendar";
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 
 library.add(faBell);
 
@@ -34,6 +34,26 @@ createApp(App)
   .use(router)
   .use(PrimeVue, {
     pt: {
+      global: {
+        css: `
+          .p-tabview-nav-link {
+            background-color: #fafafa
+          }
+          .p-tabview-nav {
+            background-color: #fafafa
+          }
+          .p-tabview-panels {
+            background-color: #fafafa
+          }
+          .p-datatable-wrapper {
+            border-color: #c6c6c6;
+            border-width: 1px;
+          }
+          .p-row-odd {
+            background-color: #fafafa
+          }
+        `,
+      },
       column: {
         sorticon: (slotProps: any) => ({
           class: [
@@ -49,7 +69,7 @@ createApp(App)
     },
   })
   .use(ToastService)
-  .component('VueDatePicker', VueDatePicker)
+  .component("VueDatePicker", VueDatePicker)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component("Dialog", Dialog)
   .component("Button", Button)

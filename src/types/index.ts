@@ -18,16 +18,25 @@ export interface Poster {
   posterId: string;
   id: string;
   title: string;
-  duration: number;
-  recurrence: string;
-  description: string;
   image: any;
+  description: string;
   createdAt: Date;
   updatedAt: Date;
   startDate: Date;
   endDate: Date;
   startTime: Date;
   endTime: Date;
+  duration: number;
+}
+
+export interface Display {
+  allDay: boolean;
+  allDevice: boolean;
+  startDate: Date;
+  endDate: Date | null;
+  time: [{ startTime: Date; endTime: Date }];
+  duration: number | null;
+  MACaddress: string[];
 }
 
 export interface Emergency {

@@ -20,9 +20,8 @@ const toggleSidebar = () => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-screen shadow side-bar sticky"
+    class="flex flex-col justify-between h-screen shadow-2xl side-bar sticky"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
-    style="background-color: #f6f6f6; border-right: 1px solid #c7bbbb"
   >
     <div class="space-y-5 font-sf-pro" :class="{ 'p-4': openSidebar }">
       <div
@@ -246,7 +245,7 @@ const toggleSidebar = () => {
             <Checkbox
               v-model="item.MACaddress"
               :inputId="item.deviceName"
-              name="category"
+              name="MACaddress"
               :value="item.deviceName"
             />
             <label :for="item.deviceName">{{ item.deviceName }}</label>
@@ -280,7 +279,7 @@ const toggleSidebar = () => {
           <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
             <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
           </div>
-          <div class=" text-[#00AEA4] text-[13px] font-700">
+          <div class="text-[#00AEA4] text-[13px] font-700">
             <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">Instructor</p>
           </div>
         </div>

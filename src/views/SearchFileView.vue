@@ -3,11 +3,12 @@ import store from "@/store";
 import { computed, ref, watchEffect } from "vue";
 import { month, day } from "../utils/constant";
 
+const color = ["#ff0000", "#00ff00", "#0f3c85", "#0000ff", "#60f0ce"];
+const devices = computed(() => store.state.devices);
 const searchPosters = computed(() => store.state.searchPosters);
 const data = ref();
 watchEffect(() => {
   let temp = [] as any;
-  
   searchPosters.value.forEach((e: any) => {
     const startDate = new Date(e.startDate);
     const endDate = new Date(e.endDate);
@@ -17,6 +18,12 @@ watchEffect(() => {
       currentDate.setDate(currentDate.getDate() + 1)
     ) {
       temp.push({
+        color:
+          color[
+            devices.value.indexOf(
+              devices.value.find((d) => d.MACaddress === e.MACaddress)!
+            )
+          ],
         date: currentDate.getDate(),
         month: currentDate.getMonth(),
         year: currentDate.getFullYear(),
@@ -71,7 +78,11 @@ watchEffect(() => {
           </Column>
           <Column>
             <template #body="item">
-              <div class="flex flex-row gap-1">
+              <div class="flex flex-row gap-1 items-center">
+                <i
+                  class="pi pi-circle-fill"
+                  :style="{ color: `${item.data.color}` }"
+                ></i>
                 <p>
                   {{ ("0" + item.data.startTime.getHours()).slice(-2) }}:{{
                     ("0" + item.data.startTime.getMinutes()).slice(-2)

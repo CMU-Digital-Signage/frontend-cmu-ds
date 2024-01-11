@@ -120,12 +120,10 @@ const calculateScreenHeight = () => {
 
 <style>
 .rectangle4 {
-  background-color: #904b4b00; /* Adjust the background color as needed */
   padding-bottom: 2rem;
 }
 
 .rectangle3 {
-  background-color: #e0caca00; /* Adjust the background color as needed */
   padding-bottom: 0.5rem;
   margin-top: 10px;
   height: 100%;

@@ -5,82 +5,82 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { computed, defineProps, toRefs, onUpdated } from "vue";
 import Calendar from "primevue/calendar";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
 import store from "@/store";
-import { all } from "axios";
 import { customDateFormatter } from "@/utils/constant";
 
+const props = defineProps<{ index: number }>();
+const { index } = toRefs(props);
 const device = computed(() => store.state.devices);
+const formDisplay = computed(() => store.state.formDisplay[index.value]);
 
-const timeAllDay = ref();
-const startDate = ref();
-const endDate = ref();
-const duration = ref();
-const allDevice = ref();
-const timeRanges = ref([
-  {
-    startTime: new Date("2024-01-01T08:00:00"),
-    endTime: new Date("2024-01-01T09:00:00"),
-  },
-]);
-
-const addTimeRange = () => {
-  const newStartTime = timeRanges.value[timeRanges.value.length - 1].endTime;
-  newStartTime.setHours(newStartTime.getHours() + 1);
-  const newEndTime = new Date(newStartTime);
-  newEndTime.setHours(newEndTime.getHours() + 1);
-  timeRanges.value.push({ startTime: newStartTime, endTime: newEndTime });
-};
-
-const deleteTimeRange = (index: number) => {
-  timeRanges.value.splice(index, 1);
-};
-
-const calculateMinHourStart = (index: number): Date | undefined => {
-  if (index >= 0 && timeRanges.value.length > index) {
-    const currentRange = timeRanges.value[index];
-
-    const minStartTime = new Date(currentRange.endTime.getTime());
-    minStartTime.setHours(minStartTime.getHours() + 1);
-
-    return minStartTime;
-  }
-  return undefined;
-};
-const calculateMinHour = (index: number): Date | undefined => {
-  if (index >= 0 && timeRanges.value.length > index) {
-    const currentRange = timeRanges.value[index];
-
-    if (currentRange.startTime !== null) {
-      const minEndTime = new Date(currentRange.startTime.getTime());
-      minEndTime.setHours(minEndTime.getHours() + 1);
-
-      return minEndTime;
-    }
-  }
-  return undefined;
-};
-const calculateMaxHour = (index: number): Date | undefined => {
-  if (index >= 0 && timeRanges.value.length > index) {
-    const currentRange = timeRanges.value[index];
-
-    if (currentRange.endTime !== null) {
-      const maxEndTime = new Date(currentRange.endTime.getTime());
-      maxEndTime.setHours(maxEndTime.getHours() - 1);
-      return maxEndTime;
-    }
-  }
-  return undefined;
-};
-
-watch(startDate, (newStartDate) => {
-  if (newStartDate) {
-    endDate.value = null;
+onUpdated(() => {
+  if (
+    formDisplay.value.endDate &&
+    formDisplay.value.startDate > formDisplay.value.endDate
+  ) {
+    store.state.formDisplay[index.value].endDate = null;
   }
 });
+
+const minStartDate = () => {
+  if (index.value > 0 && store.state.formDisplay[index.value - 1].endDate) {
+    const min = new Date(store.state.formDisplay[index.value - 1].endDate!);
+    min.setDate(min.getDate() + 1);
+    return min;
+  } else return new Date();
+};
+
+const addTime = () => {
+  const newStartTime = formDisplay.value.time.at(
+    formDisplay.value.time.length - 1
+  )?.endTime;
+  newStartTime?.setHours(newStartTime.getHours() + 1);
+  const newEndTime = new Date(newStartTime!);
+  newEndTime?.setHours(newEndTime.getHours() + 1);
+  const payload = {
+    index: index.value,
+    time: { startTime: newStartTime, endTime: newEndTime },
+  };
+  store.commit("addTime", payload);
+};
+
+const deleteTime = (i: number) => {
+  store.commit("removeTime", { index: index.value, timeIndex: i });
+};
+
+const minStartTime = (i: number) => {
+  if (i > 0) {
+    const min = new Date(formDisplay.value.time[i - 1].endTime);
+    min.setHours(min.getHours() + 1);
+    return min;
+  }
+};
+
+const maxStartTime = (i: number) => {
+  if (i >= 0) {
+    const max = new Date(formDisplay.value.time[i].endTime);
+    max.setHours(max.getHours() - 1);
+    return max;
+  }
+};
+
+const minEndTime = (i: number) => {
+  const min = new Date(formDisplay.value.time[i].startTime);
+  min.setHours(min.getHours() + 1);
+  return min;
+};
+
+const maxEndTime = (i: number) => {
+  if (i < formDisplay.value.time.length - 1) {
+    const max = new Date(formDisplay.value.time[i + 1].startTime);
+    max.setHours(max.getHours() - 1);
+    return max;
+  }
+};
 </script>
 
 <template>
@@ -89,15 +89,14 @@ watch(startDate, (newStartDate) => {
       <!-- Date -->
       <div class="flex flex-row gap-4 items-center text-[18px] text-[#282828]">
         <div class="flex-col justify-start">
-          <label for="StartDate" class="flex justify-start mb-2 font-semibold">
+          <label class="flex justify-start mb-2 font-semibold">
             Start Date
           </label>
           <Calendar
-            v-model="startDate"
+            v-model="formDisplay.startDate"
             showIcon
-            inputId="startDate"
-            :minDate="new Date()"
-            :dateFormat="customDateFormatter(startDate)"
+            :minDate="minStartDate()"
+            :dateFormat="customDateFormatter(formDisplay.startDate)"
             class="flex justify-start w-[170px]"
           />
         </div>
@@ -107,13 +106,12 @@ watch(startDate, (newStartDate) => {
             End Date
           </label>
           <Calendar
-            v-model="endDate"
+            v-model="formDisplay.endDate"
             showIcon
             inputId="EndDate"
-            :dateFormat="customDateFormatter(endDate)"
-            :minDate="startDate"
+            :dateFormat="customDateFormatter(formDisplay.endDate)"
+            :minDate="formDisplay.startDate"
             class="flex justify-start w-[170px]"
-            :disabled="!startDate"
           />
         </div>
       </div>
@@ -127,28 +125,26 @@ watch(startDate, (newStartDate) => {
           Time
         </label>
         <div class="flex gap-4 items-center">
-          <Checkbox v-model="timeAllDay" value="" :binary="true" />
+          <Checkbox v-model="formDisplay.allDay" :binary="true" />
           <label>All-day</label>
         </div>
         <!-- Time Range -->
         <div class="flex flex-row items-star gap-3">
-          <div class="flex flex-col gap-4">
-            <div v-for="(timeRange, index) in timeRanges" :key="index">
+          <div v-if="!formDisplay.allDay" class="flex flex-col gap-4">
+            <div v-for="(time, i) in formDisplay.time" :key="i">
               <div class="flex flex-row gap-2 items-center">
                 <div
                   class="flex flex-row gap-4 items-center text-[18px] text-[#282828]"
                 >
                   <Calendar
-                    v-model="timeRange.startTime"
+                    v-model="time.startTime"
                     showIcon
                     iconDisplay="input"
                     timeOnly
-                    :inputId="'Stime_' + index"
                     :stepMinute="60"
                     class="w-[170px]"
-                    :maxDate="calculateMaxHour(index)"
-                    :minDate="calculateMinHourStart(index)"
-                    :disabled="timeAllDay"
+                    :maxDate="maxStartTime(i)"
+                    :minDate="minStartTime(i)"
                   >
                     <template #inputicon="{ clickCallback }">
                       <i class="pi pi-clock" @click="clickCallback" />
@@ -156,15 +152,15 @@ watch(startDate, (newStartDate) => {
                   </Calendar>
                   <p>to</p>
                   <Calendar
-                    v-model="timeRange.endTime"
+                    v-model="time.endTime"
                     showIcon
                     iconDisplay="input"
                     timeOnly
-                    :inputId="'Etime_' + index"
                     :stepMinute="60"
                     class="w-[170px]"
-                    :minDate="calculateMinHour(index)"
-                    :disabled="!timeRange.startTime || timeAllDay"
+                    :minDate="minEndTime(i)"
+                    :maxDate="maxEndTime(i)"
+                    :disabled="!time.startTime || formDisplay.allDay"
                   >
                     <template #inputicon="{ clickCallback }">
                       <i class="pi pi-clock" @click="clickCallback"></i>
@@ -172,15 +168,16 @@ watch(startDate, (newStartDate) => {
                   </Calendar>
                 </div>
                 <Button
-                  v-if="index === 0"
+                  v-if="i === 0"
                   icon="pi pi-plus"
-                  @click="addTimeRange"
+                  @click="addTime"
                   class="w-8 h-8 rounded-lg"
+                  :disabled="formDisplay.allDay || !time.endTime"
                 ></Button>
                 <Button
-                  v-if="index !== 0"
+                  v-if="i !== 0"
                   icon="pi pi-minus"
-                  @click="deleteTimeRange(index)"
+                  @click="deleteTime(i)"
                   severity="danger"
                   class="w-8 h-8 rounded-lg"
                 ></Button>
@@ -202,15 +199,14 @@ watch(startDate, (newStartDate) => {
         </label>
         <div class="flex flex-row items-center gap-4 text-[16px] text-[#000]">
           <InputNumber
-            v-model="duration"
+            v-model="formDisplay.duration"
             inputId="minmax-buttons"
             mode="decimal"
             showButtons
             :min="0"
             :max="60"
             :inputStyle="{ width: '80px' }"
-          >
-          </InputNumber>
+          />
           <p>sec</p>
         </div>
       </div>
@@ -225,25 +221,21 @@ watch(startDate, (newStartDate) => {
         </label>
         <div class="flex flex-col gap-4 text-[16px] text-black">
           <div class="flex gap-3 items-center">
-            <Checkbox v-model="allDevice" :value="all" :binary="true" />
+            <Checkbox v-model="formDisplay.allDevice" :binary="true" />
             <label>All Device</label>
           </div>
-
           <div class="flex flex-wrap">
             <div
-              v-for="(item, index) in device"
-              :key="index"
+              v-for="(item, i) in device"
+              :key="i"
               class="flex gap-3 items-center w-1/4"
             >
               <div v-if="item.deviceName" class="flex gap-3 items-center">
                 <Checkbox
-                  :key="index"
-                  v-model="item.MACaddress"
-                  :disabled="allDevice"
-                  :binary="!allDevice ? false : true"
-                  :inputId="item.deviceName"
-                  name="category"
-                  :value="item.deviceName"
+                  v-model="formDisplay.MACaddress"
+                  :disabled="formDisplay.allDevice"
+                  :binary="!formDisplay.allDevice ? false : true"
+                  :value="item.MACaddress"
                 />
                 <label :for="item.deviceName">{{ item.deviceName }}</label>
               </div>
