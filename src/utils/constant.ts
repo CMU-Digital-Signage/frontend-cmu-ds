@@ -1,4 +1,4 @@
-import { Device } from "@/types";
+import { Device, Display } from "@/types";
 import Compressor from "compressorjs";
 import { FileUploadSelectEvent } from "primevue/fileupload";
 
@@ -34,7 +34,7 @@ export const month = [
 
 export const day = ["SUN", "MON", "TUE", "WED", "THR", "FRI", "SAT"];
 
-export const customDateFormatter = (date: Date | undefined) => {
+export const customDateFormatter = (date: Date | null | undefined) => {
   if (!date) return "";
 
   const day = date.getDate().toString().padStart(2, "0");
@@ -51,6 +51,21 @@ export const initialFormDevice = {
   location: null,
   description: null,
 } as Device;
+
+export const initialFormDisplay = {
+  MACaddress: [],
+  allDay: false,
+  allDevice: false,
+  startDate: new Date(),
+  endDate: null,
+  time: [
+    {
+      startTime: new Date("2024-01-01T08:00:00"),
+      endTime: new Date("2024-01-01T09:00:00"),
+    },
+  ],
+  duration: null,
+} as Display;
 
 export const onUpload = (
   e: FileUploadSelectEvent

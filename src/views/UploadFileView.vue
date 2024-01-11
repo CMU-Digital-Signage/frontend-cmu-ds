@@ -35,7 +35,6 @@ const click = ref(0);
 
 <style>
 .rectangle8 {
-  background-color: #83434300; /* Adjust the background color as needed */
   padding-inline: 1.5rem;
   overflow: hidden;
 }

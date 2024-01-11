@@ -284,7 +284,6 @@ const calculateScreenHeight = () => {
 
 <style>
 .rectangle5 {
-  background-color: #b2c19600; /* Adjust the background color as needed */
   padding-bottom: 2rem;
 }
 

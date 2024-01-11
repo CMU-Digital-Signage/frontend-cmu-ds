@@ -5,67 +5,43 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { reactive, ref, watch } from "vue";
+import { computed, reactive, ref } from "vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
-import { Poster } from "@/types";
-import { onUpload, rotate } from "@/utils/constant";
+import { initialFormDisplay, onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 
-const scheduleTabs = reactive([
-  {
-    header: "Schedule 1",
-    // content: ScheduleForm,
-  },
-]);
+const scheduleTabs = reactive([{ header: "Schedule 1" }]);
 
-const form = reactive({
-  title: "",
-  id: store.state.userInfo.id,
-  duration: 0,
-  recurrence: "",
-  description: "",
-  image: "" as any,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  MACaddress: "",
-} as Poster);
-
-const chooseFile = ref();
+const formPoster = computed(() => store.state.formPoster);
+const formDisplay = computed(() => store.state.formDisplay);
 const currentDeg = ref(0);
 const currentI = ref(0);
 
-const add_file = async () => {
-  form.title = (document.getElementById("Title") as HTMLInputElement).value;
-  form.description = (
-    document.getElementById("Description") as HTMLInputElement
-  ).value;
-  if (!form.image && !form.title) {
-    alert("Poster File or Poster Name Invalid");
+const addSchedule = () => {
+  const lastSchedule = formDisplay.value.at(formDisplay.value.length - 1);
+  if (
+    !lastSchedule?.endDate ||
+    (!lastSchedule?.MACaddress && !lastSchedule?.allDevice) ||
+    !lastSchedule.duration
+  ) {
+    alert("Invalid Input.");
     return;
   }
-};
-
-const addSchedule = () => {
+  store.commit("addDisplay", { ...initialFormDisplay });
   const newSchedule = {
     header: `${scheduleTabs.length + 1}`,
-    // content: ScheduleForm,
   };
   scheduleTabs.push(newSchedule);
 };
 
-watch(currentI, () => {
-  console.log(currentI);
-});
-
-const handleDeleteButtonClick = (index: number) => {
+const deleteSchedule = (index: number) => {
   if (index >= 0 && index < scheduleTabs.length) {
-    const removedTabs = scheduleTabs.splice(index, 1);
-    // const removedContent = removedTabs[0].content;
-
-    // if (removedContent) {
-    //   removedContent.destroyed;
-    // }
+    store.commit("removeDisplay", index);
+    scheduleTabs.splice(index, 1);
+    currentI.value == scheduleTabs.length
+      ? (currentI.value -= 1)
+      : currentI.value;
 
     if (scheduleTabs.length > 1) {
       scheduleTabs.forEach((schedule, i) => {
@@ -81,8 +57,9 @@ const handleDeleteButtonClick = (index: number) => {
 <template>
   <div class="flex flex-row justify-between gap-3 mx-1 font-sf-pro">
     <div class="flex flex-col justify-start w-full max-w-4xl gap-5">
+      <!-- Title -->
       <InputText
-        id="Title"
+        v-model="formPoster.title"
         type="text"
         placeholder="Title"
         class="title-input"
@@ -93,11 +70,7 @@ const handleDeleteButtonClick = (index: number) => {
         accept="image/jpeg"
         :show-upload-button="false"
         :multiple="false"
-        @select="
-          async (e) => {
-            chooseFile = await onUpload(e);
-          }
-        "
+        @select="async (e) => (formPoster.image = await onUpload(e))"
       >
         <template #header="{ files, chooseCallback, clearCallback }">
           <div class="flex w-full gap-3 items-center justify-between">
@@ -105,7 +78,7 @@ const handleDeleteButtonClick = (index: number) => {
               <Button
                 @click="
                   clearCallback();
-                  chooseFile = null;
+                  formPoster.image = null;
                   currentDeg = 0;
                   chooseCallback();
                 "
@@ -118,17 +91,17 @@ const handleDeleteButtonClick = (index: number) => {
                 @click="
                   () => {
                     clearCallback();
-                    chooseFile = null;
+                    formPoster.image = null;
                     currentDeg = 0;
                   }
                 "
-                :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
+                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
                 icon="pi pi-times"
                 label="Cancle"
                 rounded
                 outlined
                 severity="danger"
-                :disabled="!chooseFile"
+                :disabled="!formPoster.image"
               />
             </div>
             <div class="flex gap-3 items-center">
@@ -140,15 +113,15 @@ const handleDeleteButtonClick = (index: number) => {
                       currentDeg,
                       -90
                     );
-                    chooseFile = imageDataUrl;
+                    formPoster.image = imageDataUrl;
                     currentDeg = newDeg;
                   }
                 "
-                :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
+                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
                 icon="pi pi-replay"
                 rounded
                 outlined
-                :disabled="!chooseFile"
+                :disabled="!formPoster.image"
               />
               <Button
                 @click="
@@ -158,22 +131,22 @@ const handleDeleteButtonClick = (index: number) => {
                       currentDeg,
                       90
                     );
-                    chooseFile = imageDataUrl;
+                    formPoster.image = imageDataUrl;
                     currentDeg = newDeg;
                   }
                 "
-                :class="`${chooseFile ? '' : 'text-[#9c9b9b]'}`"
+                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
                 icon="pi pi-refresh"
                 rounded
                 outlined
-                :disabled="!chooseFile"
+                :disabled="!formPoster.image"
               />
             </div>
           </div>
         </template>
         <template #content="{ files }">
           <div
-            v-if="files[0] && chooseFile"
+            v-if="files[0] && formPoster.image"
             class="flex flex-row justify-center text-center items-center gap-3"
           >
             <i class="pi pi-power-off"></i>
@@ -186,7 +159,7 @@ const handleDeleteButtonClick = (index: number) => {
             >
               <img
                 :alt="files[0].name"
-                :src="chooseFile"
+                :src="formPoster.image"
                 class="max-w-full max-h-full m-auto rotate-90"
                 :style="{
                   maxWidth: `${3840 / 20}px`,
@@ -220,18 +193,18 @@ const handleDeleteButtonClick = (index: number) => {
       <!-- Description -->
       <div class="flex flex-col gap-2 w-full h-full">
         <label
-          for="Description"
           class="text-[#282828] font-semibold text-[18px] flex justify-start"
           >Description</label
         >
         <InputText
-          id="Description"
+          v-model="formPoster.description"
           type="text"
           class="description-input h-full"
-        ></InputText>
+        />
       </div>
     </div>
 
+    <!-- Schedule -->
     <div class="w-full max-w-4xl">
       <div class="rectangle8 font-sf-pro flex items-start">
         <TabView
@@ -243,21 +216,18 @@ const handleDeleteButtonClick = (index: number) => {
             :key="index"
             :header="schedule.header"
           >
-            <keep-alive>
-              <ScheduleForm v-if="currentI === index" :key="index" />
-            </keep-alive>
-            <!-- <component :key="index" :is="schedule.content" /> -->
+            <ScheduleForm v-if="formDisplay[index]" :index="index" />
           </TabPanel>
         </TabView>
         <div class="flex flex-col justify-center ml-5">
           <Button
-            @click="addSchedule"
+            @click="addSchedule()"
             class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
             ><i class="pi pi-plus text-white"></i
           ></Button>
           <Button
             v-if="currentI !== 0"
-            @click="handleDeleteButtonClick(currentI)"
+            @click="deleteSchedule(currentI)"
             class="flex items-center justify-center mt-3 rounded-md w-8 h-8"
             severity="danger"
             ><i class="pi pi-trash text-white"></i

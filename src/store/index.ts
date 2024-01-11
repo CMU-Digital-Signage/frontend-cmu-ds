@@ -1,4 +1,5 @@
-import { Device, Emergency, Poster, User } from "@/types";
+import { Device, Display, Emergency, Poster, User } from "@/types";
+import { initialFormDisplay } from "@/utils/constant";
 import { createStore } from "vuex";
 
 export default createStore({
@@ -11,7 +12,8 @@ export default createStore({
     devices: <Device[]>[],
     posters: <Poster[]>[],
     searchPosters: <Poster[]>[],
-    formNor: <Poster>{},
+    formPoster: <Poster>{},
+    formDisplay: <Display[]>[{ ...initialFormDisplay }],
     formEmer: <Emergency>{},
   },
   getters: {},
@@ -49,14 +51,34 @@ export default createStore({
     clearSearchPosters(state) {
       state.searchPosters = [] as Poster[];
     },
-    setFormNor(state, value) {
-      state.formNor = value;
+    addDisplay(state, value) {
+      state.formDisplay.push(value);
     },
-    setFormEmer(state, value) {
-      state.formEmer = value;
+    removeDisplay(state, index) {
+      state.formDisplay.splice(index, 1);
+    },
+    addTime(state, payload) {
+      state.formDisplay[payload.index].time.push(payload.time);
+    },
+    removeTime(state, payload) {
+      state.formDisplay[payload.index].time.splice(payload.timeIndex, 1);
+    },
+    setAllTime(state, index) {
+      state.formDisplay[index].time = [
+        {
+          startTime: new Date("2024-01-01T00:00:00"),
+          endTime: new Date("2024-01-01T23:59:59"),
+        },
+      ];
+    },
+    setAllDevice(state, index) {
+      state.devices.map((e) =>
+        state.formDisplay[index].MACaddress.push(e.MACaddress!)
+      );
     },
     resetForm(state) {
-      state.formNor = <Poster>{};
+      state.formPoster = <Poster>{};
+      state.formDisplay = <Display[]>[];
       state.formEmer = <Emergency>{};
     },
   },

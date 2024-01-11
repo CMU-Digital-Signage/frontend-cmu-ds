@@ -13,10 +13,10 @@ const user = computed(() => store.state.userInfo);
     class="flex flex-row h-screen font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar />
-    <div class="w-screen flex flex-col">
-      <NavBar />
-      <router-view />
+    <SideBar class="bg-white" />
+    <div class="w-screen flex flex-col bg-[#fafafa]">
+      <NavBar class="bg-white" />
+      <router-view class="bg-[#fafafa]" />
       <div v-if="$route.path === '/uploadfile'">
         <NavbarBelow />
       </div>

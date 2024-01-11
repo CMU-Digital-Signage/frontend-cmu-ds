@@ -18,7 +18,10 @@ const click = computed({
 </script>
 
 <template>
-  <TabView v-model:active-index="click" class="rectangle flex flex-col">
+  <TabView
+    v-model:active-index="click"
+    class="rectangle flex flex-col"
+  >
     <TabPanel header="Admin">
       <Admin />
     </TabPanel>
@@ -34,7 +37,6 @@ const click = computed({
 <style scoped>
 /* Add styles for the rectangle */
 .rectangle {
-  background-color: #b18b8b00; /* Adjust the background color as needed */
   padding-inline: 1.5rem;
   overflow: hidden;
 }
