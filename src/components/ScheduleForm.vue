@@ -19,10 +19,10 @@ const formDisplay = computed(() => store.state.formDisplay[index.value]);
 
 onUpdated(() => {
   if (
-    formDisplay.value.endDate &&
-    formDisplay.value.startDate > formDisplay.value.endDate
+    formDisplay.value.startDate &&
+    formDisplay.value.startDate > formDisplay.value.endDate!
   ) {
-    store.state.formDisplay[index.value].endDate = null;
+    store.state.formDisplay[index.value].endDate = undefined;
   }
 });
 

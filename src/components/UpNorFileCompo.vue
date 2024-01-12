@@ -33,15 +33,14 @@ const addSchedule = () => {
     header: `${scheduleTabs.length + 1}`,
   };
   scheduleTabs.push(newSchedule);
+  currentI.value++;
 };
 
 const deleteSchedule = (index: number) => {
   if (index >= 0 && index < scheduleTabs.length) {
     store.commit("removeDisplay", index);
     scheduleTabs.splice(index, 1);
-    currentI.value == scheduleTabs.length
-      ? (currentI.value -= 1)
-      : currentI.value;
+    currentI.value == scheduleTabs.length ? currentI.value-- : currentI.value;
 
     if (scheduleTabs.length > 1) {
       scheduleTabs.forEach((schedule, i) => {

@@ -32,8 +32,8 @@ export interface Poster {
 export interface Display {
   allDay: boolean;
   allDevice: boolean;
-  startDate: Date;
-  endDate: Date | null;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
   time: [{ startTime: Date; endTime: Date }];
   duration: number | null;
   MACaddress: string[];
