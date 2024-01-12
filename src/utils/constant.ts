@@ -56,8 +56,8 @@ export const initialFormDisplay = {
   MACaddress: [],
   allDay: false,
   allDevice: false,
-  startDate: new Date(),
-  endDate: null,
+  startDate: undefined,
+  endDate: undefined,
   time: [
     {
       startTime: new Date("2024-01-01T08:00:00"),
