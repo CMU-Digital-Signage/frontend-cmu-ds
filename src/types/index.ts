@@ -11,6 +11,7 @@ export interface Device {
   room: string | null;
   location: any;
   description: string | null;
+  color: string;
 }
 
 export interface Poster {
