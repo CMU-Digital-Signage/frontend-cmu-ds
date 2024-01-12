@@ -244,9 +244,9 @@ const toggleSidebar = () => {
           <div v-if="item.deviceName" class="flex gap-3 items-center">
             <Checkbox
               v-model="item.MACaddress"
-              :inputId="item.deviceName"
               name="MACaddress"
               :value="item.deviceName"
+              :input-style="{ 'border-color': `${item.color}` }"
             />
             <label :for="item.deviceName">{{ item.deviceName }}</label>
           </div>

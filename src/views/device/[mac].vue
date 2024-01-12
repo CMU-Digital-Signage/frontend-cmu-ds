@@ -5,12 +5,13 @@ export default {
 </script>
 <script setup lang="ts">
 import { getPosterEachDevice } from "@/services";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { Poster } from "@/types";
+import store from "@/store";
 
 const route = useRoute();
-const posters = ref<Poster[]>([]);
+const posters = computed(() => store.state.posters);
 const image = ref<string>();
 let currentIndex = 0;
 
@@ -20,10 +21,21 @@ const fetchData = async () => {
   );
   if (ok) {
     const date = new Date();
-    posters.value = poster.filter(
-      (e: Poster) =>
-        new Date(e.startDate) <= date && new Date(e.endDate) >= date
-    );
+    const filteredPoster = poster
+      .filter(
+        (e: Poster) =>
+          new Date(e.startDate) <= date && new Date(e.endDate) >= date
+      )
+      .sort((a: any, b: any) => {
+        const timeA = new Date(`1970-01-01T${a.startTime}`);
+        const timeB = new Date(`1970-01-01T${b.startTime}`);
+        if (timeA < timeB) return -1;
+        if (timeA > timeB) return 1;
+
+        return 0;
+      });
+    store.commit("setPosters", filteredPoster);
+
     if (posters.value.length > 0) {
       showCurrentPoster();
     }
@@ -34,12 +46,40 @@ const fetchData = async () => {
 
 const showCurrentPoster = () => {
   const updatePosterInterval = () => {
-    image.value = posters.value[currentIndex].image;
-    setTimeout(
-      updatePosterInterval,
-      posters.value[currentIndex].duration * 1000
-    );
-    currentIndex = (currentIndex + 1) % posters.value.length;
+    const currentTime = new Date();
+    const currentPoster = posters.value[currentIndex];
+
+    if (
+      new Date(currentPoster.startTime).getHours() <= currentTime.getHours() &&
+      new Date(currentPoster.endTime).getHours() >= currentTime.getHours() &&
+      new Date(currentPoster.endTime).getMinutes() > currentTime.getMinutes()
+    ) {
+      image.value = currentPoster.image;
+
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % posters.value.length;
+        updatePosterInterval();
+      }, currentPoster.duration * 1000);
+    } else {
+      currentIndex = findNextValidPosterIndex();
+      updatePosterInterval();
+    }
+  };
+
+  const findNextValidPosterIndex = () => {
+    const currentTime = new Date();
+    for (let i = 0; i < posters.value.length; i++) {
+      const poster = posters.value[i];
+      if (
+        new Date(poster.startTime).getHours() <= currentTime.getHours() &&
+        new Date(poster.endTime).getHours() >= currentTime.getHours() &&
+        new Date(poster.endTime).getMinutes() > currentTime.getMinutes()
+      ) {
+        return i;
+      }
+    }
+
+    return 0;
   };
 
   updatePosterInterval();

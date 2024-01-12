@@ -5,9 +5,6 @@ export async function getPosterEachDevice(mac: string) {
     const res = await axios.get(
       `${process.env.VUE_APP_API_BASE_URL}/pi/poster`,
       {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
         params: { mac },
         withCredentials: true,
       }
