@@ -20,20 +20,15 @@ const fetchData = async () => {
     route.params.mac as string
   );
   if (ok) {
-    const date = new Date();
-    const filteredPoster = poster
-      .filter(
-        (e: Poster) =>
-          new Date(e.startDate) <= date && new Date(e.endDate) >= date
-      )
-      .sort((a: any, b: any) => {
-        const timeA = new Date(`1970-01-01T${a.startTime}`);
-        const timeB = new Date(`1970-01-01T${b.startTime}`);
-        if (timeA < timeB) return -1;
-        if (timeA > timeB) return 1;
+    const filteredPoster = poster.sort((a: any, b: any) => {
+      const timeA = new Date(a.startTime).getHours();
+      const timeB = new Date(b.startTime).getHours();
 
-        return 0;
-      });
+      if (timeA < timeB) return -1;
+      if (timeA > timeB) return 1;
+
+      return 0;
+    });
     store.commit("setPosters", filteredPoster);
 
     if (posters.value.length > 0) {

@@ -14,37 +14,63 @@ const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
 
+const validateForm = () => {
+  if (
+    (!formPoster.value.title || !formPoster.value.image) &&
+    (!formEmer.value.incidentName || !formEmer.value.emergencyImage)
+  ) {
+    return "Title Invalid or Not Choose File Image.";
+  }
+
+  const invalidSchedule = formDisplay.value.find(
+    (e) =>
+      (!e.MACaddress.length && !e.allDevice) ||
+      !e.duration ||
+      !e.startDate ||
+      !e.endDate
+  );
+
+  if (invalidSchedule) {
+    return "Schedule Invalid.";
+  }
+};
+
+const handleAddEmergency = async () => {
+  const res = await addEmergency(formEmer.value);
+  if (res.ok) {
+    store.commit("resetForm");
+  } else {
+    message.value = res.message;
+  }
+};
+
+const handleAddPoster = async () => {
+  formDisplay.value.forEach((e, i) => {
+    if (e.allDay) store.commit("setAllTime", i);
+    if (e.allDevice) store.commit("setAllDevice", i);
+  });
+
+  const res = await addPoster(formPoster.value, formDisplay.value);
+  if (res.ok) store.commit("resetForm");
+  else message.value = res.message;
+};
+
 const add = async () => {
-  if (!store.state.userInfo.isAdmin) {
-    if (!formPoster.value.title || !formPoster.value.image) {
-      alert("Title Invalid or Not Choose File Image.");
-    }
-  } else if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
-    const res = await addEmergency(formEmer.value);
-    if (res.ok) store.commit("resetForm");
-    else message.value = res.message;
+  if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
+    handleAddEmergency();
   } else if (
     formPoster.value.title &&
     formPoster.value.image &&
-    formDisplay.value
+    !formDisplay.value.find(
+      (e) =>
+        (!e.MACaddress.length && !e.allDevice) ||
+        !e.duration ||
+        !e.startDate ||
+        !e.endDate
+    )
   ) {
-    formDisplay.value.forEach((e, i) => {
-      if (e.allDay) store.commit("setAllTime", i);
-      if (e.allDevice) store.commit("setAllDevice", i);
-    });
-    console.log(formPoster.value, formDisplay.value);
-
-    const res = await addPoster(formPoster.value, formDisplay.value);
-    if (res.ok) store.commit("resetForm");
-    else message.value = res.message;
-  } else
-    alert(
-      `${
-        !formDisplay.value
-          ? "Schedule Invalid."
-          : "Title Invalid or Not Choose File Image."
-      }`
-    );
+    handleAddPoster();
+  } else alert(validateForm());
 };
 </script>
 
