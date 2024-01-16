@@ -95,8 +95,9 @@ const maxEndTime = (i: number) => {
           <Calendar
             v-model="formDisplay.startDate"
             showIcon
+            dateFormat="dd/mm/yy"
             :minDate="minStartDate()"
-            :dateFormat="customDateFormatter(formDisplay.startDate)"
+            @date-select="formDisplay.startDate?.setHours(23, 59, 59, 0)"
             class="flex justify-start w-[170px]"
           />
         </div>
@@ -108,9 +109,9 @@ const maxEndTime = (i: number) => {
           <Calendar
             v-model="formDisplay.endDate"
             showIcon
-            inputId="EndDate"
-            :dateFormat="customDateFormatter(formDisplay.endDate)"
+            dateFormat="dd/mm/yy"
             :minDate="formDisplay.startDate"
+            @date-select="formDisplay.endDate?.setHours(23, 59, 59, 0)"
             class="flex justify-start w-[170px]"
           />
         </div>

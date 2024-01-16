@@ -5,15 +5,13 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { reactive, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import InputText from "primevue/inputtext";
-import { Emergency } from "@/types";
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 
 const formEmer = computed(() => store.state.formEmer);
 const currentDeg = ref(0);
-
 </script>
 
 <template>
@@ -38,11 +36,11 @@ const currentDeg = ref(0);
         "
         :pt="{
           buttonbar: {
-            class: 'border-[#f00] bg-[#f00] bg-opacity-10'
+            class: 'border-[#f00] bg-[#f00] bg-opacity-10',
           },
           content: {
-            class: 'border-[#f00]'
-          }
+            class: 'border-[#f00]',
+          },
         }"
       >
         <template #header="{ files, chooseCallback, clearCallback }">
@@ -141,10 +139,10 @@ const currentDeg = ref(0);
               />
             </div>
           </div>
-          <div v-else></div>
-        </template>
-        <template #empty>
-          <div class="flex flex-row justify-center items-center h-48 gap-3">
+          <div
+            v-else
+            class="flex flex-row justify-center items-center h-48 gap-3"
+          >
             <i class="pi pi-power-off"></i>
             <div
               class="border-2 border-black"

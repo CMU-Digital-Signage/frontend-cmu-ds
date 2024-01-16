@@ -72,13 +72,14 @@ export default createStore({
       ];
     },
     setAllDevice(state, index) {
-      state.devices.map((e) =>
-        state.formDisplay[index].MACaddress.push(e.MACaddress!)
-      );
+      state.devices.map((e) => {
+        if (!state.formDisplay[index].MACaddress.includes(e.MACaddress!))
+          state.formDisplay[index].MACaddress.push(e.MACaddress!);
+      });
     },
     resetForm(state) {
       state.formPoster = <Poster>{};
-      state.formDisplay = <Display[]>[];
+      state.formDisplay = <Display[]>[{ ...initialFormDisplay }];
       state.formEmer = <Emergency>{};
     },
   },

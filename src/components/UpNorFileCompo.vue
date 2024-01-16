@@ -21,8 +21,9 @@ const currentI = ref(0);
 const addSchedule = () => {
   const lastSchedule = formDisplay.value.at(formDisplay.value.length - 1);
   if (
+    !lastSchedule?.startDate ||
     !lastSchedule?.endDate ||
-    (!lastSchedule?.MACaddress && !lastSchedule?.allDevice) ||
+    (!lastSchedule.MACaddress.length && !lastSchedule.allDevice) ||
     !lastSchedule.duration
   ) {
     alert("Invalid Input.");
@@ -167,10 +168,10 @@ const deleteSchedule = (index: number) => {
               />
             </div>
           </div>
-          <div v-else></div>
-        </template>
-        <template #empty>
-          <div class="flex flex-row justify-center items-center h-48 gap-3">
+          <div
+            v-else
+            class="flex flex-row justify-center items-center h-48 gap-3"
+          >
             <i class="pi pi-power-off"></i>
             <div
               class="border-2 border-black"

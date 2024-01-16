@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import { ref, watch } from "vue";
+import { onUpdated, ref, watch } from "vue";
 import UpNorFileCompo from "@/components/UpNorFileCompo.vue";
 import UpEmerFileCompo from "@/components/UpEmerFileCompo.vue";
 import store from "@/store";
 
 const click = ref(0);
+
+onUpdated(() => {
+  store.commit("resetForm");
+});
 </script>
 
 <template>
