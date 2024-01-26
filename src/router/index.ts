@@ -102,11 +102,14 @@ router.beforeEach(async (to, from, next) => {
         .map((e: any) => e.MACaddress);
       store.commit("setMacNotUse", macNotUse);
 
-      const filteredDevices: Device[] = deviceRes.data.filter(
-        (e: any) => e.deviceName
+      const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
+      devices.map((e) => (e.color = getRandomColor()));
+      store.commit("setDevices", devices);
+
+      store.commit(
+        "setFilterDevice",
+        devices.map((e) => e.MACaddress)
       );
-      filteredDevices.map((e) => (e.color = getRandomColor()));
-      store.commit("setDevices", filteredDevices);
 
       if (
         (to.path === "/admin" || to.path === "/emergency") &&

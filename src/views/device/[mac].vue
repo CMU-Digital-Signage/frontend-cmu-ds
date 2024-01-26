@@ -32,6 +32,10 @@ const fetchData = async () => {
     store.commit("setPosters", filteredPoster);
 
     if (posters.value.length > 0) {
+      if (posters.value.length === 1) {
+        image.value = posters.value[0].image;
+        return;
+      }
       showCurrentPoster();
     }
   } else {
@@ -86,11 +90,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- <div v-if="message">{{ message }}</div> -->
   <div class="w-screen h-screen bg-black overflow-hidden">
-    <transition name="fade">
+    <transition v-if="image" name="fade">
       <img
-        v-if="image"
         class="max-w-screen h-screen m-auto transition-opacity"
         alt="poster"
         :key="currentIndex"

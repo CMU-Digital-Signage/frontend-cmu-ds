@@ -7,11 +7,12 @@ export default createStore({
     openSidebar: true,
     userInfo: <User>{},
     allUser: <User[]>[],
-    adminManage: 0 as number,
+    adminManage: <number>0,
     macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
     searchPosters: <Poster[]>[],
+    filterDevice: <string[]>[],
     formPoster: <Poster>{},
     formDisplay: <Display[]>[{ ...initialFormDisplay }],
     formEmer: <Emergency>{},
@@ -47,6 +48,9 @@ export default createStore({
     },
     setSearchPosters(state, posters) {
       state.searchPosters = posters;
+    },
+    setFilterDevice(state, mac) {
+      state.filterDevice = mac;
     },
     clearSearchPosters(state) {
       state.searchPosters = [] as Poster[];

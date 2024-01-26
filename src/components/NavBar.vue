@@ -373,7 +373,9 @@ const add = async () => {
           ></InputText>
           <button
             class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3"
+            :class="{ 'cursor-not-allowed': !searchP }"
             type="submit"
+            :disabled="!searchP"
           ></button>
         </form>
       </TransitionGroup>

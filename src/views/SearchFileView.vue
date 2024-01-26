@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import store from "@/store";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import { month, day } from "../utils/constant";
 
 const devices = computed(() => store.state.devices);
+const filterDevice = computed(() => store.state.filterDevice);
 const searchPosters = computed(() => store.state.searchPosters);
-const data = ref();
-watchEffect(() => {
+const data = ref([]);
+const filterData = ref([]);
+
+watch(searchPosters, () => {
   let temp = [] as any;
   searchPosters.value.forEach((e: any) => {
     const startDate = new Date(e.startDate);
@@ -17,6 +20,7 @@ watchEffect(() => {
       currentDate.setDate(currentDate.getDate() + 1)
     ) {
       temp.push({
+        MACaddress: e.MACaddress,
         color: devices.value.find((d) => d.MACaddress === e.MACaddress)!.color,
         date: currentDate.getDate(),
         month: currentDate.getMonth(),
@@ -42,6 +46,17 @@ watchEffect(() => {
     return 0;
   });
   data.value = temp;
+  filterData.value = data.value;
+});
+
+watch(filterDevice, () => {
+  filterData.value = data.value.filter((e: any) => {
+    return filterDevice.value.includes(e.MACaddress);
+  });
+  console.log(data.value);
+
+  console.log(filterDevice.value);
+  console.log(filterData.value);
 });
 </script>
 
@@ -55,7 +70,7 @@ watchEffect(() => {
           scrollable
           scrollHeight="calc(100vh - 200px)"
           class="font-sf-pro rounded-2xl h-12"
-          :value="data"
+          :value="filterData"
         >
           <Column
             field="date"
