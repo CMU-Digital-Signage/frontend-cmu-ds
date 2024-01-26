@@ -11,6 +11,10 @@ import { signOut } from "@/services";
 
 const user = computed(() => store.state.userInfo);
 const device = computed(() => store.state.devices);
+const filterDevice = computed({
+  get: () => store.state.filterDevice,
+  set: (val) => (store.state.filterDevice = val),
+});
 const openSidebar = computed(() => store.state.openSidebar);
 
 const toggleSidebar = () => {
@@ -193,14 +197,6 @@ const toggleSidebar = () => {
               <i class="pi pi-users"></i>
               <span>Management</span>
             </Button>
-            <Button
-              class="text-black rounded-full h-10 w-10 mb-2 flex items-center justify-center menu-ho"
-              :class="{ 'bg-[#70aaeb2c]': $route.path === '/admin' }"
-              v-else
-              icon="pi pi-users"
-              link
-            >
-            </Button>
           </router-link>
           <router-link to="/emergency">
             <Button
@@ -243,10 +239,16 @@ const toggleSidebar = () => {
         >
           <div v-if="item.deviceName" class="flex gap-3 items-center">
             <Checkbox
-              v-model="item.MACaddress"
-              name="MACaddress"
-              :value="item.deviceName"
-              :input-style="{ 'border-color': `${item.color}` }"
+              v-model="filterDevice"
+              :value="item.MACaddress"
+              :input-style="{
+                'border-color': `${item.color}`,
+                'background-color': filterDevice.includes(
+                  item.MACaddress ? item.MACaddress : ''
+                )
+                  ? `${item.color}`
+                  : undefined,
+              }"
             />
             <label :for="item.deviceName">{{ item.deviceName }}</label>
           </div>
