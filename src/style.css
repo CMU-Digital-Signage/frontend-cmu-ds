@@ -4,6 +4,11 @@
   @tailwind base;
 }
 
+@layer primevue {
+  @import "primevue/resources/themes/saga-blue/theme.css";
+  @import "primeicons/primeicons.css";
+}
+
 @layer tailwind-utilities {
   @tailwind components;
   @tailwind utilities;
@@ -37,5 +42,3 @@
   font-weight: normal;
   font-style: normal;
 }
-
-
