@@ -4,6 +4,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import PrimeVue from "primevue/config";
+import "primevue/resources/themes/saga-blue/theme.css"; //theme
+import "primevue/resources/primevue.min.css"; //core CSS
+import "primeicons/primeicons.css"; //icons
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
@@ -13,8 +16,6 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row"; // optional
-import "primevue/resources/themes/saga-blue/theme.css";
-import "primeicons/primeicons.css";
 import FileUpload from "primevue/fileupload";
 import ToastService from "primevue/toastservice";
 import OverlayPanel from "primevue/overlaypanel";
