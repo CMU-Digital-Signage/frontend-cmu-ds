@@ -1,13 +1,7 @@
-@layer tailwind-base, primevue, tailwind-utilities;
+@layer base-tailwind, primevue, tailwind-utilities;
 
-@layer tailwind-base {
+@layer base-tailwind {
   @tailwind base;
-}
-
-@layer primevue {
-  @import "primevue/resources/themes/saga-blue/theme.css";
-  @import "primevue/resources/primevue.min.css";
-  @import "primeicons/primeicons.css";
 }
 
 @layer tailwind-utilities {
