@@ -10,6 +10,7 @@ import store from "@/store";
 import { editDevice, deleteDevice } from "@/services";
 import { filesize } from "filesize";
 import { initialFormDevice, onUpload } from "@/utils/constant";
+import { useToast } from "primevue/usetoast";
 
 const form = reactive({ ...initialFormDevice });
 
@@ -18,7 +19,16 @@ const chooseFile = ref();
 const oldFile = ref<File>();
 const notChoose = ref(true);
 const showPopup = ref(false);
-const message = ref();
+const toast = useToast();
+
+const errorSelectFile = () => {
+  toast.add({
+    severity: "error",
+    summary: "Invalid file type",
+    detail: "Allowed file types: image/*.",
+    life: 3000,
+  });
+};
 
 const setForm = (i: number) => {
   Object.assign(form, device.value[i]);
@@ -37,7 +47,12 @@ const toggleOverlay = (e: any, panel: any) => {
 const edit = async () => {
   const check = form.deviceName?.replace(" ", "").length;
   if (!check) {
-    alert("Device Name Invalid");
+    toast.add({
+      severity: "error",
+      summary: "Device Name Invalid",
+      detail: "Device Name Invalid",
+      life: 3000,
+    });
     return;
   }
   if (chooseFile.value) {
@@ -51,16 +66,32 @@ const edit = async () => {
     );
     store.commit("setDevices", temp);
     showPopup.value = false;
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: res.message,
+      life: 3000,
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
   }
-
-  message.value = res.message;
 };
 
 const del = async (MACaddress: any) => {
   const res = await deleteDevice(MACaddress);
   const temp = device.value?.filter((e) => e.MACaddress !== MACaddress);
   store.commit("setDevices", temp);
-  message.value = res.message;
+  toast.add({
+    severity: "success",
+    summary: "Success",
+    detail: res.message,
+    life: 3000,
+  });
 };
 
 const calculateScreenHeight = () => {
@@ -72,6 +103,7 @@ const calculateScreenHeight = () => {
 </script>
 
 <template>
+  <Toast />
   <div class="rectangle5">
     <p v-if="!device">Loading...</p>
     <DataTable
@@ -200,15 +232,19 @@ const calculateScreenHeight = () => {
     </div>
     <div class="flex flex-col gap-1">
       <label for="macAddress" class="text-primary-50 font-medium"
-        >Location Photo (JPEG)</label
+        >Location Photo</label
       >
       <FileUpload
-        accept="image/jpeg"
-        customUpload
+        accept="image/*"
         :show-upload-button="false"
         :show-cancel-button="false"
         :multiple="false"
-        @select="async (e) => (chooseFile = await onUpload(e))"
+        @select="
+          async (e) => {
+            if (e.files[0]) chooseFile = await onUpload(e);
+            else errorSelectFile();
+          }
+        "
       >
         <template #header="{ chooseCallback, clearCallback }">
           <div class="flex items-center">

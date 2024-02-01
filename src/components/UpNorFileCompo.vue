@@ -10,6 +10,7 @@ import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
 import { initialFormDisplay, onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
+import { useToast } from "primevue/usetoast";
 
 const scheduleTabs = reactive([{ header: "Schedule 1" }]);
 
@@ -17,6 +18,16 @@ const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const currentDeg = ref(0);
 const currentI = ref(0);
+const toast = useToast();
+
+const errorSelectFile = () => {
+  toast.add({
+    severity: "error",
+    summary: "Invalid file type",
+    detail: "Allowed file types: image/*.",
+    life: 3000,
+  });
+};
 
 const addSchedule = () => {
   const lastSchedule = formDisplay.value.at(formDisplay.value.length - 1);
@@ -26,7 +37,12 @@ const addSchedule = () => {
     (!lastSchedule.MACaddress.length && !lastSchedule.allDevice) ||
     !lastSchedule.duration
   ) {
-    alert("Invalid Input.");
+    toast.add({
+      severity: "error",
+      summary: "Invalid Input",
+      detail: "Invalid Input.",
+      life: 3000,
+    });
     return;
   }
   store.commit("addDisplay", { ...initialFormDisplay });
@@ -55,6 +71,7 @@ const deleteSchedule = (index: number) => {
 </script>
 
 <template>
+  <Toast />
   <div class="flex flex-row justify-between gap-3 mx-1 font-sf-pro">
     <div class="flex flex-col justify-start w-full max-w-4xl gap-5">
       <!-- Title -->
@@ -67,10 +84,15 @@ const deleteSchedule = (index: number) => {
 
       <!-- File Upload -->
       <FileUpload
-        accept="image/jpeg"
+        accept="image/*"
         :show-upload-button="false"
         :multiple="false"
-        @select="async (e) => (formPoster.image = await onUpload(e))"
+        @select="
+          async (e) => {
+            if (e.files[0]) formPoster.image = await onUpload(e);
+            else errorSelectFile();
+          }
+        "
       >
         <template #header="{ files, chooseCallback, clearCallback }">
           <div class="flex w-full gap-3 items-center justify-between">
@@ -184,7 +206,7 @@ const deleteSchedule = (index: number) => {
                 class="pi pi-cloud-upload border-2 rounded-full text-4xl w-fit p-4 mt-1"
               ></i>
               <p class="mt-3 mb-0">Drag and drop files to here.</p>
-              <p class="text-[#176EE2] red">Support JPEG only.</p>
+              <!-- <p class="text-[#176EE2] red">Support JPEG only.</p> -->
             </div>
           </div>
         </template>

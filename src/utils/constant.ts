@@ -158,7 +158,7 @@ export const rotate = (file: File, currentDeg: number, deg: number) => {
           ctx.drawImage(img, -img.width / 2, -img.height / 2);
 
           // Convert the rotated image to base64
-          const imageDataUrl = canvas.toDataURL("image/jpeg", 1.0);
+          const imageDataUrl = canvas.toDataURL(file.type, 1.0);
           resolve({ imageDataUrl, newDeg });
         };
       };

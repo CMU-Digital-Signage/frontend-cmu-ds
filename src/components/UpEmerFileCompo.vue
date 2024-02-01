@@ -9,12 +9,24 @@ import { ref, computed } from "vue";
 import InputText from "primevue/inputtext";
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const formEmer = computed(() => store.state.formEmer);
 const currentDeg = ref(0);
+
+const errorSelectFile = () => {
+  toast.add({
+    severity: "error",
+    summary: "Invalid file type",
+    detail: "Allowed file types: image/*.",
+    life: 3000,
+  });
+};
 </script>
 
 <template>
+  <Toast />
   <div class="flex flex-row justify-between gap-3 mx-1 font-sf-pro">
     <div class="flex flex-col justify-start w-full max-w-4xl gap-5">
       <InputText
@@ -26,12 +38,13 @@ const currentDeg = ref(0);
 
       <!-- File Upload -->
       <FileUpload
-        accept="image/jpeg"
+        accept="image/*"
         :show-upload-button="false"
         :multiple="false"
         @select="
           async (e) => {
-            formEmer.emergencyImage = await onUpload(e);
+            if (e.files[0]) formEmer.emergencyImage = await onUpload(e);
+            else errorSelectFile();
           }
         "
         :pt="{
@@ -155,7 +168,7 @@ const currentDeg = ref(0);
                 class="pi pi-cloud-upload border-2 rounded-full text-4xl w-fit p-4 mt-1"
               ></i>
               <p class="mt-3 mb-0">Drag and drop files to here.</p>
-              <p class="text-[#176EE2] red">Support JPEG only.</p>
+              <!-- <p class="text-[#176EE2] red">Support JPEG only.</p> -->
             </div>
           </div>
         </template>

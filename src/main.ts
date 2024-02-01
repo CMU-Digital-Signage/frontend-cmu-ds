@@ -7,6 +7,7 @@ import PrimeVue from "primevue/config";
 import "primevue/resources/themes/saga-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core CSS
 import "primeicons/primeicons.css"; //icons
+import Toast from "primevue/toast";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
@@ -19,7 +20,7 @@ import Row from "primevue/row"; // optional
 import FileUpload from "primevue/fileupload";
 import ToastService from "primevue/toastservice";
 import OverlayPanel from "primevue/overlaypanel";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { icon, library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import Checkbox from "primevue/checkbox";
@@ -55,14 +56,82 @@ createApp(App)
           }
         `,
       },
-      column: {
+      Toast: {
+        container: (slotProps: any) => ({
+          class: [
+            "rounded-lg w-full border-solid border-0 border-l-[6px] shadow-md backdrop-blur-[100px]",
+            {
+              "border-blue-100/70 dark:border-blue-500/20":
+                slotProps.props.message.severity == "info",
+              "border-green-100/70 dark:border-green-500/20":
+                slotProps.props.message.severity == "success",
+              "border-orange-100/70 dark:border-orange-500/20":
+                slotProps.props.message.severity == "warn",
+              "border-[#ff5757] dark:border-red-500/20":
+                slotProps.props.message.severity == "error",
+            },
+            {
+              "bg-blue-100/70 dark:bg-blue-500/20":
+                slotProps.props.message.severity == "info",
+              "bg-green-100/70 dark:bg-green-500/20":
+                slotProps.props.message.severity == "success",
+              "bg-orange-100/70 dark:bg-orange-500/20":
+                slotProps.props.message.severity == "warn",
+              "bg-[#ffe7e6] dark:bg-red-500/20":
+                slotProps.props.message.severity == "error",
+            },
+            {
+              "text-blue-700 dark:text-blue-300":
+                slotProps.props.message.severity == "info",
+              "text-green-700 dark:text-green-300":
+                slotProps.props.message.severity == "success",
+              "text-orange-700 dark:text-orange-300":
+                slotProps.props.message.severity == "warn",
+              "text-[#ff5757] dark:text-red-500/20":
+                slotProps.props.message.severity == "error",
+            },
+          ],
+        }),
+        content: (slotProps: any) => ({
+          class: ["border-none rounded-lg"],
+        }),
+        icon: (slotProps: any) => ({
+          class: [
+            {
+              "text-blue-700 dark:text-blue-300":
+                slotProps.props.message.severity == "info",
+              "text-green-700 dark:text-green-300":
+                slotProps.props.message.severity == "success",
+              "text-orange-700 dark:text-orange-300":
+                slotProps.props.message.severity == "warn",
+              "text-[#ff5757] dark:text-red-500/20":
+                slotProps.props.message.severity == "error",
+            },
+          ],
+        }),
+        closeIcon: (slotProps: any) => ({
+          class: [
+            {
+              "text-blue-700 dark:text-blue-300":
+                slotProps.props.message.severity == "info",
+              "text-green-700 dark:text-green-300":
+                slotProps.props.message.severity == "success",
+              "text-orange-700 dark:text-orange-300":
+                slotProps.props.message.severity == "warn",
+              "text-[#ff5757] dark:text-red-500/20":
+                slotProps.props.message.severity == "error",
+            },
+          ],
+        }),
+      },
+      Column: {
         sorticon: (slotProps: any) => ({
           class: [
             "m-3 pi",
             {
-              "pi-sort-alt": slotProps.props.sortOrder === 0,
-              "pi-sort-alpha-down": slotProps.props.sortOrder === 1,
-              "pi-sort-alpha-up": slotProps.props.sortOrder === -1,
+              "pi-sort-alt": slotProps.props.sortOrder == 0,
+              "pi-sort-alpha-down": slotProps.props.sortOrder == 1,
+              "pi-sort-alpha-up": slotProps.props.sortOrder == -1,
             },
           ],
         }),
@@ -72,6 +141,7 @@ createApp(App)
   .use(ToastService)
   .component("VueDatePicker", VueDatePicker)
   .component("font-awesome-icon", FontAwesomeIcon)
+  .component("Toast", Toast)
   .component("Dialog", Dialog)
   .component("Button", Button)
   .component("Calendar", Calendar)
