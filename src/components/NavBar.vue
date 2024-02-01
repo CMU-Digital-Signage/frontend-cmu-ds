@@ -31,7 +31,6 @@ const date = ref(new Date());
 const selectedDate = ref(new Date());
 const clickSearch = ref(false);
 const searchP = ref("");
-const message = ref();
 const toast = useToast();
 const selectedDevice = ref(devices.value[0]);
 
@@ -43,6 +42,15 @@ watchEffect(() => {
     searchP.value = "";
   }
 });
+
+const errorSelectFile = () => {
+  toast.add({
+    severity: "error",
+    summary: "Invalid file type",
+    detail: "Allowed file types: image/*.",
+    life: 3000,
+  });
+};
 
 const resetForm = () => {
   Object.assign(form, initialFormDevice);
@@ -74,7 +82,12 @@ const search = async () => {
 const add = async () => {
   const check = form.deviceName?.replace(" ", "").length;
   if (!form.MACaddress || !check) {
-    alert("MAC Address or Device Name Invalid");
+    toast.add({
+      severity: "error",
+      summary: "Invalid",
+      detail: "MAC Address or Device Name Invalid",
+      life: 3000,
+    });
     return;
   }
   if (chooseFile.value) {
@@ -87,15 +100,26 @@ const add = async () => {
     showPopup.value = false;
     const temp = macNotUse.value.filter((e) => e !== form.MACaddress);
     store.commit("setMacNotUse", temp);
-    message.value = "Add device successfully.";
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Add device successfully.",
+      life: 3000,
+    });
     resetForm();
   } else {
-    message.value = res.message;
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
   }
 };
 </script>
 
 <template>
+  <Toast />
   <div class="h-14 px-6 flex items-center z-10 shadow-lg">
     <!-- "Management" -->
     <ul
@@ -183,18 +207,18 @@ const add = async () => {
           </div>
           <div class="flex flex-col gap-1">
             <label for="macAddress" class="text-primary-50 font-medium"
-              >Location Photo (JPEG)</label
+              >Location Photo</label
             >
             <FileUpload
-              accept="image/jpeg"
+              accept="image/*"
               customUpload
               :show-upload-button="false"
               :show-cancel-button="false"
               :multiple="false"
               @select="
                 async (e) => {
-                  chooseFile = await onUpload(e);
-                  console.log(chooseFile, e.files[0]);
+                  if (e.files[0]) chooseFile = await onUpload(e);
+                  else errorSelectFile();
                 }
               "
             >
@@ -359,26 +383,25 @@ const add = async () => {
           </svg>
         </div>
       </div>
-      <TransitionGroup
+      <form
         v-if="clickSearch"
-        :duration="{ enter: 500, leave: 800 }"
+        @submit.prevent="search"
+        class="flex items-center duration-500"
       >
-        <form @submit.prevent="search" class="flex items-center">
-          <p for="macAddress" class="font-bold">Search</p>
-          <InputText
-            v-model="searchP"
-            :autofocus="true"
-            class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
-            placeholder="Search Poster"
-          ></InputText>
-          <button
-            class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3"
-            :class="{ 'cursor-not-allowed': !searchP }"
-            type="submit"
-            :disabled="!searchP"
-          ></button>
-        </form>
-      </TransitionGroup>
+        <p for="macAddress" class="font-bold">Search</p>
+        <InputText
+          v-model="searchP"
+          autofocus
+          class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
+          placeholder="Search Poster"
+        ></InputText>
+        <button
+          class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3"
+          :class="{ 'cursor-not-allowed': !searchP }"
+          type="submit"
+          :disabled="!searchP"
+        ></button>
+      </form>
       <div v-if="$route.path === '/'" class="flex gap-3 items-center">
         <button @click="goToSearch">
           <i
