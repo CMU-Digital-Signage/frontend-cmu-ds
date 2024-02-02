@@ -21,8 +21,8 @@ const fetchData = async () => {
   );
   if (ok) {
     const filteredPoster = poster.sort((a: any, b: any) => {
-      const timeA = new Date(a.startTime).getHours();
-      const timeB = new Date(b.startTime).getHours();
+      const timeA = new Date(a.startTime).toTimeString();
+      const timeB = new Date(b.startTime).toTimeString();
 
       if (timeA < timeB) return -1;
       if (timeA > timeB) return 1;
@@ -45,13 +45,11 @@ const fetchData = async () => {
 
 const showCurrentPoster = () => {
   const updatePosterInterval = () => {
-    const currentTime = new Date();
+    const currentTime = new Date().toTimeString();
     const currentPoster = posters.value[currentIndex];
-
     if (
-      new Date(currentPoster.startTime).getHours() <= currentTime.getHours() &&
-      new Date(currentPoster.endTime).getHours() >= currentTime.getHours() &&
-      new Date(currentPoster.endTime).getMinutes() > currentTime.getMinutes()
+      new Date(currentPoster.startTime).toTimeString() <= currentTime &&
+      new Date(currentPoster.endTime).toTimeString() >= currentTime
     ) {
       image.value = currentPoster.image;
 
@@ -66,13 +64,12 @@ const showCurrentPoster = () => {
   };
 
   const findNextValidPosterIndex = () => {
-    const currentTime = new Date();
+    const currentTime = new Date().toTimeString();
     for (let i = 0; i < posters.value.length; i++) {
       const poster = posters.value[i];
       if (
-        new Date(poster.startTime).getHours() <= currentTime.getHours() &&
-        new Date(poster.endTime).getHours() >= currentTime.getHours() &&
-        new Date(poster.endTime).getMinutes() > currentTime.getMinutes()
+        new Date(poster.startTime).toTimeString() <= currentTime &&
+        new Date(poster.endTime).toTimeString() >= currentTime
       ) {
         return i;
       }
