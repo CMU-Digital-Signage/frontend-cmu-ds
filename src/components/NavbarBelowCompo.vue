@@ -107,6 +107,7 @@ const add = async () => {
       detail: validateForm(),
       life: 3000,
     });
+    loading.value = false;
   }
 };
 </script>
