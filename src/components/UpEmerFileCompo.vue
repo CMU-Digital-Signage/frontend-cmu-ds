@@ -154,22 +154,13 @@ const errorSelectFile = () => {
           </div>
           <div
             v-else
-            class="flex flex-row justify-center items-center h-48 gap-3"
+            class="flex flex-col justify-center items-center h-48 gap-3"
           >
-            <i class="pi pi-power-off"></i>
-            <div
-              class="border-2 border-black"
-              :style="{
-                width: `${2160 / 20}px`,
-                height: `${3840 / 20}px`,
-              }"
-            >
-              <i
-                class="pi pi-cloud-upload border-2 rounded-full text-4xl w-fit p-4 mt-1"
-              ></i>
-              <p class="mt-3 mb-0">Drag and drop files to here.</p>
-              <!-- <p class="text-[#176EE2] red">Support JPEG only.</p> -->
-            </div>
+            <i
+              class="pi pi-cloud-upload border-2 rounded-full text-4xl w-fit p-4 mt-1"
+            ></i>
+            <p class="mt-3 mb-0">Drag and drop files to here.</p>
+            <!-- <p class="text-[#176EE2] red">Support JPEG only.</p> -->
           </div>
         </template>
       </FileUpload>

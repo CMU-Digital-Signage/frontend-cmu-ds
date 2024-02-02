@@ -120,7 +120,7 @@ const add = async () => {
 
 <template>
   <Toast />
-  <div class="h-14 px-6 flex items-center z-10 shadow-lg">
+  <div class="h-14 px-6 flex items-center z-10 bg-white border-gray-100  border-b-[2px]">
     <!-- "Management" -->
     <ul
       v-if="$route.path === '/admin'"

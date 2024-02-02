@@ -24,7 +24,7 @@ const toggleSidebar = () => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-screen shadow-2xl side-bar sticky"
+    class="flex flex-col justify-between h-screen side-bar sticky border-gray-100 border-r-[2px]"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
     <div class="space-y-5 font-sf-pro" :class="{ 'p-4': openSidebar }">
@@ -66,7 +66,7 @@ const toggleSidebar = () => {
 
         <Button
           @click="$router.push('/')"
-          class="text-black bg-[#f6f6f6] rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
+          class="text-black bg-white rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
           v-if="$route.path === '/searchfile' || $route.path === '/uploadfile'"
           :style="{
             transform: openSidebar ? '' : 'translateX(8px)',
@@ -97,7 +97,7 @@ const toggleSidebar = () => {
         >
           <router-link to="/">
             <Button
-              class="bg-[#f6f6f6] menu-ho w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
+              class="bg-white menu-ho w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -121,7 +121,7 @@ const toggleSidebar = () => {
           <router-link to="/file">
             <div>
               <Button
-                class="bg-[#f6f6f6] w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+                class="bg-white w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
                 v-if="openSidebar"
                 link
                 :style="{
@@ -145,7 +145,7 @@ const toggleSidebar = () => {
           </router-link>
           <router-link to="/deviceManage">
             <Button
-              class="bg-[#f6f6f6] w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+              class="bg-white w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -186,7 +186,7 @@ const toggleSidebar = () => {
         >
           <router-link to="/admin">
             <Button
-              class="bg-[#f6f6f6] space-x-2 w-full text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
+              class="bg-white space-x-2 w-full text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -200,7 +200,7 @@ const toggleSidebar = () => {
           </router-link>
           <router-link to="/emergency">
             <Button
-              class="bg-[#f6f6f6] space-x-2 w-full text-[#f00] font-sf-pro font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
+              class="bg-white space-x-2 w-full text-[#f00] font-sf-pro font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
               v-if="openSidebar"
               link
               :style="{
