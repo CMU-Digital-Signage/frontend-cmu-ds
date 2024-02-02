@@ -47,6 +47,7 @@ const showCurrentPoster = () => {
   const updatePosterInterval = () => {
     const currentTime = new Date().toTimeString();
     const currentPoster = posters.value[currentIndex];
+
     if (
       new Date(currentPoster.startTime).toTimeString() <= currentTime &&
       new Date(currentPoster.endTime).toTimeString() >= currentTime
@@ -65,14 +66,15 @@ const showCurrentPoster = () => {
 
   const findNextValidPosterIndex = () => {
     const currentTime = new Date().toTimeString();
-    for (let i = 0; i < posters.value.length; i++) {
-      const poster = posters.value[i];
-      if (
-        new Date(poster.startTime).toTimeString() <= currentTime &&
-        new Date(poster.endTime).toTimeString() >= currentTime
-      ) {
-        return i;
-      }
+    currentIndex = (currentIndex + 1) % posters.value.length;
+    const poster = posters.value[currentIndex];
+    if (
+      new Date(poster.startTime).toTimeString() <= currentTime &&
+      new Date(poster.endTime).toTimeString() >= currentTime
+    ) {
+      return currentIndex;
+    } else {
+      findNextValidPosterIndex();
     }
 
     return 0;
