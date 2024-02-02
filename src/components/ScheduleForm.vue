@@ -54,7 +54,7 @@ const deleteTime = (i: number) => {
 
 const minStartTime = (i: number) => {
   if (i > 0) {
-    const min = new Date(formDisplay.value.time[i - 1].endTime);
+    const min = new Date(formDisplay.value.time[i - 1].endTime!);
     min.setHours(min.getHours() + 1);
     return min;
   }
@@ -62,7 +62,7 @@ const minStartTime = (i: number) => {
 
 const maxStartTime = (i: number) => {
   if (i >= 0) {
-    const max = new Date(formDisplay.value.time[i].endTime);
+    const max = new Date(formDisplay.value.time[i].endTime!);
     max.setHours(max.getHours() - 1);
     return max;
   }
@@ -142,7 +142,7 @@ const maxEndTime = (i: number) => {
                     showIcon
                     iconDisplay="input"
                     timeOnly
-                    :stepMinute="60"
+                    :stepMinute="15"
                     class="w-[170px]"
                     :maxDate="maxStartTime(i)"
                     :minDate="minStartTime(i)"
@@ -157,7 +157,7 @@ const maxEndTime = (i: number) => {
                     showIcon
                     iconDisplay="input"
                     timeOnly
-                    :stepMinute="60"
+                    :stepMinute="15"
                     class="w-[170px]"
                     :minDate="minEndTime(i)"
                     :maxDate="maxEndTime(i)"

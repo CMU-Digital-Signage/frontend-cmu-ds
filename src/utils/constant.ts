@@ -70,7 +70,7 @@ export const initialFormDisplay = {
   time: [
     {
       startTime: new Date("2024-01-01T08:00:00"),
-      endTime: new Date("2024-01-01T09:00:00"),
+      endTime: undefined,
     },
   ],
   duration: null,
