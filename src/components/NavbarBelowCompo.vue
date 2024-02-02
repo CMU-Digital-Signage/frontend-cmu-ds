@@ -127,7 +127,7 @@ const add = async () => {
         icon="pi pi-upload"
         :loading="loading"
         @click="add"
-        class="bg-teal border-teal font-semibold font-sf-pro text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+        class="bg-[#36BFA7] border-[#36BFA7] font-semibold font-sf-pro text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
       />
     </ul>
   </div>

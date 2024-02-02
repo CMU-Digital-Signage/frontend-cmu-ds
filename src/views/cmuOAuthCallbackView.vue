@@ -2,7 +2,7 @@
   <div class="py-32 flex flex-col gap-10">
     <h1 class="text-3xl">{{ message }}</h1>
     <div class="justify-center flex flex-row gap-10 text-xl">
-      <button class="bg-rose" @click="$router.push('/login')">Back</button>
+      <button class="bg-[#ED3838]" @click="$router.push('/login')">Back</button>
     </div>
   </div>
 </template>
