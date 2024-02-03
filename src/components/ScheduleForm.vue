@@ -23,6 +23,13 @@ onUpdated(() => {
     formDisplay.value.startDate > formDisplay.value.endDate!
   ) {
     store.state.formDisplay[index.value].endDate = undefined;
+  } else if (
+    formDisplay.value.time[index.value].startTime &&
+    formDisplay.value.time[index.value].endTime &&
+    formDisplay.value.time[index.value].startTime.toTimeString() >
+      formDisplay.value.time[index.value].endTime!.toTimeString()
+  ) {
+    store.state.formDisplay[index.value].time[index.value].endTime = undefined;
   }
 });
 
@@ -142,10 +149,11 @@ const maxEndTime = (i: number) => {
                     showIcon
                     iconDisplay="input"
                     timeOnly
-                    :stepMinute="15"
+                    :stepMinute="30"
                     class="w-[170px]"
                     :maxDate="maxStartTime(i)"
                     :minDate="minStartTime(i)"
+                    :manualInput="false"
                   >
                     <template #inputicon="{ clickCallback }">
                       <i class="pi pi-clock" @click="clickCallback" />
@@ -157,11 +165,12 @@ const maxEndTime = (i: number) => {
                     showIcon
                     iconDisplay="input"
                     timeOnly
-                    :stepMinute="15"
+                    :stepMinute="30"
                     class="w-[170px]"
                     :minDate="minEndTime(i)"
                     :maxDate="maxEndTime(i)"
                     :disabled="!time.startTime || formDisplay.allDay"
+                    :manualInput="false"
                   >
                     <template #inputicon="{ clickCallback }">
                       <i class="pi pi-clock" @click="clickCallback"></i>
