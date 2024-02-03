@@ -46,22 +46,22 @@ const fetchData = async () => {
 
 const showCurrentPoster = () => {
   const updatePosterInterval = () => {
+    if (currentIndex === -1) return;
+
     const currentTime = new Date().toTimeString();
     const currentPoster = posters.value[currentIndex];
     const currentPosterStart = new Date(currentPoster.startTime).toTimeString();
     const currentPosterEnd = new Date(currentPoster.endTime).toTimeString();
-    console.log(currentTime, currentPosterStart, currentPosterEnd);
 
     if (currentPosterStart <= currentTime && currentPosterEnd >= currentTime) {
       image.value = currentPoster.image;
-
+      count = 0;
       setTimeout(() => {
         currentIndex = (currentIndex + 1) % posters.value.length;
         updatePosterInterval();
       }, currentPoster.duration * 1000);
     } else {
       currentIndex = findNextValidPosterIndex();
-      if (currentIndex === -1) return;
       updatePosterInterval();
     }
   };
@@ -72,16 +72,14 @@ const showCurrentPoster = () => {
     const poster = posters.value[currentIndex];
     const posterStart = new Date(poster.startTime).toTimeString();
     const posterEnd = new Date(poster.endTime).toTimeString();
-    console.log(currentTime, posterStart, posterEnd);
     if (count > posters.value.length) return -1;
-    if (posterStart <= currentTime && posterEnd >= currentTime) {
+    else if (posterStart <= currentTime && posterEnd >= currentTime) {
       return currentIndex;
     } else {
       count++;
       findNextValidPosterIndex();
     }
-
-    return 0;
+    return currentIndex;
   };
 
   updatePosterInterval();
