@@ -1,6 +1,8 @@
 import { Device, Display, Emergency, Poster, User } from "@/types";
-import { initialFormDisplay } from "@/utils/constant";
+import { initialFormDisplay, fullMonth } from "@/utils/constant";
 import { createStore } from "vuex";
+
+const date = new Date();
 
 export default createStore({
   state: {
@@ -8,6 +10,9 @@ export default createStore({
     userInfo: <User>{},
     allUser: <User[]>[],
     adminManage: <number>0,
+    currentViewDate: <string>(
+      `${fullMonth[date.getMonth()]} ${date.getFullYear()}`
+    ),
     macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
@@ -36,6 +41,9 @@ export default createStore({
     },
     setAdminManage(state, value) {
       state.adminManage = value;
+    },
+    setCurrentViewDate(state, value) {
+      state.currentViewDate = value;
     },
     setMacNotUse(state, mac) {
       state.macNotUse = mac;
