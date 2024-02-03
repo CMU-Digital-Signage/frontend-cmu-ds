@@ -9,7 +9,10 @@ import { defineProps } from "vue";
 import { ref, computed, onMounted } from "vue";
 import store from "@/store";
 import { getPoster } from "@/services/poster";
+import { customDateMonthFormatter } from "@/utils/constant";
+import { User } from "@/types";
 const posters = ref([]);
+const user = computed<User>(() => store.state.userInfo);
 
 onMounted(async () => {
   const res = await getPoster("");
@@ -17,17 +20,35 @@ onMounted(async () => {
     const uniquePosters = res.poster.reduce((acc: any[], e: any) => {
       // Check if the title is not already in the accumulator
       if (!acc.some((poster) => poster.title === e.title)) {
-        const user = store.getters.getUserById(e.id);
-        const uploader = `${user.firstName} ${
-          user?.lastName?.charAt(0) || ""
+        //uploader
+        const users = store.getters.getUserById(e.id);
+        const uploader = `${users.firstName} ${
+          users?.lastName?.charAt(0) || ""
         }.`;
+        //status
+        const currentDate = new Date();
+        const startDate = new Date(e.startDate);
+        const endDate = new Date(e.endDate);
+        const isActive = currentDate >= startDate && currentDate <= endDate;
+        const status = isActive ? "Active" : "Inactive";
+        //createdAt
+        const createdAt = new Date(e.startDate);
 
-        acc.push({
-          title: e.title,
-          uploader,
-          createdAt: new Date(e.startDate),
-          status,
-        });
+        if (user.value.isAdmin) {
+          acc.push({
+            title: e.title,
+            uploader,
+            createdAt: customDateMonthFormatter(createdAt),
+            status,
+          });
+        } else if (e.id == user.value.id) {
+          acc.push({
+            title: e.title,
+            uploader,
+            createdAt: customDateMonthFormatter(createdAt),
+            status,
+          });
+        }
       }
       return acc;
     }, []);
@@ -48,6 +69,7 @@ onMounted(async () => {
     >
       <Column field="title" header="Title" sortable style="width: 30%"></Column>
       <Column
+        v-if="user?.isAdmin"
         field="uploader"
         header="Uploader"
         sortable

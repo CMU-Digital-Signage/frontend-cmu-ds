@@ -251,7 +251,7 @@ const toggleSidebar = () => {
         <div
           v-for="(item, index) in device"
           :key="index"
-          class="flex align-items-center text-[15px] ml-"
+          class="flex align-items-center text-[15px] ml-4"
         >
           <div v-if="item.deviceName" class="flex items-center gap-3 pb-3">
             <Checkbox
