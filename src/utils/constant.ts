@@ -2,6 +2,31 @@ import { Device, Display } from "@/types";
 import Compressor from "compressorjs";
 import { FileUploadSelectEvent } from "primevue/fileupload";
 
+export const color = [
+  "#7986CB",
+  "#33B679",
+  "#8E24AA",
+  "#E67C73",
+  "#F6BF26",
+  "#F4511E",
+  "#039BE5",
+  "#616161",
+  "#3F51B5",
+  "#0B8043",
+  "#D50000",
+  "#FF8C00",
+  "#20B2AA",
+  "#87CEEB",
+  "#FF1493",
+  "#8A2BE2",
+  "#BB85D6",
+  "#B84770",
+  "#0B5E87",
+  "#008080",
+  "#006EEB",
+  "#71A7F8"
+];
+
 export const getRandomColor = () => {
   const letters = "0123456789ABCDEF";
   let color = "#";
