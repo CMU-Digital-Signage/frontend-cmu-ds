@@ -14,6 +14,7 @@ const route = useRoute();
 const posters = computed(() => store.state.posters);
 const image = ref<string>();
 let currentIndex = 0;
+let count = 0;
 
 const fetchData = async () => {
   const { ok, poster, message } = await getPosterEachDevice(
@@ -45,15 +46,16 @@ const fetchData = async () => {
 
 const showCurrentPoster = () => {
   const updatePosterInterval = () => {
+    if (currentIndex === -1) return;
+
     const currentTime = new Date().toTimeString();
     const currentPoster = posters.value[currentIndex];
+    const currentPosterStart = new Date(currentPoster.startTime).toTimeString();
+    const currentPosterEnd = new Date(currentPoster.endTime).toTimeString();
 
-    if (
-      new Date(currentPoster.startTime).toTimeString() <= currentTime &&
-      new Date(currentPoster.endTime).toTimeString() >= currentTime
-    ) {
+    if (currentPosterStart <= currentTime && currentPosterEnd >= currentTime) {
       image.value = currentPoster.image;
-
+      count = 0;
       setTimeout(() => {
         currentIndex = (currentIndex + 1) % posters.value.length;
         updatePosterInterval();
@@ -68,16 +70,16 @@ const showCurrentPoster = () => {
     const currentTime = new Date().toTimeString();
     currentIndex = (currentIndex + 1) % posters.value.length;
     const poster = posters.value[currentIndex];
-    if (
-      new Date(poster.startTime).toTimeString() <= currentTime &&
-      new Date(poster.endTime).toTimeString() >= currentTime
-    ) {
+    const posterStart = new Date(poster.startTime).toTimeString();
+    const posterEnd = new Date(poster.endTime).toTimeString();
+    if (count > posters.value.length) return -1;
+    else if (posterStart <= currentTime && posterEnd >= currentTime) {
       return currentIndex;
     } else {
+      count++;
       findNextValidPosterIndex();
     }
-
-    return 0;
+    return currentIndex;
   };
 
   updatePosterInterval();
