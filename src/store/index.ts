@@ -22,7 +22,11 @@ export default createStore({
     formDisplay: <Display[]>[{ ...initialFormDisplay }],
     formEmer: <Emergency>{},
   },
-  getters: {},
+  getters: {
+    getUserById: (state) => (id: string) => {
+      return state.allUser.find((user) => user.id === id) || {};
+    },
+  },
   mutations: {
     setOpenSidebar(state, value) {
       state.openSidebar = value;
