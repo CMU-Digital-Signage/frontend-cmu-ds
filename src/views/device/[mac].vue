@@ -34,8 +34,19 @@ const fetchData = async () => {
 
     if (posters.value.length > 0) {
       if (posters.value.length === 1) {
-        image.value = posters.value[0].image;
-        return;
+        const currentTime = new Date().toTimeString();
+        const currentPoster = posters.value[0];
+        const currentPosterStart = new Date(
+          currentPoster.startTime
+        ).toTimeString();
+        const currentPosterEnd = new Date(currentPoster.endTime).toTimeString();
+        if (
+          currentPosterStart <= currentTime &&
+          currentPosterEnd >= currentTime
+        ) {
+          image.value = posters.value[0].image;
+          return;
+        } else return;
       }
       showCurrentPoster();
     }
