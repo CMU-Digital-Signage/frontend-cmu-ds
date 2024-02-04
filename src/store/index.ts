@@ -17,6 +17,7 @@ export default createStore({
     macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
+    emerPosters: <Emergency[]>[],
     uniquePosters: <Poster[]>[],
     searchPosters: <Poster[]>[],
     filterDevice: <string[]>[],
@@ -36,6 +37,9 @@ export default createStore({
     },
   },
   mutations: {
+    setEmerPosters(state, value) {
+      state.emerPosters = value;
+    },
     setOpenSidebar(state, value) {
       state.openSidebar = value;
     },
