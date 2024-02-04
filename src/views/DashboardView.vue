@@ -158,7 +158,7 @@ onMounted(async () => {
     headerToolbar: false,
     height: innerHeight * 0.9,
     windowResize: function (view) {
-      return
+      return;
     },
     events: postersView.value,
     eventTimeFormat: {
@@ -301,5 +301,35 @@ watch(selectedDevice, () => {
 <style>
 .fc .fc-popover {
   z-index: 50;
+}
+
+.content {
+  height: 100% !important;
+}
+.fc-col-header,
+.fc-timegrid-body {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 10px;
+}
+.fc-scrollgrid-sync-table {
+  width: 100% !important;
+  height: 100% !important;
+}
+.fc-daygrid-body {
+  width: 100% !important;
+  height: 100% !important;
+}
+.fc-daygrid-body-balanced {
+  width: 100% !important;
+  height: 100% !important;
+}
+table {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 10px;
+}
+.fc-widget-header{
+    background-color:blue;
 }
 </style>
