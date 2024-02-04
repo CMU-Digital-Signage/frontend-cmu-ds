@@ -10,6 +10,7 @@ export default createStore({
     userInfo: <User>{},
     allUser: <User[]>[],
     adminManage: <number>0,
+    selectDevice: <string>"",
     currentViewDate: <string>(
       `${fullMonth[date.getMonth()]} ${date.getFullYear()}`
     ),
@@ -45,6 +46,9 @@ export default createStore({
     },
     setAdminManage(state, value) {
       state.adminManage = value;
+    },
+    setSelectDevice(state, value) {
+      state.selectDevice = value;
     },
     setCurrentViewDate(state, value) {
       state.currentViewDate = value;

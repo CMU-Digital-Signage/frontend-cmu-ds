@@ -12,7 +12,7 @@ import AdminDashboard from "../views/AdminView.vue";
 import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
 import { Device } from "@/types";
-import { getRandomColor } from "@/utils/constant";
+import { color } from "@/utils/constant";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -103,9 +103,9 @@ router.beforeEach(async (to, from, next) => {
       store.commit("setMacNotUse", macNotUse);
 
       const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
-      devices.map((e) => (e.color = getRandomColor()));
+      devices.map((e, i) => (e.color = color[i]));
       store.commit("setDevices", devices);
-
+      store.commit("setSelectDevice", devices[0].MACaddress);
       store.commit(
         "setFilterDevice",
         devices.map((e) => e.MACaddress)
