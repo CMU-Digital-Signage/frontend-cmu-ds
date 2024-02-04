@@ -50,6 +50,9 @@ watchEffect(() => {
     clickSearch.value = false;
     searchP.value = "";
   }
+  if (router.currentRoute.value.path === "/") {
+    monthView.value = true;
+  }
 });
 
 const errorSelectFile = () => {
