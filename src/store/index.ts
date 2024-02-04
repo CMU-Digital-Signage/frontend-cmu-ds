@@ -28,6 +28,12 @@ export default createStore({
     getUserById: (state) => (id: string) => {
       return state.allUser.find((user) => user.id === id) || {};
     },
+    getDeviceByMac: (state) => (mac: string) => {
+      return (
+        state.devices.find((device) => device.MACaddress === mac)?.deviceName ||
+        {}
+      );
+    },
   },
   mutations: {
     setOpenSidebar(state, value) {
