@@ -28,6 +28,8 @@ export interface Poster {
   startTime: Date;
   endTime: Date;
   duration: number;
+  uploader: string;
+  status: boolean;
 }
 
 export interface Display {

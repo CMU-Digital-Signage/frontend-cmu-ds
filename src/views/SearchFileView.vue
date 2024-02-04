@@ -90,7 +90,7 @@ watch(filterDevice, () => {
               <div class="flex flex-row gap-1 items-center">
                 <i
                   class="pi pi-circle-fill"
-                  :style="{ color: `${item.data.color}` }"
+                  :style="{ color: item.data.color }"
                 ></i>
                 <p>
                   {{ ("0" + item.data.startTime.getHours()).slice(-2) }}:{{

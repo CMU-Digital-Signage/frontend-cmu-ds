@@ -9,52 +9,61 @@ import { defineProps } from "vue";
 import { ref, computed, onMounted } from "vue";
 import store from "@/store";
 import { getPoster } from "@/services/poster";
-import { customDateMonthFormatter } from "@/utils/constant";
+import { customDateFormatter } from "@/utils/constant";
 import { User } from "@/types";
-const posters = ref([]);
+
+const posters = computed(() => store.state.posters);
+const uniquePosters = computed(() => store.state.uniquePosters);
 const user = computed<User>(() => store.state.userInfo);
 
-onMounted(async () => {
-  const res = await getPoster("");
-  if (res.ok) {
-    const uniquePosters = res.poster.reduce((acc: any[], e: any) => {
-      // Check if the title is not already in the accumulator
-      if (!acc.some((poster) => poster.title === e.title)) {
-        //uploader
-        const users = store.getters.getUserById(e.id);
-        const uploader = `${users.firstName} ${
-          users?.lastName?.charAt(0) || ""
-        }.`;
-        //status
-        const currentDate = new Date();
-        const startDate = new Date(e.startDate);
-        const endDate = new Date(e.endDate);
-        const isActive = currentDate >= startDate && currentDate <= endDate;
-        const status = isActive ? "Active" : "Inactive";
-        //createdAt
-        const createdAt = new Date(e.startDate);
+const createUnique = (data: any) => {
+  const uniqueP = data.reduce((acc: any[], e: any) => {
+    // Check if the title is not already in the accumulator
+    if (!acc.some((poster) => poster.title === e.title)) {
+      //uploader
+      const users = store.getters.getUserById(e.id);
+      const uploader = `${users.firstName} ${
+        users?.lastName?.charAt(0) || ""
+      }.`;
+      //status
+      const currentDate = new Date();
+      const startDate = new Date(e.startDate);
+      const endDate = new Date(e.endDate);
+      const isActive = currentDate >= startDate && currentDate <= endDate;
+      const status = isActive ? "Active" : "Inactive";
+      //createdAt
+      const createdAt = new Date(e.startDate);
 
-        if (user.value.isAdmin) {
-          acc.push({
-            title: e.title,
-            uploader,
-            createdAt: customDateMonthFormatter(createdAt),
-            status,
-          });
-        } else if (e.id == user.value.id) {
-          acc.push({
-            title: e.title,
-            uploader,
-            createdAt: customDateMonthFormatter(createdAt),
-            status,
-          });
-        }
+      if (user.value.isAdmin) {
+        acc.push({
+          title: e.title,
+          uploader,
+          createdAt: customDateFormatter(createdAt),
+          status,
+        });
+      } else if (e.id == user.value.id) {
+        acc.push({
+          title: e.title,
+          uploader,
+          createdAt: customDateFormatter(createdAt),
+          status,
+        });
       }
-      return acc;
-    }, []);
+    }
+    return acc;
+  }, []);
+  console.log(uniqueP);
+  store.commit("setUniquePosters", uniqueP);
+};
 
-    console.log(uniquePosters);
-    posters.value = uniquePosters;
+onMounted(async () => {
+  if (!posters.value.length) {
+    const res = await getPoster("");
+    if (res.ok) {
+      createUnique(res.poster);
+    }
+  } else {
+    createUnique(posters.value);
   }
 });
 </script>
@@ -62,7 +71,7 @@ onMounted(async () => {
 <template>
   <div>
     <DataTable
-      :value="posters"
+      :value="uniquePosters"
       scrollDirection="vertical"
       scrollable
       class="font-sf-pro mt-2"

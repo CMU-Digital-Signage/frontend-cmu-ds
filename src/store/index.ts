@@ -17,6 +17,7 @@ export default createStore({
     macNotUse: [],
     devices: <Device[]>[],
     posters: <Poster[]>[],
+    uniquePosters: <Poster[]>[],
     searchPosters: <Poster[]>[],
     filterDevice: <string[]>[],
     formPoster: <Poster>{},
@@ -61,6 +62,9 @@ export default createStore({
     },
     setPosters(state, posters) {
       state.posters = posters;
+    },
+    setUniquePosters(state, posters) {
+      state.uniquePosters = posters;
     },
     setSearchPosters(state, posters) {
       state.searchPosters = posters;
