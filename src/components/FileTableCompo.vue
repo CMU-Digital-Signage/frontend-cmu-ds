@@ -11,8 +11,12 @@ import store from "@/store";
 import { getPoster } from "@/services/poster";
 import { customDateFormatter } from "@/utils/constant";
 import { User } from "@/types";
+import { getEmergency } from "@/services";
+
+const props = defineProps({ types: String });
 
 const posters = computed(() => store.state.posters);
+const emerPosters = computed(() => store.state.emerPosters);
 const uniquePosters = computed(() => store.state.uniquePosters);
 const user = computed<User>(() => store.state.userInfo);
 
@@ -30,7 +34,6 @@ const createUnique = (data: any) => {
       const startDate = new Date(e.startDate);
       const endDate = new Date(e.endDate);
       const isActive = currentDate >= startDate && currentDate <= endDate;
-      const status = isActive ? "Active" : "Inactive";
       //createdAt
       const createdAt = new Date(e.startDate);
 
@@ -39,14 +42,14 @@ const createUnique = (data: any) => {
           title: e.title,
           uploader,
           createdAt: customDateFormatter(createdAt),
-          status,
+          status: isActive,
         });
       } else if (e.id == user.value.id) {
         acc.push({
           title: e.title,
           uploader,
           createdAt: customDateFormatter(createdAt),
-          status,
+          status: isActive,
         });
       }
     }
@@ -57,12 +60,19 @@ const createUnique = (data: any) => {
 };
 
 onMounted(async () => {
-  if (!posters.value.length) {
-    const res = await getPoster("");
-    if (res.ok) {
-      createUnique(res.poster);
+  if (!posters.value.length || !emerPosters.value.length) {
+    if (props.types === "nor") {
+      const res = await getPoster("");
+      if (res.ok) {
+        createUnique(res.poster);
+      }
+    } else {
+      const res = await getEmergency();
+      if (res.ok) {
+        store.commit("setEmerPosters", res.emergency);
+      }
     }
-  } else {
+  } else if (!uniquePosters.value.length && props.types == "nor") {
     createUnique(posters.value);
   }
 });
@@ -71,30 +81,45 @@ onMounted(async () => {
 <template>
   <div>
     <DataTable
-      :value="uniquePosters"
+      :value="props.types === 'nor' ? uniquePosters : emerPosters"
       scrollDirection="vertical"
       scrollable
       class="font-sf-pro mt-2"
     >
-      <Column field="title" header="Title" sortable style="width: 30%"></Column>
+      <Column field="title" header="Title" sortable style="width: 20%">
+        <template #body="slotProps">
+          <div v-if="props.types === 'emer'">
+            {{ slotProps.data.incidentName }}
+          </div>
+          <div v-else>
+            {{ slotProps.data.title }}
+          </div>
+        </template>
+      </Column>
       <Column
-        v-if="user?.isAdmin"
+        v-if="user?.isAdmin && props.types === 'nor'"
         field="uploader"
         header="Uploader"
         sortable
         style="width: 20%"
       ></Column>
       <Column
+        v-if="props.types === 'nor'"
         field="createdAt"
         header="Upload Date"
         sortable
         style="width: 20%"
       ></Column>
-      <Column field="status" header="Status" style="width: 10%"></Column>
+      <Column :field="'status'" header="Status" style="width: 15%">
+        <template #body="slotProps">
+          <div v-if="slotProps.data.status">Active</div>
+          <div v-else>Inactive</div>
+        </template>
+      </Column>
       <Column
         field="management"
         header="Management"
-        style="width: 20%"
+        style="width: 15%"
       ></Column>
     </DataTable>
   </div>

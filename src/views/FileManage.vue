@@ -21,7 +21,7 @@ onUpdated(() => {
         class="rectangle flex flex-col font-sf-pro overflow-y-auto"
       >
         <TabPanel header="Normal File">
-          <FileTable />
+          <FileTable :types="'nor'" />
         </TabPanel>
         <TabPanel
           v-if="store.state.userInfo.isAdmin"
@@ -32,6 +32,7 @@ onUpdated(() => {
             },
           }"
         >
+          <FileTable :types="'emer'" />
         </TabPanel>
       </TabView>
     </div>
