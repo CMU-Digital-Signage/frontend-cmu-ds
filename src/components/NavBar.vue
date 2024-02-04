@@ -358,7 +358,7 @@ const add = async () => {
         v-if="!clickSearch"
       >
         <div class="flex gap-2 items-center text-[#777]">
-          <label class="font-semibold w-52 text-[18px]">
+          <label class="font-semibold w-44 text-[18px] text-black text-left">
             {{ currentViewDate }}
           </label>
           <button

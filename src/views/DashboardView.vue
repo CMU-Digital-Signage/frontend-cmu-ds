@@ -9,7 +9,15 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, onUpdated, computed } from "vue";
+import {
+  ref,
+  reactive,
+  watch,
+  onMounted,
+  onUpdated,
+  computed,
+  watchEffect,
+} from "vue";
 import router from "@/router";
 import store from "@/store";
 import { Calendar } from "@fullcalendar/core";
@@ -26,10 +34,10 @@ const postersView = ref<any[]>([]);
 
 const setEvent = () => {
   postersView.value = [];
-  const posterOnDevice = posters.value.filter(
+  const currentDevice = posters.value.filter(
     (e) => e.MACaddress === selectedDevice.value
   );
-  posterOnDevice.forEach((e) => {
+  currentDevice.forEach((e) => {
     const allDay =
       e.startTime.toTimeString().includes("00:00") &&
       e.endTime.toTimeString().includes("23:59");
@@ -49,6 +57,7 @@ const setEvent = () => {
       schedule = {
         start: e.startDate,
         end: e.endDate,
+        oneDay: true,
       };
     }
     // oneDay
@@ -68,6 +77,7 @@ const setEvent = () => {
           e.endTime.getHours(),
           e.endTime.getMinutes()
         ),
+        oneDay: true,
       };
     }
     // allTime manyDay
@@ -87,11 +97,21 @@ const setEvent = () => {
       };
     }
 
+    const posterOnDevice = posters.value
+      .filter((p) => p.title === e.title)
+      .reduce((arr: any[], cur: any) => {
+        const curDevice = store.getters.getDeviceByMac(cur.MACaddress);
+        if (!arr.includes(curDevice)) arr.push(curDevice);
+        return arr;
+      }, []);
+
     postersView.value.push({
       allDay: allDay,
       display: "block",
       title: e.title,
+      description: e.description,
       uploader: e.uploader,
+      onDevice: posterOnDevice,
       backgroundColor: exist
         ? exist.backgroundColor
         : color.at(postersView.value.length),
@@ -112,7 +132,6 @@ onMounted(async () => {
       e.endDate = new Date(e.endDate);
       e.startTime = new Date(e.startTime);
       e.endTime = new Date(e.endTime);
-      //uploader
       const users = store.getters.getUserById(e.id);
       const uploader = `${users.firstName} ${
         users?.lastName?.charAt(0) || ""
@@ -131,10 +150,16 @@ onMounted(async () => {
       timeGrid: {
         dayMaxEventRows: 6,
       },
+      dayGrid: {
+        dayMaxEventRows: 4,
+      },
     },
     fixedWeekCount: false,
     headerToolbar: false,
     height: innerHeight * 0.9,
+    windowResize: function (view) {
+      return
+    },
     events: postersView.value,
     eventTimeFormat: {
       hour: "numeric",
@@ -151,8 +176,6 @@ onMounted(async () => {
     // slotMinTime: '00:00:00',
     // slotMaxTime: '24:00:00',
     eventClick: function (info) {
-      console.log(info.event);
-
       const start = info.event._def.recurringDef?.typeData.startRecur;
       const end = info.event._def.recurringDef?.typeData.endRecur || null;
       const endMinus1 = end
@@ -167,7 +190,9 @@ onMounted(async () => {
         ? new Date(
             info.event.end.getFullYear(),
             info.event.end.getMonth(),
-            info.event.end.getDate() - 1,
+            info.event._def.extendedProps.oneDay
+              ? info.event.end.getDate()
+              : info.event.end.getDate() - 1,
             info.event.end.getHours(),
             info.event.end.getMinutes()
           )
@@ -183,6 +208,8 @@ onMounted(async () => {
           .toUTCString()
           .slice(17, 22),
         endTime: info.event._instance?.range.end.toUTCString().slice(17, 22),
+        onDevice: info.event._def.extendedProps.onDevice,
+        description: info.event._def.extendedProps.description,
         uploader: info.event._def.extendedProps.uploader,
       };
       showInfo.value = true;
@@ -224,7 +251,12 @@ watch(selectedDevice, () => {
 
 <template>
   <div ref="calendarEl" class="m-3 font-sf-pro"></div>
-  <Dialog v-model:visible="showInfo" modal :draggable="false" class="w-72">
+  <Dialog
+    v-model:visible="showInfo"
+    modal
+    :draggable="false"
+    class="w-72 z-[100]"
+  >
     <template #header>
       <div
         class="font-sf-pro font-bold text-2xl inline-flex gap-3 items-center"
@@ -241,6 +273,8 @@ watch(selectedDevice, () => {
         <p>Start Date</p>
         <p>End Date</p>
         <p>Time</p>
+        <p>Device</p>
+        <p>Description</p>
         <p>Uploader</p>
       </div>
       <div class="text-right">
@@ -250,10 +284,22 @@ watch(selectedDevice, () => {
         <p v-else>
           {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
         </p>
+        <div class="inline-flex gap-1">
+          <p v-for="(item, index) in selectedEvent.onDevice" :key="index">
+            <span>{{ item }}</span>
+            <span v-if="index + 1 < selectedEvent.onDevice.length"> |</span>
+          </p>
+        </div>
+        <p>{{ selectedEvent.description }}</p>
+        <p v-if="!selectedEvent.description">-</p>
         <p>{{ selectedEvent.uploader }}</p>
       </div>
     </div>
   </Dialog>
 </template>
 
-<style></style>
+<style>
+.fc .fc-popover {
+  z-index: 50;
+}
+</style>
