@@ -6,7 +6,7 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { computed, reactive, ref, watchEffect } from "vue";
+import { computed, onMounted, reactive, ref, watchEffect } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import { useToast } from "primevue/usetoast";
@@ -33,7 +33,15 @@ const selectedDate = ref(new Date());
 const clickSearch = ref(false);
 const searchP = ref("");
 const toast = useToast();
-const selectedDevice = ref(devices.value[0]);
+
+const selectDevice = computed({
+  get() {
+    return store.state.selectDevice;
+  },
+  set(val) {
+    store.commit("setSelectDevice", val);
+  },
+});
 
 watchEffect(() => {
   if (router.currentRoute.value.path === "/searchfile") {
@@ -347,7 +355,7 @@ const add = async () => {
         v-if="!clickSearch"
       >
         <div class="flex gap-2 items-center text-[#777]">
-          <label class="font-semibold w-36 text-[18px]">
+          <label class="font-semibold w-52 text-[18px]">
             {{ currentViewDate }}
           </label>
           <button
@@ -369,6 +377,8 @@ const add = async () => {
           <button
             id="dayView"
             class="rounded-full p-1 hover:bg-gray-300"
+            :class="{ 'bg-gray-200 cursor-not-allowed': !monthView }"
+            :disabled="!monthView"
             @click="monthView = false"
           >
             <svg
@@ -387,6 +397,8 @@ const add = async () => {
           <button
             id="monthView"
             class="rounded-full -ml-1 hover:bg-gray-300"
+            :class="{ 'bg-gray-200 cursor-not-allowed': monthView }"
+            :disabled="monthView"
             @click="monthView = true"
           >
             <svg
@@ -430,9 +442,10 @@ const add = async () => {
           ></i>
         </button>
         <Dropdown
-          v-model="selectedDevice"
+          v-model="selectDevice"
           :options="devices"
           optionLabel="deviceName"
+          optionValue="MACaddress"
           class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center"
         />
         <Button
