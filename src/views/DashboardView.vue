@@ -117,6 +117,12 @@ onMounted(async () => {
     timeZone: "Asia/Bangkok",
     plugins: [dayGridPlugin, timeGridPlugin],
     initialView: "dayGridMonth",
+    dayMaxEventRows: true,
+    views: {
+      timeGrid: {
+        dayMaxEventRows: 6,
+      },
+    },
     fixedWeekCount: false,
     headerToolbar: false,
     height: innerHeight * 0.9,
@@ -126,6 +132,15 @@ onMounted(async () => {
       minute: "2-digit",
       hour12: false,
     },
+    slotLabelFormat: [
+      {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: false,
+      },
+    ],
+    slotMinTime: "00:00",
+    slotMaxTime: "24:00",
     eventClick: function (info) {
       selectedEvent.value = {
         title: info.event.title,
@@ -134,7 +149,8 @@ onMounted(async () => {
           info.event.start?.toDateString(),
         end:
           info.event._def.recurringDef?.typeData.endRecur.toDateString() ||
-          info.event.end?.toDateString(),
+          info.event.end?.toDateString() ||
+          info.event.start?.toDateString(),
         allDay: info.event.allDay,
         startTime: info.event._instance?.range.start
           .toUTCString()
@@ -179,18 +195,27 @@ watch(selectedDevice, () => {
 </script>
 
 <template>
-  <div ref="calendarEl" class="m-3"></div>
-  <Dialog v-model:visible="showInfo" modal>
+  <div ref="calendarEl" class="m-3 font-sf-pro"></div>
+  <Dialog v-model:visible="showInfo" modal class="w-72">
     <template #header>
-      <div>{{ selectedEvent.title }}</div>
+      <div class="font-sf-pro font-bold text-2xl">
+        {{ selectedEvent.title }}
+      </div>
     </template>
-    <div>
-      <p>Start Date : {{ selectedEvent.start }}</p>
-      <p>End Date : {{ selectedEvent.end }}</p>
-      <p v-if="selectedEvent.allDay">Time : All Day</p>
-      <p v-else>
-        Time : {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
-      </p>
+    <div class="flex justify-between">
+      <div class="text-left">
+        <p>Start Date</p>
+        <p>End Date</p>
+        <p>Time</p>
+      </div>
+      <div class="text-right">
+        <p>{{ selectedEvent.start }}</p>
+        <p>{{ selectedEvent.end }}</p>
+        <p v-if="selectedEvent.allDay">All Day</p>
+        <p v-else>
+          {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
+        </p>
+      </div>
     </div>
   </Dialog>
 </template>
