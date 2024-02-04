@@ -119,7 +119,7 @@ const deleteSchedule = (index: number) => {
                 "
                 :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
                 icon="pi pi-times"
-                label="Cancle"
+                label="Cancel"
                 rounded
                 outlined
                 severity="danger"

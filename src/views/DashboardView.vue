@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { getPoster } from "@/services";
-import { color } from "@/utils/constant";
+import { color, customDateFormatter } from "@/utils/constant";
 import Dialog from "primevue/dialog";
 export default defineComponent({
   name: "DashboardView",
@@ -34,19 +34,25 @@ const setEvent = () => {
       e.startTime.toTimeString().includes("00:00") &&
       e.endTime.toTimeString().includes("23:59");
     const exist = postersView.value.find((p) => p.title === e.title);
+    const start = e.startDate.toDateString();
+    const end = e.endDate.toDateString();
+    const endPlus1 = new Date(
+      e.endDate.getFullYear(),
+      e.endDate.getMonth(),
+      e.endDate.getDate() + 1,
+      e.endDate.getHours(),
+      e.endDate.getMinutes()
+    );
     let schedule = null;
     // oneDay allTime
-    if (allDay && e.startDate.toDateString() === e.endDate.toDateString()) {
+    if (allDay && start === end) {
       schedule = {
         start: e.startDate,
         end: e.endDate,
       };
     }
     // oneDay
-    else if (
-      !allDay &&
-      e.startDate.toDateString() === e.endDate.toDateString()
-    ) {
+    else if (!allDay && start === end) {
       schedule = {
         start: new Date(
           e.startDate.getFullYear(),
@@ -65,20 +71,17 @@ const setEvent = () => {
       };
     }
     // allTime manyDay
-    else if (
-      allDay &&
-      e.startDate.toDateString() !== e.endDate.toDateString()
-    ) {
+    else if (allDay && start !== end) {
       schedule = {
         start: e.startDate,
-        end: e.endDate,
+        end: endPlus1,
       };
     }
     // manyDay
     else {
       schedule = {
         startRecur: e.startDate,
-        endRecur: e.endDate,
+        endRecur: endPlus1,
         startTime: e.startTime.toTimeString(),
         endTime: e.endTime.toTimeString(),
       };
@@ -88,13 +91,13 @@ const setEvent = () => {
       allDay: allDay,
       display: "block",
       title: e.title,
+      uploader: e.uploader,
       backgroundColor: exist
         ? exist.backgroundColor
         : color.at(postersView.value.length),
       ...schedule,
     });
   });
-  console.log(calendar.value?.getEvents());
   calendar.value?.removeAllEvents();
   calendar.value?.addEventSource(postersView.value);
 };
@@ -109,6 +112,12 @@ onMounted(async () => {
       e.endDate = new Date(e.endDate);
       e.startTime = new Date(e.startTime);
       e.endTime = new Date(e.endTime);
+      //uploader
+      const users = store.getters.getUserById(e.id);
+      const uploader = `${users.firstName} ${
+        users?.lastName?.charAt(0) || ""
+      }.`;
+      e.uploader = uploader;
     });
     store.commit("setPosters", res.poster);
     setEvent();
@@ -139,23 +148,42 @@ onMounted(async () => {
         hour12: false,
       },
     ],
-    slotMinTime: "00:00",
-    slotMaxTime: "24:00",
+    // slotMinTime: '00:00:00',
+    // slotMaxTime: '24:00:00',
     eventClick: function (info) {
+      console.log(info.event);
+
+      const start = info.event._def.recurringDef?.typeData.startRecur;
+      const end = info.event._def.recurringDef?.typeData.endRecur || null;
+      const endMinus1 = end
+        ? new Date(
+            end.getFullYear(),
+            end.getMonth(),
+            end.getDate() - 1,
+            end.getHours(),
+            end.getMinutes()
+          )
+        : info.event.end
+        ? new Date(
+            info.event.end.getFullYear(),
+            info.event.end.getMonth(),
+            info.event.end.getDate() - 1,
+            info.event.end.getHours(),
+            info.event.end.getMinutes()
+          )
+        : null;
+
       selectedEvent.value = {
+        color: info.event.backgroundColor,
         title: info.event.title,
-        start:
-          info.event._def.recurringDef?.typeData.startRecur.toDateString() ||
-          info.event.start?.toDateString(),
-        end:
-          info.event._def.recurringDef?.typeData.endRecur.toDateString() ||
-          info.event.end?.toDateString() ||
-          info.event.start?.toDateString(),
+        start: customDateFormatter(start || info.event.start),
+        end: customDateFormatter(endMinus1 || info.event.start),
         allDay: info.event.allDay,
         startTime: info.event._instance?.range.start
           .toUTCString()
           .slice(17, 22),
         endTime: info.event._instance?.range.end.toUTCString().slice(17, 22),
+        uploader: info.event._def.extendedProps.uploader,
       };
       showInfo.value = true;
     },
@@ -196,10 +224,16 @@ watch(selectedDevice, () => {
 
 <template>
   <div ref="calendarEl" class="m-3 font-sf-pro"></div>
-  <Dialog v-model:visible="showInfo" modal class="w-72">
+  <Dialog v-model:visible="showInfo" modal :draggable="false" class="w-72">
     <template #header>
-      <div class="font-sf-pro font-bold text-2xl">
-        {{ selectedEvent.title }}
+      <div
+        class="font-sf-pro font-bold text-2xl inline-flex gap-3 items-center"
+      >
+        <i
+          class="pi pi-circle-fill"
+          :style="{ color: selectedEvent.color }"
+        ></i>
+        <p>{{ selectedEvent.title }}</p>
       </div>
     </template>
     <div class="flex justify-between">
@@ -207,6 +241,7 @@ watch(selectedDevice, () => {
         <p>Start Date</p>
         <p>End Date</p>
         <p>Time</p>
+        <p>Uploader</p>
       </div>
       <div class="text-right">
         <p>{{ selectedEvent.start }}</p>
@@ -215,6 +250,7 @@ watch(selectedDevice, () => {
         <p v-else>
           {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
         </p>
+        <p>{{ selectedEvent.uploader }}</p>
       </div>
     </div>
   </Dialog>

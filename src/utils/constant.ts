@@ -68,24 +68,26 @@ export const month = [
 
 export const day = ["SUN", "MON", "TUE", "WED", "THR", "FRI", "SAT"];
 
-export const customDateFormatter = (date: Date | null | undefined) => {
+export const customDateFormatter = (
+  date: Date | null | undefined,
+  format?: number
+) => {
   if (!date) return "";
 
   const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const monthNum = (date.getMonth() + 1).toString().padStart(2, "0");
+  const monthFullStr = fullMonth[date.getMonth()];
+  const monthStr = month[date.getMonth()];
   const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
-};
-
-export const customDateMonthFormatter = (date: Date | null | undefined) => {
-  if (!date) return "";
-
-  const day = date.getDate();
-  const monthAbbreviation = month[date.getMonth()];
-  const year = date.getFullYear();
-
-  return `${day} ${monthAbbreviation} ${year}`; //22 Nov 2023
+  switch (format) {
+    case 1:
+      return `${day}/${monthNum}/${year}`; // 22/11/2023
+    case 2:
+      return `${day} ${monthFullStr} ${year}`; //22 November 2023
+    default:
+      return `${day} ${monthStr} ${year}`; //22 Nov 2023;
+  }
 };
 
 export const initialFormDevice = {

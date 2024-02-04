@@ -342,7 +342,7 @@ const add = async () => {
             v-model="selectedDate"
             class="custom-date-picker ml-3 pb-10 h-10"
             :enable-time-picker="false"
-            :format="customDateFormatter(selectedDate)"
+            :format="customDateFormatter(selectedDate, 1)"
           ></VueDatePicker>
         </div>
       </div>
