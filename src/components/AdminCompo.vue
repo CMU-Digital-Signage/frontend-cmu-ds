@@ -55,7 +55,7 @@ const calculateScreenHeight = () => {
 <template>
   <div ref="containerRef" class="rectangle4 flex-1 font-sf-pro">
     <form @submit.prevent="add" class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2 w-32"
         >Fullname:
       </label>
       <InputText
@@ -82,7 +82,6 @@ const calculateScreenHeight = () => {
           field="firstName"
           header="Name"
           sortable
-          class="max-w-fit font-semibold"
           headerStyle="font-bold"
         >
           <template #sorticon="slotProps">
@@ -96,21 +95,29 @@ const calculateScreenHeight = () => {
             ></i>
           </template>
         </Column>
-        <Column field="lastName" class="font-semibold"></Column>
-        <Column :field="'isCurrentUser'">
+        <Column field="lastName"></Column>
+        <Column :field="'isCurrentUser'" class="w-full">
           <template #body="slotProps">
-            <div v-if="isCurrentUser(slotProps.data)" class="py-1">(You)</div>
+            <div v-if="isCurrentUser(slotProps.data)" class="py-1">
+              (You)
+            </div>
           </template>
         </Column>
-        <Column :exportable="false" class="w-full text-center">
+        <Column
+          header="Change Role"
+          headerClass="align-middle text-center justify-center "
+          :exportable="false"
+          class="w-full align-middle justify-center"
+        >
           <template #body="slotProps">
+            <div class="w-[500px]">
             <Button
               label="Instructor"
               v-if="!isCurrentUser(slotProps.data)"
               icon="pi pi-arrow-right-arrow-left"
               class="w-fit h-9 rounded-md bg-[#00AEA4]"
               @click="del(slotProps.data.id)"
-            />
+            /></div>
           </template>
         </Column>
       </DataTable>

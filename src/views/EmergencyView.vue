@@ -1,15 +1,69 @@
+<script setup lang="ts">
+import { computed } from "vue";
+import store from "@/store";
+import Admin from "@/components/AdminCompo.vue";
+import Device from "@/components/DeviceCompo.vue";
+import Instructor from "@/components/InstructorCompo.vue";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+
+const click = computed({
+  get() {
+    return store.state.adminManage;
+  },
+  set(val) {
+    store.commit("setAdminManage", val);
+  },
+});
+</script>
+
 <template>
-    <div>
-      <h1>This is an Emergency page</h1>
-    </div>
-  </template>
-  
-  <script lang="ts">
-  export default {
-  
-  }
-  </script>
-  
-  <style>
-  
-  </style>
+  <TabView
+    v-model:active-index="click"
+    class="rectangle flex flex-col"
+  >
+    <TabPanel header="Admin">
+      <Admin />
+    </TabPanel>
+    <TabPanel header="Instructor">
+      <Instructor />
+    </TabPanel>
+    <TabPanel header="Device">
+      <Device />
+    </TabPanel>
+  </TabView>
+</template>
+
+<style scoped>
+/* Add styles for the rectangle */
+.rectangle {
+  padding-inline: 1.5rem;
+  overflow: hidden;
+  background-color: aquamarine;
+  height: 100vh;
+}
+
+TabPanel {
+  flex: 1;
+}
+
+.bold-ho:hover {
+  font-weight: 600;
+}
+
+.activer-link {
+  border-bottom: 4px solid #282828;
+  font-weight: 900;
+  border-radius: -2-px;
+}
+
+.activer-link:hover {
+  color: #282828;
+  background-color: #f0f0f014; /* Optional: change background color on hover */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: add box shadow on hover */
+}
+
+.gaptt {
+  gap: 8px;
+}
+</style>
