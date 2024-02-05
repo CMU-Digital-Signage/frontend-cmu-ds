@@ -49,6 +49,7 @@ const toggleSidebar = () => {
         </div>
         <!-- Button collapsed -->
         <Button
+          id="sideBarButton"
           @click="toggleSidebar()"
           link
           class="text-black bg-[#f6f6f600] rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
