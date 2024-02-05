@@ -126,7 +126,11 @@ const calculateScreenHeight = () => {
             <p>{{ rowData.data.deviceName }}</p>
             <i
               class="pi pi-info-circle cursor-pointer"
-              @click="
+              @mouseover="
+                (e) =>
+                  toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])
+              "
+              @mouseleave="
                 (e) =>
                   toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])
               "

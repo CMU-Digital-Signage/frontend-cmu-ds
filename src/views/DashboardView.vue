@@ -41,32 +41,13 @@ const setEvent = () => {
       e.endDate.getHours(),
       e.endDate.getMinutes()
     );
+
     let schedule = null;
     // oneDay allTime
     if (allDay && start === end) {
       schedule = {
         start: e.startDate,
         end: e.endDate,
-        oneDay: true,
-      };
-    }
-    // oneDay
-    else if (!allDay && start === end) {
-      schedule = {
-        start: new Date(
-          e.startDate.getFullYear(),
-          e.startDate.getMonth(),
-          e.startDate.getDate(),
-          e.startTime.getHours(),
-          e.startTime.getMinutes()
-        ),
-        end: new Date(
-          e.endDate.getFullYear(),
-          e.endDate.getMonth(),
-          e.endDate.getDate(),
-          e.endTime.getHours(),
-          e.endTime.getMinutes()
-        ),
         oneDay: true,
       };
     }
