@@ -7,6 +7,7 @@ import Dashboard from "../views/DashboardView.vue";
 import FileManage from "../views/FileManage.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
+import EditFile from "../views/EditFileView.vue";
 import SearchPage from "../views/SearchFileView.vue";
 import AdminDashboard from "../views/AdminView.vue";
 import UploadFile from "../views/UploadFileView.vue";
@@ -68,11 +69,27 @@ const routes: Array<RouteRecordRaw> = [
     path: "/searchfile",
     name: "SearchFile",
     component: SearchPage,
+    meta: {
+      crossIconSidebar: true,
+    },
   },
   {
     path: "/uploadfile",
     name: "UploadFile",
     component: UploadFile,
+    meta: {
+      showNavbarBelow: true,
+      crossIconSidebar: true,
+    },
+  },
+  {
+    path: "/editfile",
+    name: "EditFile",
+    component: EditFile,
+    meta: {
+      showNavbarBelow: true,
+      crossIconSidebar: true,
+    },
   },
 ];
 

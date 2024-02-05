@@ -130,6 +130,18 @@ const add = async () => {
         class="bg-[#36BFA7] border-[#36BFA7] font-semibold font-sf-pro text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
       />
     </ul>
+    <!-- edit file -->
+    <ul
+      v-if="$route.path === '/editfile'"
+      class="flex items-center justify-end w-full"
+    >
+      <Button
+        type="button"
+        label="Save"
+        :loading="loading"
+        class="bg-[#36BFA7] border-[#36BFA7] font-semibold font-sf-pro text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+      />
+    </ul>
   </div>
 </template>
 

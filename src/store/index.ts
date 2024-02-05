@@ -21,7 +21,7 @@ export default createStore({
     uniquePosters: <Poster[]>[],
     searchPosters: <Poster[]>[],
     filterDevice: <string[]>[],
-    formPoster: <Poster>{},
+    formPoster: <any>{},
     formDisplay: <Display[]>[{ ...initialFormDisplay }],
     formEmer: <Emergency>{},
   },
