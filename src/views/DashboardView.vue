@@ -2,23 +2,13 @@
 import { defineComponent } from "vue";
 import { getPoster } from "@/services";
 import { color, customDateFormatter } from "@/utils/constant";
-import Dialog from "primevue/dialog";
 export default defineComponent({
   name: "DashboardView",
   components: {},
 });
 </script>
 <script setup lang="ts">
-import {
-  ref,
-  reactive,
-  watch,
-  onMounted,
-  onUpdated,
-  computed,
-  watchEffect,
-} from "vue";
-import router from "@/router";
+import { ref, watch, onMounted, onUpdated, computed, watchEffect } from "vue";
 import store from "@/store";
 import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -107,7 +97,6 @@ const setEvent = () => {
 
     postersView.value.push({
       allDay: allDay,
-      display: "block",
       title: e.title,
       description: e.description,
       uploader: e.uploader,
@@ -158,8 +147,9 @@ onMounted(async () => {
     headerToolbar: false,
     height: innerHeight * 0.9,
     windowResize: function (view) {
-      return;
+      calendar.value?.updateSize();
     },
+    eventDisplay: "block",
     events: postersView.value,
     eventTimeFormat: {
       hour: "numeric",
@@ -173,8 +163,6 @@ onMounted(async () => {
         hour12: false,
       },
     ],
-    // slotMinTime: '00:00:00',
-    // slotMaxTime: '24:00:00',
     eventClick: function (info) {
       const start = info.event._def.recurringDef?.typeData.startRecur;
       const end = info.event._def.recurringDef?.typeData.endRecur || null;
@@ -217,6 +205,14 @@ onMounted(async () => {
   });
   calendar.value?.render();
   store.commit("setCurrentViewDate", calendar.value?.view.title);
+
+  document
+    .getElementById("sideBarButton")!
+    .addEventListener("click", function () {
+      setTimeout(() => {
+        calendar.value?.updateSize();
+      }, 290);
+    });
 
   document.getElementById("prev")!.addEventListener("click", function () {
     calendar.value?.prev();
@@ -303,33 +299,21 @@ watch(selectedDevice, () => {
   z-index: 50;
 }
 
-.content {
-  height: 100% !important;
-}
 .fc-col-header,
-.fc-timegrid-body {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 10px;
-}
-.fc-scrollgrid-sync-table {
-  width: 100% !important;
-  height: 100% !important;
-}
-.fc-daygrid-body {
-  width: 100% !important;
-  height: 100% !important;
-}
+.fc-scrollgrid-sync-table,
+.fc-timegrid-body,
+.fc-timegrid-body table,
+.fc-daygrid-body,
 .fc-daygrid-body-balanced {
   width: 100% !important;
-  height: 100% !important;
 }
-table {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 10px;
+
+.fc-event {
+  cursor: pointer;
+  border: 0;
 }
-.fc-widget-header{
-    background-color:blue;
+.fc-day-sun,
+.fc-day-sat {
+  background-color: #ffebeb;
 }
 </style>
