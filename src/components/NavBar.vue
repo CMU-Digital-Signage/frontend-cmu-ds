@@ -6,12 +6,12 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { computed, onMounted, reactive, ref, watchEffect } from "vue";
+import { computed, reactive, ref, watchEffect } from "vue";
 import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
-import { addDevice, getPoster } from "@/services";
+import { addDevice, getPoster, addAdmin } from "@/services";
 import {
   fullMonth,
   customDateFormatter,
@@ -33,6 +33,7 @@ const selectedDate = ref(new Date());
 const clickSearch = ref(false);
 const searchP = ref("");
 const toast = useToast();
+
 
 const selectDevice = computed({
   get() {
@@ -128,6 +129,26 @@ const add = async () => {
     });
   }
 };
+
+const formAdmin = ref("");
+const message = ref();
+
+const addNameAdmin = async () => {
+  if (formAdmin.value.length) {
+    const fullName = formAdmin.value.split(" ");
+    const newAdmin = await addAdmin({
+      firstName: fullName[0],
+      lastName: fullName[1],
+    });
+    if (newAdmin.ok) {
+      store.state.allUser.push(newAdmin.admin);
+      formAdmin.value = "";
+    } else {
+      message.value = newAdmin.message;
+    }
+  }
+};
+
 </script>
 
 <template>
@@ -284,6 +305,70 @@ const add = async () => {
               </template>
             </FileUpload>
           </div>
+          <div class="flex flex-row gap-4 pt-3">
+            <Button
+              label="Cancel"
+              text
+              @click="
+                showPopup = false;
+                resetForm();
+              "
+              class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
+            ></Button>
+            <Button
+              label="Add"
+              text
+              class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
+              :class="`${!macNotUse.length ? 'cursor-not-allowed' : ''}`"
+              @click="add"
+              :disabled="!macNotUse.length"
+            ></Button>
+          </div>
+        </Dialog>
+      </div>
+      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 0">
+        <Button
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
+          @click="showPopup = true"
+        >
+          <div
+            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center ml-1"
+          >
+            <i class="pi pi-plus text-white"></i>
+          </div>
+          Add Admin
+        </Button>
+        <Dialog
+          v-model:visible="showPopup"
+          header="Add Admin"
+          class="w-[600px] h-auto"
+          modal
+          close-on-escape
+          @after-hide="resetForm()"
+        >
+          <div class="flex flex-col gap-2">
+            <div class="inline-block">
+              <form @submit.prevent="addNameAdmin" class="flex flex-row gap-2">
+                <label
+                  for="macAddress"
+                  class="text-primary-50 font-semibold pt-2 w-32"
+                  >Fullname:
+                </label>
+                <InputText
+                  class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 mt-1 rounded-lg font-sf-pro"
+                  placeholder="Navadon Khunlertgit"
+                  type="text"
+                  v-model="formAdmin"
+                ></InputText>
+                <Button
+                  label="Add"
+                  type="submit"
+                  class="flex ml-4 items-center justify-center px-5 rounded-xl py-1 mt-1 text-white font-semibold custom-button"
+                ></Button>
+              </form>
+            </div>
+          </div>
+
           <div class="flex flex-row gap-4 pt-3">
             <Button
               label="Cancel"
