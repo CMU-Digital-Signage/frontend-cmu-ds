@@ -119,11 +119,10 @@ const calculateScreenHeight = () => {
         header="Device Name"
         sortable
         class="font-semibold"
-        headerStyle="font-bold"
       >
         <template #body="rowData">
           <div class="flex items-center gap-3">
-            <p>{{ rowData.data.deviceName }}</p>
+            <p class="font-light">{{ rowData.data.deviceName }}</p>
             <i
               class="pi pi-info-circle cursor-pointer"
               @mouseover="
@@ -151,12 +150,19 @@ const calculateScreenHeight = () => {
         </template>
       </Column>
       <Column
-        field="room"
         header="Room"
         sortable
         class="font-semibold"
         headerStyle="font-bold"
-      ></Column>
+      >
+        <template #body="rowData">
+          <div class="flex items-center gap-3">
+            <p class="font-light">
+              {{ rowData.data.room }}
+            </p>
+          </div>
+        </template>
+      </Column>
       <Column :exportable="false">
         <template #body="rowData">
           <div class="">

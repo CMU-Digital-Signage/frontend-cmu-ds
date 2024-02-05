@@ -9,7 +9,6 @@ import { ref, computed } from "vue";
 import { addAdmin } from "@/services";
 import store from "@/store";
 
-
 const instructor = computed(() =>
   store.state.allUser.filter(
     (e) =>
@@ -35,14 +34,13 @@ const calculateScreenHeight = () => {
   const multiplier = 0.71;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
-}
-
+};
 </script>
 
 <template>
   <div class="rectangle4 flex-1 font-sf-pro">
     <div class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2 w-32"
         >Search:
       </label>
       <InputText
@@ -57,25 +55,27 @@ const calculateScreenHeight = () => {
         :value="instructor"
         scrollDirection="vertical"
         scrollable
-        :scrollHeight=calculateScreenHeight()
+        :scrollHeight="calculateScreenHeight()"
         class="font-sf-pro mt-2"
       >
         <Column
           field="firstName"
           header="Name"
           sortable
-          class="max-w-fit h-8 font-bold"
-          headerStyle=" font-bold"
+          class="h-8 max-w-fit"
+          headerStyle="font-bold"
         ></Column>
-        <Column field="lastName" class=" font-bold"></Column>
-        <Column :exportable="false" class="w-full text-center">
+        <Column field="lastName" class="w-full"></Column>
+        <Column header="Change Role" :exportable="false">
           <template #body="slotProps">
-            <Button
-              icon="pi pi-arrow-right-arrow-left"
-              label="Admin"
-              class="w-fit h-9 rounded-md bg-[#0094FF]"
-              @click="add(slotProps.data.id)"
-            />
+            <div class="w-[500px]">
+              <Button
+                icon="pi pi-arrow-right-arrow-left"
+                label="Admin"
+                class="w-fit h-9 rounded-md bg-[#0094FF]"
+                @click="add(slotProps.data.id)"
+              />
+            </div>
           </template>
         </Column>
       </DataTable>
