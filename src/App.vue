@@ -17,7 +17,7 @@ const user = computed(() => store.state.userInfo);
     <div class="w-screen flex flex-col bg-[#fafafa]">
       <NavBar class="bg-white" />
       <router-view class="bg-[#fafafa]" />
-      <div v-if="$route.path === '/uploadfile'">
+      <div v-if="$route.meta.showNavbarBelow">
         <NavbarBelow />
       </div>
     </div>

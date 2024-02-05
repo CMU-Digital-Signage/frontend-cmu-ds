@@ -20,7 +20,7 @@ export interface Poster {
   id: string;
   title: string;
   image: any;
-  description: string;
+  description: string | null;
   createdAt: Date;
   updatedAt: Date;
   startDate: Date;

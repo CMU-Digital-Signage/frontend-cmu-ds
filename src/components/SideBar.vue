@@ -57,7 +57,7 @@ const toggleSidebar = () => {
             transform: openSidebar ? '' : 'translateX(8px)',
             marginLeft: openSidebar ? '' : '-8px',
           }"
-          v-if="$route.path !== '/searchfile' && $route.path !== '/uploadfile'"
+          v-if="!$route.meta.crossIconSidebar"
         >
           <i
             :class="{
@@ -68,9 +68,9 @@ const toggleSidebar = () => {
         </Button>
 
         <Button
-          @click="$router.push('/')"
+          @click="$router.back"
           class="text-black bg-white rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
-          v-if="$route.path === '/searchfile' || $route.path === '/uploadfile'"
+          v-else
           :style="{
             transform: openSidebar ? '' : 'translateX(8px)',
             marginLeft: openSidebar ? '' : '-8px',
