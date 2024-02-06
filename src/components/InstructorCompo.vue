@@ -17,15 +17,12 @@ const instructor = computed(() =>
         e.lastName.toLowerCase().includes(search.value?.toLowerCase()))
   )
 );
-const message = ref();
 const search = ref("");
 
 const add = async (id: number) => {
   const newAdmin = await addAdmin({ id });
   if (newAdmin.ok) {
     store.commit("setAdmin", { id, isAdmin: true });
-  } else {
-    message.value = newAdmin.message;
   }
 };
 
@@ -40,7 +37,7 @@ const calculateScreenHeight = () => {
 <template>
   <div class="rectangle4 flex-1 font-sf-pro">
     <div class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-semibold pt-2 w-32"
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
         >Search:
       </label>
       <InputText

@@ -37,7 +37,7 @@ export interface Display {
   allDevice: boolean;
   startDate: Date | undefined;
   endDate: Date | undefined;
-  time: [{ startTime: Date; endTime: Date | undefined }];
+  time: [{ startTime: Date | undefined; endTime: Date | undefined }];
   duration: number | null;
   MACaddress: string[];
 }

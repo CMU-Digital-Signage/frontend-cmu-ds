@@ -8,20 +8,13 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 
 const click = computed({
-  get() {
-    return store.state.adminManage;
-  },
-  set(val) {
-    store.commit("setAdminManage", val);
-  },
+  get: () => store.state.adminManage,
+  set: (val) => (store.state.adminManage = val),
 });
 </script>
 
 <template>
-  <TabView
-    v-model:active-index="click"
-    class="rectangle flex flex-col"
-  >
+  <TabView v-model:active-index="click" class="rectangle flex flex-col">
     <TabPanel header="Admin">
       <Admin />
     </TabPanel>

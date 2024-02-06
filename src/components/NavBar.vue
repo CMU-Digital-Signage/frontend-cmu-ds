@@ -33,16 +33,11 @@ const selectedDate = ref(new Date());
 const clickSearch = ref(false);
 const searchP = ref("");
 const toast = useToast();
-
-
 const selectDevice = computed({
-  get() {
-    return store.state.selectDevice;
-  },
-  set(val) {
-    store.commit("setSelectDevice", val);
-  },
+  get: () => store.state.selectDevice,
+  set: (val) => (store.state.selectDevice = val),
 });
+const formAdmin = ref("");
 
 watchEffect(() => {
   if (router.currentRoute.value.path === "/searchfile") {
@@ -70,13 +65,14 @@ const resetForm = () => {
 };
 
 const goToSearch = () => {
-  store.commit("setOpenSidebar", true);
+  store.state.openSidebar = true;
   clickSearch.value = true;
   router.push("/searchfile");
 };
 
 const search = async () => {
-  store.commit("setSearchPosters", []);
+  store.state.searchPosters = [];
+  store.state.loading = true;
   const res = await getPoster(searchP.value);
   if (res.ok) {
     res.poster.forEach((e: any) => {
@@ -88,8 +84,9 @@ const search = async () => {
       e.endTime = new Date(e.endTime);
     });
     res.poster.sort((a: any, b: any) => a.startDate - b.startDate);
-    store.commit("setSearchPosters", res.poster);
+    store.state.searchPosters = res.poster;
   }
+  store.state.loading = false;
 };
 
 const add = async () => {
@@ -111,8 +108,9 @@ const add = async () => {
   if (res.ok) {
     store.state.devices.push({ ...form });
     showPopup.value = false;
-    const temp = macNotUse.value.filter((e) => e !== form.MACaddress);
-    store.commit("setMacNotUse", temp);
+    store.state.macNotUse = macNotUse.value.filter(
+      (e) => e !== form.MACaddress
+    );
     toast.add({
       severity: "success",
       summary: "Success",
@@ -130,9 +128,6 @@ const add = async () => {
   }
 };
 
-const formAdmin = ref("");
-const message = ref();
-
 const addNameAdmin = async () => {
   if (formAdmin.value.length) {
     const fullName = formAdmin.value.split(" ");
@@ -143,12 +138,22 @@ const addNameAdmin = async () => {
     if (newAdmin.ok) {
       store.state.allUser.push(newAdmin.admin);
       formAdmin.value = "";
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Add admin successfully.",
+        life: 3000,
+      });
     } else {
-      message.value = newAdmin.message;
+      toast.add({
+        severity: "error",
+        summary: "Invalid",
+        detail: "User already an Admin.",
+        life: 3000,
+      });
     }
   }
 };
-
 </script>
 
 <template>
@@ -182,6 +187,7 @@ const addNameAdmin = async () => {
           class="w-[600px] h-auto"
           modal
           close-on-escape
+          :draggable="false"
           @after-hide="resetForm()"
         >
           <div class="flex flex-col gap-2">
@@ -341,17 +347,16 @@ const addNameAdmin = async () => {
         <Dialog
           v-model:visible="showPopup"
           header="Add Admin"
-          class="w-[600px] h-auto"
+          class="h-auto"
           modal
           close-on-escape
+          :draggable="false"
           @after-hide="resetForm()"
         >
-          <div class="flex flex-col gap-2">
-            <div class="inline-block">
-              <form @submit.prevent="addNameAdmin" class="flex flex-row gap-2">
-                <label
-                  for="macAddress"
-                  class="text-primary-50 font-semibold pt-2 w-32"
+          <form @submit.prevent="addNameAdmin" class="flex flex-row gap-2">
+            <div class="flex flex-col gap-2">
+              <div class="inline-block">
+                <label class="text-[17px] font-semibold pt-2 w-32"
                   >Fullname:
                 </label>
                 <InputText
@@ -360,34 +365,28 @@ const addNameAdmin = async () => {
                   type="text"
                   v-model="formAdmin"
                 ></InputText>
+              </div>
+              <div class="flex flex-row gap-4 pt-3">
+                <Button
+                  label="Cancel"
+                  text
+                  @click="
+                    showPopup = false;
+                    resetForm();
+                  "
+                  class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
+                ></Button>
                 <Button
                   label="Add"
+                  text
+                  class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
+                  :class="`${!formAdmin.length ? 'cursor-not-allowed' : ''}`"
                   type="submit"
-                  class="flex ml-4 items-center justify-center px-5 rounded-xl py-1 mt-1 text-white font-semibold custom-button"
+                  :disabled="!formAdmin.length"
                 ></Button>
-              </form>
+              </div>
             </div>
-          </div>
-
-          <div class="flex flex-row gap-4 pt-3">
-            <Button
-              label="Cancel"
-              text
-              @click="
-                showPopup = false;
-                resetForm();
-              "
-              class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
-            ></Button>
-            <Button
-              label="Add"
-              text
-              class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
-              :class="`${!macNotUse.length ? 'cursor-not-allowed' : ''}`"
-              @click="add"
-              :disabled="!macNotUse.length"
-            ></Button>
-          </div>
+          </form>
         </Dialog>
       </div>
     </ul>

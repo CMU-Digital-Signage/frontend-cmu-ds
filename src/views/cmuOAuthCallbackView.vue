@@ -51,7 +51,7 @@ export default {
 
       const res = await signIn(code);
       if (res) {
-        store.commit("setUserInfo", res.user);
+        store.state.userInfo = res.user;
         localStorage.setItem("token", res.token);
         router.replace("/");
       }

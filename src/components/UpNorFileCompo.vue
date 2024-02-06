@@ -45,7 +45,7 @@ const addSchedule = () => {
     });
     return;
   }
-  store.commit("addDisplay", { ...initialFormDisplay });
+  store.state.formDisplay.push({ ...initialFormDisplay });
   const newSchedule = {
     header: `${scheduleTabs.length + 1}`,
   };
@@ -55,7 +55,7 @@ const addSchedule = () => {
 
 const deleteSchedule = (index: number) => {
   if (index >= 0 && index < scheduleTabs.length) {
-    store.commit("removeDisplay", index);
+    store.state.formDisplay.splice(index, 1);
     scheduleTabs.splice(index, 1);
     currentI.value == scheduleTabs.length ? currentI.value-- : currentI.value;
 

@@ -30,7 +30,7 @@ const fetchData = async () => {
 
       return 0;
     });
-    store.commit("setPosters", filteredPoster);
+    store.state.posters = filteredPoster;
 
     if (posters.value.length > 0) {
       if (posters.value.length === 1) {

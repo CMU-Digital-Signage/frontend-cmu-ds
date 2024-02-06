@@ -11,10 +11,15 @@ import { User } from "@/types";
 import store from "@/store";
 
 const user = ref<User>(store.state.userInfo);
-const admin = computed(() => store.state.allUser.filter((e) => e.isAdmin));
-const message = ref();
-
-
+const admin = computed(() =>
+  store.state.allUser.filter(
+    (e) =>
+      e.isAdmin &&
+      (e.firstName.toLowerCase().includes(search.value?.toLowerCase()) ||
+        e.lastName.toLowerCase().includes(search.value?.toLowerCase()))
+  )
+);
+const search = ref("");
 
 const isCurrentUser = (admin: User) => {
   return admin.id === user.value.id;
@@ -24,8 +29,6 @@ const del = async (id: number) => {
   const res = await deleteAdmin(id);
   if (res.ok) {
     store.commit("setAdmin", { id, isAdmin: false });
-  } else {
-    message.value = res.message;
   }
 };
 
@@ -39,7 +42,17 @@ const calculateScreenHeight = () => {
 
 <template>
   <div ref="containerRef" class="rectangle4 flex-1 font-sf-pro">
-    
+    <div class="flex flex-row gap-2">
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
+        >Search:
+      </label>
+      <InputText
+        v-model="search"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-72 rounded-lg font-sf-pro"
+        placeholder="Name"
+        type="text"
+      ></InputText>
+    </div>
     <div class="rectangle3">
       <DataTable
         :value="admin"
@@ -68,9 +81,7 @@ const calculateScreenHeight = () => {
         <Column field="lastName"></Column>
         <Column :field="'isCurrentUser'" class="w-full">
           <template #body="slotProps">
-            <div v-if="isCurrentUser(slotProps.data)" class="py-1">
-              (You)
-            </div>
+            <div v-if="isCurrentUser(slotProps.data)" class="py-1">(You)</div>
           </template>
         </Column>
         <Column
@@ -81,13 +92,14 @@ const calculateScreenHeight = () => {
         >
           <template #body="slotProps">
             <div class="w-[500px]">
-            <Button
-              label="Instructor"
-              v-if="!isCurrentUser(slotProps.data)"
-              icon="pi pi-arrow-right-arrow-left"
-              class="w-fit h-9 rounded-md bg-[#00AEA4]"
-              @click="del(slotProps.data.id)"
-            /></div>
+              <Button
+                label="Instructor"
+                v-if="!isCurrentUser(slotProps.data)"
+                icon="pi pi-arrow-right-arrow-left"
+                class="w-fit h-9 rounded-md bg-[#00AEA4]"
+                @click="del(slotProps.data.id)"
+              />
+            </div>
           </template>
         </Column>
       </DataTable>

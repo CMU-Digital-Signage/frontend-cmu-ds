@@ -8,19 +8,92 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, watch, onMounted, onUpdated, computed, watchEffect } from "vue";
+import { ref, reactive, watch, onMounted, computed, watchEffect } from "vue";
 import store from "@/store";
-import { Calendar } from "@fullcalendar/core";
+import FullCalendar from "@fullcalendar/vue3";
+import { Calendar, CalendarOptions } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
+const loading = computed(() => store.state.loading);
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
-const calendarEl = ref<any>(null);
-const calendar = ref<Calendar>();
+const fullCalendar = ref<any>(null);
+let calApi = undefined as unknown as Calendar;
 const selectedDevice = computed(() => store.state.selectDevice);
 const posters = computed(() => store.state.posters);
 const postersView = ref<any[]>([]);
+const calOptions = reactive<CalendarOptions>({
+  timeZone: "Asia/Bangkok",
+  plugins: [dayGridPlugin, timeGridPlugin],
+  initialView: "dayGridMonth",
+  dayMaxEventRows: true,
+  views: {
+    timeGrid: {
+      dayMaxEventRows: 6,
+    },
+    dayGrid: {
+      dayMaxEventRows: 4,
+    },
+  },
+  fixedWeekCount: false,
+  headerToolbar: false,
+  height: screen.height,
+  windowResize: function (view) {
+    calApi?.updateSize();
+  },
+  eventDisplay: "block",
+  events: postersView.value,
+  eventTimeFormat: {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: false,
+  },
+  slotLabelFormat: [
+    {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: false,
+    },
+  ],
+  eventClick: function (info) {
+    const start = info.event._def.recurringDef?.typeData.startRecur;
+    const end = info.event._def.recurringDef?.typeData.endRecur || null;
+    const endMinus1 = end
+      ? new Date(
+          end.getFullYear(),
+          end.getMonth(),
+          end.getDate() - 1,
+          end.getHours(),
+          end.getMinutes()
+        )
+      : info.event.end
+      ? new Date(
+          info.event.end.getFullYear(),
+          info.event.end.getMonth(),
+          info.event._def.extendedProps.oneDay
+            ? info.event.end.getDate()
+            : info.event.end.getDate() - 1,
+          info.event.end.getHours(),
+          info.event.end.getMinutes()
+        )
+      : null;
+
+    selectedEvent.value = {
+      color: info.event.backgroundColor,
+      title: info.event.title,
+      start: customDateFormatter(start || info.event.start),
+      end: customDateFormatter(endMinus1 || info.event.start),
+      allDay: info.event.allDay,
+      startTime: info.event._instance?.range.start.toUTCString().slice(17, 22),
+      endTime: info.event._instance?.range.end.toUTCString().slice(17, 22),
+      onDevice: info.event._def.extendedProps.onDevice,
+      description: info.event._def.extendedProps.description,
+      uploader: info.event._def.extendedProps.uploader,
+    };
+    showInfo.value = true;
+  },
+});
 
 const setEvent = () => {
   postersView.value = [];
@@ -88,146 +161,89 @@ const setEvent = () => {
       ...schedule,
     });
   });
-  calendar.value?.removeAllEvents();
-  calendar.value?.addEventSource(postersView.value);
+  calOptions.events = postersView.value;
 };
 
 onMounted(async () => {
-  const res = await getPoster("");
-  if (res.ok) {
-    res.poster.forEach((e: any) => {
-      e.createdAt = new Date(e.createdAt);
-      e.updatedAt = new Date(e.updatedAt);
-      e.startDate = new Date(e.startDate);
-      e.endDate = new Date(e.endDate);
-      e.startTime = new Date(e.startTime);
-      e.endTime = new Date(e.endTime);
-      const users = store.getters.getUserById(e.id);
-      const uploader = `${users.firstName} ${
-        users?.lastName?.charAt(0) || ""
-      }.`;
-      e.uploader = uploader;
-    });
-    store.commit("setPosters", res.poster);
-    setEvent();
+  if (!posters.value.length) {
+    store.state.loading = true;
+    const res = await getPoster("");
+    if (res.ok) {
+      res.poster.forEach((e: any) => {
+        e.createdAt = new Date(e.createdAt);
+        e.updatedAt = new Date(e.updatedAt);
+        e.startDate = new Date(e.startDate);
+        e.endDate = new Date(e.endDate);
+        e.startTime = new Date(e.startTime);
+        e.endTime = new Date(e.endTime);
+        const users = store.getters.getUserById(e.id);
+        const uploader = `${users.firstName} ${
+          users?.lastName?.charAt(0) || ""
+        }.`;
+        e.uploader = uploader;
+      });
+      store.state.posters = res.poster;
+      store.state.loading = false;
+    }
   }
-  calendar.value = new Calendar(calendarEl.value!, {
-    timeZone: "Asia/Bangkok",
-    plugins: [dayGridPlugin, timeGridPlugin],
-    initialView: "dayGridMonth",
-    dayMaxEventRows: true,
-    views: {
-      timeGrid: {
-        dayMaxEventRows: 6,
-      },
-      dayGrid: {
-        dayMaxEventRows: 4,
-      },
-    },
-    fixedWeekCount: false,
-    headerToolbar: false,
-    height: innerHeight * 0.9,
-    windowResize: function (view) {
-      calendar.value?.updateSize();
-    },
-    eventDisplay: "block",
-    events: postersView.value,
-    eventTimeFormat: {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: false,
-    },
-    slotLabelFormat: [
-      {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: false,
-      },
-    ],
-    eventClick: function (info) {
-      const start = info.event._def.recurringDef?.typeData.startRecur;
-      const end = info.event._def.recurringDef?.typeData.endRecur || null;
-      const endMinus1 = end
-        ? new Date(
-            end.getFullYear(),
-            end.getMonth(),
-            end.getDate() - 1,
-            end.getHours(),
-            end.getMinutes()
-          )
-        : info.event.end
-        ? new Date(
-            info.event.end.getFullYear(),
-            info.event.end.getMonth(),
-            info.event._def.extendedProps.oneDay
-              ? info.event.end.getDate()
-              : info.event.end.getDate() - 1,
-            info.event.end.getHours(),
-            info.event.end.getMinutes()
-          )
-        : null;
+  setEvent();
+  calApi = fullCalendar.value?.getApi();
+  calApi?.render();
+  if (calApi) {
+    store.state.currentViewDate = calApi.view.title;
 
-      selectedEvent.value = {
-        color: info.event.backgroundColor,
-        title: info.event.title,
-        start: customDateFormatter(start || info.event.start),
-        end: customDateFormatter(endMinus1 || info.event.start),
-        allDay: info.event.allDay,
-        startTime: info.event._instance?.range.start
-          .toUTCString()
-          .slice(17, 22),
-        endTime: info.event._instance?.range.end.toUTCString().slice(17, 22),
-        onDevice: info.event._def.extendedProps.onDevice,
-        description: info.event._def.extendedProps.description,
-        uploader: info.event._def.extendedProps.uploader,
-      };
-      showInfo.value = true;
-    },
-  });
-  calendar.value?.render();
-  store.commit("setCurrentViewDate", calendar.value?.view.title);
+    document
+      .getElementById("sideBarButton")!
+      .addEventListener("click", function () {
+        setTimeout(() => {
+          calApi?.updateSize();
+        }, 290);
+      });
 
-  document
-    .getElementById("sideBarButton")!
-    .addEventListener("click", function () {
-      setTimeout(() => {
-        calendar.value?.updateSize();
-      }, 290);
+    document.getElementById("prev")!.addEventListener("click", function () {
+      calApi?.prev();
+      store.state.currentViewDate = calApi?.view.title || "";
     });
 
-  document.getElementById("prev")!.addEventListener("click", function () {
-    calendar.value?.prev();
-    store.commit("setCurrentViewDate", calendar.value?.view.title);
-  });
+    document.getElementById("next")!.addEventListener("click", function () {
+      calApi?.next();
+      store.state.currentViewDate = calApi?.view.title || "";
+    });
 
-  document.getElementById("next")!.addEventListener("click", function () {
-    calendar.value?.next();
-    store.commit("setCurrentViewDate", calendar.value?.view.title);
-  });
+    document.getElementById("today")!.addEventListener("click", function () {
+      calApi?.today();
+      store.state.currentViewDate = calApi?.view.title || "";
+    });
 
-  document.getElementById("today")!.addEventListener("click", function () {
-    calendar.value?.today();
-    store.commit("setCurrentViewDate", calendar.value?.view.title);
-  });
+    document.getElementById("dayView")!.addEventListener("click", function () {
+      calApi?.changeView("timeGridDay");
+      store.state.currentViewDate = calApi?.view.title || "";
+    });
 
-  document.getElementById("dayView")!.addEventListener("click", function () {
-    calendar.value?.changeView("timeGridDay");
-    store.commit("setCurrentViewDate", calendar.value?.view.title);
-  });
-
-  document.getElementById("monthView")!.addEventListener("click", function () {
-    calendar.value?.changeView("dayGridMonth");
-    store.commit("setCurrentViewDate", calendar.value?.view.title);
-  });
+    document
+      .getElementById("monthView")!
+      .addEventListener("click", function () {
+        calApi?.changeView("dayGridMonth");
+        store.state.currentViewDate = calApi?.view.title || "";
+      });
+  }
 });
 
-watch(selectedDevice, () => {
+watch([selectedDevice, posters], () => {
   setEvent();
 });
 </script>
 
 <template>
-  <div ref="calendarEl" class="m-3 font-sf-pro"></div>
+  <div v-if="loading" class="flex justify-center items-center h-full">
+    <i class="pi pi-spin pi-sync text-5xl"></i>
+  </div>
+  <FullCalendar
+    v-else
+    ref="fullCalendar"
+    :options="calOptions"
+    class="m-3 font-sf-pro"
+  ></FullCalendar>
   <Dialog
     v-model:visible="showInfo"
     modal

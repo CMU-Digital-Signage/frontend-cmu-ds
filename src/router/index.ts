@@ -103,7 +103,7 @@ router.beforeEach(async (to, from, next) => {
   if (shouldFetchData) {
     if (!store.state.userInfo.id) {
       const userInfoRes = await getUserInfo();
-      if (userInfoRes.ok) store.commit("setUserInfo", userInfoRes.user);
+      if (userInfoRes.ok) store.state.userInfo = userInfoRes.user;
       else next({ name: "Login", replace: true });
     }
 
@@ -111,22 +111,18 @@ router.beforeEach(async (to, from, next) => {
       getAllUser(),
       getDevice(),
     ]);
-    store.commit("setAllUser", allUserRes.user);
+    store.state.allUser = allUserRes.user;
 
     if (deviceRes.ok) {
-      const macNotUse = deviceRes.data
+      store.state.macNotUse = deviceRes.data
         .filter((e: any) => !e.deviceName)
         .map((e: any) => e.MACaddress);
-      store.commit("setMacNotUse", macNotUse);
 
       const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
       devices.map((e, i) => (e.color = color[i]));
-      store.commit("setDevices", devices);
-      store.commit("setSelectDevice", devices[0].MACaddress);
-      store.commit(
-        "setFilterDevice",
-        devices.map((e) => e.MACaddress)
-      );
+      store.state.devices = devices;
+      store.state.selectDevice = devices[0].MACaddress || "";
+      store.state.filterDevice = devices.map((e) => e.MACaddress);
 
       if (
         (to.path === "/admin" || to.path === "/emergency") &&
