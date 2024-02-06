@@ -151,7 +151,17 @@ onMounted(async () => {
       scrollable
       class="font-sf-pro mt-2"
     >
-      <Column field="title" header="Title" sortable style="width: 20%">
+      <Column field="title" header="Title" sortable style="width: 20%"
+        ><template #sorticon="slotProps">
+          <i
+            class="m-3 pi"
+            :class="{
+              'pi-sort-alt': slotProps.sortOrder === 0,
+              'pi-sort-alpha-down': slotProps.sortOrder === 1,
+              'pi-sort-alpha-up': slotProps.sortOrder === -1,
+            }"
+          ></i>
+        </template>
         <template #body="slotProps">
           <div v-if="props.types === 'emer'">
             {{ slotProps.data.incidentName }}
@@ -167,6 +177,15 @@ onMounted(async () => {
         header="Uploader"
         sortable
         style="width: 20%"
+        ><template #sorticon="slotProps">
+          <i
+            class="m-3 pi"
+            :class="{
+              'pi-sort-alt': slotProps.sortOrder === 0,
+              'pi-sort-alpha-down': slotProps.sortOrder === 1,
+              'pi-sort-alpha-up': slotProps.sortOrder === -1,
+            }"
+          ></i> </template
       ></Column>
       <Column
         v-if="props.types === 'nor'"
@@ -174,6 +193,15 @@ onMounted(async () => {
         header="Upload Date"
         sortable
         style="width: 20%"
+        ><template #sorticon="slotProps">
+          <i
+            class="m-3 pi"
+            :class="{
+              'pi-sort-alt': slotProps.sortOrder === 0,
+              'pi-sort-numeric-up': slotProps.sortOrder === 1,
+              'pi-sort-numeric-down': slotProps.sortOrder === -1,
+            }"
+          ></i> </template
       ></Column>
       <Column field="'status'" header="Status" style="width: 15%">
         <!-- <template #body="slotProps">

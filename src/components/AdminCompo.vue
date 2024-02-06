@@ -43,12 +43,12 @@ const calculateScreenHeight = () => {
 <template>
   <div ref="containerRef" class="rectangle4 flex-1 font-sf-pro">
     <div class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
-        >Search:
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2.5"
+        >Search
       </label>
       <InputText
         v-model="search"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-72 rounded-lg font-sf-pro"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-96 rounded-lg font-sf-pro"
         placeholder="Name"
         type="text"
       ></InputText>
@@ -85,7 +85,7 @@ const calculateScreenHeight = () => {
           </template>
         </Column>
         <Column
-          header="Change Role"
+          header="Action"
           headerClass="align-middle text-center justify-center "
           :exportable="false"
           class="w-full align-middle justify-center"

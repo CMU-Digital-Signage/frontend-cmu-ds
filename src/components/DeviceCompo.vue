@@ -120,6 +120,16 @@ const calculateScreenHeight = () => {
         sortable
         class="font-semibold"
       >
+      <template #sorticon="slotProps">
+            <i
+              class="m-3 pi"
+              :class="{
+                'pi-sort-alt': slotProps.sortOrder === 0,
+                'pi-sort-alpha-down': slotProps.sortOrder === 1,
+                'pi-sort-alpha-up': slotProps.sortOrder === -1,
+              }"
+            ></i>
+          </template>
         <template #body="rowData">
           <div class="flex items-center gap-3">
             <p class="font-light">{{ rowData.data.deviceName }}</p>
@@ -150,11 +160,22 @@ const calculateScreenHeight = () => {
         </template>
       </Column>
       <Column
+        field="room"
         header="Room"
         sortable
         class="font-semibold"
         headerStyle="font-bold"
       >
+      <template #sorticon="slotProps">
+            <i
+              class="m-3 pi"
+              :class="{
+                'pi-sort-alt': slotProps.sortOrder === 0,
+                'pi-sort-numeric-down': slotProps.sortOrder === 1,
+                'pi-sort-numeric-up': slotProps.sortOrder === -1,
+              }"
+            ></i>
+          </template>
         <template #body="rowData">
           <div class="flex items-center gap-3">
             <p class="font-light">
