@@ -8,7 +8,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, computed, watchEffect } from "vue";
+import { ref, reactive, watch, onMounted, computed, onUpdated } from "vue";
 import store from "@/store";
 import FullCalendar from "@fullcalendar/vue3";
 import { Calendar, CalendarOptions } from "@fullcalendar/core";
@@ -19,7 +19,7 @@ const loading = computed(() => store.state.loading);
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
 const fullCalendar = ref<any>(null);
-let calApi = undefined as unknown as Calendar;
+const calendar = ref<Calendar>();
 const selectedDevice = computed(() => store.state.selectDevice);
 const posters = computed(() => store.state.posters);
 const postersView = ref<any[]>([]);
@@ -40,7 +40,7 @@ const calOptions = reactive<CalendarOptions>({
   headerToolbar: false,
   height: screen.height,
   windowResize: function (view) {
-    calApi?.updateSize();
+    calendar.value?.updateSize();
   },
   eventDisplay: "block",
   events: postersView.value,
@@ -162,6 +162,9 @@ const setEvent = () => {
     });
   });
   calOptions.events = postersView.value;
+  // calendar.value?.event;
+  calendar.value?.removeAllEvents();
+  calendar.value?.addEventSource(postersView.value);
 };
 
 onMounted(async () => {
@@ -183,50 +186,50 @@ onMounted(async () => {
         e.uploader = uploader;
       });
       store.state.posters = res.poster;
-      store.state.loading = false;
     }
+    store.state.loading = false;
   }
   setEvent();
-  calApi = fullCalendar.value?.getApi();
-  calApi?.render();
-  if (calApi) {
-    store.state.currentViewDate = calApi.view.title;
+  calendar.value = new Calendar(fullCalendar.value, calOptions);
+  calendar.value.render();
+  store.state.currentViewDate = calendar.value.view.title;
 
-    document
-      .getElementById("sideBarButton")!
-      .addEventListener("click", function () {
-        setTimeout(() => {
-          calApi?.updateSize();
-        }, 290);
-      });
-
-    document.getElementById("prev")!.addEventListener("click", function () {
-      calApi?.prev();
-      store.state.currentViewDate = calApi?.view.title || "";
+  document
+    .getElementById("sideBarButton")!
+    .addEventListener("click", function () {
+      setTimeout(() => {
+        calendar.value?.updateSize();
+      }, 290);
     });
 
-    document.getElementById("next")!.addEventListener("click", function () {
-      calApi?.next();
-      store.state.currentViewDate = calApi?.view.title || "";
-    });
+  document.getElementById("prev")!.addEventListener("click", function () {
+    calendar.value?.prev();
+    store.state.currentViewDate = calendar.value?.view.title || "";
+  });
 
-    document.getElementById("today")!.addEventListener("click", function () {
-      calApi?.today();
-      store.state.currentViewDate = calApi?.view.title || "";
-    });
+  document.getElementById("next")!.addEventListener("click", function () {
+    calendar.value?.next();
+    store.state.currentViewDate = calendar.value?.view.title || "";
+  });
 
-    document.getElementById("dayView")!.addEventListener("click", function () {
-      calApi?.changeView("timeGridDay");
-      store.state.currentViewDate = calApi?.view.title || "";
-    });
+  document.getElementById("today")!.addEventListener("click", function () {
+    calendar.value?.today();
+    store.state.currentViewDate = calendar.value?.view.title || "";
+  });
 
-    document
-      .getElementById("monthView")!
-      .addEventListener("click", function () {
-        calApi?.changeView("dayGridMonth");
-        store.state.currentViewDate = calApi?.view.title || "";
-      });
-  }
+  document.getElementById("dayView")!.addEventListener("click", function () {
+    calendar.value?.changeView("timeGridDay");
+    store.state.currentViewDate = calendar.value?.view.title || "";
+  });
+
+  document.getElementById("monthView")!.addEventListener("click", function () {
+    calendar.value?.changeView("dayGridMonth");
+    store.state.currentViewDate = calendar.value?.view.title || "";
+  });
+});
+
+onUpdated(() => {
+  calendar.value?.updateSize();
 });
 
 watch([selectedDevice, posters], () => {
@@ -238,12 +241,8 @@ watch([selectedDevice, posters], () => {
   <div v-if="loading" class="flex justify-center items-center h-full">
     <i class="pi pi-spin pi-sync text-5xl"></i>
   </div>
-  <FullCalendar
-    v-else
-    ref="fullCalendar"
-    :options="calOptions"
-    class="m-3 font-sf-pro"
-  ></FullCalendar>
+  <!-- <Skeleton v-if="loading"></Skeleton> -->
+  <div ref="fullCalendar" class="m-3 font-sf-pro"></div>
   <Dialog
     v-model:visible="showInfo"
     modal
