@@ -353,19 +353,21 @@ const addNameAdmin = async () => {
           :draggable="false"
           @after-hide="resetForm()"
         >
+        <span class="p-text-secondary block mb-5">Enter full name as in CMU Registration.</span>
           <form @submit.prevent="addNameAdmin" class="flex flex-row gap-2">
+            
             <div class="flex flex-col gap-2">
-              <div class="inline-block">
+              
                 <label class="text-[17px] font-semibold pt-2 w-32"
-                  >Fullname:
+                  >Full name
                 </label>
                 <InputText
-                  class="border border-[#C6C6C6] p-2 h-9 ml-2 w-72 mt-1 rounded-lg font-sf-pro"
-                  placeholder="Navadon Khunlertgit"
+                  class="border border-[#C6C6C6] p-2 h-9  w-96 rounded-lg font-sf-pro"
+                  placeholder="Ex. Navadon Khunlertgit"
                   type="text"
                   v-model="formAdmin"
                 ></InputText>
-              </div>
+             
               <div class="flex flex-row gap-4 pt-3">
                 <Button
                   label="Cancel"

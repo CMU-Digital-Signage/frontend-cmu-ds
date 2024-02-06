@@ -37,12 +37,12 @@ const calculateScreenHeight = () => {
 <template>
   <div class="rectangle4 flex-1 font-sf-pro">
     <div class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-semibold pt-2"
-        >Search:
+      <label for="macAddress" class="text-primary-50 font-semibold pt-2.5"
+        >Search
       </label>
       <InputText
         v-model="search"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-72 rounded-lg font-sf-pro"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-96 rounded-lg font-sf-pro"
         placeholder="Name"
         type="text"
       ></InputText>
@@ -61,9 +61,19 @@ const calculateScreenHeight = () => {
           sortable
           class="h-8 max-w-fit"
           headerStyle="font-bold"
-        ></Column>
+        >
+        <template #sorticon="slotProps">
+            <i
+              class="m-3 pi"
+              :class="{
+                'pi-sort-alt': slotProps.sortOrder === 0,
+                'pi-sort-alpha-down': slotProps.sortOrder === 1,
+                'pi-sort-alpha-up': slotProps.sortOrder === -1,
+              }"
+            ></i>
+          </template></Column>
         <Column field="lastName" class="w-full"></Column>
-        <Column header="Change Role" :exportable="false">
+        <Column header="Action" :exportable="false">
           <template #body="slotProps">
             <div class="w-[500px]">
               <Button
