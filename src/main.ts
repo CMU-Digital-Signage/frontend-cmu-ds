@@ -60,20 +60,20 @@ createApp(App)
       Toast: {
         container: (slotProps: any) => ({
           class: [
-            "rounded-lg w-full border-solid border-0 border-l-[6px] shadow-md backdrop-blur-[10px]",
+            "rounded-lg w-full border-solid border-0 border-l-[6px] shadow-md",
             {
-              "border-blue-500/70": slotProps.props.message.severity == "info",
-              "border-green-500/70":
+              "border-blue-500": slotProps.props.message.severity == "info",
+              "border-green-500":
                 slotProps.props.message.severity == "success",
-              "border-orange-500/70":
+              "border-orange-500":
                 slotProps.props.message.severity == "warn",
-              "border-red-500/70": slotProps.props.message.severity == "error",
+              "border-red-500": slotProps.props.message.severity == "error",
             },
             {
-              "bg-blue-300/30": slotProps.props.message.severity == "info",
-              "bg-green-300/30": slotProps.props.message.severity == "success",
-              "bg-orange-300/30": slotProps.props.message.severity == "warn",
-              "bg-red-300/30": slotProps.props.message.severity == "error",
+              "bg-blue-300": slotProps.props.message.severity == "info",
+              "bg-green-300": slotProps.props.message.severity == "success",
+              "bg-orange-300": slotProps.props.message.severity == "warn",
+              "bg-red-300": slotProps.props.message.severity == "error",
             },
             {
               "text-blue-500": slotProps.props.message.severity == "info",

@@ -24,8 +24,8 @@ const user = computed<User>(() => store.state.userInfo);
 const setForm = (title: string) => {
   if (props.types === "nor") {
     const data = posters.value.filter((e) => e.title === title);
-    console.log(data);
 
+    // poster form
     const form = {
       title: title,
       image: data[0].image,
@@ -33,8 +33,8 @@ const setForm = (title: string) => {
     };
     store.state.formPoster = form;
 
+    // display form
     const display = [{ ...initialFormDisplay }] as Display[];
-    display[0].time.pop();
     data.forEach((e) => {
       display.find((disp) => {
         if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
@@ -47,6 +47,7 @@ const setForm = (title: string) => {
           ) {
             disp.allDay = true;
           } else {
+            display[0].time.pop();
             disp.time.push({ startTime: e.startTime, endTime: e.endTime });
           }
         } else {
@@ -63,7 +64,6 @@ const setForm = (title: string) => {
     store.state.formDisplay = display;
   } else {
     const data = emerPosters.value.filter((e) => e.incidentName === title);
-
     const form = {
       title: title,
       image: data[0].emergencyImage,
@@ -71,8 +71,6 @@ const setForm = (title: string) => {
     };
     store.state.formPoster = form;
   }
-
-  console.log(title, props.types);
 };
 
 const createUnique = (data: any) => {
