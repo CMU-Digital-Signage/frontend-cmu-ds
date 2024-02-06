@@ -8,6 +8,7 @@ const filterDevice = computed(() => store.state.filterDevice);
 const searchPosters = computed(() => store.state.searchPosters);
 const data = ref([]);
 const filterData = ref([]);
+const loading = computed(() => store.state.loading);
 
 watch(searchPosters, () => {
   let temp = [] as any;
@@ -53,17 +54,13 @@ watch(filterDevice, () => {
   filterData.value = data.value.filter((e: any) => {
     return filterDevice.value.includes(e.MACaddress);
   });
-  console.log(data.value);
-
-  console.log(filterDevice.value);
-  console.log(filterData.value);
 });
 </script>
 
 <template>
   <div class="bg-[#b18b8b00] py-4 px-4 flex-1">
     <div class="h-full overflow-y-auto border-2 border-[#878787] rounded-xl">
-      <div class="rectangle3">
+      <div v-if="!loading" class="rectangle3">
         <DataTable
           columnResizeMode="fit"
           scrollDirection="vertical"
@@ -108,6 +105,9 @@ watch(filterDevice, () => {
           </Column>
           <Column field="title" class="w-full"></Column>
         </DataTable>
+      </div>
+      <div v-else class="flex h-full justify-center items-center">
+        <i class="pi pi-spin pi-sync text-5xl"></i>
       </div>
     </div>
   </div>

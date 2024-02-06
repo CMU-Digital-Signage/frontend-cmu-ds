@@ -1,5 +1,6 @@
 import router from "@/router";
 import store from "@/store";
+import { User } from "@/types";
 import axios from "axios";
 
 export async function getUserInfo() {
@@ -10,7 +11,7 @@ export async function getUserInfo() {
       },
       withCredentials: true,
     });
-    
+
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -43,6 +44,6 @@ export async function getAllUser() {
 
 export function signOut() {
   localStorage.removeItem("token");
-  store.commit("clearUser");
+  store.state.userInfo = <User>{};
   router.replace("/login");
 }

@@ -25,6 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
+import Skeleton from "primevue/skeleton";
 import Calendar from "primevue/calendar";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -101,14 +102,10 @@ createApp(App)
         closeIcon: (slotProps: any) => ({
           class: [
             {
-              "text-blue-500 ":
-                slotProps.props.message.severity == "info",
-              "text-green-500":
-                slotProps.props.message.severity == "success",
-              "text-orange-500":
-                slotProps.props.message.severity == "warn",
-              "text-red-500":
-                slotProps.props.message.severity == "error",
+              "text-blue-500 ": slotProps.props.message.severity == "info",
+              "text-green-500": slotProps.props.message.severity == "success",
+              "text-orange-500": slotProps.props.message.severity == "warn",
+              "text-red-500": slotProps.props.message.severity == "error",
             },
           ],
         }),
@@ -145,4 +142,5 @@ createApp(App)
   .component("FileUpload", FileUpload)
   .component("OverlayPanel", OverlayPanel)
   .component("Checkbox", Checkbox)
+  .component("Skeleton", Skeleton)
   .mount("#app");

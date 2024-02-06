@@ -73,6 +73,7 @@ const handleAddPoster = async () => {
       life: 3000,
     });
     store.commit("resetForm");
+    // store.commit("addPoster", );
   } else {
     toast.add({
       severity: "error",

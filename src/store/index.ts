@@ -7,6 +7,7 @@ const date = new Date();
 export default createStore({
   state: {
     openSidebar: true,
+    loading: false,
     userInfo: <User>{},
     allUser: <User[]>[],
     adminManage: <number>0,
@@ -20,7 +21,7 @@ export default createStore({
     emerPosters: <Emergency[]>[],
     uniquePosters: <Poster[]>[],
     searchPosters: <Poster[]>[],
-    filterDevice: <string[]>[],
+    filterDevice: <(string | null)[]>[],
     formPoster: <any>{},
     formDisplay: <Display[]>[{ ...initialFormDisplay }],
     formEmer: <Emergency>{},
@@ -37,65 +38,8 @@ export default createStore({
     },
   },
   mutations: {
-    setEmerPosters(state, value) {
-      state.emerPosters = value;
-    },
-    setOpenSidebar(state, value) {
-      state.openSidebar = value;
-    },
-    setUserInfo(state, userInfo) {
-      state.userInfo = userInfo;
-    },
-    clearUser(state) {
-      state.userInfo = <User>{};
-    },
-    setAllUser(state, value) {
-      state.allUser = value;
-    },
     setAdmin(state, { id, isAdmin }) {
       state.allUser.find((e) => (e.id === id ? (e.isAdmin = isAdmin) : ""));
-    },
-    setAdminManage(state, value) {
-      state.adminManage = value;
-    },
-    setSelectDevice(state, value) {
-      state.selectDevice = value;
-    },
-    setCurrentViewDate(state, value) {
-      state.currentViewDate = value;
-    },
-    setMacNotUse(state, mac) {
-      state.macNotUse = mac;
-    },
-    setDevices(state, devices) {
-      state.devices = devices;
-    },
-    setPosters(state, posters) {
-      state.posters = posters;
-    },
-    setUniquePosters(state, posters) {
-      state.uniquePosters = posters;
-    },
-    setSearchPosters(state, posters) {
-      state.searchPosters = posters;
-    },
-    setFilterDevice(state, mac) {
-      state.filterDevice = mac;
-    },
-    clearSearchPosters(state) {
-      state.searchPosters = [] as Poster[];
-    },
-    addDisplay(state, value) {
-      state.formDisplay.push(value);
-    },
-    removeDisplay(state, index) {
-      state.formDisplay.splice(index, 1);
-    },
-    addTime(state, payload) {
-      state.formDisplay[payload.index].time.push(payload.time);
-    },
-    removeTime(state, payload) {
-      state.formDisplay[payload.index].time.splice(payload.timeIndex, 1);
     },
     setAllTime(state, index) {
       state.formDisplay[index].time = [

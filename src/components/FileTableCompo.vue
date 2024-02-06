@@ -7,7 +7,7 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { ref, computed, onMounted, reactive, onUnmounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import store from "@/store";
 import { getPoster } from "@/services/poster";
 import { customDateFormatter, initialFormDisplay } from "@/utils/constant";
@@ -76,7 +76,7 @@ const setForm = (title: string) => {
 };
 
 const createUnique = (data: any) => {
-  const uniqueP = data.reduce((acc: any[], e: any) => {
+  store.state.uniquePosters = data.reduce((acc: any[], e: any) => {
     // Check if the title is not already in the accumulator
     if (!acc.some((poster) => poster.title === e.title)) {
       //uploader
@@ -110,7 +110,6 @@ const createUnique = (data: any) => {
     }
     return acc;
   }, []);
-  store.commit("setUniquePosters", uniqueP);
 };
 
 onMounted(async () => {
@@ -131,14 +130,13 @@ onMounted(async () => {
           }.`;
           e.uploader = uploader;
         });
-
-        store.commit("setPosters", res.poster);
+        store.state.posters = res.poster;
         createUnique(res.poster);
       }
     } else {
       const res = await getEmergency();
       if (res.ok) {
-        store.commit("setEmerPosters", res.emergency);
+        store.state.emerPosters = res.emergency;
       }
     }
   } else if (!uniquePosters.value.length && props.types == "nor") {

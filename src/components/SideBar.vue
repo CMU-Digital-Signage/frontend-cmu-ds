@@ -18,7 +18,7 @@ const filterDevice = computed({
 const openSidebar = computed(() => store.state.openSidebar);
 
 const toggleSidebar = () => {
-  store.commit("setOpenSidebar", !openSidebar.value);
+  store.state.openSidebar = !openSidebar.value;
 };
 </script>
 

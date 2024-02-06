@@ -26,7 +26,7 @@ onUpdated(() => {
   } else if (
     formDisplay.value.time[index.value].startTime &&
     formDisplay.value.time[index.value].endTime &&
-    formDisplay.value.time[index.value].startTime.toTimeString() >
+    formDisplay.value.time[index.value].startTime!.toTimeString() >
       formDisplay.value.time[index.value].endTime!.toTimeString()
   ) {
     store.state.formDisplay[index.value].time[index.value].endTime = undefined;
@@ -48,15 +48,14 @@ const addTime = () => {
   newStartTime?.setHours(newStartTime.getHours() + 1);
   const newEndTime = new Date(newStartTime!);
   newEndTime?.setHours(newEndTime.getHours() + 1);
-  const payload = {
-    index: index.value,
-    time: { startTime: newStartTime, endTime: newEndTime },
-  };
-  store.commit("addTime", payload);
+  store.state.formDisplay[index.value].time.push({
+    startTime: newStartTime,
+    endTime: newEndTime,
+  });
 };
 
 const deleteTime = (i: number) => {
-  store.commit("removeTime", { index: index.value, timeIndex: i });
+  store.state.formDisplay[index.value].time.splice(i, 1);
 };
 
 const minStartTime = (i: number) => {
@@ -76,14 +75,14 @@ const maxStartTime = (i: number) => {
 };
 
 const minEndTime = (i: number) => {
-  const min = new Date(formDisplay.value.time[i].startTime);
+  const min = new Date(formDisplay.value.time[i].startTime!);
   min.setHours(min.getHours() + 1);
   return min;
 };
 
 const maxEndTime = (i: number) => {
   if (i < formDisplay.value.time.length - 1) {
-    const max = new Date(formDisplay.value.time[i + 1].startTime);
+    const max = new Date(formDisplay.value.time[i + 1].startTime!);
     max.setHours(max.getHours() - 1);
     return max;
   }

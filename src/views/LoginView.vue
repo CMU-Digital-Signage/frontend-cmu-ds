@@ -54,7 +54,7 @@ export default defineComponent({
     if (!store.state.userInfo.id && localStorage.getItem("token")) {
       const res = await getUserInfo();
       if (res.ok) {
-        store.commit("setUserInfo", res.user);
+        store.state.userInfo = res.user;
         next({ path: "/" });
       } else {
         next();
@@ -67,9 +67,7 @@ export default defineComponent({
 </script>
 
 <style>
-
 .button-container:hover {
   background-color: #545787;
 }
-
 </style>

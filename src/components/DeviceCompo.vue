@@ -61,10 +61,9 @@ const edit = async () => {
 
   const res = await editDevice(form);
   if (res.ok) {
-    const temp = device.value?.map((e) =>
+    store.state.devices = device.value?.map((e) =>
       e.MACaddress === form.MACaddress ? { ...e, ...form } : e
     );
-    store.commit("setDevices", temp);
     showPopup.value = false;
     toast.add({
       severity: "success",
@@ -84,8 +83,9 @@ const edit = async () => {
 
 const del = async (MACaddress: any) => {
   const res = await deleteDevice(MACaddress);
-  const temp = device.value?.filter((e) => e.MACaddress !== MACaddress);
-  store.commit("setDevices", temp);
+  store.state.devices = device.value?.filter(
+    (e) => e.MACaddress !== MACaddress
+  );
   toast.add({
     severity: "success",
     summary: "Success",
@@ -105,14 +105,14 @@ const calculateScreenHeight = () => {
 <template>
   <Toast />
   <div class="rectangle5">
-    <p v-if="!device">Loading...</p>
+    <p v-if="!device"><i class="pi pi-spin pi-sync text-5xl"></i></p>
     <DataTable
       v-else
+      :value="device"
       scrollDirection="vertical"
       scrollable
       :scrollHeight="calculateScreenHeight()"
       class="font-sf-pro mt-2"
-      :value="device"
     >
       <Column
         field="deviceName"
