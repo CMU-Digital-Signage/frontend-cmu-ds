@@ -20,7 +20,7 @@ export default createStore({
     posters: <Poster[]>[],
     emerPosters: <Emergency[]>[],
     uniquePosters: <Poster[]>[],
-    searchPosters: <Poster[]>[],
+    searchPosters: <Poster[] | null>null,
     filterDevice: <(string | null)[]>[],
     formPoster: <any>{},
     formDisplay: <Display[]>[{ ...initialFormDisplay }],

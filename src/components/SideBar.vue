@@ -24,7 +24,7 @@ const toggleSidebar = () => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-screen side-bar sticky border-gray-100 border-r-[2px]"
+    class="flex flex-col justify-between h-screen side-bar z-10 sticky border-gray-100 border-r-[2px]"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
     <div class="space-y-5 font-sf-pro" :class="{ 'p-4': openSidebar }">

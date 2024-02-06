@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { getPoster } from "@/services";
-import { color, customDateFormatter } from "@/utils/constant";
+import { color, customDateFormatter, day } from "@/utils/constant";
 export default defineComponent({
   name: "DashboardView",
   components: {},
@@ -38,7 +38,7 @@ const calOptions = reactive<CalendarOptions>({
   },
   fixedWeekCount: false,
   headerToolbar: false,
-  height: screen.height,
+  height: innerHeight * 0.9,
   windowResize: function (view) {
     calendar.value?.updateSize();
   },
@@ -162,7 +162,6 @@ const setEvent = () => {
     });
   });
   calOptions.events = postersView.value;
-  // calendar.value?.event;
   calendar.value?.removeAllEvents();
   calendar.value?.addEventSource(postersView.value);
 };
@@ -238,10 +237,12 @@ watch([selectedDevice, posters], () => {
 </script>
 
 <template>
-  <div v-if="loading" class="flex justify-center items-center h-full">
-    <i class="pi pi-spin pi-sync text-5xl"></i>
-  </div>
-  <!-- <Skeleton v-if="loading"></Skeleton> -->
+  <Skeleton
+    v-if="loading"
+    width="100%"
+    height="92%"
+    class="bg-gray-200 -mb-3"
+  ></Skeleton>
   <div ref="fullCalendar" class="m-3 font-sf-pro"></div>
   <Dialog
     v-model:visible="showInfo"
