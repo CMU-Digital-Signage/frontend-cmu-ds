@@ -28,7 +28,7 @@ const add = async (id: number) => {
 
 const calculateScreenHeight = () => {
   const screenHeight = window.innerHeight;
-  const multiplier = 0.71;
+  const multiplier = 0.69;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
@@ -73,7 +73,7 @@ const calculateScreenHeight = () => {
             ></i>
           </template></Column>
         <Column field="lastName" class="w-full"></Column>
-        <Column header="Action" :exportable="false">
+        <Column header="Change Role" :exportable="false">
           <template #body="slotProps">
             <div class="w-[500px]">
               <Button

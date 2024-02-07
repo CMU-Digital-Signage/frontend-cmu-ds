@@ -34,4 +34,33 @@ const user = computed(() => store.state.userInfo);
 router-view {
   flex: 1;
 }
+
+.p-sortable-column {
+  height: 20px;
+  padding: 15px;
+}
+
+.p-tabview-nav-link {
+  background-color: #fafafa;
+}
+.p-tabview-nav {
+  background-color: #fafafa;
+}
+.p-tabview-panels {
+  background-color: #fafafa;
+}
+
+.p-datatable-wrapper {
+  border-color: #dbdbdb;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  border-width: 1px;
+  border-radius: 10px;
+}
+.p-row-odd {
+  background-color: #fafafa;
+}
+
+.p-dialog {
+  border-radius: 10px;
+}
 </style>

@@ -37,26 +37,7 @@ createApp(App)
   .use(router)
   .use(PrimeVue, {
     pt: {
-      global: {
-        css: `
-          .p-tabview-nav-link {
-            background-color: #fafafa
-          }
-          .p-tabview-nav {
-            background-color: #fafafa
-          }
-          .p-tabview-panels {
-            background-color: #fafafa
-          }
-          .p-datatable-wrapper {
-            border-color: #c6c6c6;
-            border-width: 1px;
-          }
-          .p-row-odd {
-            background-color: #fafafa
-          }
-        `,
-      },
+      
       Toast: {
         container: (slotProps: any) => ({
           class: [
