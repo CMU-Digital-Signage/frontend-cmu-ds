@@ -15,10 +15,10 @@ onUpdated(() => {
 <template>
   <div>
     <!-- Tabview -->
-    <div class="mx-10 mt-3 font-sf-pro">
+    <div class="mx-10 mt-3">
       <TabView
         v-model:activeIndex="click"
-        class="rectangle flex flex-col font-sf-pro overflow-y-auto"
+        class="rectangle flex flex-col overflow-y-auto"
       >
         <TabPanel header="Normal File">
           <FileTable :types="'nor'" />

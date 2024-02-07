@@ -149,7 +149,7 @@ onMounted(async () => {
       :value="props.types === 'nor' ? uniquePosters : emerPosters"
       scrollDirection="vertical"
       scrollable
-      class="font-sf-pro mt-2"
+      class="mt-2"
     >
       <Column field="title" header="Title" sortable style="width: 20%"
         ><template #sorticon="slotProps">

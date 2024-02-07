@@ -37,7 +37,6 @@ createApp(App)
   .use(router)
   .use(PrimeVue, {
     pt: {
-      
       Toast: {
         container: (slotProps: any) => ({
           class: [

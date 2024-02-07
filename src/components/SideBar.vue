@@ -27,7 +27,7 @@ const toggleSidebar = () => {
     class="flex flex-col justify-between h-screen side-bar z-10 sticky border-gray-100 border-r-[2px]"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
-    <div class="space-y-5 font-sf-pro" :class="{ 'p-4': openSidebar }">
+    <div class="space-y-5" :class="{ 'p-4': openSidebar }">
       <div
         class="flex justify-between items-start"
         :class="{ 'p-4': !openSidebar }"
@@ -100,7 +100,7 @@ const toggleSidebar = () => {
         >
           <router-link to="/">
             <Button
-              class="bg-white menu-ho w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
+              class="bg-white menu-ho w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -124,7 +124,7 @@ const toggleSidebar = () => {
           <router-link to="/file">
             <div>
               <Button
-                class="bg-white w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+                class="bg-white w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
                 v-if="openSidebar"
                 link
                 :style="{
@@ -150,7 +150,7 @@ const toggleSidebar = () => {
           </router-link>
           <router-link to="/deviceManage">
             <Button
-              class="bg-white w-full space-x-2 text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+              class="bg-white w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -194,7 +194,7 @@ const toggleSidebar = () => {
         >
           <router-link to="/admin">
             <Button
-              class="bg-white space-x-2 w-full text-[#282828] font-sf-pro font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
+              class="bg-white space-x-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -219,7 +219,7 @@ const toggleSidebar = () => {
 
           <router-link to="/emergency">
             <Button
-              class="bg-white space-x-2 w-full text-[#f00] font-sf-pro font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
+              class="bg-white space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
               v-if="openSidebar"
               link
               :style="{

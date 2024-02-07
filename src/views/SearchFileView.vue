@@ -81,7 +81,7 @@ watch(filterDevice, () => {
         columnResizeMode="fit"
         scrollDirection="vertical"
         scrollable
-        class="font-sf-pro rounded-2xl h-12"
+        class="rounded-2xl h-12"
         :value="filterData"
       >
         <Column class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6">

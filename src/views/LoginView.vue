@@ -19,7 +19,7 @@
         >
         <span class="text-lg mb-3 font-notoThai">ลงชื่อเข้าสู่ระบบ</span>
         <button
-          class="flex items-center justify-center w-auto p-5 h-11 relative rounded-[10px] bg-[#696CA3] font-sf-pro text-white text-2xl button-container"
+          class="flex items-center justify-center w-auto p-5 h-11 relative rounded-[10px] bg-[#696CA3] text-white text-2xl button-container"
           @click="redirectToOAuth()"
         >
           <img

@@ -35,6 +35,10 @@ router-view {
   flex: 1;
 }
 
+.p-component {
+  font-family: "SF Pro";
+}
+
 .p-sortable-column {
   height: 20px;
   padding: 15px;

@@ -72,7 +72,7 @@ const deleteSchedule = (index: number) => {
 
 <template>
   <Toast />
-  <div class="flex flex-row justify-between gap-3 mx-1 font-sf-pro">
+  <div class="flex flex-row justify-between gap-3 mx-1">
     <div class="flex flex-col justify-start w-full max-w-4xl gap-5">
       <!-- Title -->
       <InputText
@@ -219,9 +219,9 @@ const deleteSchedule = (index: number) => {
 
     <!-- Schedule -->
     <div class="w-full max-w-4xl">
-      <div class="rectangle8 font-sf-pro flex items-start">
+      <div class="rectangle8 flex items-start">
         <TabView
-          class="rectangleflex flex-row flex-1 justify-between w-56 font-sf-pro scroll-x"
+          class="rectangleflex flex-row flex-1 justify-between w-56 scroll-x"
           v-model:active-index="currentI"
         >
           <TabPanel

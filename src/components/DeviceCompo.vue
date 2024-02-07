@@ -112,7 +112,7 @@ const calculateScreenHeight = () => {
       scrollDirection="vertical"
       scrollable
       :scrollHeight="calculateScreenHeight()"
-      class="font-sf-pro mt-2"
+      class="mt-2"
     >
       <Column
         field="deviceName"

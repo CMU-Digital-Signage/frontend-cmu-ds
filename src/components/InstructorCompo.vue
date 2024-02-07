@@ -35,14 +35,14 @@ const calculateScreenHeight = () => {
 </script>
 
 <template>
-  <div class="rectangle4 flex-1 font-sf-pro">
+  <div class="rectangle4 flex-1 ">
     <div class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-semibold pt-2.5"
         >Search
       </label>
       <InputText
         v-model="search"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-96 rounded-lg font-sf-pro"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-96 rounded-lg "
         placeholder="Name"
         type="text"
       ></InputText>
@@ -53,7 +53,7 @@ const calculateScreenHeight = () => {
         scrollDirection="vertical"
         scrollable
         :scrollHeight="calculateScreenHeight()"
-        class="font-sf-pro mt-2"
+        class=" mt-2"
       >
         <Column
           field="firstName"
