@@ -12,6 +12,7 @@ export interface Device {
   location: any;
   description: string | null;
   color: string;
+  status: boolean;
 }
 
 export interface Poster {
@@ -29,7 +30,7 @@ export interface Poster {
   endTime: Date;
   duration: number;
   uploader: string;
-  status: boolean;
+  status: string;
 }
 
 export interface Display {
