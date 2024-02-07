@@ -14,10 +14,10 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="rectangle8 flex-1 font-sf-pro">
+  <div class="rectangle8 flex-1">
     <TabView
       v-model:activeIndex="click"
-      class="rectangle flex flex-col font-sf-pro overflow-y-auto"
+      class="rectangle flex flex-col overflow-y-auto"
     >
       <TabPanel header="Normal File">
         <UpNorFileCompo />

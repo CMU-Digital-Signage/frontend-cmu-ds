@@ -362,7 +362,7 @@ const addNameAdmin = async () => {
                   >Full name
                 </label>
                 <InputText
-                  class="border border-[#C6C6C6] p-2 h-9  w-96 rounded-lg font-sf-pro"
+                  class="border border-[#C6C6C6] p-2 h-9  w-96 rounded-lg"
                   placeholder="Ex. Navadon Khunlertgit"
                   type="text"
                   v-model="formAdmin"
@@ -546,7 +546,7 @@ const addNameAdmin = async () => {
           >
             <i class="pi pi-plus text-white"></i>
           </div>
-          Upload File
+          Go Upload
         </Button>
       </div>
     </ul>

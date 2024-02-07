@@ -11,7 +11,7 @@ onUpdated(() => {
 </script>
 
 <template>
-  <div class="rectangle8 flex-1 font-sf-pro">
+  <div class="rectangle8 flex-1">
     <UpNorFileCompo v-if="store.state.formDisplay[0].duration" />
     <UpEmerFileCompo v-else />
   </div>

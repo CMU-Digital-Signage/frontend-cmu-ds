@@ -91,7 +91,7 @@ const maxEndTime = (i: number) => {
 
 <template>
   <div class="mt-5">
-    <div class="font-sf-pro flex flex-col justify-start gap-5">
+    <div class="flex flex-col justify-start gap-5">
       <!-- Date -->
       <div class="flex flex-row gap-4 items-center text-[18px] text-[#282828]">
         <div class="flex-col justify-start">

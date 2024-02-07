@@ -116,7 +116,7 @@ const add = async () => {
 <template>
   <Toast />
   <div
-    class="bg-[#F6F6F6] border-t border-[#c7bbbb] h-14 px-6 flex items-center font-sf-pro"
+    class="bg-[#F6F6F6] border-t border-[#c7bbbb] h-14 px-6 flex items-center"
   >
     <ul
       v-if="$route.path === '/uploadfile'"
@@ -128,7 +128,7 @@ const add = async () => {
         icon="pi pi-upload"
         :loading="loading"
         @click="add"
-        class="bg-[#36BFA7] border-[#36BFA7] font-semibold font-sf-pro text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+        class="bg-[#36BFA7] border-[#36BFA7] font-semibold text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
       />
     </ul>
     <!-- edit file -->
@@ -140,7 +140,7 @@ const add = async () => {
         type="button"
         label="Save"
         :loading="loading"
-        class="bg-[#36BFA7] border-[#36BFA7] font-semibold font-sf-pro text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+        class="bg-[#36BFA7] border-[#36BFA7] font-semibold text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
       />
     </ul>
   </div>

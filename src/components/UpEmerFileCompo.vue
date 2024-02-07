@@ -27,7 +27,7 @@ const errorSelectFile = () => {
 
 <template>
   <Toast />
-  <div class="flex flex-row justify-between gap-3 mx-1 font-sf-pro">
+  <div class="flex flex-row justify-between gap-3 mx-1">
     <div class="flex flex-col justify-start w-full max-w-4xl gap-5">
       <InputText
         v-model="formEmer.incidentName"

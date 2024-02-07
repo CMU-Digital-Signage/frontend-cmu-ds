@@ -243,7 +243,7 @@ watch([selectedDevice, posters], () => {
     height="92%"
     class="bg-gray-200 -mb-3"
   ></Skeleton>
-  <div ref="fullCalendar" class="m-3 font-sf-pro"></div>
+  <div ref="fullCalendar" class="m-3 "></div>
   <Dialog
     v-model:visible="showInfo"
     modal
@@ -252,7 +252,7 @@ watch([selectedDevice, posters], () => {
   >
     <template #header>
       <div
-        class="font-sf-pro font-bold text-2xl inline-flex gap-3 items-center"
+        class=" font-bold text-2xl inline-flex gap-3 items-center"
       >
         <i
           class="pi pi-circle-fill"
