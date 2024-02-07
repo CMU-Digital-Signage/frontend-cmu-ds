@@ -34,7 +34,7 @@ const del = async (id: number) => {
 
 const calculateScreenHeight = () => {
   const screenHeight = window.innerHeight;
-  const multiplier = 0.71;
+  const multiplier = 0.69;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
@@ -85,7 +85,7 @@ const calculateScreenHeight = () => {
           </template>
         </Column>
         <Column
-          header="Action"
+          header="Change Role"
           headerClass="align-middle text-center justify-center "
           :exportable="false"
           class="w-full align-middle justify-center"
