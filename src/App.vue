@@ -2,7 +2,7 @@
 import SideBar from "./components/SideBar.vue";
 import store from "./store";
 import NavBar from "./components/NavBar.vue";
-import NavbarBelow from "./components/NavbarBelowCompo.vue";
+import NavbarBelow from "./components/NavbarBelow.vue";
 import { computed } from "vue";
 
 const user = computed(() => store.state.userInfo);
