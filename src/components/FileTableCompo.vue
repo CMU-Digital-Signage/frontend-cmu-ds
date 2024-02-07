@@ -9,10 +9,11 @@ export default defineComponent({
 import { defineProps } from "vue";
 import { ref, computed, onMounted } from "vue";
 import store from "@/store";
-import { getPoster } from "@/services/poster";
+import { getPoster, deletePoster } from "@/services/poster";
 import { customDateFormatter, initialFormDisplay } from "@/utils/constant";
 import { Display, User } from "@/types";
-import { getEmergency } from "@/services";
+import { deleteEmergency, getEmergency } from "@/services";
+import { useToast } from "primevue/usetoast";
 
 const props = defineProps({ types: String });
 
@@ -20,6 +21,9 @@ const posters = computed(() => store.state.posters);
 const emerPosters = computed(() => store.state.emerPosters);
 const uniquePosters = computed(() => store.state.uniquePosters);
 const user = computed<User>(() => store.state.userInfo);
+const toast = useToast();
+let delP = null as any;
+const loading = computed(() => store.state.loading);
 
 const setForm = (title: string) => {
   if (props.types === "nor") {
@@ -82,27 +86,53 @@ const createUnique = (data: any) => {
       const uploader = `${users.firstName} ${
         users?.lastName?.charAt(0) || ""
       }.`;
+
       //status
       const currentDate = new Date();
       const startDate = new Date(e.startDate);
       const endDate = new Date(e.endDate);
-      const isActive = currentDate >= startDate && currentDate <= endDate;
-      //createdAt
-      const createdAt = new Date(e.startDate);
+
+      let status = "";
+      if (
+        currentDate.getDate() >= startDate.getDate() &&
+        currentDate.getDate() <= endDate.getDate() &&
+        currentDate.getMonth() >= startDate.getMonth() &&
+        currentDate.getMonth() <= endDate.getMonth() &&
+        currentDate.getFullYear() >= startDate.getFullYear() &&
+        currentDate.getFullYear() <= endDate.getFullYear()
+      ) {
+        if (
+          currentDate.getHours() >= e.startTime.getHours() &&
+          currentDate.getHours() <= e.endTime.getHours() &&
+          currentDate.getMinutes() >= e.startTime.getMinutes() &&
+          currentDate.getMinutes() <= e.endTime.getMinutes() &&
+          new Date().getSeconds() <= e.endTime.getSeconds()
+        ) {
+          status = "Running";
+        } else {
+          status = "Pending";
+        }
+      } else if (currentDate < startDate) {
+        status = "Upcoming";
+      } else {
+        status = "Expire";
+      }
 
       if (user.value.isAdmin) {
         acc.push({
           title: e.title,
+          posterId: e.posterId,
           uploader,
-          createdAt: customDateFormatter(createdAt),
-          status: isActive,
+          createdAt: customDateFormatter(new Date(e.createdAt)),
+          status,
         });
       } else if (e.id == user.value.id) {
         acc.push({
           title: e.title,
+          posterId: e.posterId,
           uploader,
-          createdAt: customDateFormatter(createdAt),
-          status: isActive,
+          createdAt: customDateFormatter(new Date(e.createdAt)),
+          status,
         });
       }
     }
@@ -141,6 +171,32 @@ onMounted(async () => {
     createUnique(posters.value);
   }
 });
+
+const del = async (poster: string) => {
+  delP = poster;
+  console.log(delP);
+
+  store.state.loading = true;
+  if (props.types == "nor") {
+    const res = await deletePoster(delP);
+    store.state.posters = posters.value?.filter((e) => e.posterId !== delP);
+  } else {
+    const res = await deleteEmergency(delP);
+    store.state.emerPosters = emerPosters.value?.filter(
+      (e) => e.incidentName !== delP
+    );
+  }
+
+  store.state.loading = false;
+  delP = null;
+
+  toast.add({
+    severity: "success",
+    summary: "Success",
+    detail: "Delete poster successful.",
+    life: 3000,
+  });
+};
 </script>
 
 <template>
@@ -203,11 +259,10 @@ onMounted(async () => {
             }"
           ></i> </template
       ></Column>
-      <Column field="'status'" header="Status" style="width: 15%">
-        <!-- <template #body="slotProps">
-          <div v-if="slotProps.data.status">Active</div>
-          <div v-else>Inactive</div>
-        </template> -->
+      <Column field="status" header="Status" style="width: 15%">
+        <template #body="slotProps" v-if="props.types === 'emer'">
+          <p>{{ slotProps.data.status ? "Active" : "Inactive" }}</p>
+        </template>
       </Column>
       <Column field="management" header="Management" style="width: 15%">
         <template #body="rowData">
@@ -229,6 +284,12 @@ onMounted(async () => {
               rounded
               class="w-9 h-9 mx-3"
               severity="danger"
+              :loading="
+                loading &&
+                (rowData.data.posterId === delP ||
+                  rowData.data.incidentName === delP)
+              "
+              @click="del(rowData.data.posterId || rowData.data.incidentName)"
             />
           </div>
         </template>
