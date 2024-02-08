@@ -84,8 +84,6 @@ const calOptions = reactive<CalendarOptions>({
         )
       : null;
 
-    console.log(info.event);
-
     selectedEvent.value = {
       color: info.event.backgroundColor,
       type: info.event._def.extendedProps.type,
@@ -122,6 +120,12 @@ const setEvent = () => {
       titleCol !== e.title
     )
       return;
+
+    console.log(currentDevice.filter((p) => p.title.startsWith(titleCol)));
+
+    const displayDuration =
+      currentDevice.filter((p) => p.title.startsWith(titleCol)).length *
+      e.duration;
 
     const allDay =
       e.startTime.toTimeString().includes("00:00") &&
@@ -176,7 +180,7 @@ const setEvent = () => {
       type: e.type,
       title: titleCol,
       description: e.description,
-      displayDuration: e.duration,
+      displayDuration: displayDuration,
       uploader: e.uploader,
       onDevice: posterOnDevice,
       backgroundColor: exist
