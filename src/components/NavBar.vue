@@ -167,7 +167,7 @@ const validateEmail = () => {
       <div class="text-lg font-semibold text-gray-800 text-[20px]">
         Management
       </div>
-      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 2">
+      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 1">
         <Button
           class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
           @click="showPopup = true"
@@ -190,9 +190,9 @@ const validateEmail = () => {
         >
           <div class="flex flex-col gap-2">
             <div class="inline-block">
-              <label for="deviceName" class="text-primary-50 font-medium"
-                >Device Name</label
-              >
+              <label for="deviceName" class="text-primary-50 font-medium">
+                Device Name
+              </label>
               <label for="deviceName" class="text-[#FF0000] font-medium"
                 >*</label
               >
@@ -205,12 +205,12 @@ const validateEmail = () => {
           </div>
           <div class="flex flex-col gap-2">
             <div class="inline-block">
-              <label for="deviceName" class="text-primary-50 font-medium"
-                >MAC Address</label
-              >
-              <label for="deviceName" class="text-[#FF0000] font-medium"
-                >*</label
-              >
+              <label for="deviceName" class="text-primary-50 font-medium">
+                MAC Address
+              </label>
+              <label for="deviceName" class="text-[#FF0000] font-medium">
+                *
+              </label>
             </div>
             <Dropdown
               class="mb-3"
@@ -225,9 +225,9 @@ const validateEmail = () => {
             />
           </div>
           <div class="flex flex-col gap-1">
-            <label for="macAddress" class="text-primary-50 font-medium"
-              >Room</label
-            >
+            <label for="macAddress" class="text-primary-50 font-medium">
+              Room
+            </label>
             <InputText
               v-model:model-value="form.room"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
@@ -235,9 +235,9 @@ const validateEmail = () => {
             ></InputText>
           </div>
           <div class="flex flex-col gap-1">
-            <label for="macAddress" class="text-primary-50 font-medium"
-              >Location Description</label
-            >
+            <label for="macAddress" class="text-primary-50 font-medium">
+              Location Description
+            </label>
             <InputText
               v-model:model-value="form.description"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
@@ -245,9 +245,9 @@ const validateEmail = () => {
             ></InputText>
           </div>
           <div class="flex flex-col gap-1">
-            <label for="macAddress" class="text-primary-50 font-medium"
-              >Location Photo</label
-            >
+            <label for="macAddress" class="text-primary-50 font-medium">
+              Location Photo
+            </label>
             <FileUpload
               accept="image/*"
               customUpload

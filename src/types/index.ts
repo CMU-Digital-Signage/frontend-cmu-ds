@@ -32,6 +32,7 @@ export interface Poster {
   duration: number;
   uploader: string;
   status: string;
+  type: string;
 }
 
 export interface Display {

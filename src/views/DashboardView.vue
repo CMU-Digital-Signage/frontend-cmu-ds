@@ -1,32 +1,24 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { getPoster } from "@/services";
-import {
-  color,
-  customDateFormatter,
-  day,
-  setFieldPoster,
-} from "@/utils/constant";
 export default defineComponent({
   name: "DashboardView",
   components: {},
 });
 </script>
 <script setup lang="ts">
+import { ref, reactive, watch, onMounted, computed, onUpdated } from "vue";
 import {
-  ref,
-  reactive,
-  watch,
-  onMounted,
-  computed,
-  onUpdated,
-  onUnmounted,
-} from "vue";
+  color,
+  customDateFormatter,
+  day,
+  setFieldPoster,
+} from "@/utils/constant";
 import store from "@/store";
-import FullCalendar from "@fullcalendar/vue3";
+import { getPoster } from "@/services";
 import { Calendar, CalendarOptions } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { Poster } from "@/types";
 
 const loading = computed(() => store.state.loading);
 const showInfo = ref(false);
@@ -92,14 +84,18 @@ const calOptions = reactive<CalendarOptions>({
         )
       : null;
 
+    console.log(info.event);
+
     selectedEvent.value = {
       color: info.event.backgroundColor,
+      type: info.event._def.extendedProps.type,
       title: info.event.title,
       start: customDateFormatter(start || info.event.start),
       end: customDateFormatter(endMinus1 || info.event.start),
       allDay: info.event.allDay,
       startTime: info.event._instance?.range.start.toUTCString().slice(17, 22),
       endTime: info.event._instance?.range.end.toUTCString().slice(17, 22),
+      duration: info.event._def.extendedProps.displayDuration,
       onDevice: info.event._def.extendedProps.onDevice,
       description: info.event._def.extendedProps.description,
       uploader: info.event._def.extendedProps.uploader,
@@ -114,6 +110,19 @@ const setEvent = () => {
     (e) => e.MACaddress === selectedDevice.value
   );
   currentDevice.forEach((e) => {
+    const titleCol = /[0-9]+$/.test(e.title)
+      ? e.title.substring(0, e.title.lastIndexOf(" "))
+      : e.title;
+
+    if (titleCol === e.title) e.type = "Individual";
+    else e.type = "Collection";
+
+    if (
+      postersView.value.find((p) => p.title === titleCol) &&
+      titleCol !== e.title
+    )
+      return;
+
     const allDay =
       e.startTime.toTimeString().includes("00:00") &&
       e.endTime.toTimeString().includes("23:59");
@@ -164,8 +173,10 @@ const setEvent = () => {
 
     postersView.value.push({
       allDay: allDay,
-      title: e.title,
+      type: e.type,
+      title: titleCol,
       description: e.description,
+      displayDuration: e.duration,
       uploader: e.uploader,
       onDevice: posterOnDevice,
       backgroundColor: exist
@@ -184,8 +195,15 @@ onMounted(async () => {
     store.state.loading = true;
     const res = await getPoster("");
     if (res.ok) {
-      res.poster.forEach((e: any) => {
+      res.poster.forEach((e: Poster) => {
         setFieldPoster(e);
+        if (
+          res.poster.filter((p: Poster) =>
+            p.title.startsWith(e.title.substring(0, e.title.lastIndexOf(" ")))
+          ).length > 1
+        ) {
+          e.type = "Collection";
+        } else e.type = "Individual";
       });
       store.state.posters = res.poster;
     }
@@ -255,39 +273,49 @@ watch([selectedDevice, posters], () => {
     v-model:visible="showInfo"
     modal
     :draggable="false"
-    class="w-96 z-[100]"
+    class="w-[500px] z-[100]"
   >
     <template #header>
-      <div class="inline-flex justify-between max-w-fit items-center">
+      <div class="inline-flex justify-between items-center w-full">
         <div class="inline-flex font-bold text-2xl gap-3 items-center">
           <i
             class="pi pi-circle-fill"
             :style="{ color: selectedEvent.color }"
           ></i>
           <p>{{ selectedEvent.title }}</p>
+          <p>({{ selectedEvent.type }})</p>
         </div>
-        <div class="inline-flex gap-3">
+        <div class="inline-flex gap-5 mr-5">
           <i class="pi pi-trash"></i>
           <i class="pi pi-pencil"></i>
         </div>
       </div>
     </template>
     <div class="flex flex-col gap-2">
+      <!-- Start Date -->
       <div class="posterDetail">
         <p>Start Date</p>
         <p>{{ selectedEvent.start }}</p>
       </div>
+      <!-- End Date -->
       <div class="posterDetail">
         <p>End Date</p>
         <p>{{ selectedEvent.end }}</p>
       </div>
+      <!-- Running Time -->
       <div class="posterDetail">
-        <p>Time</p>
+        <p>Running Time</p>
         <p v-if="selectedEvent.allDay">All Day</p>
         <p v-else>
           {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
         </p>
       </div>
+      <!-- Duration -->
+      <div class="posterDetail">
+        <p>Display Duration</p>
+        <p>{{ selectedEvent.duration }} sec</p>
+      </div>
+      <!-- Device -->
       <div class="posterDetail">
         <p>Device</p>
         <div class="flex flex-col">
@@ -305,11 +333,13 @@ watch([selectedDevice, posters], () => {
           </p>
         </div>
       </div>
+      <!-- Description -->
       <div class="posterDetail">
         <p>Description</p>
         <p>{{ selectedEvent.description }}</p>
         <p v-if="!selectedEvent.description">-</p>
       </div>
+      <!-- Uploader -->
       <div class="posterDetail">
         <p>Uploader</p>
         <p>{{ selectedEvent.uploader }}</p>
