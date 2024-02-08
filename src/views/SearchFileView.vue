@@ -62,8 +62,8 @@ watch(filterDevice, () => {
 </script>
 
 <template>
-  <div class="bg-[#b18b8b00] py-4 px-4 flex-1">
-    <div class="h-full overflow-y-auto border-2 border-[#878787] rounded-xl">
+  <div class="flex-1">
+    <div class="h-full overflow-y-auto ">
       <DataTable v-if="loading" :value="new Array(10)">
         <Column class="w-[243px] border-r-[#CFCECE] border-r-2">
           <template #body
@@ -100,7 +100,7 @@ watch(filterDevice, () => {
         </Column>
         <Column>
           <template #body="item">
-            <div class="flex flex-row gap-1 items-center">
+            <div class="flex flex-row gap-3 items-center">
               <i
                 class="pi pi-circle-fill"
                 :style="{ color: item.data.color }"
