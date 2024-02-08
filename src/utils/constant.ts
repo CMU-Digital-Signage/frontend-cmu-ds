@@ -215,3 +215,53 @@ export const setFieldPoster = (e: any) => {
   const uploader = `${users.firstName} ${users?.lastName?.charAt(0) || ""}.`;
   e.uploader = uploader;
 };
+
+export const createUnique = (data: any) => {
+  store.state.uniquePosters = data.reduce((acc: any[], e: any) => {
+    // Check if the title is not already in the accumulator
+    if (!acc.some((poster) => poster.title === e.title)) {
+      const currentDate = new Date();
+      setFieldPoster(e);
+      let status = "";
+      if (
+        currentDate.getDate() >= e.startDate.getDate() &&
+        currentDate.getDate() <= e.endDate.getDate() &&
+        currentDate.getMonth() >= e.startDate.getMonth() &&
+        currentDate.getMonth() <= e.endDate.getMonth() &&
+        currentDate.getFullYear() >= e.startDate.getFullYear() &&
+        currentDate.getFullYear() <= e.endDate.getFullYear()
+      ) {
+        if (
+          new Date().toTimeString() >= e.startTime.toTimeString() &&
+          new Date().toTimeString() <= e.endTime.toTimeString()
+        ) {
+          status = "Running";
+        } else {
+          status = "Pending";
+        }
+      } else if (currentDate < e.startDate) {
+        status = "Upcoming";
+      } else {
+        status = "Expire";
+      }
+      if (store.state.userInfo.isAdmin) {
+        acc.push({
+          title: e.title,
+          posterId: e.posterId,
+          uploader: e.uploader,
+          createdAt: customDateFormatter(e.createdAt),
+          status,
+        });
+      } else if (e.id == store.state.userInfo.id) {
+        acc.push({
+          title: e.title,
+          posterId: e.posterId,
+          uploader: e.uploader,
+          createdAt: customDateFormatter(e.createdAt),
+          status,
+        });
+      }
+    }
+    return acc;
+  }, []);
+};

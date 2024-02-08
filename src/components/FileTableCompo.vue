@@ -10,17 +10,12 @@ import { defineProps } from "vue";
 import { ref, watch, computed, onMounted } from "vue";
 import store from "@/store";
 import { getPoster, deletePoster } from "@/services/poster";
-import {
-  customDateFormatter,
-  initialFormDisplay,
-  setFieldPoster,
-} from "@/utils/constant";
+import { createUnique, initialFormDisplay } from "@/utils/constant";
 import { Display, User } from "@/types";
 import { deleteEmergency, getEmergency } from "@/services";
 import { useToast } from "primevue/usetoast";
 
 const props = defineProps({ types: String });
-
 const posters = computed(() => store.state.posters);
 const emerPosters = computed(() => store.state.emerPosters);
 const uniquePosters = computed(() => store.state.uniquePosters);
@@ -81,56 +76,6 @@ const setForm = (title: string) => {
   }
 };
 
-const createUnique = (data: any) => {
-  store.state.uniquePosters = data.reduce((acc: any[], e: any) => {
-    // Check if the title is not already in the accumulator
-    if (!acc.some((poster) => poster.title === e.title)) {
-      const currentDate = new Date();
-      setFieldPoster(e);
-      let status = "";
-      if (
-        currentDate.getDate() >= e.startDate.getDate() &&
-        currentDate.getDate() <= e.endDate.getDate() &&
-        currentDate.getMonth() >= e.startDate.getMonth() &&
-        currentDate.getMonth() <= e.endDate.getMonth() &&
-        currentDate.getFullYear() >= e.startDate.getFullYear() &&
-        currentDate.getFullYear() <= e.endDate.getFullYear()
-      ) {
-        if (
-          new Date().toTimeString() >= e.startTime.toTimeString() &&
-          new Date().toTimeString() <= e.endTime.toTimeString()
-        ) {
-          status = "Running";
-        } else {
-          status = "Pending";
-        }
-      } else if (currentDate < e.startDate) {
-        status = "Upcoming";
-      } else {
-        status = "Expire";
-      }
-      if (user.value.isAdmin) {
-        acc.push({
-          title: e.title,
-          posterId: e.posterId,
-          uploader: e.uploader,
-          createdAt: customDateFormatter(e.createdAt),
-          status,
-        });
-      } else if (e.id == user.value.id) {
-        acc.push({
-          title: e.title,
-          posterId: e.posterId,
-          uploader: e.uploader,
-          createdAt: customDateFormatter(e.createdAt),
-          status,
-        });
-      }
-    }
-    return acc;
-  }, []);
-};
-
 onMounted(async () => {
   if (!posters.value.length || !emerPosters.value.length) {
     if (props.types === "nor") {
@@ -161,10 +106,6 @@ onMounted(async () => {
   } else if (!uniquePosters.value.length && props.types == "nor") {
     createUnique(posters.value);
   }
-});
-
-watch(posters, () => {
-  createUnique(posters.value);
 });
 
 const del = async (poster: string) => {
