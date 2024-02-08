@@ -19,7 +19,7 @@ const instructor = computed(() =>
 );
 const search = ref("");
 
-const add = async (id: number) => {
+const add = async (id: string) => {
   const newAdmin = await addAdmin({ id });
   if (newAdmin.ok) {
     store.commit("setAdmin", { id, isAdmin: true });
@@ -35,14 +35,14 @@ const calculateScreenHeight = () => {
 </script>
 
 <template>
-  <div class="rectangle4 flex-1 ">
+  <div class="rectangle4 flex-1">
     <div class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-semibold pt-2.5"
         >Search
       </label>
       <InputText
         v-model="search"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-96 rounded-lg "
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-96 rounded-lg"
         placeholder="Name"
         type="text"
       ></InputText>
@@ -53,16 +53,16 @@ const calculateScreenHeight = () => {
         scrollDirection="vertical"
         scrollable
         :scrollHeight="calculateScreenHeight()"
-        class=" mt-2"
+        class="mt-2"
       >
         <Column
           field="firstName"
           header="Name"
           sortable
-          class="h-8 max-w-fit"
+          class="h-8 w-1/12"
           headerStyle="font-bold"
         >
-        <template #sorticon="slotProps">
+          <template #sorticon="slotProps">
             <i
               class="m-3 pi"
               :class="{
@@ -70,19 +70,24 @@ const calculateScreenHeight = () => {
                 'pi-sort-alpha-down': slotProps.sortOrder === 1,
                 'pi-sort-alpha-up': slotProps.sortOrder === -1,
               }"
-            ></i>
-          </template></Column>
-        <Column field="lastName" class="w-full"></Column>
-        <Column header="Change Role" :exportable="false">
+            >
+            </i>
+          </template>
+        </Column>
+        <Column field="lastName" class="w-1/12"></Column>
+        <Column class="w-auto">
+          <template #body="rowData">
+            <div v-if="!rowData"></div>
+          </template>
+        </Column>
+        <Column header="Change Role" class="w-1/2" :exportable="false">
           <template #body="slotProps">
-            <div class="w-[500px]">
-              <Button
-                icon="pi pi-arrow-right-arrow-left"
-                label="Admin"
-                class="w-fit h-9 rounded-md bg-[#0094FF]"
-                @click="add(slotProps.data.id)"
-              />
-            </div>
+            <Button
+              icon="pi pi-arrow-right-arrow-left"
+              label="Admin"
+              class="w-fit h-9 rounded-md bg-[#0094FF]"
+              @click="add(slotProps.data.id)"
+            />
           </template>
         </Column>
       </DataTable>

@@ -7,10 +7,14 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { ref, computed, onMounted } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import store from "@/store";
 import { getPoster, deletePoster } from "@/services/poster";
-import { customDateFormatter, initialFormDisplay } from "@/utils/constant";
+import {
+  customDateFormatter,
+  initialFormDisplay,
+  setFieldPoster,
+} from "@/utils/constant";
 import { Display, User } from "@/types";
 import { deleteEmergency, getEmergency } from "@/services";
 import { useToast } from "primevue/usetoast";
@@ -81,57 +85,44 @@ const createUnique = (data: any) => {
   store.state.uniquePosters = data.reduce((acc: any[], e: any) => {
     // Check if the title is not already in the accumulator
     if (!acc.some((poster) => poster.title === e.title)) {
-      //uploader
-      const users = store.getters.getUserById(e.id);
-      const uploader = `${users.firstName} ${
-        users?.lastName?.charAt(0) || ""
-      }.`;
-
-      //status
       const currentDate = new Date();
-      const startDate = new Date(e.startDate);
-      const endDate = new Date(e.endDate);
-
+      setFieldPoster(e);
       let status = "";
       if (
-        currentDate.getDate() >= startDate.getDate() &&
-        currentDate.getDate() <= endDate.getDate() &&
-        currentDate.getMonth() >= startDate.getMonth() &&
-        currentDate.getMonth() <= endDate.getMonth() &&
-        currentDate.getFullYear() >= startDate.getFullYear() &&
-        currentDate.getFullYear() <= endDate.getFullYear()
+        currentDate.getDate() >= e.startDate.getDate() &&
+        currentDate.getDate() <= e.endDate.getDate() &&
+        currentDate.getMonth() >= e.startDate.getMonth() &&
+        currentDate.getMonth() <= e.endDate.getMonth() &&
+        currentDate.getFullYear() >= e.startDate.getFullYear() &&
+        currentDate.getFullYear() <= e.endDate.getFullYear()
       ) {
         if (
-          currentDate.getHours() >= e.startTime.getHours() &&
-          currentDate.getHours() <= e.endTime.getHours() &&
-          currentDate.getMinutes() >= e.startTime.getMinutes() &&
-          currentDate.getMinutes() <= e.endTime.getMinutes() &&
-          new Date().getSeconds() <= e.endTime.getSeconds()
+          new Date().toTimeString() >= e.startTime.toTimeString() &&
+          new Date().toTimeString() <= e.endTime.toTimeString()
         ) {
           status = "Running";
         } else {
           status = "Pending";
         }
-      } else if (currentDate < startDate) {
+      } else if (currentDate < e.startDate) {
         status = "Upcoming";
       } else {
         status = "Expire";
       }
-
       if (user.value.isAdmin) {
         acc.push({
           title: e.title,
           posterId: e.posterId,
-          uploader,
-          createdAt: customDateFormatter(new Date(e.createdAt)),
+          uploader: e.uploader,
+          createdAt: customDateFormatter(e.createdAt),
           status,
         });
       } else if (e.id == user.value.id) {
         acc.push({
           title: e.title,
           posterId: e.posterId,
-          uploader,
-          createdAt: customDateFormatter(new Date(e.createdAt)),
+          uploader: e.uploader,
+          createdAt: customDateFormatter(e.createdAt),
           status,
         });
       }
@@ -172,14 +163,19 @@ onMounted(async () => {
   }
 });
 
+watch(posters, () => {
+  createUnique(posters.value);
+});
+
 const del = async (poster: string) => {
   delP = poster;
-  console.log(delP);
-
   store.state.loading = true;
   if (props.types == "nor") {
     const res = await deletePoster(delP);
     store.state.posters = posters.value?.filter((e) => e.posterId !== delP);
+    store.state.uniquePosters = uniquePosters.value?.filter(
+      (e) => e.posterId !== delP
+    );
   } else {
     const res = await deleteEmergency(delP);
     store.state.emerPosters = emerPosters.value?.filter(

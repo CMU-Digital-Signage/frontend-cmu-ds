@@ -1,5 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { setFieldPoster } from "@/utils/constant";
+
 export default defineComponent({
   name: "NavBarBottom",
 });
@@ -7,11 +9,13 @@ export default defineComponent({
 <script setup lang="ts">
 import { addEmergency, addPoster } from "@/services";
 import store from "@/store";
+import { Poster } from "@/types";
 import { computed, ref } from "vue";
 import { useToast } from "primevue/usetoast";
 
 const loading = ref(false);
 const toast = useToast();
+const posters = computed(() => store.state.posters);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
@@ -47,6 +51,7 @@ const handleAddEmergency = async () => {
       life: 3000,
     });
     store.commit("resetForm");
+    store.state.emerPosters.push(res.emergency);
   } else {
     toast.add({
       severity: "error",
@@ -73,7 +78,7 @@ const handleAddPoster = async () => {
       life: 3000,
     });
     store.commit("resetForm");
-    // store.commit("addPoster", );
+    // push new poster
   } else {
     toast.add({
       severity: "error",

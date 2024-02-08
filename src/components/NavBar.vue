@@ -37,7 +37,7 @@ const selectDevice = computed({
   get: () => store.state.selectDevice,
   set: (val) => (store.state.selectDevice = val),
 });
-const formAdmin = ref("");
+const email = ref<string>("");
 
 watchEffect(() => {
   if (router.currentRoute.value.path === "/searchfile") {
@@ -128,16 +128,12 @@ const add = async () => {
   }
 };
 
-const addNameAdmin = async () => {
-  if (formAdmin.value.length) {
-    const fullName = formAdmin.value.split(" ");
-    const newAdmin = await addAdmin({
-      firstName: fullName[0],
-      lastName: fullName[1],
-    });
+const addEmailAdmin = async () => {
+  if (email.value.length && validateEmail()) {
+    const newAdmin = await addAdmin({ email: email.value });
     if (newAdmin.ok) {
       store.state.allUser.push(newAdmin.admin);
-      formAdmin.value = "";
+      email.value = "";
       toast.add({
         severity: "success",
         summary: "Success",
@@ -153,6 +149,10 @@ const addNameAdmin = async () => {
       });
     }
   }
+};
+
+const validateEmail = () => {
+  return /^\S+@cmu\.ac\.th$/i.test(email.value);
 };
 </script>
 
@@ -353,38 +353,35 @@ const addNameAdmin = async () => {
           :draggable="false"
           @after-hide="resetForm()"
         >
-        <span class="p-text-secondary block mb-5">Enter full name as in CMU Registration.</span>
-          <form @submit.prevent="addNameAdmin" class="flex flex-row gap-2">
-            
+          <!-- <span class="p-text-secondary block mb-5">
+            Enter email domain @cmu.ac.th only
+          </span> -->
+          <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
             <div class="flex flex-col gap-2">
-              
-                <label class="text-[17px] font-semibold pt-2 w-32"
-                  >Full name
-                </label>
-                <InputText
-                  class="border border-[#C6C6C6] p-2 h-9  w-96 rounded-lg"
-                  placeholder="Ex. Navadon Khunlertgit"
-                  type="text"
-                  v-model="formAdmin"
-                ></InputText>
-             
+              <label class="text-[17px] font-semibold pt-2 w-32">Email </label>
+              <InputText
+                class="border border-[#C6C6C6] p-2 h-9 w-96 rounded-lg"
+                placeholder="Enter email domain @cmu.ac.th only"
+                type="text"
+                v-model="email"
+              ></InputText>
+
               <div class="flex flex-row gap-4 pt-3">
                 <Button
                   label="Cancel"
                   text
-                  @click="
-                    showPopup = false;
-                    resetForm();
-                  "
+                  @click="showPopup = false"
                   class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
                 ></Button>
                 <Button
                   label="Add"
                   text
                   class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
-                  :class="`${!formAdmin.length ? 'cursor-not-allowed' : ''}`"
+                  :class="`${
+                    !email.length || !validateEmail() ? 'cursor-not-allowed' : ''
+                  }`"
                   type="submit"
-                  :disabled="!formAdmin.length"
+                  :disabled="!email.length"
                 ></Button>
               </div>
             </div>
