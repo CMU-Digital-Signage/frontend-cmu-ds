@@ -69,13 +69,13 @@ const calculateScreenHeight = () => {
           class="h-8 w-1/12"
           headerStyle="font-bold"
         >
-          <template #sorticon="slotProps">
+          <template #sorticon="rowData">
             <i
               class="m-3 pi"
               :class="{
-                'pi-sort-alt': slotProps.sortOrder === 0,
-                'pi-sort-alpha-down': slotProps.sortOrder === 1,
-                'pi-sort-alpha-up': slotProps.sortOrder === -1,
+                'pi-sort-alt': rowData.sortOrder === 0,
+                'pi-sort-alpha-down': rowData.sortOrder === 1,
+                'pi-sort-alpha-up': rowData.sortOrder === -1,
               }"
             ></i>
           </template>
@@ -86,18 +86,19 @@ const calculateScreenHeight = () => {
         </Column>
         <Column field="lastName" class="w-1/12"></Column>
         <Column :field="'isCurrentUser'" class="w-auto">
-          <template #body="slotProps">
-            <div v-if="isCurrentUser(slotProps.data)" class="py-1">(You)</div>
+          <template #body="rowData">
+            <div v-if="isCurrentUser(rowData.data)" class="py-1">(You)</div>
           </template>
         </Column>
-        <Column header="Change Role" headerClass="w-1/2" :exportable="false">
-          <template #body="slotProps">
+        <Column header="Action" headerClass="w-1/2" :exportable="false">
+          <template #body="rowData">
             <Button
-              label="Instructor"
-              v-if="!isCurrentUser(slotProps.data)"
-              icon="pi pi-arrow-right-arrow-left"
-              class="w-fit h-9 rounded-md bg-[#00AEA4]"
-              @click="del(slotProps.data.id)"
+              icon="pi pi-trash"
+              rounded
+              class="w-9 h-9 mx-3"
+              severity="danger"
+              v-if="!isCurrentUser(rowData.data)"
+              @click="del(rowData.data.id)"
             />
           </template>
         </Column>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function addAdmin({ id, email }: { id?: string; email?: string }) {
+export async function addAdmin(email: string) {
   try {
     const res = await axios.post(
       `${process.env.VUE_APP_API_BASE_URL}/admin`,
@@ -9,10 +9,7 @@ export async function addAdmin({ id, email }: { id?: string; email?: string }) {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-        params: {
-          id,
-          email,
-        },
+        params: { email },
         withCredentials: true,
       }
     );
