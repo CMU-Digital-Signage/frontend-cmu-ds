@@ -239,7 +239,6 @@ onUpdated(() => {
 });
 
 watch([selectedDevice, posters], () => {
-  console.log(posters.value);
   setEvent();
 });
 </script>

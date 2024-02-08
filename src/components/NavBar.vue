@@ -129,25 +129,23 @@ const add = async () => {
 };
 
 const addEmailAdmin = async () => {
-  if (email.value.length && validateEmail()) {
-    const newAdmin = await addAdmin({ email: email.value });
-    if (newAdmin.ok) {
-      store.state.allUser.push(newAdmin.admin);
-      email.value = "";
-      toast.add({
-        severity: "success",
-        summary: "Success",
-        detail: "Add admin successfully.",
-        life: 3000,
-      });
-    } else {
-      toast.add({
-        severity: "error",
-        summary: "Invalid",
-        detail: "User already an Admin.",
-        life: 3000,
-      });
-    }
+  const newAdmin = await addAdmin({ email: email.value });
+  if (newAdmin.ok) {
+    store.state.allUser.push(newAdmin.admin);
+    email.value = "";
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Add admin successfully.",
+      life: 3000,
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Invalid",
+      detail: "User already an Admin.",
+      life: 3000,
+    });
   }
 };
 
@@ -325,7 +323,6 @@ const validateEmail = () => {
               label="Add"
               text
               class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
-              :class="`${!macNotUse.length ? 'cursor-not-allowed' : ''}`"
               @click="add"
               :disabled="!macNotUse.length"
             ></Button>
@@ -377,11 +374,8 @@ const validateEmail = () => {
                   label="Add"
                   text
                   class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
-                  :class="`${
-                    !email.length || !validateEmail() ? 'cursor-not-allowed' : ''
-                  }`"
                   type="submit"
-                  :disabled="!email.length"
+                  :disabled="!email.length || !validateEmail()"
                 ></Button>
               </div>
             </div>

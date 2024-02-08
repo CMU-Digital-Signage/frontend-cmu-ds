@@ -35,6 +35,10 @@ router-view {
   flex: 1;
 }
 
+.p-disabled, .p-component:disabled {
+  color: #dbdbdb;
+}
+
 .p-component {
   font-family: "SF Pro";
 }
