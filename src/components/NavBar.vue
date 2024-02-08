@@ -129,7 +129,7 @@ const add = async () => {
 };
 
 const addEmailAdmin = async () => {
-  const newAdmin = await addAdmin({ email: email.value });
+  const newAdmin = await addAdmin(email.value);
   if (newAdmin.ok) {
     store.state.allUser.push(newAdmin.admin);
     email.value = "";
@@ -350,15 +350,12 @@ const validateEmail = () => {
           :draggable="false"
           @after-hide="resetForm()"
         >
-          <!-- <span class="p-text-secondary block mb-5">
-            Enter email domain @cmu.ac.th only
-          </span> -->
           <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
             <div class="flex flex-col gap-2">
               <label class="text-[17px] font-semibold pt-2 w-32">Email </label>
               <InputText
                 class="border border-[#C6C6C6] p-2 h-9 w-96 rounded-lg"
-                placeholder="Enter email domain @cmu.ac.th only"
+                placeholder="example@cmu.ac.th"
                 type="text"
                 v-model="email"
               ></InputText>
