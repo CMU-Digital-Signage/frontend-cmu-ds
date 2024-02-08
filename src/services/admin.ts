@@ -1,14 +1,6 @@
 import axios from "axios";
 
-export async function addAdmin({
-  id,
-  firstName,
-  lastName,
-}: {
-  id?: number;
-  firstName?: string;
-  lastName?: string;
-}) {
+export async function addAdmin({ id, email }: { id?: string; email?: string }) {
   try {
     const res = await axios.post(
       `${process.env.VUE_APP_API_BASE_URL}/admin`,
@@ -19,8 +11,7 @@ export async function addAdmin({
         },
         params: {
           id,
-          firstName,
-          lastName,
+          email,
         },
         withCredentials: true,
       }

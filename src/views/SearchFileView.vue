@@ -83,8 +83,10 @@ watch(filterDevice, () => {
         scrollable
         class="rounded-2xl h-12"
         :value="filterData"
+        rowGroupMode="rowspan"
+        groupRowsBy="date"
       >
-        <Column class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6">
+        <Column field="date" class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6">
           <template #body="item">
             <div class="flex flex-row gap-1 items-center">
               <p class="w-fit mr-2 text-black font-bold text-[20px]">

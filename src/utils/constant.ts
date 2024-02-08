@@ -1,3 +1,4 @@
+import store from "@/store";
 import { Device, Display } from "@/types";
 import Compressor from "compressorjs";
 import { FileUploadSelectEvent } from "primevue/fileupload";
@@ -27,14 +28,14 @@ export const color = [
   "#71A7F8",
 ];
 
-export const getRandomColor = () => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-};
+// export const getRandomColor = () => {
+//   const letters = "0123456789ABCDEF";
+//   let color = "#";
+//   for (let i = 0; i < 6; i++) {
+//     color += letters[Math.floor(Math.random() * 16)];
+//   }
+//   return color;
+// };
 
 export const fullMonth = [
   "January",
@@ -201,4 +202,16 @@ export const rotate = (file: File, currentDeg: number, deg: number) => {
       };
     }
   );
+};
+
+export const setFieldPoster = (e: any) => {
+  e.createdAt = new Date(e.createdAt);
+  e.updatedAt = new Date(e.updatedAt);
+  e.startDate = new Date(e.startDate);
+  e.endDate = new Date(e.endDate);
+  e.startTime = new Date(e.startTime);
+  e.endTime = new Date(e.endTime);
+  const users = store.getters.getUserById(e.id);
+  const uploader = `${users.firstName} ${users?.lastName?.charAt(0) || ""}.`;
+  e.uploader = uploader;
 };

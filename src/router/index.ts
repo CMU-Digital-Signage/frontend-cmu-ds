@@ -4,7 +4,7 @@ import { getAllUser, getDevice, getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
-import FileManage from "../views/FileManage.vue";
+import FileManage from "../views/FileManageView.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
 import EditFile from "../views/EditFileView.vue";

@@ -1,14 +1,27 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { getPoster } from "@/services";
-import { color, customDateFormatter, day } from "@/utils/constant";
+import {
+  color,
+  customDateFormatter,
+  day,
+  setFieldPoster,
+} from "@/utils/constant";
 export default defineComponent({
   name: "DashboardView",
   components: {},
 });
 </script>
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, computed, onUpdated } from "vue";
+import {
+  ref,
+  reactive,
+  watch,
+  onMounted,
+  computed,
+  onUpdated,
+  onUnmounted,
+} from "vue";
 import store from "@/store";
 import FullCalendar from "@fullcalendar/vue3";
 import { Calendar, CalendarOptions } from "@fullcalendar/core";
@@ -172,59 +185,53 @@ onMounted(async () => {
     const res = await getPoster("");
     if (res.ok) {
       res.poster.forEach((e: any) => {
-        e.createdAt = new Date(e.createdAt);
-        e.updatedAt = new Date(e.updatedAt);
-        e.startDate = new Date(e.startDate);
-        e.endDate = new Date(e.endDate);
-        e.startTime = new Date(e.startTime);
-        e.endTime = new Date(e.endTime);
-        const users = store.getters.getUserById(e.id);
-        const uploader = `${users.firstName} ${
-          users?.lastName?.charAt(0) || ""
-        }.`;
-        e.uploader = uploader;
+        setFieldPoster(e);
       });
       store.state.posters = res.poster;
     }
     store.state.loading = false;
   }
   setEvent();
-  calendar.value = new Calendar(fullCalendar.value, calOptions);
-  calendar.value.render();
-  store.state.currentViewDate = calendar.value.view.title;
+  if (fullCalendar.value) {
+    calendar.value = new Calendar(fullCalendar.value, calOptions);
+    calendar.value.render();
+    store.state.currentViewDate = calendar.value.view.title;
 
-  document
-    .getElementById("sideBarButton")!
-    .addEventListener("click", function () {
-      setTimeout(() => {
-        calendar.value?.updateSize();
-      }, 290);
+    document
+      .getElementById("sideBarButton")!
+      .addEventListener("click", function () {
+        setTimeout(() => {
+          calendar.value?.updateSize();
+        }, 290);
+      });
+
+    document.getElementById("prev")!.addEventListener("click", function () {
+      calendar.value?.prev();
+      store.state.currentViewDate = calendar.value?.view.title || "";
     });
 
-  document.getElementById("prev")!.addEventListener("click", function () {
-    calendar.value?.prev();
-    store.state.currentViewDate = calendar.value?.view.title || "";
-  });
+    document.getElementById("next")!.addEventListener("click", function () {
+      calendar.value?.next();
+      store.state.currentViewDate = calendar.value?.view.title || "";
+    });
 
-  document.getElementById("next")!.addEventListener("click", function () {
-    calendar.value?.next();
-    store.state.currentViewDate = calendar.value?.view.title || "";
-  });
+    document.getElementById("today")!.addEventListener("click", function () {
+      calendar.value?.today();
+      store.state.currentViewDate = calendar.value?.view.title || "";
+    });
 
-  document.getElementById("today")!.addEventListener("click", function () {
-    calendar.value?.today();
-    store.state.currentViewDate = calendar.value?.view.title || "";
-  });
+    document.getElementById("dayView")!.addEventListener("click", function () {
+      calendar.value?.changeView("timeGridDay");
+      store.state.currentViewDate = calendar.value?.view.title || "";
+    });
 
-  document.getElementById("dayView")!.addEventListener("click", function () {
-    calendar.value?.changeView("timeGridDay");
-    store.state.currentViewDate = calendar.value?.view.title || "";
-  });
-
-  document.getElementById("monthView")!.addEventListener("click", function () {
-    calendar.value?.changeView("dayGridMonth");
-    store.state.currentViewDate = calendar.value?.view.title || "";
-  });
+    document
+      .getElementById("monthView")!
+      .addEventListener("click", function () {
+        calendar.value?.changeView("dayGridMonth");
+        store.state.currentViewDate = calendar.value?.view.title || "";
+      });
+  }
 });
 
 onUpdated(() => {
@@ -232,6 +239,7 @@ onUpdated(() => {
 });
 
 watch([selectedDevice, posters], () => {
+  console.log(posters.value);
   setEvent();
 });
 </script>
@@ -243,48 +251,68 @@ watch([selectedDevice, posters], () => {
     height="92%"
     class="bg-gray-200 -mb-3"
   ></Skeleton>
-  <div ref="fullCalendar" class="m-3 "></div>
+  <div ref="fullCalendar" class="m-3"></div>
   <Dialog
     v-model:visible="showInfo"
     modal
     :draggable="false"
-    class="w-72 z-[100]"
+    class="w-96 z-[100]"
   >
     <template #header>
-      <div
-        class=" font-bold text-2xl inline-flex gap-3 items-center"
-      >
-        <i
-          class="pi pi-circle-fill"
-          :style="{ color: selectedEvent.color }"
-        ></i>
-        <p>{{ selectedEvent.title }}</p>
+      <div class="inline-flex justify-between max-w-fit items-center">
+        <div class="inline-flex font-bold text-2xl gap-3 items-center">
+          <i
+            class="pi pi-circle-fill"
+            :style="{ color: selectedEvent.color }"
+          ></i>
+          <p>{{ selectedEvent.title }}</p>
+        </div>
+        <div class="inline-flex gap-3">
+          <i class="pi pi-trash"></i>
+          <i class="pi pi-pencil"></i>
+        </div>
       </div>
     </template>
-    <div class="flex justify-between">
-      <div class="text-left">
+    <div class="flex flex-col gap-2">
+      <div class="posterDetail">
         <p>Start Date</p>
-        <p>End Date</p>
-        <p>Time</p>
-        <p>Device</p>
-        <p>Description</p>
-        <p>Uploader</p>
-      </div>
-      <div class="text-right">
         <p>{{ selectedEvent.start }}</p>
+      </div>
+      <div class="posterDetail">
+        <p>End Date</p>
         <p>{{ selectedEvent.end }}</p>
+      </div>
+      <div class="posterDetail">
+        <p>Time</p>
         <p v-if="selectedEvent.allDay">All Day</p>
         <p v-else>
           {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
         </p>
-        <div class="inline-flex gap-1">
-          <p v-for="(item, index) in selectedEvent.onDevice" :key="index">
+      </div>
+      <div class="posterDetail">
+        <p>Device</p>
+        <div class="flex flex-col">
+          <p
+            v-for="(item, index) in selectedEvent.onDevice"
+            :key="index"
+            class="inline-flex justify-between gap-1"
+          >
             <span>{{ item }}</span>
-            <span v-if="index + 1 < selectedEvent.onDevice.length"> |</span>
+            <span>
+              ({{
+                store.state.devices.find((e) => e.deviceName === item)?.room
+              }})
+            </span>
           </p>
         </div>
+      </div>
+      <div class="posterDetail">
+        <p>Description</p>
         <p>{{ selectedEvent.description }}</p>
         <p v-if="!selectedEvent.description">-</p>
+      </div>
+      <div class="posterDetail">
+        <p>Uploader</p>
         <p>{{ selectedEvent.uploader }}</p>
       </div>
     </div>
@@ -292,6 +320,11 @@ watch([selectedDevice, posters], () => {
 </template>
 
 <style>
+.posterDetail {
+  display: inline-flex;
+  justify-content: space-between;
+}
+
 .fc .fc-popover {
   z-index: 50;
 }
