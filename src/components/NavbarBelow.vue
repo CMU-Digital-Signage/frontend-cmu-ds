@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-
 export default defineComponent({
   name: "NavBarBottom",
 });
@@ -8,6 +7,7 @@ export default defineComponent({
 <script setup lang="ts">
 import { addEmergency, addPoster } from "@/services";
 import store from "@/store";
+import router from "@/router";
 import { Poster } from "@/types";
 import { computed, ref } from "vue";
 import { useToast } from "primevue/usetoast";
@@ -52,6 +52,7 @@ const handleAddEmergency = async () => {
     });
     store.commit("resetForm");
     store.state.emerPosters.push(res.emergency);
+    router.push("/");
   } else {
     toast.add({
       severity: "error",
@@ -96,6 +97,7 @@ const handleAddPoster = async () => {
       detail: "Poster has been add successfully.",
       life: 3000,
     });
+    router.push("/");
   } else {
     toast.add({
       severity: "error",

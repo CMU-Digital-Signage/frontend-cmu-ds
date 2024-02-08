@@ -23,6 +23,7 @@ import OverlayPanel from "primevue/overlaypanel";
 import { icon, library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
+import RadioButton from "primevue/radiobutton";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
 import Skeleton from "primevue/skeleton";
@@ -43,10 +44,8 @@ createApp(App)
             "rounded-lg w-full border-solid border-0 border-l-[6px] shadow-md",
             {
               "border-blue-500": slotProps.props.message.severity == "info",
-              "border-green-500":
-                slotProps.props.message.severity == "success",
-              "border-orange-500":
-                slotProps.props.message.severity == "warn",
+              "border-green-500": slotProps.props.message.severity == "success",
+              "border-orange-500": slotProps.props.message.severity == "warn",
               "border-red-500": slotProps.props.message.severity == "error",
             },
             {
@@ -121,6 +120,7 @@ createApp(App)
   .component("Row", Row)
   .component("FileUpload", FileUpload)
   .component("OverlayPanel", OverlayPanel)
+  .component("RadioButton", RadioButton)
   .component("Checkbox", Checkbox)
   .component("Skeleton", Skeleton)
   .mount("#app");
