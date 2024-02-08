@@ -229,25 +229,32 @@ const maxEndTime = (i: number) => {
           Device
         </label>
         <div class="flex flex-col gap-4 text-[16px] text-black">
-          <div class="flex gap-3 items-center">
+          <div class="flex gap-2 items-center">
             <Checkbox v-model="formDisplay.allDevice" :binary="true" />
-            <label>All Device</label>
+            <label>All Devices</label>
           </div>
           <div class="flex flex-wrap">
             <div
               v-for="(item, i) in device"
               :key="i"
-              class="flex gap-3 items-center w-1/4"
+              class="flex gap-2 items-center w-1/4"
             >
-              <div v-if="item.deviceName" class="flex gap-3 items-center">
-                <Checkbox
-                  v-model="formDisplay.MACaddress"
-                  :disabled="formDisplay.allDevice"
-                  :binary="!formDisplay.allDevice ? false : true"
-                  :value="item.MACaddress"
-                />
-                <label :for="item.deviceName">{{ item.deviceName }}</label>
-              </div>
+            <div v-if="item.deviceName" class="flex gap-2 items-center">
+  <div>
+    <Checkbox
+      v-model="formDisplay.MACaddress"
+      :disabled="formDisplay.allDevice"
+      :binary="!formDisplay.allDevice ? false : true"
+      :value="item.MACaddress"
+    />
+  </div>
+  <div>
+    <label :for="item.deviceName">{{ item.deviceName }}</label>
+    <br/> <!-- New line -->
+    <label :for="item.deviceName">{{ '(' + item.room + ')' }}</label>
+  </div>
+</div>
+
             </div>
           </div>
         </div>

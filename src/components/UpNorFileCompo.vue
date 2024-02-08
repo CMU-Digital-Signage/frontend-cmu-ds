@@ -73,15 +73,7 @@ const deleteSchedule = (index: number) => {
 <template>
   <Toast />
   <div class="flex flex-row justify-between gap-3 mx-1">
-    <div class="flex flex-col justify-start w-full max-w-4xl gap-5">
-      <!-- Title -->
-      <InputText
-        v-model="formPoster.title"
-        type="text"
-        placeholder="Title"
-        class="title-input"
-      />
-
+    <div class="flex flex-col justify-start w-screen max-w-4xl gap-5">
       <!-- File Upload -->
       <FileUpload
         accept="image/*"
@@ -94,6 +86,7 @@ const deleteSchedule = (index: number) => {
           }
         "
       >
+  
         <template #header="{ files, chooseCallback, clearCallback }">
           <div class="flex w-full gap-3 items-center justify-between">
             <div class="flex gap-3 items-center">
@@ -108,22 +101,6 @@ const deleteSchedule = (index: number) => {
                 label="Choose File"
                 rounded
                 outlined
-              />
-              <Button
-                @click="
-                  () => {
-                    clearCallback();
-                    formPoster.image = null;
-                    currentDeg = 0;
-                  }
-                "
-                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                icon="pi pi-times"
-                label="Cancel"
-                rounded
-                outlined
-                severity="danger"
-                :disabled="!formPoster.image"
               />
             </div>
             <div class="flex gap-3 items-center">
@@ -202,6 +179,12 @@ const deleteSchedule = (index: number) => {
           </div>
         </template>
       </FileUpload>
+      <InputText
+        v-model="formPoster.title"
+        type="text"
+        placeholder="Title"
+        class="title-input"
+      />
 
       <!-- Description -->
       <div class="flex flex-col gap-2 w-full h-full">
@@ -218,7 +201,7 @@ const deleteSchedule = (index: number) => {
     </div>
 
     <!-- Schedule -->
-    <div class="w-full max-w-4xl">
+    <!-- <div class="w-full max-w-4xl">
       <div class="rectangle8 flex items-start">
         <TabView
           class="rectangleflex flex-row flex-1 justify-between w-56 scroll-x"
@@ -247,7 +230,7 @@ const deleteSchedule = (index: number) => {
           ></Button>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
