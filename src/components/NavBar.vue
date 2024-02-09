@@ -7,8 +7,7 @@ export default defineComponent({
 <script setup lang="ts">
 import store from "@/store";
 import { computed, reactive, ref, watchEffect } from "vue";
-import Dialog from "primevue/dialog";
-import Dropdown from "primevue/dropdown";
+import PopupUpload from "@/components/PopupUploadCompo.vue";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { addDevice, addAdmin, searchPoster } from "@/services";
@@ -27,6 +26,7 @@ const devices = computed(() => store.state.devices);
 const searchPosters = computed(() => store.state.searchPosters);
 const chooseFile = ref();
 const showPopup = ref(false);
+const showUpload = ref(false);
 const currentViewDate = computed(() => store.state.currentViewDate);
 const monthView = ref(true);
 const selectedDate = ref(new Date());
@@ -532,7 +532,7 @@ const validateEmail = () => {
         />
         <Button
           class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho"
-          @click="router.push('/uploadfile')"
+          @click="showUpload = true"
         >
           <div
             class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center"
@@ -545,14 +545,15 @@ const validateEmail = () => {
     </ul>
 
     <!-- "Upload File" -->
-    <ul v-if="$route.path === '/uploadfile'" class="flex justify-between">
+    <PopupUpload :show="showUpload" />
+    <!-- <ul v-if="$route.path === '/uploadfile'" class="flex justify-between">
       <li class="text-lg font-semibold text-black text-[20px]">Upload File</li>
-    </ul>
+    </ul> -->
 
     <!-- "Edit File" -->
-    <ul v-if="$route.path === '/editfile'" class="flex justify-between">
+    <!-- <ul v-if="$route.path === '/editfile'" class="flex justify-between">
       <li class="text-lg font-semibold text-black text-[20px]">Edit File</li>
-    </ul>
+    </ul> -->
   </div>
 </template>
 

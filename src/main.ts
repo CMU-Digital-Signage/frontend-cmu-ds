@@ -10,6 +10,7 @@ import "primeicons/primeicons.css"; //icons
 import Toast from "primevue/toast";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
+import Dropdown from "primevue/dropdown";
 import Button from "primevue/button";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
@@ -108,6 +109,7 @@ createApp(App)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component("Toast", Toast)
   .component("Dialog", Dialog)
+  .component("Dropdown", Dropdown)
   .component("Button", Button)
   .component("Calendar", Calendar)
   .component("InputNumber", InputNumber)

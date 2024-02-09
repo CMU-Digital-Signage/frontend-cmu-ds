@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import TabView from "primevue/tabview";
-import TabPanel from "primevue/tabpanel";
 import FileTable from "@/components/FileTableCompo.vue";
 import { onUpdated, ref, watch } from "vue";
 import store from "../store";
@@ -15,7 +13,7 @@ onUpdated(() => {
 <template>
   <div>
     <!-- Tabview -->
-    <div >
+    <div>
       <TabView
         v-model:activeIndex="click"
         class="rectangle18 flex flex-col overflow-y-auto"
@@ -45,5 +43,4 @@ onUpdated(() => {
   padding-inline: 1.5rem;
   overflow: hidden;
 }
-
 </style>
