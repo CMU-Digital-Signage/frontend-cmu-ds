@@ -6,7 +6,7 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { computed, reactive, ref, watchEffect } from "vue";
+import { computed, onUpdated, reactive, ref, watchEffect } from "vue";
 import PopupUpload from "@/components/PopupUploadCompo.vue";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
@@ -26,7 +26,6 @@ const devices = computed(() => store.state.devices);
 const searchPosters = computed(() => store.state.searchPosters);
 const chooseFile = ref();
 const showPopup = ref(false);
-const showUpload = ref(false);
 const currentViewDate = computed(() => store.state.currentViewDate);
 const monthView = ref(true);
 const selectedDate = ref(new Date());
@@ -532,7 +531,7 @@ const validateEmail = () => {
         />
         <Button
           class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho"
-          @click="showUpload = true"
+          @click="store.state.showUpload = true"
         >
           <div
             class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center"
@@ -545,7 +544,7 @@ const validateEmail = () => {
     </ul>
 
     <!-- "Upload File" -->
-    <PopupUpload :show="showUpload" />
+    <PopupUpload />
     <!-- <ul v-if="$route.path === '/uploadfile'" class="flex justify-between">
       <li class="text-lg font-semibold text-black text-[20px]">Upload File</li>
     </ul> -->
