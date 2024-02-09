@@ -128,21 +128,24 @@ const add = async () => {
 };
 
 const addEmailAdmin = async () => {
-  const newAdmin = await addAdmin(email.value);
-  if (newAdmin.ok) {
-    store.state.allUser.push(newAdmin.admin);
-    email.value = "";
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Add admin successfully.",
-      life: 3000,
-    });
-  } else {
+  if (store.state.allUser.find((e) => e.email === email.value)?.isAdmin) {
     toast.add({
       severity: "error",
       summary: "Invalid",
       detail: "User already an Admin.",
+      life: 3000,
+    });
+    return;
+  }
+  const newAdmin = await addAdmin(email.value);
+  if (newAdmin.ok) {
+    store.state.allUser.push(newAdmin.admin);
+    email.value = "";
+    showPopup.value = false;
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Add admin successfully.",
       life: 3000,
     });
   }
