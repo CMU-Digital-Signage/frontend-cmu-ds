@@ -90,7 +90,7 @@ const calculateScreenHeight = () => {
             <div v-if="isCurrentUser(rowData.data)" class="py-1">(You)</div>
           </template>
         </Column>
-        <Column header="Action" headerClass="w-1/2" :exportable="false">
+        <Column header="Action" headerClass="w-1/2"  :exportable="false">
           <template #body="rowData">
             <Button
               icon="pi pi-trash"
