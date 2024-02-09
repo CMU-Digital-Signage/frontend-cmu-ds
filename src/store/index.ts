@@ -8,6 +8,7 @@ export default createStore({
   state: {
     openSidebar: true,
     loading: false,
+    showUpload: false,
     userInfo: <User>{},
     allUser: <User[]>[],
     adminManage: <number>0,
