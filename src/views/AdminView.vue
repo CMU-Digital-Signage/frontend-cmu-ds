@@ -3,8 +3,6 @@ import { computed } from "vue";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
-import TabView from "primevue/tabview";
-import TabPanel from "primevue/tabpanel";
 
 const click = computed({
   get: () => store.state.adminManage,

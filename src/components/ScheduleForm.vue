@@ -6,9 +6,6 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import { computed, defineProps, toRefs, onUpdated } from "vue";
-import Calendar from "primevue/calendar";
-import Checkbox from "primevue/checkbox";
-import InputNumber from "primevue/inputnumber";
 import store from "@/store";
 import { customDateFormatter } from "@/utils/constant";
 
