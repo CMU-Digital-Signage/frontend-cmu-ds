@@ -79,7 +79,7 @@ const setForm = (title: string) => {
 onMounted(async () => {
   if (!posters.value.length || !emerPosters.value.length) {
     if (props.types === "nor") {
-      const res = await getPoster("");
+      const res = await getPoster();
       if (res.ok) {
         res.poster.forEach((e: any) => {
           e.createdAt = new Date(e.createdAt);
@@ -109,30 +109,28 @@ onMounted(async () => {
 });
 
 const del = async (poster: string) => {
-  delP = poster;
-  store.state.loading = true;
-  if (props.types == "nor") {
-    const res = await deletePoster(delP);
-    store.state.posters = posters.value?.filter((e) => e.posterId !== delP);
-    store.state.uniquePosters = uniquePosters.value?.filter(
-      (e) => e.posterId !== delP
-    );
-  } else {
-    const res = await deleteEmergency(delP);
-    store.state.emerPosters = emerPosters.value?.filter(
-      (e) => e.incidentName !== delP
-    );
-  }
-
-  store.state.loading = false;
-  delP = null;
-
-  toast.add({
-    severity: "success",
-    summary: "Success",
-    detail: "Delete poster successful.",
-    life: 3000,
-  });
+  // delP = poster;
+  // store.state.loading = true;
+  // if (props.types == "nor") {
+  //   const res = await deletePoster(delP);
+  //   store.state.posters = posters.value?.filter((e) => e.posterId !== delP);
+  //   store.state.uniquePosters = uniquePosters.value?.filter(
+  //     (e) => e.posterId !== delP
+  //   );
+  // } else {
+  //   const res = await deleteEmergency(delP);
+  //   store.state.emerPosters = emerPosters.value?.filter(
+  //     (e) => e.incidentName !== delP
+  //   );
+  // }
+  // store.state.loading = false;
+  // delP = null;
+  // toast.add({
+  //   severity: "success",
+  //   summary: "Success",
+  //   detail: "Delete poster successful.",
+  //   life: 3000,
+  // });
 };
 </script>
 

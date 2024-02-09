@@ -73,24 +73,24 @@ const routes: Array<RouteRecordRaw> = [
       crossIconSidebar: true,
     },
   },
-  {
-    path: "/uploadfile",
-    name: "UploadFile",
-    component: UploadFile,
-    meta: {
-      showNavbarBelow: true,
-      crossIconSidebar: true,
-    },
-  },
-  {
-    path: "/editfile",
-    name: "EditFile",
-    component: EditFile,
-    meta: {
-      showNavbarBelow: true,
-      crossIconSidebar: true,
-    },
-  },
+  // {
+  //   path: "/uploadfile",
+  //   name: "UploadFile",
+  //   component: UploadFile,
+  //   meta: {
+  //     showNavbarBelow: true,
+  //     crossIconSidebar: true,
+  //   },
+  // },
+  // {
+  //   path: "/editfile",
+  //   name: "EditFile",
+  //   component: EditFile,
+  //   meta: {
+  //     showNavbarBelow: true,
+  //     crossIconSidebar: true,
+  //   },
+  // },
 ];
 
 const router = createRouter({

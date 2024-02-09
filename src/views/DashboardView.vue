@@ -108,24 +108,13 @@ const setEvent = () => {
     (e) => e.MACaddress === selectedDevice.value
   );
   currentDevice.forEach((e) => {
-    const titleCol = /[0-9]+$/.test(e.title)
-      ? e.title.substring(0, e.title.lastIndexOf(" "))
-      : e.title;
+    const numPoster = currentDevice.filter((p) => p.title === e.title).length;
+    const displayDuration = numPoster * e.duration;
+    if (numPoster > 1) {
+      e.type = "Collection";
+    } else e.type = "Individual";
 
-    if (titleCol === e.title) e.type = "Individual";
-    else e.type = "Collection";
-
-    if (
-      postersView.value.find((p) => p.title === titleCol) &&
-      titleCol !== e.title
-    )
-      return;
-
-    console.log(currentDevice.filter((p) => p.title.startsWith(titleCol)));
-
-    const displayDuration =
-      currentDevice.filter((p) => p.title.startsWith(titleCol)).length *
-      e.duration;
+    if (postersView.value.find((p) => p.title === e.title)) return;
 
     const allDay =
       e.startTime.toTimeString().includes("00:00") &&
@@ -178,7 +167,7 @@ const setEvent = () => {
     postersView.value.push({
       allDay: allDay,
       type: e.type,
-      title: titleCol,
+      title: e.title,
       description: e.description,
       displayDuration: displayDuration,
       uploader: e.uploader,
@@ -197,7 +186,7 @@ const setEvent = () => {
 onMounted(async () => {
   if (!posters.value.length) {
     store.state.loading = true;
-    const res = await getPoster("");
+    const res = await getPoster();
     if (res.ok) {
       res.poster.forEach((e: Poster) => {
         setFieldPoster(e);

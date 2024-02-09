@@ -1,7 +1,13 @@
 import { getUserInfo, getAllUser, signOut } from "./user";
 import { addAdmin, deleteAdmin } from "./admin";
 import { getDevice, addDevice, editDevice, deleteDevice } from "./device";
-import { getPoster, addPoster } from "./poster";
+import {
+  searchPoster,
+  getPoster,
+  addPoster,
+  editPoster,
+  deletePoster,
+} from "./poster";
 import {
   getEmergency,
   addEmergency,
@@ -20,8 +26,11 @@ export {
   addDevice,
   editDevice,
   deleteDevice,
+  searchPoster,
   getPoster,
   addPoster,
+  editPoster,
+  deletePoster,
   getEmergency,
   addEmergency,
   editEmergency,
