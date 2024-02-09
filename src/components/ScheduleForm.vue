@@ -145,8 +145,9 @@ const maxEndTime = (i: number) => {
                 <Button
                   v-if="i === 0"
                   icon="pi pi-plus"
+                  style="color: rgb(56, 117, 197)"
                   @click="addTime"
-                  class="w-8 h-8 rounded-lg"
+                  class="w-8 h-8 rounded-lg bg-blue-200 border-0"
                   :disabled="formDisplay.allDay || !time.endTime"
                 ></Button>
                 <Button
@@ -165,33 +166,42 @@ const maxEndTime = (i: number) => {
       </div>
 
       <!-- Start Date -->
-      <div class="flex flex-row gap-4 items-center text-[18px] text-[#282828]">
-        <div class="flex-col justify-start">
-          <label class="flex justify-start mb-2 font-semibold">
-            Start Date
-          </label>
-          <Calendar
-            v-model="formDisplay.startDate"
-            showIcon
-            dateFormat="dd M yy"
-            :minDate="minStartDate()"
-            @date-select="formDisplay.startDate?.setHours(23, 59, 59, 0)"
-            class="flex justify-start w-[170px]"
-          />
-        </div>
-        <p class="pt-9">to</p>
-        <div class="flex-col justify-start">
-          <label for="EndDate" class="flex justify-start mb-2 font-semibold">
-            End Date
-          </label>
-          <Calendar
-            v-model="formDisplay.endDate"
-            showIcon
-            dateFormat="dd M yy"
-            :minDate="formDisplay.startDate"
-            @date-select="formDisplay.endDate?.setHours(23, 59, 59, 0)"
-            class="flex justify-start w-[170px]"
-          />
+      <div>
+        <label
+          class="flex justify-start font-semibold text-[18px] text-[#282828] mb-2"
+        >
+          Running Date
+        </label>
+        <div class="flex flex-row items-star gap-3">
+          <div class="flex flex-row gap-2 items-center">
+            <div
+              class="flex flex-row gap-4 items-center text-[18px] text-[#282828]"
+            >
+              <Calendar
+                v-model="formDisplay.startDate"
+                showIcon
+                iconDisplay="input"
+                inputId="icondisplay"
+                dateFormat="dd M yy"
+                :minDate="minStartDate()"
+                @date-select="formDisplay.startDate?.setHours(23, 59, 59, 0)"
+                class="flex justify-start w-[170px]"
+              />
+
+              <p>to</p>
+
+              <Calendar
+                v-model="formDisplay.endDate"
+                showIcon
+                iconDisplay="input"
+                inputId="icondisplay"
+                dateFormat="dd M yy"
+                :minDate="formDisplay.startDate"
+                @date-select="formDisplay.endDate?.setHours(23, 59, 59, 0)"
+                class="flex justify-start w-[170px]"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -206,12 +216,11 @@ const maxEndTime = (i: number) => {
         <div class="flex flex-row items-center gap-4 text-[16px] text-[#000]">
           <InputNumber
             v-model="formDisplay.duration"
-            inputId="minmax-buttons"
-            mode="decimal"
-            showButtons
+            inputId="minmax-buttons" mode="decimal" showButtons
+            showButton
             :min="0"
-            :max="60"
-            :inputStyle="{ width: '80px' }"
+            :max="15"
+            :inputStyle="{ width: '70px' }"
           />
           <p>sec</p>
         </div>
@@ -250,7 +259,7 @@ const maxEndTime = (i: number) => {
                   <br />
                   <!-- New line -->
                   <label :for="item.deviceName">{{
-                    "(" + item.room + ")"
+                    "Room:" + item.room 
                   }}</label>
                 </div>
               </div>

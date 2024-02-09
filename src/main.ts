@@ -30,6 +30,7 @@ import InputNumber from "primevue/inputnumber";
 import Skeleton from "primevue/skeleton";
 import Calendar from "primevue/calendar";
 import VueDatePicker from "@vuepic/vue-datepicker";
+import Steps from 'primevue/steps';
 import "@vuepic/vue-datepicker/dist/main.css";
 
 library.add(faBell);
@@ -125,4 +126,5 @@ createApp(App)
   .component("RadioButton", RadioButton)
   .component("Checkbox", Checkbox)
   .component("Skeleton", Skeleton)
+  .component("Steps", Steps)
   .mount("#app");
