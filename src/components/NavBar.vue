@@ -11,7 +11,7 @@ import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
-import { addDevice, getPoster, addAdmin } from "@/services";
+import { addDevice, addAdmin, searchPoster } from "@/services";
 import {
   fullMonth,
   customDateFormatter,
@@ -73,7 +73,7 @@ const goToSearch = () => {
 const search = async () => {
   store.state.searchPosters = [];
   store.state.loading = true;
-  const res = await getPoster(searchP.value);
+  const res = await searchPoster(searchP.value);
   if (res.ok) {
     res.poster.forEach((e: any) => {
       e.createdAt = new Date(e.createdAt);
@@ -90,7 +90,7 @@ const search = async () => {
 };
 
 const add = async () => {
-  const check = form.deviceName?.replace(" ", "").length;
+  const check = form.deviceName?.replace(" ", "").length || form.room?.length;
   if (!form.MACaddress || !check) {
     toast.add({
       severity: "error",
@@ -167,6 +167,56 @@ const validateEmail = () => {
       <div class="text-lg font-semibold text-gray-800 text-[20px]">
         Management
       </div>
+      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 0">
+        <Button
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
+          @click="showPopup = true"
+        >
+          <div
+            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center ml-1"
+          >
+            <i class="pi pi-plus text-white"></i>
+          </div>
+          Add Admin
+        </Button>
+        <Dialog
+          v-model:visible="showPopup"
+          header="Add Admin"
+          class="h-auto"
+          modal
+          close-on-escape
+          :draggable="false"
+          @after-hide="resetForm()"
+        >
+          <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
+            <div class="flex flex-col gap-2">
+              <label class="text-[17px] font-semibold pt-2 w-32">Email </label>
+              <InputText
+                class="border border-[#C6C6C6] p-2 h-9 w-96 rounded-lg"
+                placeholder="example@cmu.ac.th"
+                type="text"
+                v-model="email"
+              ></InputText>
+
+              <div class="flex flex-row gap-4 pt-3">
+                <Button
+                  label="Cancel"
+                  text
+                  @click="showPopup = false"
+                  class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
+                ></Button>
+                <Button
+                  label="Add"
+                  text
+                  class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
+                  type="submit"
+                  :disabled="!email.length || !validateEmail()"
+                ></Button>
+              </div>
+            </div>
+          </form>
+        </Dialog>
+      </div>
       <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 1">
         <Button
           class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
@@ -193,9 +243,9 @@ const validateEmail = () => {
               <label for="deviceName" class="text-primary-50 font-medium">
                 Device Name
               </label>
-              <label for="deviceName" class="text-[#FF0000] font-medium"
-                >*</label
-              >
+              <label for="deviceName" class="text-[#FF0000] font-medium">
+                *
+              </label>
             </div>
             <InputText
               v-model:model-value="form.deviceName"
@@ -224,14 +274,19 @@ const validateEmail = () => {
               :disabled="!macNotUse.length"
             />
           </div>
-          <div class="flex flex-col gap-1">
-            <label for="macAddress" class="text-primary-50 font-medium">
-              Room
-            </label>
+          <div class="flex flex-col gap-2">
+            <div class="inline-block">
+              <label for="macAddress" class="text-primary-50 font-medium">
+                Room
+              </label>
+              <label for="deviceName" class="text-[#FF0000] font-medium">
+                *
+              </label>
+            </div>
             <InputText
               v-model:model-value="form.room"
               class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
-              placeholder="(Optional)"
+              placeholder="516"
             ></InputText>
           </div>
           <div class="flex flex-col gap-1">
@@ -246,7 +301,7 @@ const validateEmail = () => {
           </div>
           <div class="flex flex-col gap-1">
             <label for="macAddress" class="text-primary-50 font-medium">
-              Location Photo
+              Location Photo (Optional)
             </label>
             <FileUpload
               accept="image/*"
@@ -327,56 +382,6 @@ const validateEmail = () => {
               :disabled="!macNotUse.length"
             ></Button>
           </div>
-        </Dialog>
-      </div>
-      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 0">
-        <Button
-          class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
-          @click="showPopup = true"
-        >
-          <div
-            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center ml-1"
-          >
-            <i class="pi pi-plus text-white"></i>
-          </div>
-          Add Admin
-        </Button>
-        <Dialog
-          v-model:visible="showPopup"
-          header="Add Admin"
-          class="h-auto"
-          modal
-          close-on-escape
-          :draggable="false"
-          @after-hide="resetForm()"
-        >
-          <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
-            <div class="flex flex-col gap-2">
-              <label class="text-[17px] font-semibold pt-2 w-32">Email </label>
-              <InputText
-                class="border border-[#C6C6C6] p-2 h-9 w-96 rounded-lg"
-                placeholder="example@cmu.ac.th"
-                type="text"
-                v-model="email"
-              ></InputText>
-
-              <div class="flex flex-row gap-4 pt-3">
-                <Button
-                  label="Cancel"
-                  text
-                  @click="showPopup = false"
-                  class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
-                ></Button>
-                <Button
-                  label="Add"
-                  text
-                  class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
-                  type="submit"
-                  :disabled="!email.length || !validateEmail()"
-                ></Button>
-              </div>
-            </div>
-          </form>
         </Dialog>
       </div>
     </ul>
