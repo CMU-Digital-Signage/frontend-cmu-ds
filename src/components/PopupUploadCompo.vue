@@ -32,7 +32,6 @@ const showDifferentDialog = () => {
       header: "Emergency Poster",
     };
   }
-  showSecondDialog.value = true;
 };
 
 const items = ref([
