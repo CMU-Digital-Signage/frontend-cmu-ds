@@ -5,8 +5,8 @@ import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
 
 const click = computed({
-  get: () => store.state.adminManage,
-  set: (val) => (store.state.adminManage = val),
+  get: () => store.state.selectTabview,
+  set: (val) => (store.state.selectTabview = val),
 });
 </script>
 
@@ -28,10 +28,6 @@ const click = computed({
   overflow: hidden;
 }
 
-TabPanel {
-  flex: 1;
-}
-
 .bold-ho:hover {
   font-weight: 600;
 }
@@ -46,9 +42,5 @@ TabPanel {
   color: #282828;
   background-color: #f0f0f014; /* Optional: change background color on hover */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: add box shadow on hover */
-}
-
-.gaptt {
-  gap: 8px;
 }
 </style>

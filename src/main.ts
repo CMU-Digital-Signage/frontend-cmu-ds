@@ -29,9 +29,8 @@ import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
 import Skeleton from "primevue/skeleton";
 import Calendar from "primevue/calendar";
-import VueDatePicker from "@vuepic/vue-datepicker";
-import Steps from 'primevue/steps';
-import "@vuepic/vue-datepicker/dist/main.css";
+import Steps from "primevue/steps";
+import Tag from "primevue/tag";
 
 library.add(faBell);
 
@@ -106,7 +105,6 @@ createApp(App)
     },
   })
   .use(ToastService)
-  .component("VueDatePicker", VueDatePicker)
   .component("font-awesome-icon", FontAwesomeIcon)
   .component("Toast", Toast)
   .component("Dialog", Dialog)
@@ -127,4 +125,5 @@ createApp(App)
   .component("Checkbox", Checkbox)
   .component("Skeleton", Skeleton)
   .component("Steps", Steps)
+  .component("Tag", Tag)
   .mount("#app");

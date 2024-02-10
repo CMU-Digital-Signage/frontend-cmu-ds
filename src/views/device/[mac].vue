@@ -114,7 +114,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .fade-enter-active {
   transition: opacity 0.5s;
 }

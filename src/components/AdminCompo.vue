@@ -42,7 +42,7 @@ const calculateScreenHeight = () => {
 </script>
 
 <template>
-  <div ref="containerRef" class="rectangle4 flex-1">
+  <div class="rectangle2">
     <div class="flex flex-row gap-2">
       <label for="macAddress" class="text-primary-50 font-semibold pt-2.5"
         >Search
@@ -90,7 +90,7 @@ const calculateScreenHeight = () => {
             <div v-if="isCurrentUser(rowData.data)" class="py-1">(You)</div>
           </template>
         </Column>
-        <Column header="Action" headerClass="w-1/2"  :exportable="false">
+        <Column header="Action" headerClass="w-1/2" :exportable="false">
           <template #body="rowData">
             <Button
               icon="pi pi-trash"
@@ -107,15 +107,15 @@ const calculateScreenHeight = () => {
   </div>
 </template>
 
-<style>
-.rectangle4 {
+<style scoped>
+.rectangle2 {
   padding-bottom: 2rem;
 }
 
 .rectangle3 {
+  flex: 1 1;
   padding-bottom: 0.5rem;
   margin-top: 10px;
-  height: 100%;
   overflow-y: auto;
 }
 

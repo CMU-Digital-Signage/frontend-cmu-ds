@@ -216,6 +216,17 @@ export const setFieldPoster = (e: any) => {
   e.uploader = uploader;
 };
 
+export const statusPoster = [
+  { status: "Running", severity: "success" },
+  { status: "Pending", severity: "info" },
+  { status: "Upcoming", severity: "warning" },
+  { status: "Expire", severity: "danger" },
+];
+export const statusEmer = [
+  { status: "Inactive", severity: "secondary" },
+  { status: "Active", severity: "success" },
+];
+
 export const createUnique = (data: any) => {
   store.state.uniquePosters = data.reduce((acc: any[], e: any) => {
     // Check if the title is not already in the accumulator
@@ -224,12 +235,8 @@ export const createUnique = (data: any) => {
       setFieldPoster(e);
       let status = "";
       if (
-        currentDate.getDate() >= e.startDate.getDate() &&
-        currentDate.getDate() <= e.endDate.getDate() &&
-        currentDate.getMonth() >= e.startDate.getMonth() &&
-        currentDate.getMonth() <= e.endDate.getMonth() &&
-        currentDate.getFullYear() >= e.startDate.getFullYear() &&
-        currentDate.getFullYear() <= e.endDate.getFullYear()
+        customDateFormatter(currentDate) >= customDateFormatter(e.startDate) &&
+        customDateFormatter(currentDate) <= customDateFormatter(e.endDate)
       ) {
         if (
           new Date().toTimeString() >= e.startTime.toTimeString() &&
@@ -249,7 +256,7 @@ export const createUnique = (data: any) => {
           title: e.title,
           posterId: e.posterId,
           uploader: e.uploader,
-          createdAt: customDateFormatter(e.createdAt),
+          createdAt: e.createdAt,
           status,
         });
       } else if (e.id == store.state.userInfo.id) {
@@ -257,7 +264,7 @@ export const createUnique = (data: any) => {
           title: e.title,
           posterId: e.posterId,
           uploader: e.uploader,
-          createdAt: customDateFormatter(e.createdAt),
+          createdAt: e.createdAt,
           status,
         });
       }

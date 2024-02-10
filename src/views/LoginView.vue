@@ -66,7 +66,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .button-container:hover {
   background-color: #545787;
 }
