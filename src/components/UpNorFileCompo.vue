@@ -201,7 +201,7 @@ const deleteSchedule = (index: number) => {
     </div>
 
     <!-- Schedule -->
-    <!-- <div class="w-full max-w-4xl">
+    <div class="w-full max-w-4xl">
       <div class="rectangle8 flex items-start">
         <TabView
           class="rectangleflex flex-row flex-1 justify-between w-56 scroll-x"
@@ -212,7 +212,7 @@ const deleteSchedule = (index: number) => {
             :key="index"
             :header="schedule.header"
           >
-            <ScheduleForm v-if="formDisplay[index]" :index="index" />
+            <ScheduleForm :index="index" />
           </TabPanel>
         </TabView>
         <div class="flex flex-col justify-center ml-5">
@@ -230,7 +230,7 @@ const deleteSchedule = (index: number) => {
           ></Button>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 

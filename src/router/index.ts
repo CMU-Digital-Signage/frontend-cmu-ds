@@ -14,6 +14,7 @@ import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
 import { Device } from "@/types";
 import { color } from "@/utils/constant";
+import PosterpreView from "@/views/PosterpreView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -72,6 +73,11 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       crossIconSidebar: true,
     },
+  },
+  {
+    path: "/preview",
+    name: "Preview",
+    component: PosterpreView,
   },
   // {
   //   path: "/uploadfile",

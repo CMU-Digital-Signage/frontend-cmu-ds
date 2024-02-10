@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { C } from "@fullcalendar/core/internal-common";
 export default defineComponent({
   name: "PopupUpload",
 });
@@ -10,13 +9,15 @@ export default defineComponent({
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
 import { computed, ref, reactive, warn, watch } from "vue";
-import { initialFormDisplay, onUpload, rotate } from "@/utils/constant";
-import ScheduleForm from "./ScheduleForm.vue";
+import { newInitialFormDisplay, onUpload, rotate } from "@/utils/constant";
+import ScheduleForm from "@/components/ScheduleForm.vue";
 
+const user = computed(() => store.state.userInfo);
 const show = computed({
   get: () => store.state.showUpload,
   set: (val) => (store.state.showUpload = val),
 });
+
 const user = computed(() => store.state.userInfo);
 const isNextButtonDisabled = computed(() => {
   return !selectedPoster.value;
@@ -35,30 +36,45 @@ const showDifferentDialog = () => {
 };
 
 const items = ref([
+
+const uploadState = ref([
   { label: "Schedule" },
   { label: "Uploaded" },
   { label: "Review" },
 ]);
-
-const selectedItem = ref(0);
-
-const selectedDialog = ref({ header: "" });
-
-const selectedPoster = ref();
-const showSecondDialog = ref(false);
-const posters = ref([
-  { name: "Normal Poster", code: "NP" },
-  { name: "Emergency Poster", code: "EP" },
+const posterType = ref([
+  { header: "Normal Poster", code: "NP" },
+  { header: "Emergency Poster", code: "EP" },
 ]);
-
+const selectedPosterType = ref({ header: "", code: "NP" });
+const currentState = ref(0);
+const scheduleTabs = reactive([{ header: "Schedule 1", index: 0 }]);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
+const formEmer = computed(() => store.state.formEmer);
 const currentDeg = ref(0);
+const selectSchedule = ref(scheduleTabs[0]);
+
+const showSecondDialog = ref(true);
 
 const toast = useToast();
-const scheduleTabs = reactive([{ header: "Schedule 1" }]);
-const selectSchedule = ref(scheduleTabs[0].header);
-const currentIndexSchedule = ref(0);
+
+const isNextButtonDisabled = computed(() => {
+  return !selectedPosterType.value.header;
+});
+const showDifferentDialog = () => {
+  store.state.showUpload = false;
+  // if (selectedPosterType.value.code === "NP") {
+  //   selectedPosterType.value.header = {
+  //     header: "Normal Poster",
+  //   };
+  // } else if (selectedPosterType.value.code === "EP") {
+  //   selectedPosterType.value = {
+  //     header: "Emergency Poster",
+  //   };
+  // }
+  showSecondDialog.value = true;
+};
 
 const errorSelectFile = () => {
   toast.add({
@@ -70,7 +86,7 @@ const errorSelectFile = () => {
 };
 
 const addSchedule = () => {
-  const lastSchedule = formDisplay.value.at(formDisplay.value.length - 1);
+  // const lastSchedule = formDisplay.value.at(formDisplay.value.length - 1);
   // if (
   //   !lastSchedule?.startDate ||
   //   !lastSchedule?.endDate ||
@@ -85,21 +101,51 @@ const addSchedule = () => {
   //   });
   //   return;
   // }
-  // store.state.formDisplay.push({ ...initialFormDisplay });
+
+  console.log(newInitialFormDisplay());
+
+  store.state.formDisplay.push(newInitialFormDisplay());
+  // store.commit("addSchedule");
+
   const newSchedule = {
     header: `Schedule ${scheduleTabs.length + 1}`,
+    index: scheduleTabs.length,
   };
   scheduleTabs.push(newSchedule);
-  currentIndexSchedule.value++;
-  // selectSchedule.value = scheduleTabs[scheduleTabs.length].header;
+  selectSchedule.value = scheduleTabs[scheduleTabs.length - 1];
 };
+
+const deleteSchedule = (index: number) => {
+  if (index >= 0 && index < scheduleTabs.length) {
+    store.state.formDisplay.splice(index, 1);
+    scheduleTabs.splice(index, 1);
+    selectSchedule.value.index == scheduleTabs.length
+      ? selectSchedule.value.index--
+      : selectSchedule.value.index;
+
+    if (scheduleTabs.length > 1) {
+      scheduleTabs.forEach((schedule, i) => {
+        if (i > 0) {
+          schedule.header = `${i + 1}`;
+        }
+      });
+    }
+  }
+};
+
+// watch([show, showSecondDialog], () => {
+//   if (!show.value && !showSecondDialog.value) {
+//     selectedPosterType.value = { header: "", code: "" };
+//     currentState.value = 0;
+//     store.commit("resetForm");
+//   }
+// });
 </script>
 
 <template>
   <Toast />
   <div>
     <Dialog
-      v-if="!showSecondDialog"
       v-model:visible="show"
       modal
       close-on-escape
@@ -112,14 +158,16 @@ const addSchedule = () => {
       <div class="flex flex-col gap-2">
         <div class="inline-block">
           <div v-if="user?.isAdmin">
-            <label for="deviceName" class="flex justify-start font-semibold text-[18px] text-[#282828]"
+            <label
+              for="deviceName"
+              class="flex justify-start font-semibold text-[18px] text-[#282828]"
               >Type of Poster</label
             >
           </div>
           <Dropdown
-            v-model="selectedPoster"
-            :options="posters"
-            optionLabel="name"
+            v-model="selectedPosterType"
+            :options="posterType"
+            optionLabel="header"
             placeholder="Select poster"
             class="w-full md:w-14rem mt-1"
           />
@@ -145,23 +193,22 @@ const addSchedule = () => {
     <Dialog
       v-if="showSecondDialog"
       v-model:visible="showSecondDialog"
+      :header="selectedPosterType.header"
       modal
       close-on-escape
       :draggable="false"
       class="w-[600px]"
     >
-      <template #header>
-        <div class="header-popup">{{ selectedDialog.header }}</div>
-      </template>
-      <div v-if="selectedPoster.code === 'NP'">
-        <Steps :model="items" :active-step="selectedItem" />
-        <div v-if="selectedItem === 0">
+      <div v-if="selectedPosterType.code === 'NP'">
+        <Steps :model="uploadState" :active-step="currentState" />
+        <div v-if="currentState === 0">
           <div class="inline-flex items-center">
             <label
               class="text-[#282828] font-semibold text-[18px] flex justify-start mt-5 mb-1"
-              >Title</label
             >
-            <label class="text-[#FF0000] mt-1 font-medium">*</label>
+              Title
+            </label>
+            <label class="text-[#FF0000] mt-1 font-medium"> * </label>
           </div>
           <InputText
             v-model="formPoster.title"
@@ -172,8 +219,9 @@ const addSchedule = () => {
 
           <label
             class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
-            >Description</label
           >
+            Description
+          </label>
           <InputText
             v-model="formPoster.description"
             class="description-input h-full w-full mb-5"
@@ -186,13 +234,14 @@ const addSchedule = () => {
             v-model="selectSchedule"
             :options="scheduleTabs"
             optionLabel="header"
-            optionValue="header"
             class="w-full md:w-14rem mt-3"
           >
           </Dropdown>
           <ScheduleForm
-            v-if="formDisplay[currentIndexSchedule]"
-            :index="currentIndexSchedule"
+            v-for="(schedule, index) in scheduleTabs"
+            v-show="index === selectSchedule.index"
+            :key="schedule.header"
+            :index="index"
           />
 
           <div class="flex flex-row gap-4 pt-3">
@@ -203,12 +252,12 @@ const addSchedule = () => {
             ></Button>
             <Button
               label="Next"
-              @click="selectedItem = 1"
+              @click="currentState = 1"
               :class="'primaryButton'"
             ></Button>
           </div>
         </div>
-        <div v-if="selectedItem === 1">
+        <div v-if="currentState === 1">
           <FileUpload
             cl
             accept="image/*"
@@ -316,27 +365,27 @@ const addSchedule = () => {
             <Button
               label="Back"
               :class="'secondaryButton'"
-              @click="selectedItem = 0"
+              @click="currentState = 0"
             ></Button>
             <Button
               label="Next"
               :class="'primaryButton'"
-              @click="selectedItem = 2"
+              @click="currentState = 2"
             ></Button>
           </div>
           <p>ffrhfbrbvhrss</p>
         </div>
-        <div v-if="selectedItem === 2">
+        <div v-if="currentState === 2">
           <Button
             label="Back"
             :class="'secondaryButton'"
-            @click="selectedItem = 1"
+            @click="currentState = 1"
           ></Button>
           <Button label="Upload" :class="'primaryButton'"></Button>
           <p>review</p>
         </div>
       </div>
-      <div v-else-if="selectedPoster === 'EP'">
+      <div v-else-if="selectedPosterType.code === 'EP'">
         <p>sssseff</p>
       </div>
     </Dialog>
