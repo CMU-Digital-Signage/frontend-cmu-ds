@@ -161,7 +161,7 @@ const validateEmail = () => {
 <template>
   <Toast />
   <div
-    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-red-100 border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
+    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
   >
     <!-- "Management" -->
     <ul v-if="$route.path === '/admin'" class="justify-between">
