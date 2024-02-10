@@ -87,31 +87,47 @@ Button:focus {
 .p-tag-success {
   background-color: #caf1d8;
   color: #188a42;
-  padding: 7px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 15px;
+  font-size: 14px;
 }
 
 // expired
 .p-tag-danger {
   background-color: #ffd0ce;
   color: #b32b24;
-  padding: 7px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 15px;
+  font-size: 14px;
 }
 
 // upcoming
 .p-tag-warning {
-  background-color: #FFDDC7;
-  color: #AE510F;
-  padding: 7px;
+  background-color: #ffddc7;
+  color: #ae510f;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 15px;
+  font-size: 14px;
 }
 
 // pending
 .p-tag-info {
-  background-color: #D0E1FD;
-  color: #5C84C4;
-  padding: 7px;
+  background-color: #d0e1fd;
+  color: #4270ba;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   border-radius: 15px;
+  font-size: 14px;
 }
 </style>
