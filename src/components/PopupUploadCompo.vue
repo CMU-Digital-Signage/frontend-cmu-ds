@@ -17,26 +17,6 @@ const show = computed({
   get: () => store.state.showUpload,
   set: (val) => (store.state.showUpload = val),
 });
-
-const user = computed(() => store.state.userInfo);
-const isNextButtonDisabled = computed(() => {
-  return !selectedPoster.value;
-});
-const showDifferentDialog = () => {
-  store.state.showUpload = false;
-  if (selectedPoster.value.code === "NP") {
-    selectedDialog.value = {
-      header: "Normal Poster",
-    };
-  } else if (selectedPoster.value.code === "EP") {
-    selectedDialog.value = {
-      header: "Emergency Poster",
-    };
-  }
-};
-
-const items = ref([
-
 const uploadState = ref([
   { label: "Schedule" },
   { label: "Uploaded" },
@@ -54,8 +34,7 @@ const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
 const currentDeg = ref(0);
 const selectSchedule = ref(scheduleTabs[0]);
-
-const showSecondDialog = ref(true);
+const showSecondDialog = ref(false);
 
 const toast = useToast();
 
@@ -64,15 +43,17 @@ const isNextButtonDisabled = computed(() => {
 });
 const showDifferentDialog = () => {
   store.state.showUpload = false;
-  // if (selectedPosterType.value.code === "NP") {
-  //   selectedPosterType.value.header = {
-  //     header: "Normal Poster",
-  //   };
-  // } else if (selectedPosterType.value.code === "EP") {
-  //   selectedPosterType.value = {
-  //     header: "Emergency Poster",
-  //   };
-  // }
+  if (selectedPosterType.value.code === "NP") {
+    selectedPosterType.value = {
+      header: "Normal Poster",
+      code: "NP",
+    };
+  } else if (selectedPosterType.value.code === "EP") {
+    selectedPosterType.value = {
+      header: "Emergency Poster",
+      code: "NP",
+    };
+  }
   showSecondDialog.value = true;
 };
 
