@@ -11,13 +11,13 @@ const user = computed(() => store.state.userInfo);
 
 <template>
   <div
-    class="flex flex-row h-screen font-sf-pro"
+    class="flex flex-row w-screen h-screen font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-white" />
     <div class="w-screen flex flex-col h-full bg-[#fafafa]">
       <NavBar class="bg-white" />
-      <router-view class="bg-[#fafafa]" />
+      <router-view class="bg-[#fafafa] w-full" />
       <NavbarBelow v-if="$route.meta.showNavbarBelow" />
     </div>
   </div>
@@ -81,5 +81,37 @@ Button:focus {
 
 .p-dialog {
   border-radius: 10px;
+}
+
+// running
+.p-tag-success {
+  background-color: #caf1d8;
+  color: #188a42;
+  padding: 7px;
+  border-radius: 15px;
+}
+
+// expired
+.p-tag-danger {
+  background-color: #ffd0ce;
+  color: #b32b24;
+  padding: 7px;
+  border-radius: 15px;
+}
+
+// upcoming
+.p-tag-warning {
+  background-color: #FFDDC7;
+  color: #AE510F;
+  padding: 7px;
+  border-radius: 15px;
+}
+
+// pending
+.p-tag-info {
+  background-color: #D0E1FD;
+  color: #5C84C4;
+  padding: 7px;
+  border-radius: 15px;
 }
 </style>

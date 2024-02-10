@@ -173,19 +173,21 @@ const validateEmail = () => {
         <Button
           label="Add Admin"
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
-          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white hover:bg-gray-200"
           @click="showPopup = true"
         >
         </Button>
         <Dialog
           v-model:visible="showPopup"
-          header="Add Admin"
           class="h-auto"
           modal
           close-on-escape
           :draggable="false"
           @after-hide="resetForm()"
         >
+          <template #header>
+            <div class="header-popup">Add Admin</div>
+          </template>
           <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
             <div class="flex flex-col gap-2">
               <label class="text-[17px] font-semibold pt-2 w-32">Email </label>
@@ -201,12 +203,12 @@ const validateEmail = () => {
                   label="Cancel"
                   text
                   @click="showPopup = false"
-                  class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
+                  :class="'secondaryButton'"
                 ></Button>
                 <Button
                   label="Add"
                   text
-                  class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
+                  :class="'primaryButton'"
                   type="submit"
                   :disabled="!email.length || !validateEmail()"
                 ></Button>
@@ -222,19 +224,21 @@ const validateEmail = () => {
         <Button
           label="Add Device"
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
-          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white hover:bg-gray-200"
           @click="showPopup = true"
         >
         </Button>
         <Dialog
           v-model:visible="showPopup"
-          header="Add Device"
           class="w-[600px] h-auto"
           modal
           close-on-escape
           :draggable="false"
           @after-hide="resetForm()"
         >
+          <template #header>
+            <div class="header-popup">Add Device</div>
+          </template>
           <div class="flex flex-col gap-2">
             <div class="inline-block">
               <label for="deviceName" class="text-primary-50 font-medium">
@@ -369,12 +373,12 @@ const validateEmail = () => {
                 showPopup = false;
                 resetForm();
               "
-              class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 mt-2"
+              :class="'secondaryButton'"
             ></Button>
             <Button
               label="Add"
               text
-              class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 mt-2"
+              :class="'primaryButton'"
               @click="add"
               :disabled="!macNotUse.length"
             ></Button>
@@ -396,35 +400,35 @@ const validateEmail = () => {
     <!-- "File Manage" -->
     <ul
       v-if="$route.path === '/file'"
-      class="flex-wrap gap-3 lg:gap-5 text-[16px] lg:text-[18px]"
+      class="flex-wrap gap-2 lg:gap-5 text-[14px] lg:text-[16px]"
     >
       <li>
         <label>Title</label>
         <InputText
           id="title"
           v-model="filterInput.title"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 h-7 py-4 w-28 lg:w-40 rounded-lg"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 w-28 lg:w-40 rounded-lg"
           placeholder="Search Title"
         ></InputText>
       </li>
-      <li>
+      <li v-if="store.state.selectTabview !== 1">
         <label>Uploader</label>
         <InputText
           id="uploader"
           v-model="filterInput.uploader"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 h-7 py-4 w-28 lg:w-40 rounded-lg"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 w-28 lg:w-40 rounded-lg"
           placeholder="Search Name"
-          :disabled="store.state.selectTabview === 1"
         ></InputText>
       </li>
-      <li>
-        <label class="text-[15px] lg:text-[18px]">Upload Date</label>
+      <li v-if="store.state.selectTabview !== 1">
+        <label class="text-[14px] lg:text-[16px]">Upload Date</label>
         <Calendar
           v-model="filterInput.uploadDate"
           showButtonBar
-          :disabled="store.state.selectTabview === 1"
           :manualInput="false"
           showIcon
+          iconDisplay="input"
+          inputId="icondisplay"
           :showOnFocus="false"
           dateFormat="dd M yy"
           inputClass="text-[13px] lg:text-[16px]"
@@ -440,14 +444,14 @@ const validateEmail = () => {
           optionValue="status"
           inputClass="text-[13px] lg:text-[16px] text-left"
           :showClear="filterInput.status !== ''"
-          class="rounded-lg items-center w-36 lg:w-40"
+          class="rounded-lg items-center h-8 w-36 lg:w-40"
         ></Dropdown>
       </li>
       <li>
         <Button
-          label="Clear Filter"
+          label="Clear"
           @click="store.commit('resetFilter')"
-          class="rounded-[15px] h-8 border-0 bg-red-500 text-right float-end justify-self-end"
+          class="rounded-[10px] h-8 border-0 bg-blue-500 text-right float-end justify-self-end"
         />
       </li>
     </ul>
@@ -467,24 +471,24 @@ const validateEmail = () => {
           </label>
           <button
             id="prev"
-            class="pi pi-angle-left rounded-full p-1 hover:bg-gray-300"
+            class="pi pi-angle-left rounded-full p-1 hover:bg-gray-200"
           ></button>
           <button
             id="next"
-            class="pi pi-angle-right rounded-full p-1 hover:bg-gray-300"
+            class="pi pi-angle-right rounded-full p-1 hover:bg-gray-200"
           ></button>
         </div>
         <div class="flex items-center gap-4 pl-3">
           <button
             id="today"
-            class="border-[1px] rounded-xl hover:bg-gray-300 border-[#878787] text-[#878787] w-[60px] h-[25px] text-[14px] font-normal flex items-center justify-center"
+            class="border-[1px] rounded-xl hover:bg-gray-200 border-[#878787] text-[#878787] w-[60px] h-[25px] text-[14px] font-normal flex items-center justify-center"
           >
             Today
           </button>
           <button
             id="dayView"
-            class="rounded-full p-1 hover:bg-gray-300"
-            :class="{ 'bg-gray-200 cursor-not-allowed': !monthView }"
+            class="rounded-full p-1 hover:bg-gray-200"
+            :class="{ 'bg-gray-300 cursor-not-allowed': !monthView }"
             :disabled="!monthView"
             @click="monthView = false"
           >
@@ -503,15 +507,15 @@ const validateEmail = () => {
           </button>
           <button
             id="monthView"
-            class="rounded-full -ml-1 hover:bg-gray-300"
-            :class="{ 'bg-gray-200 cursor-not-allowed': monthView }"
+            class="rounded-full -ml-1 hover:bg-gray-200"
+            :class="{ 'bg-gray-300 cursor-not-allowed': monthView }"
             :disabled="monthView"
             @click="monthView = true"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
+              width="32"
+              height="32"
               viewBox="0 0 30 30"
               fill="none"
             >
@@ -553,10 +557,10 @@ const validateEmail = () => {
           :options="devices"
           optionLabel="deviceName"
           optionValue="MACaddress"
-          class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center"
+          class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center hover:bg-gray-200"
         />
         <Button
-          class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho"
+          class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho hover:bg-gray-200"
           @click="store.state.showUpload = true"
         >
           <div
@@ -584,14 +588,44 @@ li {
   gap: 0.25rem;
 }
 
-.bold-ho:hover {
-  font-weight: 600;
-  background-color: #e2e2e2;
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
 }
 
-.bold-ho-add:hover {
-  font-weight: 600;
-  text-decoration: underline;
-  background-color: #a9ddf8;
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+}
+
+.primaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: white;
+  color: rgb(43, 152, 255);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(228, 233, 255);
+  text-decoration-line: underline;
+}
+
+.header-popup {
+  font-weight: 700;
+  font-size: 22px;
 }
 </style>
