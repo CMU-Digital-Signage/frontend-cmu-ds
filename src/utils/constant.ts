@@ -28,14 +28,14 @@ export const color = [
   "#71A7F8",
 ];
 
-// export const getRandomColor = () => {
-//   const letters = "0123456789ABCDEF";
-//   let color = "#";
-//   for (let i = 0; i < 6; i++) {
-//     color += letters[Math.floor(Math.random() * 16)];
-//   }
-//   return color;
-// };
+export const getRandomColor = () => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 export const fullMonth = [
   "January",
@@ -105,14 +105,21 @@ export const initialFormDisplay = {
   allDevice: false,
   startDate: undefined,
   endDate: undefined,
-  time: [
-    {
-      startTime: new Date("2024-01-01T08:00:00"),
-      endTime: undefined,
-    },
-  ],
+  time: [],
   duration: null,
 } as Display;
+
+export const newInitialFormDisplay = () => {
+  return {
+    ...initialFormDisplay,
+    time: [
+      {
+        startTime: undefined,
+        endTime: undefined,
+      },
+    ],
+  };
+};
 
 export const onUpload = (
   e: FileUploadSelectEvent
