@@ -335,7 +335,7 @@ watch([selectedDevice, posters], () => {
   </Dialog>
 </template>
 
-<style scoped>
+<style >
 .posterDetail {
   display: inline-flex;
   justify-content: space-between;
@@ -360,6 +360,6 @@ watch([selectedDevice, posters], () => {
 }
 .fc-day-sun,
 .fc-day-sat {
-  background-color: #ffebeb;
+  background-color: #ffeeee;
 }
 </style>

@@ -49,12 +49,12 @@ const calculateScreenHeight = () => {
       </label>
       <InputText
         v-model="search"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 w-96 rounded-lg"
-        placeholder="Name"
+        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 mb-3 w-96 rounded-lg"
+        placeholder="Ex. Navadon Khunlertgit"
         type="text"
       ></InputText>
     </div>
-    <div class="rectangle3">
+    <div>
       <DataTable
         :value="admin"
         scrollDirection="vertical"
@@ -109,6 +109,7 @@ const calculateScreenHeight = () => {
 
 <style scoped>
 .rectangle2 {
+  flex: 1 1;
   padding-bottom: 2rem;
 }
 
@@ -142,4 +143,6 @@ const calculateScreenHeight = () => {
 .custom-button:hover {
   background-color: #1369da;
 }
+
+
 </style>
