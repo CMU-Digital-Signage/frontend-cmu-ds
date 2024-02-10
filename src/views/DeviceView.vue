@@ -29,7 +29,7 @@ onMounted(() => {
       <div
         v-for="(device, innerIndex) in devices"
         :key="innerIndex"
-        class="flex flex-wrap gap-10"
+        class="inline-flex flex-wrap"
       >
         <DeviceBlock
           v-if="device.room?.startsWith(floor || '')"
