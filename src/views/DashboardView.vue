@@ -335,12 +335,16 @@ watch([selectedDevice, posters], () => {
   </Dialog>
 </template>
 
-<style >
+<style>
 .posterDetail {
   display: inline-flex;
   justify-content: space-between;
 }
-
+.fc {
+  border: 1px solid #a2a2a2;
+  border-radius: 15px;
+  overflow: hidden;
+}
 .fc .fc-popover {
   z-index: 50;
 }
@@ -359,7 +363,26 @@ watch([selectedDevice, posters], () => {
   border: 0;
 }
 .fc-day-sun,
-.fc-day-sat {
-  background-color: #ffeeee;
+.fc-day-sat,
+.fc-day-today {
+  background-color: #f3f3f3 !important;
+}
+
+/* Override the background color for today */
+/* .fc-day.fc-day-today {
+  background-color: transparent !important;
+} */
+
+.fc-day-today .fc-daygrid-day-number {
+  background-color: #039be5 !important;
+  margin-right: 2px;
+  margin-top: 2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
