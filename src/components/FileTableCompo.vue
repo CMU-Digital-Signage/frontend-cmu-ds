@@ -38,7 +38,9 @@ const emerPosters = computed(() =>
   store.state.emerPosters.filter((e) => {
     return (
       (!filterInput.value.title ||
-        e.incidentName.toLowerCase().includes(filterInput.value.title)) &&
+        e.incidentName
+          .toLowerCase()
+          .includes(filterInput.value.title.toLowerCase())) &&
       (!filterInput.value.status || e.status === filterInput.value.status)
     );
   })
@@ -47,8 +49,10 @@ const uniquePosters = computed(() =>
   store.state.uniquePosters.filter((e) => {
     return (
       (!filterInput.value.title ||
-        e.title.toLowerCase().includes(filterInput.value.title)) &&
-      (!filterInput.value.uploader ||
+        e.title
+          .toLowerCase()
+          .includes(filterInput.value.title.toLowerCase())) &&
+      (!filterInput.value.uploader.toLowerCase() ||
         e.uploader.toLowerCase().includes(filterInput.value.uploader)) &&
       (!filterInput.value.uploadDate ||
         customDateFormatter(e.createdAt) ===
