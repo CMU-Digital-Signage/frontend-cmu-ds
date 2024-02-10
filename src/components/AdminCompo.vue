@@ -113,36 +113,10 @@ const calculateScreenHeight = () => {
   padding-bottom: 2rem;
 }
 
-.rectangle3 {
-  flex: 1 1;
-  padding-bottom: 0.5rem;
-  margin-top: 10px;
-  overflow-y: auto;
-}
 
-.box-admin {
-  display: flex;
-  background-color: #9dc75000; /* Adjust the background color as needed */
-  padding-left: 1.5rem;
-  height: 75px;
-  align-items: center;
-  border-bottom: 2px solid #dbdbdb;
-  padding-right: 4.5rem;
-}
 
-.circle {
-  width: 40px; /* Adjust the width and height as needed */
-  height: 40px;
-  border-radius: 50%; /* This makes the element circular */
-  background-color: #3671bf; /* Set your desired background color */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.custom-button:hover {
-  background-color: #1369da;
-}
+
 
 
 </style>
