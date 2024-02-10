@@ -53,7 +53,9 @@ const uniquePosters = computed(() =>
           .toLowerCase()
           .includes(filterInput.value.title.toLowerCase())) &&
       (!filterInput.value.uploader.toLowerCase() ||
-        e.uploader.toLowerCase().includes(filterInput.value.uploader.toLowerCase())) &&
+        e.uploader
+          .toLowerCase()
+          .includes(filterInput.value.uploader.toLowerCase())) &&
       (!filterInput.value.uploadDate ||
         customDateFormatter(e.createdAt) ===
           customDateFormatter(filterInput.value.uploadDate)) &&
@@ -246,6 +248,9 @@ const del = async (poster: string) => {
       header="Status"
       :class="`${props.types === 'nor' ? 'w-1/6' : 'w-1/3'}`"
     >
+      <!-- <template #header="column">
+        <i class="pi pi-info-circle cursor-pointer"></i>
+      </template> -->
       <template #body="rowData">
         <Tag
           :value="rowData.data.status"
@@ -253,10 +258,10 @@ const del = async (poster: string) => {
           :severity="
             statusPoster.find((e) => rowData.data.status === e.status)?.severity
           "
-          
         />
       </template>
     </Column>
+
     <Column
       field="management"
       header="Action"

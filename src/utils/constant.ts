@@ -223,7 +223,7 @@ export const statusPoster = [
   { status: "Expire", severity: "danger" },
 ];
 export const statusEmer = [
-  { status: "Inactive", severity: "secondary" },
+  { status: "Inactive", severity: "contrast" },
   { status: "Active", severity: "success" },
 ];
 

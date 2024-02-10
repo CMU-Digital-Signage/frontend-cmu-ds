@@ -432,7 +432,7 @@ const validateEmail = () => {
           :showOnFocus="false"
           dateFormat="dd M yy"
           inputClass="text-[13px] lg:text-[16px]"
-          class="w-[140px] lg:w-[150px] h-8 rounded-lg align-middle"
+          class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
         />
       </li>
       <li>
@@ -444,7 +444,7 @@ const validateEmail = () => {
           optionValue="status"
           inputClass="text-[13px] lg:text-[16px] text-left"
           :showClear="filterInput.status !== ''"
-          class="rounded-lg items-center h-8 w-36 lg:w-40"
+          class="rounded-lg items-center h-8 w-28 lg:w-36"
         ></Dropdown>
       </li>
       <li>
