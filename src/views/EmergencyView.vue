@@ -1,54 +1,159 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
 import Instructor from "@/components/InstructorCompo.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
+import { getEmergency } from "@/services";
+import { Emergency } from "@/types";
 
 const click = computed({
   get: () => store.state.selectTabview,
   set: (val) => (store.state.selectTabview = val),
 });
+
+const emerPosters = computed(() => store.state.emerPosters);
+
+const selectEmer = ref("");
+const selectedPosterImage = ref("");
+const confirmationText = ref("");
+const isConfirmationValid = computed(
+  () => selectEmer.value === confirmationText.value
+);
+
+watch(selectEmer, () => {
+  console.log(selectEmer.value);
+  const selectedEmergency = emerPosters.value.find(
+    (emergency) => emergency.incidentName === selectEmer.value
+  );
+  if (selectedEmergency) {
+    selectedPosterImage.value = selectedEmergency.emergencyImage;
+  }
+});
+
+onMounted(async () => {
+  if (!emerPosters.value.length) {
+    const res = await getEmergency();
+    if (res.ok) {
+      res.emergency.forEach(
+        (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+      );
+      store.state.emerPosters = res.emergency;
+    }
+  }
+});
 </script>
 
 <template>
-  <TabView v-model:active-index="click" class="rectangle flex flex-col">
-    <TabPanel header="Admin">
-      <Admin />
-    </TabPanel>
-    <TabPanel header="Device">
-      <Device />
-    </TabPanel>
-  </TabView>
+  <div class="rectangleOut flex flex-row">
+    <div class="rectangleLeft flex flex-col text-left">
+      <p class="text-[18px] mb-8">
+        <span style="color: red; font-weight: bold"
+          >Activating the Emergency Poster</span
+        >, there is overriding currently running poster.
+        <span style="font-weight: bold">Please be certain. </span>
+      </p>
+      <p class="text-[18px] font-bold">Choose Poster to displayed</p>
+      <div class="rectangleLeftIn">
+        <div
+          v-for="category in emerPosters"
+          :key="category.incidentName"
+          class="flex text-[16px] gap-2 m-1 mb-3"
+        >
+          <RadioButton
+            v-model="selectEmer"
+            :inputId="category.incidentName"
+            :value="category.incidentName"
+          />
+          <label :for="category.incidentName" class="ml-2">{{
+            category.incidentName
+          }}</label>
+        </div>
+      </div>
+      <div v-if="selectEmer">
+        <p class="text-[18px] font-semibold mb-2">
+          To confirm, type "{{ selectEmer }}" in the box below
+        </p>
+        <div class="flex flex-col">
+          <InputText class="w-full mb-2" v-model="confirmationText"></InputText>
+          <Button
+            class="w-full bg-red-500 rounded-lg border-0"
+            :disabled="!isConfirmationValid"
+            label="Activate"
+          ></Button>
+        </div>
+      </div>
+    </div>
+
+    <div class="rectangleRight flex flex-col">
+      <div class="rectangleRightIn">
+        <div class="w-full h-full overflow-hidden">
+          <img
+            v-if="selectedPosterImage"
+            class="m-auto mt-28 transition-opacity rotated-image"
+            :src="selectedPosterImage"
+            alt="poster-image"
+            
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-/* Add styles for the rectangle */
-.rectangle {
-  padding-inline: 1.5rem;
+
+.rectangleOut {
   overflow: hidden;
   background-color: aquamarine;
+  flex: 1 1;
 }
 
-.bold-ho:hover {
-  font-weight: 600;
+.rectangleLeft {
+  background-color: rgb(255, 255, 255);
+  height: 100vh;
+  width: 40vw;
+  padding-top: 30px;
+  padding-left: 26px;
+  padding-right: 30px;
+  padding-bottom: 80px;
+  flex: 1 1;
 }
 
-.activer-link {
-  border-bottom: 4px solid #282828;
-  font-weight: 900;
-  border-radius: -2-px;
+.rotated-image {
+  transform: rotate(90deg);
 }
 
-.activer-link:hover {
-  color: #282828;
-  background-color: #f0f0f014; /* Optional: change background color on hover */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: add box shadow on hover */
+.rectangleLeftIn {
+  background-color: rgb(255, 255, 255);
+  height: 10vh;
+  padding-left: 15px;
+  padding-top: 10px;
+  padding-bottom: 30px;
+  overflow-y: scroll;
+  flex: 1 1;
 }
 
-.gaptt {
-  gap: 8px;
+.rectangleRight {
+  background-color: #ffffff;
+  height: 100vh;
+  width: 40vw;
+  padding-top: 30px;
+  padding-left: 26px;
+  padding-right: 30px;
+  padding-bottom: 80px;
+  flex: 1 1;
+  border-left: solid 2px;
+  border-color: #eaeaea;
+}
+
+.rectangleRightIn {
+  background-color: rgb(255, 255, 255);
+  height: 10vh;
+  border-radius: 15px;
+  overflow-y: scroll;
+  flex: 1 1;
 }
 </style>
