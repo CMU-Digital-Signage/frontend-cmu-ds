@@ -20,7 +20,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import { Poster } from "@/types";
 
-const loading = computed(() => store.state.loading);
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
 const fullCalendar = ref<any>(null);
@@ -255,12 +254,7 @@ watch([selectedDevice, posters], () => {
 </script>
 
 <template>
-  <Skeleton
-    v-if="loading"
-    width="100%"
-    height="92%"
-    class="bg-gray-200 -mb-3"
-  ></Skeleton>
+  <Skeleton v-if="!calendar" class="bg-gray-200 flex-1"></Skeleton>
   <div ref="fullCalendar" class="m-3"></div>
   <Dialog
     v-model:visible="showInfo"
@@ -341,7 +335,7 @@ watch([selectedDevice, posters], () => {
   </Dialog>
 </template>
 
-<style>
+<style scoped>
 .posterDetail {
   display: inline-flex;
   justify-content: space-between;

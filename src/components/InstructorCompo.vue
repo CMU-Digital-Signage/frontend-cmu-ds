@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "InstructorCompo",
@@ -95,7 +95,7 @@ const calculateScreenHeight = () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .rectangle4 {
   padding-bottom: 2rem;
 }
@@ -130,4 +130,4 @@ const calculateScreenHeight = () => {
 .custom-button:hover {
   background-color: #1369da;
 }
-</style>
+</style> -->

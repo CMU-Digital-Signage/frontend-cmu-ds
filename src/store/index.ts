@@ -11,7 +11,7 @@ export default createStore({
     showUpload: false,
     userInfo: <User>{},
     allUser: <User[]>[],
-    adminManage: <number>0,
+    selectTabview: <number>0,
     selectDevice: <string>"",
     currentViewDate: <string>(
       `${fullMonth[date.getMonth()]} ${date.getFullYear()}`
@@ -22,6 +22,12 @@ export default createStore({
     emerPosters: <Emergency[]>[],
     uniquePosters: <Poster[]>[],
     searchPosters: <Poster[] | null>null,
+    filterInputPosters: {
+      title: "",
+      uploader: "",
+      uploadDate: undefined as Date | undefined,
+      status: "" as string,
+    },
     filterDevice: <(string | null)[]>[],
     formPoster: <any>{},
     formDisplay: <Display[]>[{ ...initialFormDisplay }],
@@ -41,6 +47,14 @@ export default createStore({
   mutations: {
     setAdmin(state, { id, isAdmin }) {
       state.allUser.find((e) => (e.id === id ? (e.isAdmin = isAdmin) : ""));
+    },
+    resetFilter(state) {
+      state.filterInputPosters = {
+        title: "",
+        uploader: "",
+        uploadDate: undefined,
+        status: "",
+      };
     },
     setAllTime(state, index) {
       state.formDisplay[index].time = [

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import SideBar from "./components/SideBar.vue";
 import store from "./store";
+import { computed } from "vue";
+import SideBar from "./components/SideBar.vue";
 import NavBar from "./components/NavBar.vue";
 import NavbarBelow from "./components/NavbarBelow.vue";
-import { computed } from "vue";
+import PopupUpload from "@/components/PopupUploadCompo.vue";
 
 const user = computed(() => store.state.userInfo);
 </script>
@@ -14,13 +15,14 @@ const user = computed(() => store.state.userInfo);
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-white" />
-    <div class="w-screen flex flex-col bg-[#fafafa]">
+    <div class="w-screen flex flex-col h-full bg-[#fafafa]">
       <NavBar class="bg-white" />
       <router-view class="bg-[#fafafa]" />
       <NavbarBelow v-if="$route.meta.showNavbarBelow" />
     </div>
   </div>
   <router-view v-else />
+  <PopupUpload />
 </template>
 
 <style lang="scss">
@@ -32,10 +34,19 @@ const user = computed(() => store.state.userInfo);
 }
 
 router-view {
+  flex: 1 1;
+}
+
+TabPanel {
   flex: 1;
 }
 
-.p-disabled, .p-component:disabled {
+Button:focus {
+  box-shadow: none;
+}
+
+.p-disabled,
+.p-component:disabled {
   color: #dbdbdb;
 }
 

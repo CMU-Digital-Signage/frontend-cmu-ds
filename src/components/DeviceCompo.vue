@@ -13,7 +13,7 @@ import { initialFormDevice, onUpload } from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 
 const form = reactive({ ...initialFormDevice });
-
+const loading = computed(() => !store.state.devices.length);
 const device = computed(() => store.state.devices);
 const chooseFile = ref();
 const oldFile = ref<File>();
@@ -104,8 +104,13 @@ const calculateScreenHeight = () => {
 
 <template>
   <Toast />
-  <div class="rectangle5">
-    <p v-if="!device"><i class="pi pi-spin pi-sync text-5xl"></i></p>
+  <div class="rectangle2">
+    <Skeleton
+      v-if="loading"
+      width="100%"
+      height="92%"
+      class="bg-gray-200 -mb-3"
+    ></Skeleton>
     <DataTable
       v-else
       :value="device"
@@ -349,8 +354,9 @@ const calculateScreenHeight = () => {
   </Dialog>
 </template>
 
-<style>
-.rectangle5 {
+<style scoped>
+.rectangle2 {
+  flex: 1 1;
   padding-bottom: 2rem;
 }
 

@@ -8,8 +8,8 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 
 const click = computed({
-  get: () => store.state.adminManage,
-  set: (val) => (store.state.adminManage = val),
+  get: () => store.state.selectTabview,
+  set: (val) => (store.state.selectTabview = val),
 });
 </script>
 
@@ -17,9 +17,6 @@ const click = computed({
   <TabView v-model:active-index="click" class="rectangle flex flex-col">
     <TabPanel header="Admin">
       <Admin />
-    </TabPanel>
-    <TabPanel header="Instructor">
-      <Instructor />
     </TabPanel>
     <TabPanel header="Device">
       <Device />
@@ -33,11 +30,6 @@ const click = computed({
   padding-inline: 1.5rem;
   overflow: hidden;
   background-color: aquamarine;
-  height: 100vh;
-}
-
-TabPanel {
-  flex: 1;
 }
 
 .bold-ho:hover {

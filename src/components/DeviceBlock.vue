@@ -16,24 +16,16 @@ const devices = computed(() => store.state.devices);
 </script>
 
 <template>
-  <div>
-    <Button class="button1">
-      <i
-        class="pi pi-desktop"
-        style="font-size: 70px; color: rgb(98, 204, 202)"
-      ></i>
-      <div>
-        <p class="font-bold text-1xl" style="font-size: 20px; color: black">
-          <span>{{ device.deviceName }}</span>
-        </p>
-        <p class="text-1xl" style="color: black">
-          Room:
-          <span>{{ device.room }}</span>
-        </p>
-        <p class="text-1xl" style="color: rgb(98, 204, 202)">On</p>
-      </div>
-    </Button>
-  </div>
+  <Button class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300">
+    <i class="pi pi-desktop text-[70px] text-[#62ccca]"></i>
+    <div>
+      <p class="font-bold text-[16px] text-black">
+        {{ device.deviceName }}
+      </p>
+      <p class=" text-[] text-black">Room: {{ device.room }}</p>
+      <p class="text-[#62ccca]">On</p>
+    </div>
+  </Button>
 </template>
 
 <style>
@@ -41,12 +33,10 @@ const devices = computed(() => store.state.devices);
   margin-top: 3px;
   margin-bottom: 10px;
   border-radius: 8px;
-  background-color: rgb(243, 243, 243);
   column-count: 2;
   column-gap: 20px;
   text-align: left;
-  border-color: rgb(187, 186, 186);
+  border-color: #bbbaba;
   padding: 15px 30px;
-  font-family: "SF Pro";
 }
 </style>

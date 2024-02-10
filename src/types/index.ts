@@ -49,5 +49,5 @@ export interface Emergency {
   incidentName: string;
   emergencyImage: any;
   description: string | null;
-  status: boolean;
+  status: boolean | string;
 }

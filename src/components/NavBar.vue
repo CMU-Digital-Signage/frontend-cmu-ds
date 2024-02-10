@@ -7,7 +7,6 @@ export default defineComponent({
 <script setup lang="ts">
 import store from "@/store";
 import { computed, onUpdated, reactive, ref, watchEffect } from "vue";
-import PopupUpload from "@/components/PopupUploadCompo.vue";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { addDevice, addAdmin, searchPoster } from "@/services";
@@ -16,21 +15,24 @@ import {
   customDateFormatter,
   initialFormDevice,
   onUpload,
+  statusPoster,
+  statusEmer,
 } from "@/utils/constant";
 import { filesize } from "filesize";
 
 const form = reactive({ ...initialFormDevice });
+const filterInput = computed(() => store.state.filterInputPosters);
 
 const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
+const posters = computed(() => store.state.posters);
 const searchPosters = computed(() => store.state.searchPosters);
 const chooseFile = ref();
 const showPopup = ref(false);
 const currentViewDate = computed(() => store.state.currentViewDate);
 const monthView = ref(true);
-const selectedDate = ref(new Date());
 const clickSearch = ref(false);
-const searchP = ref("");
+const searchP = ref<string>("");
 const toast = useToast();
 const selectDevice = computed({
   get: () => store.state.selectDevice,
@@ -159,27 +161,21 @@ const validateEmail = () => {
 <template>
   <Toast />
   <div
-    class="h-14 px-6 flex items-center z-10 bg-white border-gray-100 border-b-[2px]"
+    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
   >
     <!-- "Management" -->
-    <ul
-      v-if="$route.path === '/admin'"
-      class="flex items-center justify-between w-full"
-    >
-      <div class="text-lg font-semibold text-gray-800 text-[20px]">
-        Management
-      </div>
-      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 0">
+    <ul v-if="$route.path === '/admin'" class="justify-between">
+      <p>Management</p>
+      <div
+        class="ml-auto cursor-pointer"
+        v-if="store.state.selectTabview === 0"
+      >
         <Button
-          class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
+          label="Add Admin"
+          icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
           @click="showPopup = true"
         >
-          <div
-            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center ml-1"
-          >
-            <i class="pi pi-plus text-white"></i>
-          </div>
-          Add Admin
         </Button>
         <Dialog
           v-model:visible="showPopup"
@@ -219,17 +215,16 @@ const validateEmail = () => {
           </form>
         </Dialog>
       </div>
-      <div class="ml-auto cursor-pointer" v-if="store.state.adminManage === 1">
+      <div
+        class="ml-auto cursor-pointer"
+        v-if="store.state.selectTabview === 1"
+      >
         <Button
-          class="flex bg-while text-black pr-2 pl-1 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
+          label="Add Device"
+          icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white"
           @click="showPopup = true"
         >
-          <div
-            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center ml-1"
-          >
-            <i class="pi pi-plus text-white"></i>
-          </div>
-          Add Device
         </Button>
         <Dialog
           v-model:visible="showPopup"
@@ -389,57 +384,85 @@ const validateEmail = () => {
     </ul>
 
     <!-- "Emergency" -->
-    <ul v-if="$route.path === '/emergency'" class="flex justify-between">
-      <li class="text-lg font-semibold text-[#FF0000] text-[20px]">
-        Emergency Activation
-      </li>
+    <ul v-if="$route.path === '/emergency'">
+      <p class="text-[#FF0000]">Emergency Activation</p>
     </ul>
 
     <!-- "Device" -->
-    <ul v-if="$route.path === '/deviceManage'" class="flex justify-between">
-      <li class="text-lg font-semibold text-black text-[20px]">Device</li>
+    <ul v-if="$route.path === '/deviceManage'">
+      <p>Device</p>
     </ul>
 
     <!-- "File Manage" -->
-    <ul v-if="$route.path === '/file'" class="flex items-center">
-      <div
-        class="text-lg font-normal text-black items-center pt-3 text-[13px] flex-col"
-      >
-        <label for="macAddress" class="font-medium">Title </label>
+    <ul
+      v-if="$route.path === '/file'"
+      class="flex-wrap gap-3 lg:gap-5 text-[16px] lg:text-[18px]"
+    >
+      <li>
+        <label>Title</label>
         <InputText
-          id="email"
-          class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-40 rounded-lg"
-          placeholder="Search Poster Title"
+          id="title"
+          v-model="filterInput.title"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 h-7 py-4 w-28 lg:w-40 rounded-lg"
+          placeholder="Search Title"
         ></InputText>
-        <label for="macAddress" class="font-medium">Uploader </label>
+      </li>
+      <li>
+        <label>Uploader</label>
         <InputText
-          id="email"
-          class="border text-[13px] font-normal border-[#C6C6C6] ml-1 mr-4 pl-3 h-7 py-4 w-40 rounded-lg"
-          placeholder="English firstname"
+          id="uploader"
+          v-model="filterInput.uploader"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 h-7 py-4 w-28 lg:w-40 rounded-lg"
+          placeholder="Search Name"
+          :disabled="store.state.selectTabview === 1"
         ></InputText>
-        <div class="inline-flex">
-          <label for="macAddress" class="font-medium">Upload Date </label>
-          <VueDatePicker
-            v-model="selectedDate"
-            class="custom-date-picker ml-3 pb-10 h-10"
-            :enable-time-picker="false"
-            :format="customDateFormatter(selectedDate, 1)"
-          ></VueDatePicker>
-        </div>
-      </div>
+      </li>
+      <li>
+        <label class="text-[15px] lg:text-[18px]">Upload Date</label>
+        <Calendar
+          v-model="filterInput.uploadDate"
+          showButtonBar
+          :disabled="store.state.selectTabview === 1"
+          :manualInput="false"
+          showIcon
+          :showOnFocus="false"
+          dateFormat="dd M yy"
+          inputClass="text-[13px] lg:text-[16px]"
+          class="w-[140px] lg:w-[150px] h-8 rounded-lg align-middle"
+        />
+      </li>
+      <li>
+        <label>Status</label>
+        <Dropdown
+          v-model="filterInput.status"
+          :options="store.state.selectTabview === 0 ? statusPoster : statusEmer"
+          optionLabel="status"
+          optionValue="status"
+          inputClass="text-[13px] lg:text-[16px] text-left"
+          :showClear="filterInput.status !== ''"
+          class="rounded-lg items-center w-36 lg:w-40"
+        ></Dropdown>
+      </li>
+      <li>
+        <Button
+          label="Clear Filter"
+          @click="store.commit('resetFilter')"
+          class="rounded-[15px] h-8 border-0 bg-red-500 text-right float-end justify-self-end"
+        />
+      </li>
     </ul>
 
     <!-- "calendar dashboard"-->
     <ul
       v-if="$route.path === '/' || $route.path === '/searchfile'"
-      class="flex items-center justify-between w-full"
+      class="justify-between w-full"
     >
       <div
         class="text-lg font-normal text-[13px] flex items-center"
         v-if="!clickSearch"
       >
         <div class="flex gap-2 items-center text-[#777]">
-          <label class="font-semibold w-44 text-[18px] text-black text-left">
+          <label class="font-semibold w-44 text-xl text-black text-left">
             {{ currentViewDate }}
           </label>
           <button
@@ -545,25 +568,20 @@ const validateEmail = () => {
         </Button>
       </div>
     </ul>
-
-    <!-- "Upload File" -->
-    <PopupUpload />
-    <!-- <ul v-if="$route.path === '/uploadfile'" class="flex justify-between">
-      <li class="text-lg font-semibold text-black text-[20px]">Upload File</li>
-    </ul> -->
-
-    <!-- "Edit File" -->
-    <!-- <ul v-if="$route.path === '/editfile'" class="flex justify-between">
-      <li class="text-lg font-semibold text-black text-[20px]">Edit File</li>
-    </ul> -->
   </div>
 </template>
 
 <style scoped>
-/* Adjust the width as needed */
-.custom-date-picker {
-  width: 200px; /* Set the desired width */
-  height: 1.75rem;
+ul {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .bold-ho:hover {

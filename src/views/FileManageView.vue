@@ -1,45 +1,43 @@
 <script setup lang="ts">
 import FileTable from "@/components/FileTableCompo.vue";
-import { onUpdated, ref, watch } from "vue";
+import { computed, onUnmounted, watch } from "vue";
 import store from "../store";
 
-const click = ref(0);
+const click = computed({
+  get: () => store.state.selectTabview,
+  set: (val) => (store.state.selectTabview = val),
+});
 
-onUpdated(() => {
-  store.commit("resetForm");
+watch(click, () => {
+  store.commit("resetFilter");
+});
+
+onUnmounted(() => {
+  store.commit("resetFilter");
 });
 </script>
 
 <template>
-  <div>
-    <!-- Tabview -->
-    <div>
-      <TabView
-        v-model:activeIndex="click"
-        class="rectangle18 flex flex-col overflow-y-auto"
-      >
-        <TabPanel header="Normal File">
-          <FileTable :types="'nor'" />
-        </TabPanel>
-        <TabPanel
-          v-if="store.state.userInfo.isAdmin"
-          header="Emergency File"
-          :pt="{
-            headerAction: {
-              class: `${click != 0 ? 'text-[#f00] border-[#f00]' : ''}`,
-            },
-          }"
-        >
-          <FileTable :types="'emer'" />
-        </TabPanel>
-      </TabView>
-    </div>
-    <!-- File Table-->
-  </div>
+  <TabView v-model:activeIndex="click" class="rectangle flex flex-col">
+    <TabPanel header="Normal File">
+      <FileTable :types="'nor'" />
+    </TabPanel>
+    <TabPanel
+      v-if="store.state.userInfo.isAdmin"
+      header="Emergency File"
+      :pt="{
+        headerAction: {
+          class: `${click != 0 ? 'text-[#f00] border-[#f00]' : ''}`,
+        },
+      }"
+    >
+      <FileTable :types="'emer'" />
+    </TabPanel>
+  </TabView>
 </template>
 
-<style>
-.rectangle18 {
+<style scoped>
+.rectangle {
   padding-inline: 1.5rem;
   overflow: hidden;
 }

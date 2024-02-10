@@ -344,7 +344,7 @@ const addSchedule = () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .bold-ho:hover {
   font-weight: 600;
   background-color: #e2e2e2;

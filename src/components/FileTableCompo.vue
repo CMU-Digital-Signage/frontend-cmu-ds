@@ -9,20 +9,57 @@ export default defineComponent({
 import { defineProps } from "vue";
 import { ref, watch, computed, onMounted } from "vue";
 import store from "@/store";
-import { getPoster, deletePoster } from "@/services/poster";
-import { createUnique, initialFormDisplay } from "@/utils/constant";
-import { Display, User } from "@/types";
-import { deleteEmergency, getEmergency } from "@/services";
+import {
+  createUnique,
+  customDateFormatter,
+  initialFormDisplay,
+} from "@/utils/constant";
+import { Display, Emergency, User } from "@/types";
+import { statusPoster } from "@/utils/constant";
+import {
+  getPoster,
+  deletePoster,
+  deleteEmergency,
+  getEmergency,
+} from "@/services";
 import { useToast } from "primevue/usetoast";
 
+const calculateScreenHeight = () => {
+  const screenHeight = window.innerHeight;
+  const multiplier = 0.69;
+  const scrollHeight = screenHeight * multiplier;
+  return `${scrollHeight}px`;
+};
+const loading = computed(() => store.state.loading);
 const props = defineProps({ types: String });
 const posters = computed(() => store.state.posters);
-const emerPosters = computed(() => store.state.emerPosters);
-const uniquePosters = computed(() => store.state.uniquePosters);
+const filterInput = computed(() => store.state.filterInputPosters);
+const emerPosters = computed(() =>
+  store.state.emerPosters.filter((e) => {
+    return (
+      (!filterInput.value.title ||
+        e.incidentName.toLowerCase().includes(filterInput.value.title)) &&
+      (!filterInput.value.status || e.status === filterInput.value.status)
+    );
+  })
+);
+const uniquePosters = computed(() =>
+  store.state.uniquePosters.filter((e) => {
+    return (
+      (!filterInput.value.title ||
+        e.title.toLowerCase().includes(filterInput.value.title)) &&
+      (!filterInput.value.uploader ||
+        e.uploader.toLowerCase().includes(filterInput.value.uploader)) &&
+      (!filterInput.value.uploadDate ||
+        customDateFormatter(e.createdAt) ===
+          customDateFormatter(filterInput.value.uploadDate)) &&
+      (!filterInput.value.status || e.status === filterInput.value.status)
+    );
+  })
+);
 const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
 let delP = null as any;
-const loading = computed(() => store.state.loading);
 
 const setForm = (title: string) => {
   if (props.types === "nor") {
@@ -100,6 +137,9 @@ onMounted(async () => {
     } else {
       const res = await getEmergency();
       if (res.ok) {
+        res.emergency.forEach(
+          (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+        );
         store.state.emerPosters = res.emergency;
       }
     }
@@ -135,102 +175,116 @@ const del = async (poster: string) => {
 </script>
 
 <template>
-  <div>
-    <DataTable
-      :value="props.types === 'nor' ? uniquePosters : emerPosters"
-      scrollDirection="vertical"
-      scrollable
-      class="mt-2"
+  <Skeleton v-if="!posters.length" class="bg-gray-200"></Skeleton>
+  <DataTable
+    v-else
+    :value="props.types === 'nor' ? uniquePosters : emerPosters"
+    scrollDirection="vertical"
+    scrollable
+    :scrollHeight="calculateScreenHeight()"
+    class="mt-2 text-[14px] lg:text-[16px]"
+  >
+    <Column
+      :field="(e) => (props.types === 'emer' ? e.incidentName : e.title)"
+      header="Title"
+      sortable
+      :class="`${props.types === 'nor' ? 'w-1/5' : 'w-1/3'}`"
     >
-      <Column field="title" header="Title" sortable style="width: 20%"
-        ><template #sorticon="slotProps">
-          <i
-            class="m-3 pi"
-            :class="{
-              'pi-sort-alt': slotProps.sortOrder === 0,
-              'pi-sort-alpha-down': slotProps.sortOrder === 1,
-              'pi-sort-alpha-up': slotProps.sortOrder === -1,
-            }"
-          ></i>
-        </template>
-        <template #body="slotProps">
-          <div v-if="props.types === 'emer'">
-            {{ slotProps.data.incidentName }}
-          </div>
-          <div v-else>
-            {{ slotProps.data.title }}
-          </div>
-        </template>
-      </Column>
-      <Column
-        v-if="user?.isAdmin && props.types === 'nor'"
-        field="uploader"
-        header="Uploader"
-        sortable
-        style="width: 20%"
-        ><template #sorticon="slotProps">
-          <i
-            class="m-3 pi"
-            :class="{
-              'pi-sort-alt': slotProps.sortOrder === 0,
-              'pi-sort-alpha-down': slotProps.sortOrder === 1,
-              'pi-sort-alpha-up': slotProps.sortOrder === -1,
-            }"
-          ></i> </template
-      ></Column>
-      <Column
-        v-if="props.types === 'nor'"
-        field="createdAt"
-        header="Upload Date"
-        sortable
-        style="width: 20%"
-        ><template #sorticon="slotProps">
-          <i
-            class="m-3 pi"
-            :class="{
-              'pi-sort-alt': slotProps.sortOrder === 0,
-              'pi-sort-numeric-up': slotProps.sortOrder === 1,
-              'pi-sort-numeric-down': slotProps.sortOrder === -1,
-            }"
-          ></i> </template
-      ></Column>
-      <Column field="status" header="Status" style="width: 15%">
-        <template #body="slotProps" v-if="props.types === 'emer'">
-          <p>{{ slotProps.data.status ? "Active" : "Inactive" }}</p>
-        </template>
-      </Column>
-      <Column field="management" header="Management" style="width: 15%">
-        <template #body="rowData">
-          <div v-if="rowData">
-            <Button
-              icon="pi pi-pencil"
-              rounded
-              class="w-9 h-9"
-              severity="warning"
-              @click="
-                () => {
-                  setForm(rowData.data.title || rowData.data.incidentName);
-                  router.push('/editfile');
-                }
-              "
-            />
-            <Button
-              icon="pi pi-trash"
-              rounded
-              class="w-9 h-9 mx-3"
-              severity="danger"
-              :loading="
-                loading &&
-                (rowData.data.posterId === delP ||
-                  rowData.data.incidentName === delP)
-              "
-              @click="del(rowData.data.posterId || rowData.data.incidentName)"
-            />
-          </div>
-        </template>
-      </Column>
-    </DataTable>
-  </div>
+      <template #sorticon="slotProps">
+        <i
+          class="m-3 pi"
+          :class="{
+            'pi-sort-alt': slotProps.sortOrder === 0,
+            'pi-sort-alpha-down': slotProps.sortOrder === 1,
+            'pi-sort-alpha-up': slotProps.sortOrder === -1,
+          }"
+        ></i>
+      </template>
+    </Column>
+    <Column
+      v-if="user?.isAdmin && props.types === 'nor'"
+      field="uploader"
+      header="Uploader"
+      sortable
+      class="w-1/5"
+    >
+      <template #sorticon="slotProps">
+        <i
+          class="m-3 pi"
+          :class="{
+            'pi-sort-alt': slotProps.sortOrder === 0,
+            'pi-sort-alpha-down': slotProps.sortOrder === 1,
+            'pi-sort-alpha-up': slotProps.sortOrder === -1,
+          }"
+        ></i>
+      </template>
+    </Column>
+    <Column
+      v-if="props.types === 'nor'"
+      :field="(e) => customDateFormatter(e.createdAt)"
+      header="Upload Date"
+      sortable
+      class="w-1/5"
+    >
+      <template #sorticon="slotProps">
+        <i
+          class="m-3 pi"
+          :class="{
+            'pi-sort-alt': slotProps.sortOrder === 0,
+            'pi-sort-numeric-up': slotProps.sortOrder === 1,
+            'pi-sort-numeric-down': slotProps.sortOrder === -1,
+          }"
+        ></i>
+      </template>
+    </Column>
+    <Column
+      field="status"
+      header="Status"
+      :class="`${props.types === 'nor' ? 'w-1/6' : 'w-1/3'}`"
+    >
+      <template #body="rowData">
+        <Tag
+          :value="rowData.data.status"
+          rounded
+          :severity="
+            statusPoster.find((e) => rowData.data.status === e.status)?.severity
+          "
+        />
+      </template>
+    </Column>
+    <Column
+      field="management"
+      header="Management"
+      :class="`${props.types === 'nor' ? 'w-1/6' : 'w-1/3'}`"
+    >
+      <template #body="rowData">
+        <Button
+          icon="pi pi-pencil"
+          rounded
+          class="w-9 h-9"
+          severity="warning"
+          @click="
+            () => {
+              setForm(rowData.data.title || rowData.data.incidentName);
+              router.push('/editfile');
+            }
+          "
+        />
+        <Button
+          icon="pi pi-trash"
+          rounded
+          class="w-9 h-9 ml-3"
+          severity="danger"
+          :loading="
+            loading &&
+            (rowData.data.posterId === delP ||
+              rowData.data.incidentName === delP)
+          "
+          @click="del(rowData.data.posterId || rowData.data.incidentName)"
+        />
+      </template>
+    </Column>
+  </DataTable>
 </template>
 
-<style></style>
+<style scoped></style>
