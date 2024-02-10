@@ -17,6 +17,26 @@ const show = computed({
   get: () => store.state.showUpload,
   set: (val) => (store.state.showUpload = val),
 });
+
+const user = computed(() => store.state.userInfo);
+const isNextButtonDisabled = computed(() => {
+  return !selectedPoster.value;
+});
+const showDifferentDialog = () => {
+  store.state.showUpload = false;
+  if (selectedPoster.value.code === "NP") {
+    selectedDialog.value = {
+      header: "Normal Poster",
+    };
+  } else if (selectedPoster.value.code === "EP") {
+    selectedDialog.value = {
+      header: "Emergency Poster",
+    };
+  }
+};
+
+const items = ref([
+
 const uploadState = ref([
   { label: "Schedule" },
   { label: "Uploaded" },
