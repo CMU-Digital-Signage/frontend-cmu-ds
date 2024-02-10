@@ -40,9 +40,14 @@ export interface Display {
   allDevice: boolean;
   startDate: Date | undefined;
   endDate: Date | undefined;
-  time: [{ startTime: Date | undefined; endTime: Date | undefined }];
+  time: DisplayTime[];
   duration: number | null;
   MACaddress: string[];
+}
+
+export interface DisplayTime {
+  startTime: Date | undefined;
+  endTime: Date | undefined;
 }
 
 export interface Emergency {

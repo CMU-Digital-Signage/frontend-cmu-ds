@@ -1,5 +1,5 @@
 import { Device, Display, Emergency, Poster, User } from "@/types";
-import { initialFormDisplay, fullMonth } from "@/utils/constant";
+import { newInitialFormDisplay, fullMonth } from "@/utils/constant";
 import { createStore } from "vuex";
 
 const date = new Date();
@@ -30,7 +30,7 @@ export default createStore({
     },
     filterDevice: <(string | null)[]>[],
     formPoster: <any>{},
-    formDisplay: <Display[]>[{ ...initialFormDisplay }],
+    formDisplay: <Display[]>[newInitialFormDisplay()],
     formEmer: <Emergency>{},
   },
   getters: {
@@ -56,6 +56,15 @@ export default createStore({
         status: "",
       };
     },
+    // addSchedule(state) {
+    //   state.formDisplay.push({ ...initialFormDisplay });
+    // },
+    // addTime(state, index: number) {
+    //   state.formDisplay[index].time.push({
+    //     startTime: undefined,
+    //     endTime: undefined,
+    //   });
+    // },
     setAllTime(state, index) {
       state.formDisplay[index].time = [
         {
@@ -72,7 +81,7 @@ export default createStore({
     },
     resetForm(state) {
       state.formPoster = <Poster>{};
-      state.formDisplay = <Display[]>[{ ...initialFormDisplay }];
+      state.formDisplay = <Display[]>[newInitialFormDisplay()];
       state.formEmer = <Emergency>{};
     },
   },
