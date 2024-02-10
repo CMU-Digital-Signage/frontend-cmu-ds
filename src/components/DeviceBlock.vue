@@ -22,7 +22,7 @@ const devices = computed(() => store.state.devices);
       <p class="font-bold text-[16px] text-black">
         {{ device.deviceName }}
       </p>
-      <p class=" text-[] text-black">Room: {{ device.room }}</p>
+      <p class="text-[] text-black">Room: {{ device.room }}</p>
       <p class="text-[#62ccca]">On</p>
     </div>
   </Button>
@@ -38,5 +38,6 @@ const devices = computed(() => store.state.devices);
   text-align: left;
   border-color: #bbbaba;
   padding: 15px 30px;
+  margin-right: 20px;
 }
 </style>
