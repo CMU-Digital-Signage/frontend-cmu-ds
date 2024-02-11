@@ -12,7 +12,7 @@ import router from "@/router";
 import { addDevice, addAdmin, searchPoster } from "@/services";
 import {
   fullMonth,
-  customDateFormatter,
+  dateFormatter,
   initialFormDevice,
   onUpload,
   statusPoster,

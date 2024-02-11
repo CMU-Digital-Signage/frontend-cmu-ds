@@ -21,7 +21,7 @@ export interface Poster {
   posterId: string;
   id: string;
   title: string;
-  image: any;
+  image: ImageCollection[];
   description: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -33,6 +33,11 @@ export interface Poster {
   uploader: string;
   status: string;
   type: string;
+}
+
+export interface ImageCollection {
+  priority: number;
+  image: any;
 }
 
 export interface Display {

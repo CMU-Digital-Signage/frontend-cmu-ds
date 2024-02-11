@@ -9,7 +9,7 @@ export default defineComponent({
 import { ref, reactive, watch, onMounted, computed, onUpdated } from "vue";
 import {
   color,
-  customDateFormatter,
+  dateFormatter,
   day,
   setFieldPoster,
 } from "@/utils/constant";
@@ -87,8 +87,8 @@ const calOptions = reactive<CalendarOptions>({
       color: info.event.backgroundColor,
       type: info.event._def.extendedProps.type,
       title: info.event.title,
-      start: customDateFormatter(start || info.event.start),
-      end: customDateFormatter(endMinus1 || info.event.start),
+      start: dateFormatter(start || info.event.start),
+      end: dateFormatter(endMinus1 || info.event.start),
       allDay: info.event.allDay,
       startTime: info.event._instance?.range.start.toUTCString().slice(17, 22),
       endTime: info.event._instance?.range.end.toUTCString().slice(17, 22),
@@ -189,6 +189,9 @@ onMounted(async () => {
     if (res.ok) {
       res.poster.forEach((e: Poster) => {
         setFieldPoster(e);
+        // e.image = res.poster.filter((p: Poster)=>{
+
+        // })
         if (
           res.poster.filter((p: Poster) =>
             p.title.startsWith(e.title.substring(0, e.title.lastIndexOf(" ")))

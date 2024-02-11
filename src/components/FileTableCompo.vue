@@ -11,7 +11,7 @@ import { ref, watch, computed, onMounted } from "vue";
 import store from "@/store";
 import {
   createUnique,
-  customDateFormatter,
+  dateFormatter,
   initialFormDisplay,
 } from "@/utils/constant";
 import { Display, Emergency, User } from "@/types";
@@ -57,8 +57,8 @@ const uniquePosters = computed(() =>
           .toLowerCase()
           .includes(filterInput.value.uploader.toLowerCase())) &&
       (!filterInput.value.uploadDate ||
-        customDateFormatter(e.createdAt) ===
-          customDateFormatter(filterInput.value.uploadDate)) &&
+        dateFormatter(e.createdAt) ===
+          dateFormatter(filterInput.value.uploadDate)) &&
       (!filterInput.value.status || e.status === filterInput.value.status)
     );
   })
@@ -155,28 +155,28 @@ onMounted(async () => {
 });
 
 const del = async (poster: string) => {
-  // delP = poster;
-  // store.state.loading = true;
-  // if (props.types == "nor") {
-  //   const res = await deletePoster(delP);
-  //   store.state.posters = posters.value?.filter((e) => e.posterId !== delP);
-  //   store.state.uniquePosters = uniquePosters.value?.filter(
-  //     (e) => e.posterId !== delP
-  //   );
-  // } else {
-  //   const res = await deleteEmergency(delP);
-  //   store.state.emerPosters = emerPosters.value?.filter(
-  //     (e) => e.incidentName !== delP
-  //   );
-  // }
-  // store.state.loading = false;
-  // delP = null;
-  // toast.add({
-  //   severity: "success",
-  //   summary: "Success",
-  //   detail: "Delete poster successful.",
-  //   life: 3000,
-  // });
+  delP = poster;
+  store.state.loading = true;
+  if (props.types == "nor") {
+    const res = await deletePoster(delP);
+    store.state.posters = posters.value?.filter((e) => e.posterId !== delP);
+    store.state.uniquePosters = uniquePosters.value?.filter(
+      (e) => e.posterId !== delP
+    );
+  } else {
+    const res = await deleteEmergency(delP);
+    store.state.emerPosters = emerPosters.value?.filter(
+      (e) => e.incidentName !== delP
+    );
+  }
+  store.state.loading = false;
+  delP = null;
+  toast.add({
+    severity: "success",
+    summary: "Success",
+    detail: "Delete poster successful.",
+    life: 3000,
+  });
 };
 </script>
 
@@ -227,7 +227,7 @@ const del = async (poster: string) => {
     </Column>
     <Column
       v-if="props.types === 'nor'"
-      :field="(e) => customDateFormatter(e.createdAt)"
+      :field="(e) => dateFormatter(e.createdAt)"
       header="Upload Date"
       sortable
       class="w-1/5"
