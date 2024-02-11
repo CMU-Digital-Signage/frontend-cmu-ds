@@ -1,6 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import router from "@/router";
+import { an } from "@fullcalendar/core/internal-common";
+import Panel from "primevue/panel";
 export default defineComponent({
   name: "FileTableCompo",
 });
@@ -24,13 +26,23 @@ import {
 } from "@/services";
 import { useToast } from "primevue/usetoast";
 
+const isOverlayPanelVisible = ref();
+
+const toggleShowStatus = (e: any) => {
+  isOverlayPanelVisible.value.toggle(e);
+};
+
 const calculateScreenHeight = () => {
   const screenHeight = window.innerHeight;
   const multiplier = 0.69;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
-const loading = computed(() => store.state.loading);
+
+const loading = computed({
+  get: () => store.state.loading,
+  set: (val) => (store.state.loading = val),
+});
 const props = defineProps({ types: String });
 const posters = computed(() => store.state.posters);
 const filterInput = computed(() => store.state.filterInputPosters);
@@ -120,6 +132,7 @@ const setForm = (title: string) => {
 };
 
 onMounted(async () => {
+  loading.value = true;
   if (!posters.value.length || !emerPosters.value.length) {
     if (props.types === "nor") {
       const res = await getPoster();
@@ -152,6 +165,7 @@ onMounted(async () => {
   } else if (!uniquePosters.value.length && props.types == "nor") {
     createUnique(posters.value);
   }
+  loading.value = false;
 });
 
 const del = async (poster: string) => {
@@ -181,9 +195,14 @@ const del = async (poster: string) => {
 </script>
 
 <template>
-  <Skeleton v-if="!posters.length" class="bg-gray-200"></Skeleton>
+  <Skeleton v-if="loading" class="bg-gray-200"></Skeleton>
   <DataTable
-    v-else
+    v-else-if="
+      !loading &&
+      (store.state.selectTabview
+        ? uniquePosters[0]?.id
+        : emerPosters[0]?.incidentName)
+    "
     :value="props.types === 'nor' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
     scrollable
@@ -245,12 +264,44 @@ const del = async (poster: string) => {
     </Column>
     <Column
       field="status"
-      header="Status"
       :class="`${props.types === 'nor' ? 'w-1/6' : 'w-1/3'}`"
     >
-      <!-- <template #header="column">
-        <i class="pi pi-info-circle cursor-pointer"></i>
-      </template> -->
+      <template #header>
+        <div>Status</div>
+        <i
+          class="pi pi-info-circle cursor-pointer ml-1"
+          @mouseover="(e) => toggleShowStatus(e)"
+          @mouseleave="(e) => toggleShowStatus(e)"
+        ></i>
+        <OverlayPanel
+          class="w-fit h-fit max-w-full max-h-full p-2 rounded-lg"
+          ref="isOverlayPanelVisible"
+        >
+          <div class="flex flex-col gap-3">
+            <div class="inline-flex gap-2">
+              <Tag severity="success" value="Running" />
+              <p class="mt-1">Poster is currently being displayed.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <Tag severity="danger" value="Expired" />
+              <p class="mt-1">
+                Posters are no longer scheduled to be displayed.
+              </p>
+            </div>
+            <div class="inline-flex gap-2">
+              <Tag severity="warning" value="Upcoming" />
+              <p class="mt-1">Poster display date and time hasn't arrived.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <Tag severity="info" value="Pending" />
+              <p class="mt-1">
+                Poster display date has come, but it's not time to be displayed.
+              </p>
+            </div>
+          </div>
+        </OverlayPanel>
+      </template>
+
       <template #body="rowData">
         <Tag
           :value="rowData.data.status"
@@ -295,6 +346,9 @@ const del = async (poster: string) => {
       </template>
     </Column>
   </DataTable>
+  <div v-else class="flex justify-center items-center align-middle">
+    No Data
+  </div>
 </template>
 
 <style scoped></style>

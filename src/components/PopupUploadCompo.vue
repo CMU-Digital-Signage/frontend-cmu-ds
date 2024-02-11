@@ -7,13 +7,15 @@ export default defineComponent({
 
 <script setup lang="ts">
 import store from "@/store";
+import router from "@/router";
+import { addEmergency, addPoster } from "@/services";
+import { Poster } from "@/types";
 import { useToast } from "primevue/usetoast";
-import { computed, ref, reactive, warn, watch } from "vue";
+import { computed, ref, reactive, warn, watch, onMounted } from "vue";
 import {
   dateFormatter,
-  newInitialFormDisplay,
-  onUpload,
-  rotate,
+  createUnique,
+  setFieldPoster,
 } from "@/utils/constant";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 
@@ -38,10 +40,135 @@ const scheduleTabs = reactive([{ header: "Schedule 1", index: 0 }]);
 const posters = computed(() => store.state.posters);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
+const posters = computed(() => store.state.posters);
 const formEmer = computed(() => store.state.formEmer);
 const currentDeg = ref(0);
 const selectSchedule = ref(scheduleTabs[0]);
 const showSecondDialog = ref(false);
+const loading = ref(false);
+
+watch(show, () => {
+  if (!user.value.isAdmin) {
+    show.value = false;
+    showSecondDialog.value = true;
+  }
+});
+
+const validateForm = () => {
+  if (
+    (!formPoster.value.title || !formPoster.value.image) &&
+    (!formEmer.value.incidentName || !formEmer.value.emergencyImage)
+  ) {
+    return "Title Invalid or Not Choose File Image.";
+  }
+
+  const invalidSchedule = formDisplay.value.find(
+    (e) =>
+      (!e.MACaddress.length && !e.allDevice) ||
+      !e.duration ||
+      !e.startDate ||
+      !e.endDate
+  );
+
+  if (invalidSchedule) {
+    return "Schedule Invalid.";
+  }
+};
+
+const handleAddEmergency = async () => {
+  const res = await addEmergency(formEmer.value);
+  if (res.ok) {
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Emergency has been add successfully.",
+      life: 3000,
+    });
+    store.commit("resetForm");
+    store.state.emerPosters.push(res.emergency);
+    router.push("/");
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
+  }
+  loading.value = false;
+};
+
+const handleAddPoster = async () => {
+  formDisplay.value.forEach((e, i) => {
+    if (e.allDay) store.commit("setAllTime", i);
+    if (e.allDevice) store.commit("setAllDevice", i);
+  });
+
+  const res = await addPoster(formPoster.value, formDisplay.value);
+  if (res.ok) {
+    setFieldPoster(res.createPoster);
+    let newPoster = [] as Poster[];
+    formDisplay.value.forEach((e) => {
+      e.time.forEach((time) => {
+        e.MACaddress.forEach(async (mac) => {
+          newPoster.push({
+            ...res.createPoster,
+            MACaddress: mac,
+            startDate: e.startDate,
+            endDate: e.endDate,
+            startTime: time.startTime,
+            endTime: time.endTime,
+          });
+        });
+      });
+    });
+    store.state.posters.push(...newPoster);
+    createUnique(posters.value);
+    store.commit("resetForm");
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Poster has been add successfully.",
+      life: 3000,
+    });
+    router.push("/");
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
+  }
+  loading.value = false;
+};
+
+const add = async () => {
+  loading.value = true;
+  if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
+    handleAddEmergency();
+  } else if (
+    formPoster.value.title &&
+    formPoster.value.image &&
+    !formDisplay.value.find(
+      (e) =>
+        (!e.MACaddress.length && !e.allDevice) ||
+        !e.duration ||
+        !e.startDate ||
+        !e.endDate
+    )
+  ) {
+    handleAddPoster();
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: validateForm(),
+      life: 3000,
+    });
+    loading.value = false;
+  }
+};
 
 watch([show, showSecondDialog], () => {
   if (!show.value && !showSecondDialog.value) {
@@ -64,7 +191,7 @@ const showDifferentDialog = () => {
   } else if (selectedPosterType.value.code === "EP") {
     selectedPosterType.value = {
       header: "Emergency Poster",
-      code: "NP",
+      code: "EP",
     };
   }
   showSecondDialog.value = true;
@@ -190,7 +317,7 @@ const nextStepUpload = () => {
       </template>
       <div class="flex flex-col gap-2">
         <div class="inline-block">
-          <div v-if="user?.isAdmin">
+          <div>
             <label
               for="deviceName"
               class="flex justify-start font-semibold text-[18px] text-[#282828]"
@@ -224,16 +351,21 @@ const nextStepUpload = () => {
     </Dialog>
 
     <Dialog
-      v-if="showSecondDialog"
       v-model:visible="showSecondDialog"
-      :header="selectedPosterType.header"
+      header="Upload File"
       modal
       close-on-escape
       :draggable="false"
       class="w-[600px]"
     >
+      <template v-if="user?.isAdmin" #header>
+        <span
+          style="font-weight: bold; color: rgb(94, 94, 94); font-size: 22px"
+          >{{ selectedPosterType.header }}</span
+        >
+      </template>
       <div v-if="selectedPosterType.code === 'NP'">
-        <Steps :model="uploadState" :active-step="currentState" />
+        <Steps class="mb-5" :model="uploadState" :active-step="currentState" />
         <div v-if="currentState === 0">
           <div class="inline-flex items-center">
             <label
@@ -292,7 +424,7 @@ const nextStepUpload = () => {
         </div>
         <div v-if="currentState === 1">
           <FileUpload
-            cl
+            class="mt-12"
             accept="image/*"
             :show-upload-button="false"
             @select="
@@ -302,7 +434,7 @@ const nextStepUpload = () => {
               }
             "
           >
-            <template #header="{ files, chooseCallback, clearCallback }">
+            <template #header="{ chooseCallback, clearCallback }">
               <div class="flex w-full gap-3 items-center justify-between">
                 <div class="flex gap-3 items-center">
                   <Button
@@ -316,44 +448,6 @@ const nextStepUpload = () => {
                     label="Choose File"
                     rounded
                     outlined
-                  />
-                </div>
-                <div class="flex gap-3 items-center">
-                  <Button
-                    @click="
-                      async () => {
-                        const { imageDataUrl, newDeg } = await rotate(
-                          files[0],
-                          currentDeg,
-                          -90
-                        );
-                        formPoster.image = imageDataUrl;
-                        currentDeg = newDeg;
-                      }
-                    "
-                    :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                    icon="pi pi-replay"
-                    rounded
-                    outlined
-                    :disabled="!formPoster.image"
-                  />
-                  <Button
-                    @click="
-                      async () => {
-                        const { imageDataUrl, newDeg } = await rotate(
-                          files[0],
-                          currentDeg,
-                          90
-                        );
-                        formPoster.image = imageDataUrl;
-                        currentDeg = newDeg;
-                      }
-                    "
-                    :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                    icon="pi pi-refresh"
-                    rounded
-                    outlined
-                    :disabled="!formPoster.image"
                   />
                 </div>
               </div>
@@ -406,20 +500,223 @@ const nextStepUpload = () => {
               @click="currentState = 2"
             ></Button>
           </div>
-          <p>ffrhfbrbvhrss</p>
         </div>
         <div v-if="currentState === 2">
+          <label
+            class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
+          >
+            Orientation
+          </label>
+          <div class="orientOut">
+            <div class="flex gap-3 items-center">
+              <template header="files">
+                <!-- <Button
+                  @click="rotate(files[0], currentDeg, -90)"
+                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                  icon="pi pi-replay"
+                  rounded
+                  outlined
+                  :disabled="!formPoster.image"
+                />
+                <Button
+                  @click="rotate(files[0], currentDeg, 90)"
+                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                  icon="pi pi-refresh"
+                  rounded
+                  outlined
+                  :disabled="!formPoster.image"
+                /> -->
+              </template>
+            </div>
+          </div>
+          <label
+            class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1 mt-3"
+          >
+            Review
+          </label>
           <Button
             label="Back"
             :class="'secondaryButton'"
             @click="currentState = 1"
           ></Button>
           <Button label="Upload" :class="'primaryButton'"></Button>
-          <p>review</p>
         </div>
       </div>
+
       <div v-else-if="selectedPosterType.code === 'EP'">
-        <p>sssseff</p>
+        <div class="flex flex-row justify-between gap-3 mx-1">
+          <div class="flex flex-col justify-start w-full max-w-4xl">
+            <div class="inline-flex items-center">
+              <label
+                class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
+              >
+                Title
+              </label>
+              <label class="text-[#FF0000] mb-3 font-medium"> * </label>
+            </div>
+            <InputText
+              v-model="formEmer.incidentName"
+              type="text"
+              placeholder="Ex. Gas leakage"
+              class="title-input mb-3"
+            />
+            <!-- File Upload -->
+            <FileUpload
+              accept="image/*"
+              :show-upload-button="false"
+              :multiple="false"
+              @select="
+                async (e) => {
+                  if (e.files[0]) formEmer.emergencyImage = await onUpload(e);
+                  else errorSelectFile();
+                }
+              "
+              :pt="{
+                buttonbar: {
+                  class: 'border-[#f00] bg-[#f00] bg-opacity-10',
+                },
+                content: {
+                  class: 'border-[#f00]',
+                },
+              }"
+            >
+              <template #header="{ files, chooseCallback, clearCallback }">
+                <div class="flex w-full gap-3 items-center justify-between">
+                  <div class="flex gap-3 items-center">
+                    <Button
+                      @click="
+                        clearCallback();
+                        formEmer.emergencyImage = null;
+                        currentDeg = 0;
+                        chooseCallback();
+                      "
+                      icon="pi pi-plus"
+                      label="Choose File"
+                      rounded
+                      outlined
+                    />
+                    <Button
+                      @click="
+                        () => {
+                          clearCallback();
+                          formEmer.emergencyImage = null;
+                          currentDeg = 0;
+                        }
+                      "
+                      :class="`${
+                        formEmer.emergencyImage ? '' : 'text-[#9c9b9b]'
+                      }`"
+                      icon="pi pi-times"
+                      label="Cancel"
+                      rounded
+                      outlined
+                      severity="danger"
+                      :disabled="!formEmer.emergencyImage"
+                    />
+                  </div>
+                  <div class="flex gap-3 items-center">
+                    <Button
+                      @click="
+                        async () => {
+                          const { imageDataUrl, newDeg } = await rotate(
+                            files[0],
+                            currentDeg,
+                            -90
+                          );
+                          formEmer.emergencyImage = imageDataUrl;
+                          currentDeg = newDeg;
+                        }
+                      "
+                      :class="`${
+                        formEmer.emergencyImage ? '' : 'text-[#9c9b9b]'
+                      }`"
+                      icon="pi pi-replay"
+                      rounded
+                      outlined
+                      :disabled="!formEmer.emergencyImage"
+                    />
+                    <Button
+                      @click="
+                        async () => {
+                          const { imageDataUrl, newDeg } = await rotate(
+                            files[0],
+                            currentDeg,
+                            90
+                          );
+                          formEmer.emergencyImage = imageDataUrl;
+                          currentDeg = newDeg;
+                        }
+                      "
+                      :class="`${
+                        formEmer.emergencyImage ? '' : 'text-[#9c9b9b]'
+                      }`"
+                      icon="pi pi-refresh"
+                      rounded
+                      outlined
+                      :disabled="!formEmer.emergencyImage"
+                    />
+                  </div>
+                </div>
+              </template>
+              <template #content="{ files }">
+                <div
+                  v-if="files[0] && formEmer.emergencyImage"
+                  class="flex flex-row justify-center text-center items-center gap-3"
+                >
+                  <i class="pi pi-power-off"></i>
+                  <div
+                    class="flex justify-center border-2 border-black bg-black"
+                    :style="{
+                      width: `${2160 / 20}px`,
+                      height: `${3840 / 20}px`,
+                    }"
+                  >
+                    <img
+                      :alt="files[0].name"
+                      :src="formEmer.emergencyImage"
+                      class="max-w-full max-h-full m-auto rotate-90"
+                      :style="{
+                        maxWidth: `${3840 / 20}px`,
+                        maxHeight: `${2160 / 20}px`,
+                      }"
+                    />
+                  </div>
+                </div>
+                <div
+                  v-else
+                  class="flex flex-col justify-center items-center h-48 gap-3"
+                >
+                  <i
+                    class="pi pi-cloud-upload border-2 rounded-full text-4xl w-fit p-4 mt-1"
+                  ></i>
+                  <p class="mt-3 mb-0">Drag and drop files to here.</p>
+                  <!-- <p class="text-[#176EE2] red">Support JPEG only.</p> -->
+                </div>
+              </template>
+            </FileUpload>
+
+            <!-- Description -->
+            <div class="flex flex-col gap-1 w-full">
+              <label
+                for="Description"
+                class="text-[#282828] mt-3 font-semibold text-[18px] flex justify-start"
+                >Description</label
+              >
+              <InputText
+                v-model="formEmer.description"
+                type="text"
+                placeholder="(optional)"
+                class="description-input h-full"
+              ></InputText>
+            </div>
+            <Button
+              label="Upload"
+              :class="'primaryButtonEmer'"
+              :loading="loading"
+              @click="add"
+            ></Button>
+          </div>
+        </div>
       </div>
     </Dialog>
   </div>
@@ -478,8 +775,38 @@ const nextStepUpload = () => {
   text-decoration-line: underline;
 }
 
+.primaryButtonEmer {
+  width: 100%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: white;
+  color: rgb(255, 107, 43);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryButtonEmer:hover {
+  cursor: pointer;
+  background-color: rgb(255, 233, 228);
+  text-decoration-line: underline;
+}
+
 .line-separator {
   border-top: 3px solid #b4b4b4;
   margin: 15px 0;
+}
+
+.orientOut {
+  background-color: rgb(194, 88, 88);
+  height: 50vh;
+  width: full;
+  padding-top: 30px;
+  padding-left: 26px;
+  padding-right: 30px;
+  padding-bottom: 80px;
+  flex: 1 1;
 }
 </style>

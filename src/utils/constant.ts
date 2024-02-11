@@ -227,7 +227,7 @@ export const statusPoster = [
   { status: "Running", severity: "success" },
   { status: "Pending", severity: "info" },
   { status: "Upcoming", severity: "warning" },
-  { status: "Expire", severity: "danger" },
+  { status: "Expired", severity: "danger" },
 ];
 export const statusEmer = [
   { status: "Inactive", severity: "contrast" },
@@ -256,7 +256,7 @@ export const createUnique = (data: any) => {
       } else if (currentDate < e.startDate) {
         status = "Upcoming";
       } else {
-        status = "Expire";
+        status = "Expired";
       }
       if (store.state.userInfo.isAdmin) {
         acc.push({

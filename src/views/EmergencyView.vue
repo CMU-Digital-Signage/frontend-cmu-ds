@@ -112,7 +112,7 @@ onMounted(async () => {
 }
 
 .rectangleLeft {
-  background-color: rgb(255, 255, 255);
+  background-color: #fafafa;
   height: 100vh;
   width: 40vw;
   padding-top: 30px;
@@ -127,7 +127,7 @@ onMounted(async () => {
 }
 
 .rectangleLeftIn {
-  background-color: rgb(255, 255, 255);
+  background-color: #fafafa;;
   height: 10vh;
   padding-left: 15px;
   padding-top: 10px;
@@ -137,7 +137,7 @@ onMounted(async () => {
 }
 
 .rectangleRight {
-  background-color: #ffffff;
+  background-color: #fafafa;;
   height: 100vh;
   width: 40vw;
   padding-top: 30px;
@@ -150,7 +150,7 @@ onMounted(async () => {
 }
 
 .rectangleRightIn {
-  background-color: rgb(255, 255, 255);
+  background-color: #fafafa;;
   height: 10vh;
   border-radius: 15px;
   overflow-y: scroll;
