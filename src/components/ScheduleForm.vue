@@ -29,9 +29,9 @@ const { index } = toRefs(props);
 const device = computed(() => store.state.devices);
 const formDisplay = computed(() => store.state.formDisplay[index.value]);
 
-onMounted(() => {
-  console.log(store.state.formDisplay);
-});
+// onMounted(() => {
+//   console.log(store.state.formDisplay);
+// });
 
 watch(store.state.formDisplay[index.value], () => {
   if (
@@ -75,8 +75,6 @@ const addTime = () => {
     startTime: newStartTime,
     endTime: undefined,
   });
-
-  console.log(index.value, store.state.formDisplay);
 };
 
 const deleteTime = (i: number) => {
@@ -119,12 +117,15 @@ const maxEndTime = (i: number) => {
     <div class="flex flex-col justify-start gap-5">
       <!-- Running Time -->
       <div class="flex flex-col justify-start gap-2">
-        <label
-          for="Time"
-          class="flex justify-start font-semibold text-[18px] text-[#282828]"
-        >
-          Running Time
-        </label>
+        <div class="inline-flex items-center">
+          <label
+            for="Time"
+            class="flex justify-start font-semibold text-[18px] text-[#282828]"
+          >
+            Running Time
+          </label>
+          <label class="text-[#FF0000] font-medium"> * </label>
+        </div>
         <div class="flex gap-4 items-center">
           <RadioButton v-model="formDisplay.allDay" :value="true" />
           <label>All-Day</label>
@@ -198,12 +199,16 @@ const maxEndTime = (i: number) => {
       </div>
 
       <!-- Running Date -->
-      <div>
-        <label
-          class="flex justify-start font-semibold text-[18px] text-[#282828] mb-2"
-        >
-          Running Date
-        </label>
+      <div class="flex flex-col justify-start gap-2">
+        <div class="inline-flex items-center">
+          <label
+            class="flex justify-start font-semibold text-[18px] text-[#282828] "
+          >
+            Running Date
+          </label>
+       
+        <label class="text-[#FF0000] font-medium"> * </label>
+      </div>
         <div class="flex flex-row items-star gap-3">
           <div class="flex flex-row gap-2 items-center">
             <div
@@ -240,12 +245,15 @@ const maxEndTime = (i: number) => {
 
       <!-- Display Duration-->
       <div class="flex flex-col gap-2">
-        <label
-          for="duration"
-          class="flex justify-start font-semibold text-[18px] text-[#282828]"
-        >
-          Display Duration
-        </label>
+        <div class="inline-flex items-center">
+          <label
+            for="duration"
+            class="flex justify-start font-semibold text-[18px] text-[#282828]"
+          >
+            Display Duration
+          </label>
+          <label class="text-[#FF0000] font-medium"> * </label>
+        </div>
         <div class="flex flex-row items-center gap-4 text-[16px] text-[#000]">
           <InputNumber
             v-model="formDisplay.duration"
@@ -263,12 +271,15 @@ const maxEndTime = (i: number) => {
 
       <!-- Device -->
       <div class="flex flex-col gap-3">
-        <label
-          for="Device"
-          class="flex justify-start font-semibold text-[18px] text-[#282828]"
-        >
-          Device
-        </label>
+        <div class="inline-flex items-center">
+          <label
+            for="Device"
+            class="flex justify-start font-semibold text-[18px] text-[#282828]"
+          >
+            Device
+          </label>
+          <label class="text-[#FF0000] font-medium"> * </label>
+        </div>
         <div class="flex flex-col gap-4 text-[16px] text-black">
           <div class="flex gap-2 items-center">
             <Checkbox v-model="formDisplay.allDevice" :binary="true" />
@@ -294,7 +305,7 @@ const maxEndTime = (i: number) => {
                   <br />
                   <!-- New line -->
                   <label :for="item.deviceName">{{
-                    "Room: " + item.room
+                    "(" + item.room + ")"
                   }}</label>
                 </div>
               </div>
