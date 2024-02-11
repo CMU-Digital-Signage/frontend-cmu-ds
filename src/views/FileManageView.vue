@@ -18,7 +18,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <TabView v-model:activeIndex="click" class="rectangle flex flex-col">
+  <TabView
+    v-if="store.state.userInfo.isAdmin"
+    v-model:activeIndex="click"
+    class="rectangle flex flex-col"
+  >
     <TabPanel header="Normal File">
       <FileTable :types="'nor'" />
     </TabPanel>
@@ -34,6 +38,7 @@ onUnmounted(() => {
       <FileTable :types="'emer'" />
     </TabPanel>
   </TabView>
+  <FileTable v-else :types="'nor'" class="rectangle flex flex-col" />
 </template>
 
 <style scoped>

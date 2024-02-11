@@ -22,6 +22,7 @@ import { filesize } from "filesize";
 
 const form = reactive({ ...initialFormDevice });
 const filterInput = computed(() => store.state.filterInputPosters);
+const user = computed(() => store.state.userInfo);
 
 const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
@@ -412,16 +413,17 @@ const validateEmail = () => {
         ></InputText>
       </li>
       <li v-if="store.state.selectTabview !== 1">
-        <label>Uploader</label>
+        <label v-if="user?.isAdmin" >Uploader</label>
         <InputText
           id="uploader"
           v-model="filterInput.uploader"
           class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 w-28 lg:w-40 rounded-lg"
           placeholder="Search Name"
+          v-if="user?.isAdmin"
         ></InputText>
       </li>
       <li v-if="store.state.selectTabview !== 1">
-        <label class="text-[14px] lg:text-[16px]">Upload Date</label>
+        <label class="text-[14px] ml-[-17px] mr-1 lg:text-[16px]">Upload Date</label>
         <Calendar
           v-model="filterInput.uploadDate"
           showButtonBar
@@ -444,7 +446,7 @@ const validateEmail = () => {
           optionValue="status"
           inputClass="text-[13px] lg:text-[16px] text-left"
           :showClear="filterInput.status !== ''"
-          class="rounded-lg items-center h-8 w-28 lg:w-36"
+          class="rounded-lg items-center h-8 w-28 lg:w-36 ml-1"
         ></Dropdown>
       </li>
       <li>
