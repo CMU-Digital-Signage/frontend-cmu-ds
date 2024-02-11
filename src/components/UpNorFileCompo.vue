@@ -8,7 +8,7 @@ export default defineComponent({
 import { computed, reactive, ref } from "vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import InputText from "primevue/inputtext";
-import { initialFormDisplay, onUpload, rotate } from "@/utils/constant";
+import { newInitialFormDisplay, onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
 
@@ -45,7 +45,7 @@ const addSchedule = () => {
     });
     return;
   }
-  store.state.formDisplay.push({ ...initialFormDisplay });
+  store.state.formDisplay.push(newInitialFormDisplay());
   const newSchedule = {
     header: `${scheduleTabs.length + 1}`,
   };

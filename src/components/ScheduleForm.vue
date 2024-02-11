@@ -5,33 +5,13 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import {
-  reactive,
-  computed,
-  defineProps,
-  toRefs,
-  onMounted,
-  onUpdated,
-  watch,
-} from "vue";
+import { computed, defineProps, toRefs, onMounted, watch } from "vue";
 import store from "@/store";
-import {
-  customDateFormatter,
-  getRandomColor,
-  initialFormDisplay,
-} from "@/utils/constant";
 
-const form = reactive({ ...initialFormDisplay });
-
-const bg = getRandomColor();
 const props = defineProps<{ index: number }>();
 const { index } = toRefs(props);
 const device = computed(() => store.state.devices);
 const formDisplay = computed(() => store.state.formDisplay[index.value]);
-
-// onMounted(() => {
-//   console.log(store.state.formDisplay);
-// });
 
 watch(store.state.formDisplay[index.value], () => {
   if (
@@ -65,7 +45,6 @@ const changeEndTime = (endTime: Date | undefined, i: number) => {
 };
 
 const addTime = () => {
-  // store.commit("addTime", index.value);
   const newStartTime = formDisplay.value.time.at(
     formDisplay.value.time.length - 1
   )?.endTime;

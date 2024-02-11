@@ -1,5 +1,5 @@
 import store from "@/store";
-import { Device, Display } from "@/types";
+import { Device, Display, Poster } from "@/types";
 import Compressor from "compressorjs";
 import { FileUploadSelectEvent } from "primevue/fileupload";
 
@@ -69,7 +69,7 @@ export const month = [
 
 export const day = ["SUN", "MON", "TUE", "WED", "THR", "FRI", "SAT"];
 
-export const customDateFormatter = (
+export const dateFormatter = (
   date: Date | null | undefined,
   format?: number
 ) => {
@@ -211,7 +211,7 @@ export const rotate = (file: File, currentDeg: number, deg: number) => {
   );
 };
 
-export const setFieldPoster = (e: any) => {
+export const setFieldPoster = (e: Poster) => {
   e.createdAt = new Date(e.createdAt);
   e.updatedAt = new Date(e.updatedAt);
   e.startDate = new Date(e.startDate);
@@ -242,8 +242,8 @@ export const createUnique = (data: any) => {
       setFieldPoster(e);
       let status = "";
       if (
-        customDateFormatter(currentDate) >= customDateFormatter(e.startDate) &&
-        customDateFormatter(currentDate) <= customDateFormatter(e.endDate)
+        dateFormatter(currentDate) >= dateFormatter(e.startDate) &&
+        dateFormatter(currentDate) <= dateFormatter(e.endDate)
       ) {
         if (
           new Date().toTimeString() >= e.startTime.toTimeString() &&

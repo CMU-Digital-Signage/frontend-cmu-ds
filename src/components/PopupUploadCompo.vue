@@ -13,14 +13,13 @@ import { Poster } from "@/types";
 import { useToast } from "primevue/usetoast";
 import { computed, ref, reactive, warn, watch, onMounted } from "vue";
 import {
-  newInitialFormDisplay,
-  onUpload,
-  rotate,
+  dateFormatter,
   createUnique,
   setFieldPoster,
 } from "@/utils/constant";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 
+const toast = useToast();
 const user = computed(() => store.state.userInfo);
 const show = computed({
   get: () => store.state.showUpload,
@@ -38,6 +37,7 @@ const posterType = ref([
 const selectedPosterType = ref({ header: "", code: "NP" });
 const currentState = ref(0);
 const scheduleTabs = reactive([{ header: "Schedule 1", index: 0 }]);
+const posters = computed(() => store.state.posters);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const posters = computed(() => store.state.posters);
@@ -170,7 +170,13 @@ const add = async () => {
   }
 };
 
-const toast = useToast();
+watch([show, showSecondDialog], () => {
+  if (!show.value && !showSecondDialog.value) {
+    selectedPosterType.value = { header: "", code: "" };
+    currentState.value = 0;
+    store.commit("resetForm");
+  }
+});
 
 const isNextButtonDisabled = computed(() => {
   return !selectedPosterType.value.header;
@@ -217,11 +223,7 @@ const addSchedule = () => {
   //   return;
   // }
 
-  console.log(newInitialFormDisplay());
-
   store.state.formDisplay.push(newInitialFormDisplay());
-  // store.commit("addSchedule");
-
   const newSchedule = {
     header: `Schedule ${scheduleTabs.length + 1}`,
     index: scheduleTabs.length,
@@ -248,13 +250,56 @@ const deleteSchedule = (index: number) => {
   }
 };
 
-// watch([show, showSecondDialog], () => {
-//   if (!show.value && !showSecondDialog.value) {
-//     selectedPosterType.value = { header: "", code: "" };
-//     currentState.value = 0;
-//     store.commit("resetForm");
-//   }
-// });
+const nextStepUpload = () => {
+  console.log(posters.value);
+  let durationTime = [] as any;
+  let temp2 = [] as any;
+  formDisplay.value.forEach((form, index) => {
+    const temp = posters.value.filter((all) => {
+      // filter date
+      return (
+        (dateFormatter(form.startDate) <= dateFormatter(all.startDate) &&
+          dateFormatter(all.startDate) <= dateFormatter(form.endDate)) ||
+        (dateFormatter(form.startDate) <= dateFormatter(all.endDate) &&
+          dateFormatter(all.endDate) <= dateFormatter(form.endDate))
+      );
+    });
+
+    form.time.forEach((item) => {
+      durationTime.push({
+        startDate: form.startDate,
+        endDate: form.endDate,
+        startTime: item.startTime,
+        endTime: item.endTime,
+        duration: 0,
+      });
+      temp2 = temp.filter((all) => {
+        return (
+          (item.startTime!.toTimeString() <= all.startTime.toTimeString() &&
+            all.startTime.toTimeString() <= item.endTime!.toTimeString()) ||
+          (item.startTime!.toTimeString() <= all.endTime.toTimeString() &&
+            all.endTime.toTimeString() <= item.endTime!.toTimeString())
+        );
+      });
+    });
+  });
+  // durationTime.forEach((form: any) => {
+  //   const time = temp2.filter((all: any) => {
+  //     return (
+  //       temp2.startTime.toTimeString() === form.startTime.toTimeString() &&
+  //       temp2.endTime.toTimeString() === form.endTime.toTimeString() &&
+  //       dateFormatter(temp2.startDate) === dateFormatter(form.startDate) &&
+  //       dateFormatter(temp2.endDate) === dateFormatter(form.endDate)
+  //     );
+  //   });
+  //   form.duration = time.reduce((prev: any, cur: any) => {
+  //     return prev + cur.duration;
+  //   }, 0);
+  // });
+  console.log(temp2);
+
+  currentState.value = 1;
+};
 </script>
 
 <template>
