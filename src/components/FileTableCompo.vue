@@ -1,6 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import router from "@/router";
+import { an } from "@fullcalendar/core/internal-common";
+import Panel from "primevue/panel";
 export default defineComponent({
   name: "FileTableCompo",
 });
@@ -23,6 +25,12 @@ import {
   getEmergency,
 } from "@/services";
 import { useToast } from "primevue/usetoast";
+
+const isOverlayPanelVisible = ref();
+
+const toggleShowStatus = (e: any) => {
+  isOverlayPanelVisible.value.toggle(e);
+};
 
 const calculateScreenHeight = () => {
   const screenHeight = window.innerHeight;
@@ -245,12 +253,44 @@ const del = async (poster: string) => {
     </Column>
     <Column
       field="status"
-      header="Status"
       :class="`${props.types === 'nor' ? 'w-1/6' : 'w-1/3'}`"
     >
-      <!-- <template #header="column">
-        <i class="pi pi-info-circle cursor-pointer"></i>
-      </template> -->
+      <template #header>
+        <div>Status</div>
+        <i
+          class="pi pi-info-circle cursor-pointer ml-1"
+          @mouseover="(e) => toggleShowStatus(e)"
+          @mouseleave="(e) => toggleShowStatus(e)"
+        ></i>
+        <OverlayPanel
+          class="w-fit h-fit max-w-full max-h-full p-2 rounded-lg"
+          ref="isOverlayPanelVisible"
+        >
+          <div class="flex flex-col gap-3">
+            <div class="inline-flex gap-2">
+              <Tag severity="success" value="Running" />
+              <p class="mt-1">Poster is currently being displayed.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <Tag severity="danger" value="Expired" />
+              <p class="mt-1">
+                Posters are no longer scheduled to be displayed.
+              </p>
+            </div>
+            <div class="inline-flex gap-2">
+              <Tag severity="warning" value="Upcoming" />
+              <p class="mt-1">Poster display date and time hasn't arrived.</p>
+            </div>
+            <div class="inline-flex gap-2">
+              <Tag severity="info" value="Pending" />
+              <p class="mt-1">
+                Poster display date has come, but it's not time to be displayed.
+              </p>
+            </div>
+          </div>
+        </OverlayPanel>
+      </template>
+
       <template #body="rowData">
         <Tag
           :value="rowData.data.status"
