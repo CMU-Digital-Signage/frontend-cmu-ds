@@ -38,7 +38,11 @@ const calculateScreenHeight = () => {
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
-const loading = computed(() => store.state.loading);
+
+const loading = computed({
+  get: () => store.state.loading,
+  set: (val) => (store.state.loading = val),
+});
 const props = defineProps({ types: String });
 const posters = computed(() => store.state.posters);
 const filterInput = computed(() => store.state.filterInputPosters);
@@ -128,6 +132,7 @@ const setForm = (title: string) => {
 };
 
 onMounted(async () => {
+  loading.value = true;
   if (!posters.value.length || !emerPosters.value.length) {
     if (props.types === "nor") {
       const res = await getPoster();
@@ -160,6 +165,7 @@ onMounted(async () => {
   } else if (!uniquePosters.value.length && props.types == "nor") {
     createUnique(posters.value);
   }
+  loading.value = false;
 });
 
 const del = async (poster: string) => {
@@ -189,9 +195,14 @@ const del = async (poster: string) => {
 </script>
 
 <template>
-  <Skeleton v-if="!posters.length" class="bg-gray-200"></Skeleton>
+  <Skeleton v-if="loading" class="bg-gray-200"></Skeleton>
   <DataTable
-    v-else
+    v-else-if="
+      !loading &&
+      (store.state.selectTabview
+        ? uniquePosters[0]?.id
+        : emerPosters[0]?.incidentName)
+    "
     :value="props.types === 'nor' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
     scrollable
@@ -335,6 +346,9 @@ const del = async (poster: string) => {
       </template>
     </Column>
   </DataTable>
+  <div v-else class="flex justify-center items-center align-middle">
+    No Data
+  </div>
 </template>
 
 <style scoped></style>

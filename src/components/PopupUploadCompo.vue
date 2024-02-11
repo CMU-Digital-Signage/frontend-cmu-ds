@@ -7,9 +7,18 @@ export default defineComponent({
 
 <script setup lang="ts">
 import store from "@/store";
+import router from "@/router";
+import { addEmergency, addPoster } from "@/services";
+import { Poster } from "@/types";
 import { useToast } from "primevue/usetoast";
-import { computed, ref, reactive, warn, watch } from "vue";
-import { newInitialFormDisplay, onUpload, rotate } from "@/utils/constant";
+import { computed, ref, reactive, warn, watch, onMounted } from "vue";
+import {
+  newInitialFormDisplay,
+  onUpload,
+  rotate,
+  createUnique,
+  setFieldPoster,
+} from "@/utils/constant";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 
 const user = computed(() => store.state.userInfo);
@@ -31,10 +40,135 @@ const currentState = ref(0);
 const scheduleTabs = reactive([{ header: "Schedule 1", index: 0 }]);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
+const posters = computed(() => store.state.posters);
 const formEmer = computed(() => store.state.formEmer);
 const currentDeg = ref(0);
 const selectSchedule = ref(scheduleTabs[0]);
 const showSecondDialog = ref(false);
+const loading = ref(false);
+
+watch(show, () => {
+  if (!user.value.isAdmin) {
+    show.value = false;
+    showSecondDialog.value = true;
+  }
+});
+
+const validateForm = () => {
+  if (
+    (!formPoster.value.title || !formPoster.value.image) &&
+    (!formEmer.value.incidentName || !formEmer.value.emergencyImage)
+  ) {
+    return "Title Invalid or Not Choose File Image.";
+  }
+
+  const invalidSchedule = formDisplay.value.find(
+    (e) =>
+      (!e.MACaddress.length && !e.allDevice) ||
+      !e.duration ||
+      !e.startDate ||
+      !e.endDate
+  );
+
+  if (invalidSchedule) {
+    return "Schedule Invalid.";
+  }
+};
+
+const handleAddEmergency = async () => {
+  const res = await addEmergency(formEmer.value);
+  if (res.ok) {
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Emergency has been add successfully.",
+      life: 3000,
+    });
+    store.commit("resetForm");
+    store.state.emerPosters.push(res.emergency);
+    router.push("/");
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
+  }
+  loading.value = false;
+};
+
+const handleAddPoster = async () => {
+  formDisplay.value.forEach((e, i) => {
+    if (e.allDay) store.commit("setAllTime", i);
+    if (e.allDevice) store.commit("setAllDevice", i);
+  });
+
+  const res = await addPoster(formPoster.value, formDisplay.value);
+  if (res.ok) {
+    setFieldPoster(res.createPoster);
+    let newPoster = [] as Poster[];
+    formDisplay.value.forEach((e) => {
+      e.time.forEach((time) => {
+        e.MACaddress.forEach(async (mac) => {
+          newPoster.push({
+            ...res.createPoster,
+            MACaddress: mac,
+            startDate: e.startDate,
+            endDate: e.endDate,
+            startTime: time.startTime,
+            endTime: time.endTime,
+          });
+        });
+      });
+    });
+    store.state.posters.push(...newPoster);
+    createUnique(posters.value);
+    store.commit("resetForm");
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Poster has been add successfully.",
+      life: 3000,
+    });
+    router.push("/");
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
+  }
+  loading.value = false;
+};
+
+const add = async () => {
+  loading.value = true;
+  if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
+    handleAddEmergency();
+  } else if (
+    formPoster.value.title &&
+    formPoster.value.image &&
+    !formDisplay.value.find(
+      (e) =>
+        (!e.MACaddress.length && !e.allDevice) ||
+        !e.duration ||
+        !e.startDate ||
+        !e.endDate
+    )
+  ) {
+    handleAddPoster();
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: validateForm(),
+      life: 3000,
+    });
+    loading.value = false;
+  }
+};
 
 const toast = useToast();
 
@@ -138,7 +272,7 @@ const deleteSchedule = (index: number) => {
       </template>
       <div class="flex flex-col gap-2">
         <div class="inline-block">
-          <div v-if="user?.isAdmin">
+          <div>
             <label
               for="deviceName"
               class="flex justify-start font-semibold text-[18px] text-[#282828]"
@@ -172,14 +306,19 @@ const deleteSchedule = (index: number) => {
     </Dialog>
 
     <Dialog
-      v-if="showSecondDialog"
       v-model:visible="showSecondDialog"
-      :header="selectedPosterType.header"
+      header="Upload File"
       modal
       close-on-escape
       :draggable="false"
       class="w-[600px]"
     >
+      <template v-if="user?.isAdmin" #header>
+        <span
+          style="font-weight: bold; color: rgb(94, 94, 94); font-size: 22px"
+          >{{ selectedPosterType.header }}</span
+        >
+      </template>
       <div v-if="selectedPosterType.code === 'NP'">
         <Steps class="mb-5" :model="uploadState" :active-step="currentState" />
         <div v-if="currentState === 0">
@@ -326,7 +465,7 @@ const deleteSchedule = (index: number) => {
           <div class="orientOut">
             <div class="flex gap-3 items-center">
               <template header="files">
-                <Button
+                <!-- <Button
                   @click="rotate(files[0], currentDeg, -90)"
                   :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
                   icon="pi pi-replay"
@@ -341,7 +480,7 @@ const deleteSchedule = (index: number) => {
                   rounded
                   outlined
                   :disabled="!formPoster.image"
-                />
+                /> -->
               </template>
             </div>
           </div>
@@ -525,7 +664,12 @@ const deleteSchedule = (index: number) => {
                 class="description-input h-full"
               ></InputText>
             </div>
-            <Button label="Upload" :class="'primaryButtonEmer'"></Button>
+            <Button
+              label="Upload"
+              :class="'primaryButtonEmer'"
+              :loading="loading"
+              @click="add"
+            ></Button>
           </div>
         </div>
       </div>
