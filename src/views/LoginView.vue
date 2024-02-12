@@ -10,6 +10,15 @@
         alt="cpelogo"
         src="../assets/images/cpe-logo.png"
       />
+      <router-link to="/emergency">
+        <Button
+          class="absolute top-0 right-0 mr-20 mt-8 border-0 items-center justify-center h-11 w-auto p-3 rounded-[10px] bg-[#f65454] text-white button-containerEmer"
+        >
+          <i class="pi pi-exclamation-triangle"></i>
+          <p class="ml-2">Emergency</p>
+        </Button>
+      </router-link>
+
       <div
         class="absolute top-40 left-0 w-auto px-14 h-1/2 ml-20 rounded-[15px] flex flex-col items-center justify-center text-center"
       >
@@ -69,5 +78,9 @@ export default defineComponent({
 <style scoped>
 .button-container:hover {
   background-color: #545787;
+}
+
+.button-containerEmer:hover {
+  background-color: #ff1010;
 }
 </style>
