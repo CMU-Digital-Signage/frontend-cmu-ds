@@ -61,8 +61,18 @@ watch([show, showSecondDialog], () => {
 });
 
 const validateForm = () => {
-  if (!formPoster.value.title && !formEmer.value.incidentName) {
+  if (
+    (selectedPosterType.value.code === "NP" && !formPoster.value.title) ||
+    (selectedPosterType.value.code === "EP" && !formEmer.value.incidentName)
+  ) {
     return "Title Invalid";
+  }
+
+  if (
+    (selectedPosterType.value.code === "NP" && !formPoster.value.image) ||
+    (selectedPosterType.value.code === "EP" && !formEmer.value.emergencyImage)
+  ) {
+    return "Not Choose File Image.";
   }
 
   const invalidSchedule = formDisplay.value.find(
@@ -76,19 +86,6 @@ const validateForm = () => {
   if (invalidSchedule) {
     return "Schedule Invalid.";
   }
-};
-
-const validateImage = () => {
-  if (!formPoster.value.image || !formEmer.value.emergencyImage) {
-    toast.add({
-      severity: "error",
-      summary: "Invalid Input",
-      detail: "Not Choose File Image.",
-      life: 3000,
-    });
-    return;
-  }
-  currentState.value = 2;
 };
 
 const handleAddEmergency = async () => {
@@ -314,6 +311,8 @@ const nextStepUpload = () => {
     currentState.value = 1;
   }
 };
+
+// const preview = () => {};
 </script>
 
 <template>
@@ -447,7 +446,7 @@ const nextStepUpload = () => {
             <Button
               label="Next"
               :class="'primaryButton'"
-              @click="validateImage()"
+              @click="currentState = 2"
             ></Button>
           </div>
         </div>
