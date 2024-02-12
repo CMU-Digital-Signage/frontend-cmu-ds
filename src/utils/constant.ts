@@ -136,7 +136,7 @@ export const onUpload = (
         new Compressor(file, {
           quality: compressionQuality,
           async success(result) {
-            e.files[0] = new File([result], "locationImage");
+            e.files[0] = new File([result], "image");
             resolve();
           },
           error(error) {

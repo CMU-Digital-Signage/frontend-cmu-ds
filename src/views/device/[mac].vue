@@ -7,13 +7,15 @@ export default {
 import { getPosterEachDevice } from "@/services";
 import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
-import { Poster } from "@/types";
 import store from "@/store";
+import { setFieldPoster } from "@/utils/constant";
+import { ImageCollection, Poster } from "@/types";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
 const image = ref<string>();
 let currentIndex = 0;
+let currentIndexImage = 0;
 let count = 0;
 
 const fetchData = async () => {
@@ -21,30 +23,21 @@ const fetchData = async () => {
     route.params.mac as string
   );
   if (ok) {
-    const filteredPoster = poster.sort((a: any, b: any) => {
-      const timeA = new Date(a.startTime).toTimeString();
-      const timeB = new Date(b.startTime).toTimeString();
-
-      if (timeA < timeB) return -1;
-      if (timeA > timeB) return 1;
-
+    store.state.posters = setFieldPoster(poster);
+    posters.value.sort((a: Poster, b: Poster) => {
+      if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
+      if (a.startTime.toTimeString() > b.startTime.toTimeString()) return 1;
       return 0;
     });
-    store.state.posters = filteredPoster;
-
     if (posters.value.length > 0) {
       if (posters.value.length === 1) {
         const currentTime = new Date().toTimeString();
         const currentPoster = posters.value[0];
-        const currentPosterStart = new Date(
-          currentPoster.startTime
-        ).toTimeString();
-        const currentPosterEnd = new Date(currentPoster.endTime).toTimeString();
         if (
-          currentPosterStart <= currentTime &&
-          currentPosterEnd >= currentTime
+          currentPoster.startTime.toTimeString() <= currentTime &&
+          currentPoster.endTime.toTimeString() >= currentTime
         ) {
-          image.value = posters.value[0].image;
+          image.value = posters.value[0].image[0].image;
           return;
         } else return;
       }
@@ -58,17 +51,19 @@ const fetchData = async () => {
 const showCurrentPoster = () => {
   const updatePosterInterval = () => {
     if (currentIndex === -1) return;
-
-    const currentTime = new Date().toTimeString();
     const currentPoster = posters.value[currentIndex];
-    const currentPosterStart = new Date(currentPoster.startTime).toTimeString();
-    const currentPosterEnd = new Date(currentPoster.endTime).toTimeString();
-
-    if (currentPosterStart <= currentTime && currentPosterEnd >= currentTime) {
-      image.value = currentPoster.image;
+    if (
+      currentPoster.startTime.toTimeString() <= new Date().toTimeString() &&
+      currentPoster.endTime.toTimeString() >= new Date().toTimeString()
+    ) {
+      image.value = currentPoster.image[currentIndexImage].image;
       count = 0;
       setTimeout(() => {
-        currentIndex = (currentIndex + 1) % posters.value.length;
+        currentIndexImage = currentIndexImage + 1;
+        if (currentIndexImage === currentPoster.image.length) {
+          currentIndexImage = 0;
+          currentIndex = (currentIndex + 1) % posters.value.length;
+        }
         updatePosterInterval();
       }, currentPoster.duration * 1000);
     } else {
@@ -81,10 +76,11 @@ const showCurrentPoster = () => {
     const currentTime = new Date().toTimeString();
     currentIndex = (currentIndex + 1) % posters.value.length;
     const poster = posters.value[currentIndex];
-    const posterStart = new Date(poster.startTime).toTimeString();
-    const posterEnd = new Date(poster.endTime).toTimeString();
     if (count > posters.value.length) return -1;
-    else if (posterStart <= currentTime && posterEnd >= currentTime) {
+    else if (
+      poster.startTime.toTimeString() <= currentTime &&
+      poster.endTime.toTimeString() >= currentTime
+    ) {
       return currentIndex;
     } else {
       count++;
