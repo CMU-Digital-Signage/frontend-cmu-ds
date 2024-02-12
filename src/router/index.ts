@@ -65,6 +65,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/emergency",
     name: "Emergency",
     component: EmergencyManage,
+    meta: {
+      hideSidebar: true,
+    },
   },
   {
     path: "/searchfile",

@@ -5,6 +5,7 @@ import SideBar from "./components/SideBar.vue";
 import NavBar from "./components/NavBar.vue";
 import NavbarBelow from "./components/NavbarBelow.vue";
 import PopupUpload from "@/components/PopupUploadCompo.vue";
+import router from "./router";
 
 const user = computed(() => store.state.userInfo);
 </script>
@@ -18,10 +19,13 @@ const user = computed(() => store.state.userInfo);
     <div class="w-screen flex flex-col h-full bg-[#fafafa]">
       <NavBar class="bg-white" />
       <router-view class="bg-[#fafafa] w-full" />
-      <NavbarBelow v-if="$route.meta.showNavbarBelow" />
+      <!-- <NavbarBelow v-if="$route.meta.showNavbarBelow" /> -->
     </div>
   </div>
-  <router-view v-else />
+  <div v-else>
+    <NavBar v-if="$route.path === '/emergency' " class="bg-white"/>
+    <router-view />
+  </div>
   <PopupUpload />
 </template>
 
