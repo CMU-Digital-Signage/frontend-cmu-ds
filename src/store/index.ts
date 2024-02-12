@@ -29,7 +29,7 @@ export default createStore({
       status: "" as string,
     },
     filterDevice: <(string | null)[]>[],
-    formPoster: <any>{},
+    formPoster: <Poster>{},
     formDisplay: <Display[]>[newInitialFormDisplay()],
     formEmer: <Emergency>{},
   },
@@ -56,15 +56,6 @@ export default createStore({
         status: "",
       };
     },
-    // addSchedule(state) {
-    //   state.formDisplay.push({ ...initialFormDisplay });
-    // },
-    // addTime(state, index: number) {
-    //   state.formDisplay[index].time.push({
-    //     startTime: undefined,
-    //     endTime: undefined,
-    //   });
-    // },
     setAllTime(state, index) {
       state.formDisplay[index].time = [
         {

@@ -114,8 +114,8 @@ export const newInitialFormDisplay = () => {
     ...initialFormDisplay,
     time: [
       {
-        startTime: undefined,
-        endTime: undefined,
+        startTime: new Date("2024-02-09 08:00:00"),
+        endTime: new Date("2024-02-09 09:00:00"),
       },
     ],
   };
@@ -211,35 +211,65 @@ export const rotate = (file: File, currentDeg: number, deg: number) => {
   );
 };
 
-export const setFieldPoster = (e: Poster) => {
-  e.createdAt = new Date(e.createdAt);
-  e.updatedAt = new Date(e.updatedAt);
-  e.startDate = new Date(e.startDate);
-  e.endDate = new Date(e.endDate);
-  e.startTime = new Date(e.startTime);
-  e.endTime = new Date(e.endTime);
-  const users = store.getters.getUserById(e.id);
-  const uploader = `${users.firstName} ${users?.lastName?.charAt(0) || ""}.`;
-  e.uploader = uploader;
+export const setFieldPoster = (data: Poster[]) => {
+  const posterCol = [] as Poster[];
+  data.forEach((e: Poster) => {
+    e.createdAt = new Date(e.createdAt);
+    e.updatedAt = new Date(e.updatedAt);
+    e.startDate = new Date(e.startDate);
+    e.endDate = new Date(e.endDate);
+    e.startTime = new Date(e.startTime);
+    e.endTime = new Date(e.endTime);
+    const users = store.getters.getUserById(e.id);
+    const uploader = `${users.firstName} ${users?.lastName?.charAt(0) || ""}.`;
+    e.uploader = uploader;
+
+    const temp = { ...e };
+    const imgCol = data.filter((p: Poster) => p.title === e.title);
+    temp.image = [];
+    imgCol.forEach((p: Poster) => {
+      if (!temp.image.find((e) => e.priority === p.priority)) {
+        temp.image.push({ image: p.image, priority: p.priority });
+      }
+    });
+    temp.image.sort((a: any, b: any) => a.priority - b.priority);
+
+    if (temp.image.length > 1) {
+      temp.type = "Collection";
+    } else temp.type = "Individual";
+
+    if (
+      !posterCol.find(
+        (p) =>
+          p.title === e.title &&
+          dateFormatter(p.startDate) === dateFormatter(e.startDate) &&
+          dateFormatter(p.endDate) === dateFormatter(e.endDate) &&
+          p.startTime.toTimeString() === e.startTime.toTimeString() &&
+          p.endTime.toTimeString() === e.endTime.toTimeString()
+      )
+    ) {
+      posterCol.push(temp);
+    }
+  });
+  return [...posterCol];
 };
 
 export const statusPoster = [
   { status: "Running", severity: "success" },
   { status: "Pending", severity: "info" },
   { status: "Upcoming", severity: "warning" },
-  { status: "Expired", severity: "danger" },
+  { status: "Expire", severity: "danger" },
 ];
 export const statusEmer = [
   { status: "Inactive", severity: "contrast" },
   { status: "Active", severity: "success" },
 ];
 
-export const createUnique = (data: any) => {
-  store.state.uniquePosters = data.reduce((acc: any[], e: any) => {
+export const createUnique = (data: Poster[]) => {
+  store.state.uniquePosters = data.reduce((acc: any[], e: Poster) => {
     // Check if the title is not already in the accumulator
     if (!acc.some((poster) => poster.title === e.title)) {
       const currentDate = new Date();
-      setFieldPoster(e);
       let status = "";
       if (
         dateFormatter(currentDate) >= dateFormatter(e.startDate) &&
@@ -256,7 +286,7 @@ export const createUnique = (data: any) => {
       } else if (currentDate < e.startDate) {
         status = "Upcoming";
       } else {
-        status = "Expired";
+        status = "Expire";
       }
       if (store.state.userInfo.isAdmin) {
         acc.push({

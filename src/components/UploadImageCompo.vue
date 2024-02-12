@@ -18,6 +18,10 @@ const formEmer = computed(() => store.state.formEmer);
 const currentDeg = ref(0);
 const toast = useToast();
 
+onMounted(() => {
+  store.state.formPoster.image = [];
+});
+
 const errorSelectFile = () => {
   toast.add({
     severity: "error",
@@ -37,7 +41,8 @@ const errorSelectFile = () => {
     @select="
       async (e) => {
         if (e.files[0] && posType === 'NP') {
-          formPoster.image = await onUpload(e);
+          const img = await onUpload(e);
+          store.state.formPoster.image.push({ image: img, priority: 1 });
         } else if (e.files[0] && posType === 'EP') {
           formEmer.emergencyImage = await onUpload(e);
         } else errorSelectFile();
@@ -60,7 +65,7 @@ const errorSelectFile = () => {
           <Button
             @click="
               clearCallback();
-              formPoster.image = null;
+              formPoster.image = [];
               formEmer.emergencyImage = null;
               currentDeg = 0;
               chooseCallback();
@@ -126,7 +131,7 @@ const errorSelectFile = () => {
         >
           <img
             :alt="files[0].name"
-            :src="formPoster.image || formEmer.emergencyImage"
+            :src="formPoster.image[0]?.image || formEmer.emergencyImage"
             class="max-w-full max-h-full m-auto rotate-90"
             :style="{
               maxWidth: `${3840 / 20}px`,

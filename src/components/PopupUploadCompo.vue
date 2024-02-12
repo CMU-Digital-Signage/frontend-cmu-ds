@@ -61,11 +61,8 @@ watch([show, showSecondDialog], () => {
 });
 
 const validateForm = () => {
-  if (
-    (!formPoster.value.title || !formPoster.value.image) &&
-    (!formEmer.value.incidentName || !formEmer.value.emergencyImage)
-  ) {
-    return "Title Invalid or Not Choose File Image.";
+  if (!formPoster.value.title && !formEmer.value.incidentName) {
+    return "Title Invalid";
   }
 
   const invalidSchedule = formDisplay.value.find(
@@ -81,6 +78,19 @@ const validateForm = () => {
   }
 };
 
+const validateImage = () => {
+  if (!formPoster.value.image || !formEmer.value.emergencyImage) {
+    toast.add({
+      severity: "error",
+      summary: "Invalid Input",
+      detail: "Not Choose File Image.",
+      life: 3000,
+    });
+    return;
+  }
+  currentState.value = 2;
+};
+
 const handleAddEmergency = async () => {
   const res = await addEmergency(formEmer.value);
   if (res.ok) {
@@ -90,9 +100,9 @@ const handleAddEmergency = async () => {
       detail: "Emergency has been add successfully.",
       life: 3000,
     });
+    showSecondDialog.value = false;
     store.commit("resetForm");
     store.state.emerPosters.push(res.emergency);
-    router.push("/");
   } else {
     toast.add({
       severity: "error",
@@ -109,27 +119,27 @@ const handleAddPoster = async () => {
     if (e.allDay) store.commit("setAllTime", i);
     if (e.allDevice) store.commit("setAllDevice", i);
   });
-
   const res = await addPoster(formPoster.value, formDisplay.value);
   if (res.ok) {
-    setFieldPoster(res.createPoster);
     let newPoster = [] as Poster[];
     formDisplay.value.forEach((e) => {
       e.time.forEach((time) => {
+        newPoster;
         e.MACaddress.forEach(async (mac) => {
           newPoster.push({
-            ...res.createPoster,
+            ...formPoster.value,
             MACaddress: mac,
-            startDate: e.startDate,
-            endDate: e.endDate,
-            startTime: time.startTime,
-            endTime: time.endTime,
+            startDate: e.startDate!,
+            endDate: e.endDate!,
+            startTime: time.startTime!,
+            endTime: time.endTime!,
           });
         });
       });
     });
     store.state.posters.push(...newPoster);
     createUnique(posters.value);
+    showSecondDialog.value = false;
     store.commit("resetForm");
     toast.add({
       severity: "success",
@@ -137,7 +147,6 @@ const handleAddPoster = async () => {
       detail: "Poster has been add successfully.",
       life: 3000,
     });
-    router.push("/");
   } else {
     toast.add({
       severity: "error",
@@ -196,21 +205,21 @@ const showDifferentDialog = () => {
 };
 
 const addSchedule = () => {
-  // const lastSchedule = formDisplay.value.at(formDisplay.value.length - 1);
-  // if (
-  //   !lastSchedule?.startDate ||
-  //   !lastSchedule?.endDate ||
-  //   (!lastSchedule.MACaddress.length && !lastSchedule.allDevice) ||
-  //   !lastSchedule.duration
-  // ) {
-  //   toast.add({
-  //     severity: "error",
-  //     summary: "Invalid Input",
-  //     detail: "Invalid Input.",
-  //     life: 3000,
-  //   });
-  //   return;
-  // }
+  const lastSchedule = formDisplay.value.at(formDisplay.value.length - 1);
+  if (
+    !lastSchedule?.startDate ||
+    !lastSchedule?.endDate ||
+    (!lastSchedule.MACaddress.length && !lastSchedule.allDevice) ||
+    !lastSchedule.duration
+  ) {
+    toast.add({
+      severity: "error",
+      summary: "Invalid Input",
+      detail: "Invalid Input.",
+      life: 3000,
+    });
+    return;
+  }
 
   store.state.formDisplay.push(newInitialFormDisplay());
   const newSchedule = {
@@ -240,54 +249,70 @@ const deleteSchedule = (index: number) => {
 };
 
 const nextStepUpload = () => {
-  console.log(posters.value);
-  let durationTime = [] as any;
-  let temp2 = [] as any;
-  formDisplay.value.forEach((form, index) => {
-    const temp = posters.value.filter((all) => {
-      // filter date
-      return (
-        (dateFormatter(form.startDate) <= dateFormatter(all.startDate) &&
-          dateFormatter(all.startDate) <= dateFormatter(form.endDate)) ||
-        (dateFormatter(form.startDate) <= dateFormatter(all.endDate) &&
-          dateFormatter(all.endDate) <= dateFormatter(form.endDate))
-      );
+  if (
+    !formPoster.value.title ||
+    formDisplay.value.find(
+      (e) =>
+        (!e.MACaddress.length && !e.allDevice) ||
+        !e.duration ||
+        !e.startDate ||
+        !e.endDate
+    )
+  ) {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: validateForm(),
+      life: 3000,
     });
-
-    form.time.forEach((item) => {
-      durationTime.push({
-        startDate: form.startDate,
-        endDate: form.endDate,
-        startTime: item.startTime,
-        endTime: item.endTime,
-        duration: 0,
-      });
-      temp2 = temp.filter((all) => {
+  } else {
+    let durationTime = [] as any;
+    let temp2 = [] as any;
+    formDisplay.value.forEach((form, index) => {
+      const temp = posters.value.filter((all) => {
+        // filter date
         return (
-          (item.startTime!.toTimeString() <= all.startTime.toTimeString() &&
-            all.startTime.toTimeString() <= item.endTime!.toTimeString()) ||
-          (item.startTime!.toTimeString() <= all.endTime.toTimeString() &&
-            all.endTime.toTimeString() <= item.endTime!.toTimeString())
+          (dateFormatter(form.startDate) <= dateFormatter(all.startDate) &&
+            dateFormatter(all.startDate) <= dateFormatter(form.endDate)) ||
+          (dateFormatter(form.startDate) <= dateFormatter(all.endDate) &&
+            dateFormatter(all.endDate) <= dateFormatter(form.endDate))
         );
       });
-    });
-  });
-  // durationTime.forEach((form: any) => {
-  //   const time = temp2.filter((all: any) => {
-  //     return (
-  //       temp2.startTime.toTimeString() === form.startTime.toTimeString() &&
-  //       temp2.endTime.toTimeString() === form.endTime.toTimeString() &&
-  //       dateFormatter(temp2.startDate) === dateFormatter(form.startDate) &&
-  //       dateFormatter(temp2.endDate) === dateFormatter(form.endDate)
-  //     );
-  //   });
-  //   form.duration = time.reduce((prev: any, cur: any) => {
-  //     return prev + cur.duration;
-  //   }, 0);
-  // });
-  console.log(temp2);
 
-  currentState.value = 1;
+      form.time.forEach((item) => {
+        durationTime.push({
+          startDate: form.startDate,
+          endDate: form.endDate,
+          startTime: item.startTime,
+          endTime: item.endTime,
+          duration: 0,
+        });
+        temp2 = temp.filter((all) => {
+          return (
+            (item.startTime!.toTimeString() <= all.startTime.toTimeString() &&
+              all.startTime.toTimeString() <= item.endTime!.toTimeString()) ||
+            (item.startTime!.toTimeString() <= all.endTime.toTimeString() &&
+              all.endTime.toTimeString() <= item.endTime!.toTimeString())
+          );
+        });
+      });
+    });
+    // durationTime.forEach((form: any) => {
+    //   const time = temp2.filter((all: any) => {
+    //     return (
+    //       temp2.startTime.toTimeString() === form.startTime.toTimeString() &&
+    //       temp2.endTime.toTimeString() === form.endTime.toTimeString() &&
+    //       dateFormatter(temp2.startDate) === dateFormatter(form.startDate) &&
+    //       dateFormatter(temp2.endDate) === dateFormatter(form.endDate)
+    //     );
+    //   });
+    //   form.duration = time.reduce((prev: any, cur: any) => {
+    //     return prev + cur.duration;
+    //   }, 0);
+    // });
+
+    currentState.value = 1;
+  }
 };
 </script>
 
@@ -406,7 +431,7 @@ const nextStepUpload = () => {
             ></Button>
             <Button
               label="Next"
-              @click="currentState = 1"
+              @click="nextStepUpload()"
               :class="'primaryButton'"
             ></Button>
           </div>
@@ -422,7 +447,7 @@ const nextStepUpload = () => {
             <Button
               label="Next"
               :class="'primaryButton'"
-              @click="currentState = 2"
+              @click="validateImage()"
             ></Button>
           </div>
         </div>
@@ -464,7 +489,7 @@ const nextStepUpload = () => {
             :class="'secondaryButton'"
             @click="currentState = 1"
           ></Button>
-          <Button label="Upload" :class="'primaryButton'"></Button>
+          <Button label="Upload" :class="'primaryButton'" @click="add"></Button>
         </div>
       </div>
 
