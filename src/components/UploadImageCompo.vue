@@ -45,6 +45,7 @@ const errorSelectFile = () => {
           store.state.formPoster.image.push({ image: img, priority: 1 });
         } else if (e.files[0] && posType === 'EP') {
           formEmer.emergencyImage = await onUpload(e);
+          console.log(formEmer.emergencyImage);
         } else errorSelectFile();
       }
     "
