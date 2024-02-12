@@ -2,23 +2,16 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "DashboardView",
-  components: {},
 });
 </script>
 <script setup lang="ts">
 import { ref, reactive, watch, onMounted, computed, onUpdated } from "vue";
-import {
-  color,
-  dateFormatter,
-  day,
-  setFieldPoster,
-} from "@/utils/constant";
+import { color, dateFormatter, day, setFieldPoster } from "@/utils/constant";
 import store from "@/store";
 import { getPoster } from "@/services";
 import { Calendar, CalendarOptions } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { Poster } from "@/types";
 
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
@@ -107,7 +100,7 @@ const setEvent = () => {
     (e) => e.MACaddress === selectedDevice.value
   );
   currentDevice.forEach((e) => {
-    const numPoster = currentDevice.filter((p) => p.title === e.title).length;
+    const numPoster = e.image.length;
     const displayDuration = numPoster * e.duration;
     if (numPoster > 1) {
       e.type = "Collection";
@@ -187,20 +180,7 @@ onMounted(async () => {
     store.state.loading = true;
     const res = await getPoster();
     if (res.ok) {
-      res.poster.forEach((e: Poster) => {
-        setFieldPoster(e);
-        // e.image = res.poster.filter((p: Poster)=>{
-
-        // })
-        if (
-          res.poster.filter((p: Poster) =>
-            p.title.startsWith(e.title.substring(0, e.title.lastIndexOf(" ")))
-          ).length > 1
-        ) {
-          e.type = "Collection";
-        } else e.type = "Individual";
-      });
-      store.state.posters = res.poster;
+      store.state.posters = setFieldPoster(res.poster);
     }
     store.state.loading = false;
   }

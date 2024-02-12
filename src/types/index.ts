@@ -22,6 +22,7 @@ export interface Poster {
   id: string;
   title: string;
   image: ImageCollection[];
+  priority: number;
   description: string | null;
   createdAt: Date;
   updatedAt: Date;

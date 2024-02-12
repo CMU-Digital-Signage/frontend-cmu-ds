@@ -1,8 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import router from "@/router";
-import { an } from "@fullcalendar/core/internal-common";
-import Panel from "primevue/panel";
 export default defineComponent({
   name: "FileTableCompo",
 });
@@ -11,12 +8,14 @@ export default defineComponent({
 import { defineProps } from "vue";
 import { ref, watch, computed, onMounted } from "vue";
 import store from "@/store";
+import router from "@/router";
 import {
   createUnique,
   dateFormatter,
   initialFormDisplay,
+  setFieldPoster,
 } from "@/utils/constant";
-import { Display, Emergency, User } from "@/types";
+import { Display, Emergency, Poster, User } from "@/types";
 import { statusPoster } from "@/utils/constant";
 import {
   getPoster,
@@ -27,7 +26,6 @@ import {
 import { useToast } from "primevue/usetoast";
 
 const isOverlayPanelVisible = ref();
-
 const toggleShowStatus = (e: any) => {
   isOverlayPanelVisible.value.toggle(e);
 };
@@ -38,6 +36,9 @@ const calculateScreenHeight = () => {
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
+
+const loadNor = ref(false);
+const loadEmer = ref(false);
 
 const loading = computed({
   get: () => store.state.loading,
@@ -80,80 +81,72 @@ const toast = useToast();
 let delP = null as any;
 
 const setForm = (title: string) => {
-  if (props.types === "nor") {
-    const data = posters.value.filter((e) => e.title === title);
+  console.log(1);
 
-    // poster form
-    const form = {
-      title: title,
-      image: data[0].image,
-      description: data[0].description,
-    };
-    store.state.formPoster = form;
+  // if (props.types === "nor") {
+  //   const data = posters.value.filter((e) => e.title === title);
 
-    // display form
-    const display = [{ ...initialFormDisplay }] as Display[];
-    data.forEach((e) => {
-      display.find((disp) => {
-        if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
-          disp.startDate = e.startDate;
-          disp.endDate = e.endDate;
-          disp.duration = e.duration;
-          if (
-            e.startTime.toTimeString().includes("00:00") &&
-            e.endTime.toTimeString().includes("23:59")
-          ) {
-            disp.allDay = true;
-          } else {
-            display[0].time.pop();
-            disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-          }
-        } else {
-          if (
-            !disp.time.includes({ startTime: e.startTime, endTime: e.endTime })
-          ) {
-            disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-          }
-        }
-      });
-    });
-    console.log(display);
+  //   // poster form
+  //   const form = {
+  //     title: title,
+  //     image: data[0].image,
+  //     description: data[0].description,
+  //   } as Poster;
+  //   store.state.formPoster = form;
 
-    store.state.formDisplay = display;
-  } else {
-    const data = emerPosters.value.filter((e) => e.incidentName === title);
-    const form = {
-      title: title,
-      image: data[0].emergencyImage,
-      description: data[0].description,
-    };
-    store.state.formPoster = form;
-  }
+  //   // display form
+  //   const display = [{ ...initialFormDisplay }] as Display[];
+  //   data.forEach((e) => {
+  //     display.find((disp) => {
+  //       if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
+  //         disp.startDate = e.startDate;
+  //         disp.endDate = e.endDate;
+  //         disp.duration = e.duration;
+  //         if (
+  //           e.startTime.toTimeString().includes("00:00") &&
+  //           e.endTime.toTimeString().includes("23:59")
+  //         ) {
+  //           disp.allDay = true;
+  //         } else {
+  //           display[0].time.pop();
+  //           disp.time.push({ startTime: e.startTime, endTime: e.endTime });
+  //         }
+  //       } else {
+  //         if (
+  //           !disp.time.includes({ startTime: e.startTime, endTime: e.endTime })
+  //         ) {
+  //           disp.time.push({ startTime: e.startTime, endTime: e.endTime });
+  //         }
+  //       }
+  //     });
+  //   });
+  //   console.log(display);
+
+  //   store.state.formDisplay = display;
+  // } else {
+  //   const data = emerPosters.value.filter((e) => e.incidentName === title);
+  //   const form = {
+  //     incidentName: title,
+  //     emergencyImage: data[0].emergencyImage,
+  //     description: data[0].description,
+  //   } as Emergency;
+  //   store.state.formEmer = form;
+  // }
 };
 
 onMounted(async () => {
   loading.value = true;
   if (!posters.value.length || !emerPosters.value.length) {
     if (props.types === "nor") {
+      loadNor.value = true;
       const res = await getPoster();
       if (res.ok) {
-        res.poster.forEach((e: any) => {
-          e.createdAt = new Date(e.createdAt);
-          e.updatedAt = new Date(e.updatedAt);
-          e.startDate = new Date(e.startDate);
-          e.endDate = new Date(e.endDate);
-          e.startTime = new Date(e.startTime);
-          e.endTime = new Date(e.endTime);
-          const users = store.getters.getUserById(e.id);
-          const uploader = `${users.firstName} ${
-            users?.lastName?.charAt(0) || ""
-          }.`;
-          e.uploader = uploader;
-        });
-        store.state.posters = res.poster;
-        createUnique(res.poster);
+        store.state.posters = setFieldPoster(res.poster);
+        createUnique(posters.value);
       }
+      loadNor.value = false;
     } else {
+      loadEmer.value = true;
       const res = await getEmergency();
       if (res.ok) {
         res.emergency.forEach(
@@ -161,6 +154,7 @@ onMounted(async () => {
         );
         store.state.emerPosters = res.emergency;
       }
+      loadEmer.value = false;
     }
   } else if (!uniquePosters.value.length && props.types == "nor") {
     createUnique(posters.value);
@@ -195,14 +189,12 @@ const del = async (poster: string) => {
 </script>
 
 <template>
-  <Skeleton v-if="loading" class="bg-gray-200"></Skeleton>
+  <Skeleton
+    v-if="loading || loadEmer || loadNor"
+    class="bg-gray-200"
+  ></Skeleton>
   <DataTable
-    v-else-if="
-      !loading &&
-      (store.state.selectTabview
-        ? uniquePosters[0]?.id
-        : emerPosters[0]?.incidentName)
-    "
+    v-else-if="!loading && !loadEmer && !loadNor"
     :value="props.types === 'nor' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
     scrollable
