@@ -16,12 +16,13 @@ export default createStore({
     currentViewDate: <string>(
       `${fullMonth[date.getMonth()]} ${date.getFullYear()}`
     ),
-    macNotUse: [],
+    macNotUse: <any>[],
     devices: <Device[]>[],
     posters: <Poster[]>[],
     emerPosters: <Emergency[]>[],
     uniquePosters: <Poster[]>[],
     searchPosters: <Poster[] | null>null,
+    editPoster: { title: "", type: "" },
     filterInputPosters: {
       title: "",
       uploader: "",

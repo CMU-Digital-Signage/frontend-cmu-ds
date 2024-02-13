@@ -45,7 +45,7 @@ export async function addEmergency(data: Emergency) {
   }
 }
 
-export async function editEmergency(data: Emergency) {
+export async function editEmergency(incidentName: string, data: Emergency) {
   try {
     const res = await axios.put(
       `${process.env.VUE_APP_API_BASE_URL}/poster/emergency`,
@@ -54,9 +54,7 @@ export async function editEmergency(data: Emergency) {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
-        params: {
-          incidentName: data.incidentName,
-        },
+        params: { incidentName },
         withCredentials: true,
       }
     );

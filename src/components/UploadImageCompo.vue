@@ -6,7 +6,15 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, ref, toRefs, defineProps, onMounted, onUpdated } from "vue";
+import {
+  computed,
+  watch,
+  ref,
+  toRefs,
+  defineProps,
+  onMounted,
+  onUpdated,
+} from "vue";
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
@@ -15,11 +23,17 @@ const props = defineProps<{ posType: string }>();
 const { posType } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
+const img = ref<File[]>();
 const currentDeg = ref(0);
 const toast = useToast();
 
-onMounted(() => {
-  store.state.formPoster.image = [];
+onUpdated(() => {
+  img.value =
+    posType.value === "NP"
+      ? formPoster.value.image
+      : formEmer.value.emergencyImage;
+
+  console.log(img);
 });
 
 const errorSelectFile = () => {
@@ -34,6 +48,7 @@ const errorSelectFile = () => {
 
 <template>
   <FileUpload
+    v-model="img"
     class="mt-12"
     accept="image/*"
     :show-upload-button="false"
@@ -45,7 +60,6 @@ const errorSelectFile = () => {
           store.state.formPoster.image.push({ image: img, priority: 1 });
         } else if (e.files[0] && posType === 'EP') {
           formEmer.emergencyImage = await onUpload(e);
-          console.log(formEmer.emergencyImage);
         } else errorSelectFile();
       }
     "
@@ -131,7 +145,7 @@ const errorSelectFile = () => {
           }"
         >
           <img
-            :alt="files[0].name"
+            :alt="files[0]?.name"
             :src="formPoster.image[0]?.image || formEmer.emergencyImage"
             class="max-w-full max-h-full m-auto rotate-90"
             :style="{

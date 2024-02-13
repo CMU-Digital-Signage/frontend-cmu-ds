@@ -1,8 +1,12 @@
 <template>
   <div class="py-32 flex flex-col gap-10">
-    <h1 class="text-3xl">{{ message }}</h1>
+    <h1 class="text-3xl font-bold whitespace-break-spaces">{{ message }}</h1>
     <div class="justify-center flex flex-row gap-10 text-xl">
-      <button class="bg-[#ED3838]" @click="$router.push('/login')">Back</button>
+      <Button
+        class="bg-[#ED3838] border-0 text-xl rounded-xl"
+        @click="$router.push('/login')"
+        >Back</Button
+      >
     </div>
   </div>
 </template>
@@ -37,7 +41,7 @@ export default {
       } catch (err: any) {
         if (!err.response) {
           message.value =
-            "Cannot connect to API Server. Please try again later.";
+            `Cannot connect to API Server.\nPlease try again later.`;
         } else if (!err.response.data.ok) {
           message.value = err.response.data.message;
         } else {
@@ -47,7 +51,10 @@ export default {
     }
 
     const fetchData = async () => {
-      if (!code) return;
+      if (!code) {
+        message.value = queryParameters.get("error") || "";
+        return;
+      }
 
       const res = await signIn(code);
       if (res) {

@@ -56,7 +56,7 @@ import { getUserInfo } from "@/services";
 export default defineComponent({
   methods: {
     redirectToOAuth() {
-      window.location = process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL;
+      window.location.href = process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL!;
     },
   },
   async beforeRouteEnter(to, from, next) {

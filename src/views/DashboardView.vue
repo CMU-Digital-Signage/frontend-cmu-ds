@@ -5,13 +5,23 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted, computed, onUpdated } from "vue";
+import {
+  ref,
+  reactive,
+  watch,
+  onMounted,
+  onUnmounted,
+  computed,
+  onUpdated,
+} from "vue";
 import { color, dateFormatter, day, setFieldPoster } from "@/utils/constant";
 import store from "@/store";
 import { getPoster } from "@/services";
 import { Calendar, CalendarOptions } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import PopupUpload from "@/components/PopupUploadCompo.vue";
 
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
@@ -22,20 +32,12 @@ const posters = computed(() => store.state.posters);
 const postersView = ref<any[]>([]);
 const calOptions = reactive<CalendarOptions>({
   timeZone: "Asia/Bangkok",
-  plugins: [dayGridPlugin, timeGridPlugin],
+  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: "dayGridMonth",
   dayMaxEventRows: true,
-  views: {
-    timeGrid: {
-      dayMaxEventRows: 6,
-    },
-    dayGrid: {
-      dayMaxEventRows: 4,
-    },
-  },
   fixedWeekCount: false,
   headerToolbar: false,
-  height: innerHeight * 0.9,
+  contentHeight: innerHeight,
   windowResize: function (view) {
     calendar.value?.updateSize();
   },
@@ -91,6 +93,16 @@ const calOptions = reactive<CalendarOptions>({
       uploader: info.event._def.extendedProps.uploader,
     };
     showInfo.value = true;
+  },
+  select: function (info) {
+    alert("selected " + info.startStr + " to " + info.endStr);
+  },
+  dateClick: function (info) {
+    calendar.value?.gotoDate(info.date);
+    info.view.calendar.changeView("timeGridDay");
+    store.state.currentViewDate = info.view.title;
+    // document
+    //   .getElementById("monthView")!.
   },
 });
 
@@ -227,18 +239,21 @@ onMounted(async () => {
   }
 });
 
-onUpdated(() => {
-  calendar.value?.updateSize();
-});
-
 watch([selectedDevice, posters], () => {
   setEvent();
+});
+
+onUnmounted(() => {
+  calendar.value?.destroy();
 });
 </script>
 
 <template>
-  <Skeleton v-if="!calendar" class="bg-gray-200 flex-1"></Skeleton>
-  <div ref="fullCalendar" class="m-3"></div>
+  <PopupUpload />
+  <div class="rectangle flex flex-col">
+    <Skeleton v-if="!calendar" class="bg-gray-200 rounded-xl flex-1"></Skeleton>
+    <div ref="fullCalendar"></div>
+  </div>
   <Dialog
     v-model:visible="showInfo"
     modal
@@ -318,6 +333,14 @@ watch([selectedDevice, posters], () => {
   </Dialog>
 </template>
 
+<style scoped>
+.rectangle {
+  width: 100%;
+  height: 100%;
+  padding: 0.75rem;
+  overflow: hidden;
+}
+</style>
 <style>
 .posterDetail {
   display: inline-flex;
@@ -329,7 +352,7 @@ watch([selectedDevice, posters], () => {
   overflow: hidden;
 }
 .fc .fc-popover {
-  z-index: 50;
+  z-index: 10;
 }
 
 .fc-col-header,
@@ -350,11 +373,6 @@ watch([selectedDevice, posters], () => {
 .fc-day-today {
   background-color: #f3f3f3 !important;
 }
-
-/* Override the background color for today */
-/* .fc-day.fc-day-today {
-  background-color: transparent !important;
-} */
 
 .fc-day-today .fc-daygrid-day-number {
   background-color: #039be5 !important;

@@ -81,7 +81,7 @@ const deleteSchedule = (index: number) => {
         :multiple="false"
         @select="
           async (e) => {
-            if (e.files[0]) formPoster.image = await onUpload(e);
+            if (e.files[0]) formPoster.image[0].image = await onUpload(e);
             else errorSelectFile();
           }
         "
@@ -93,7 +93,7 @@ const deleteSchedule = (index: number) => {
               <Button
                 @click="
                   clearCallback();
-                  formPoster.image = null;
+                  formPoster.image[0].image = null;
                   currentDeg = 0;
                   chooseCallback();
                 "
@@ -112,7 +112,7 @@ const deleteSchedule = (index: number) => {
                       currentDeg,
                       -90
                     );
-                    formPoster.image = imageDataUrl;
+                    formPoster.image[0].image = imageDataUrl;
                     currentDeg = newDeg;
                   }
                 "
@@ -130,7 +130,7 @@ const deleteSchedule = (index: number) => {
                       currentDeg,
                       90
                     );
-                    formPoster.image = imageDataUrl;
+                    formPoster.image[0].image = imageDataUrl;
                     currentDeg = newDeg;
                   }
                 "
@@ -158,7 +158,7 @@ const deleteSchedule = (index: number) => {
             >
               <img
                 :alt="files[0].name"
-                :src="formPoster.image"
+                :src="formPoster.image[0].image"
                 class="max-w-full max-h-full m-auto rotate-90"
                 :style="{
                   maxWidth: `${3840 / 20}px`,

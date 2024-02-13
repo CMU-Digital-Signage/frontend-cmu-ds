@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Device } from "@/types";
 export default defineComponent({
   name: "DeviceCompo",
 });
@@ -30,9 +31,11 @@ const errorSelectFile = () => {
   });
 };
 
-const setForm = (i: number) => {
-  Object.assign(form, device.value[i]);
-  oldFile.value = new File([form.location], "locationImage");
+const setForm = (data: Device) => {
+  Object.assign(form, data);
+  if (form.location) {
+    oldFile.value = new File([form.location], "locationImage");
+  } else notChoose.value = false;
 };
 
 const resetForm = () => {
@@ -45,12 +48,14 @@ const toggleOverlay = (e: any, panel: any) => {
 };
 
 const edit = async () => {
-  const check = form.deviceName?.replace(" ", "").length;
-  if (!check) {
+  const check =
+    !form.deviceName?.replace(" ", "").length ||
+    !form.room?.replace(" ", "").length;
+  if (check) {
     toast.add({
       severity: "error",
-      summary: "Device Name Invalid",
-      detail: "Device Name Invalid",
+      summary: "Invalid Input",
+      detail: "Device Name or Room Invalid",
       life: 3000,
     });
     return;
@@ -61,9 +66,6 @@ const edit = async () => {
 
   const res = await editDevice(form);
   if (res.ok) {
-    store.state.devices = device.value?.map((e) =>
-      e.MACaddress === form.MACaddress ? { ...e, ...form } : e
-    );
     showPopup.value = false;
     toast.add({
       severity: "success",
@@ -199,7 +201,7 @@ const calculateScreenHeight = () => {
               severity="warning"
               @click="
                 showPopup = true;
-                setForm(rowData.index);
+                setForm(rowData.data);
               "
             />
             <Button

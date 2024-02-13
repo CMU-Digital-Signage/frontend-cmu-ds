@@ -92,12 +92,14 @@ const search = async () => {
 };
 
 const add = async () => {
-  const check = form.deviceName?.replace(" ", "").length || form.room?.length;
-  if (!form.MACaddress || !check) {
+  const check =
+    !form.deviceName?.replace(" ", "").length ||
+    !form.room?.replace(" ", "").length;
+  if (!form.MACaddress || check) {
     toast.add({
       severity: "error",
       summary: "Invalid",
-      detail: "MAC Address or Device Name Invalid",
+      detail: "MAC Address or Device Name or Room Invalid",
       life: 3000,
     });
     return;
@@ -108,11 +110,7 @@ const add = async () => {
 
   const res = await addDevice(form);
   if (res.ok) {
-    store.state.devices.push({ ...form });
     showPopup.value = false;
-    store.state.macNotUse = macNotUse.value.filter(
-      (e) => e !== form.MACaddress
-    );
     toast.add({
       severity: "success",
       summary: "Success",
@@ -142,7 +140,6 @@ const addEmailAdmin = async () => {
   }
   const newAdmin = await addAdmin(email.value);
   if (newAdmin.ok) {
-    store.state.allUser.push(newAdmin.admin);
     email.value = "";
     showPopup.value = false;
     toast.add({
@@ -165,10 +162,10 @@ const validateEmail = () => {
     class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
   >
     <!-- "Management" -->
-    <ul v-if="$route.path === '/admin'" class="justify-between">
+    <ul v-if="$route.path === '/admin'">
       <p>Management</p>
       <div
-        class="ml-auto cursor-pointer"
+        class="ml-auto cursor-pointer justify-between"
         v-if="store.state.selectTabview === 0"
       >
         <Button
@@ -219,7 +216,7 @@ const validateEmail = () => {
         </Dialog>
       </div>
       <div
-        class="ml-auto cursor-pointer"
+        class="ml-auto cursor-pointer justify-between"
         v-if="store.state.selectTabview === 1"
       >
         <Button
@@ -413,7 +410,7 @@ const validateEmail = () => {
         ></InputText>
       </li>
       <li v-if="store.state.selectTabview !== 1">
-        <label v-if="user?.isAdmin" >Uploader</label>
+        <label v-if="user?.isAdmin">Uploader</label>
         <InputText
           id="uploader"
           v-model="filterInput.uploader"
@@ -422,8 +419,11 @@ const validateEmail = () => {
           v-if="user?.isAdmin"
         ></InputText>
       </li>
+
       <li v-if="store.state.selectTabview !== 1">
-        <label class="text-[14px] ml-[-17px] mr-1 lg:text-[16px]">Upload Date</label>
+        <label class="text-[14px] ml-[-17px] mr-1 lg:text-[16px]"
+          >Upload Date
+        </label>
         <Calendar
           v-model="filterInput.uploadDate"
           showButtonBar
@@ -461,14 +461,14 @@ const validateEmail = () => {
     <!-- "calendar dashboard"-->
     <ul
       v-if="$route.path === '/' || $route.path === '/searchfile'"
-      class="justify-between w-full"
+      class="justify-between flex-wrap gap-2 lg:gap-5 text-[14px] lg:text-[16px]"
     >
       <div
         class="text-lg font-normal text-[13px] flex items-center"
         v-if="!clickSearch"
       >
         <div class="flex gap-2 items-center text-[#777]">
-          <label class="font-semibold w-44 text-xl text-black text-left">
+          <label class="font-semibold w-40 text-black text-left">
             {{ currentViewDate }}
           </label>
           <button
@@ -548,7 +548,7 @@ const validateEmail = () => {
           :disabled="!searchP"
         ></button>
       </form>
-      <div v-if="$route.path === '/'" class="flex gap-3 items-center">
+      <div v-if="$route.path === '/'" class="inline-flex gap-3 items-center">
         <button @click="goToSearch">
           <i
             class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2"

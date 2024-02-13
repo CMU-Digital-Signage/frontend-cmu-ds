@@ -9,7 +9,9 @@ import { ref, computed, reactive } from "vue";
 import { deleteAdmin } from "@/services";
 import { User } from "@/types";
 import store from "@/store";
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const user = ref<User>(store.state.userInfo);
 const admin = computed(() =>
   store.state.allUser.filter(
@@ -21,7 +23,6 @@ const admin = computed(() =>
   )
 );
 const search = ref("");
-
 const isCurrentUser = (admin: User) => {
   return admin.id === user.value.id;
 };
@@ -29,7 +30,12 @@ const isCurrentUser = (admin: User) => {
 const del = async (id: number) => {
   const res = await deleteAdmin(id);
   if (res.ok) {
-    store.commit("setAdmin", { id, isAdmin: false });
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Delete admin successfully.",
+      life: 3000,
+    });
   }
 };
 
@@ -112,11 +118,4 @@ const calculateScreenHeight = () => {
   flex: 1 1;
   padding-bottom: 2rem;
 }
-
-
-
-
-
-
-
 </style>
