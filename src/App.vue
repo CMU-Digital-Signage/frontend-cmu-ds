@@ -31,8 +31,10 @@ const user = computed(() => store.state.userInfo);
     </div>
   </div>
   <div v-else>
-    <NavBar v-if="$route.path === '/emergency'" class="bg-white" />
-    <router-view />
+    <div class="w-screen flex flex-col h-full bg-[#fafafa]">
+      <NavBar v-if="$route.path === '/emergency'" class="bg-white" />
+      <router-view />
+    </div>
   </div>
 </template>
 
