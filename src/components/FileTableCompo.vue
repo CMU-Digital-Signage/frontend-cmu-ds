@@ -14,6 +14,7 @@ import {
   dateFormatter,
   initialFormDisplay,
   setFieldPoster,
+  statusEmer,
 } from "@/utils/constant";
 import { Display, Emergency, Poster, User } from "@/types";
 import { statusPoster } from "@/utils/constant";
@@ -37,7 +38,7 @@ const calculateScreenHeight = () => {
   return `${scrollHeight}px`;
 };
 
-const loadNor = ref(false);
+const loadNP = ref(false);
 const loadEmer = ref(false);
 
 const loading = computed({
@@ -80,71 +81,68 @@ const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
 let delP = null as any;
 
-const setForm = (title: string) => {
-  console.log(1);
+const setForm = (data: any) => {
+  if (props.types === "NP") {
+    store.state.editPoster.title = data.title;
+    // poster form
+    const form = {
+      title: data.title,
+      image: data.image,
+      description: data.description,
+    } as Poster;
+    store.state.formPoster = { ...form };
 
-  // if (props.types === "nor") {
-  //   const data = posters.value.filter((e) => e.title === title);
+    // display form
+    // const display = [{ ...initialFormDisplay }] as Display[];
+    // data.forEach((e: any) => {
+    //   display.find((disp) => {
+    //     if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
+    //       disp.startDate = e.startDate;
+    //       disp.endDate = e.endDate;
+    //       disp.duration = e.duration;
+    //       if (
+    //         e.startTime.toTimeString().includes("00:00") &&
+    //         e.endTime.toTimeString().includes("23:59")
+    //       ) {
+    //         disp.allDay = true;
+    //       } else {
+    //         display[0].time.pop();
+    //         disp.time.push({ startTime: e.startTime, endTime: e.endTime });
+    //       }
+    //     } else {
+    //       if (
+    //         !disp.time.includes({ startTime: e.startTime, endTime: e.endTime })
+    //       ) {
+    //         disp.time.push({ startTime: e.startTime, endTime: e.endTime });
+    //       }
+    //     }
+    //   });
+    // });
+    // console.log(display);
 
-  //   // poster form
-  //   const form = {
-  //     title: title,
-  //     image: data[0].image,
-  //     description: data[0].description,
-  //   } as Poster;
-  //   store.state.formPoster = form;
-
-  //   // display form
-  //   const display = [{ ...initialFormDisplay }] as Display[];
-  //   data.forEach((e) => {
-  //     display.find((disp) => {
-  //       if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
-  //         disp.startDate = e.startDate;
-  //         disp.endDate = e.endDate;
-  //         disp.duration = e.duration;
-  //         if (
-  //           e.startTime.toTimeString().includes("00:00") &&
-  //           e.endTime.toTimeString().includes("23:59")
-  //         ) {
-  //           disp.allDay = true;
-  //         } else {
-  //           display[0].time.pop();
-  //           disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-  //         }
-  //       } else {
-  //         if (
-  //           !disp.time.includes({ startTime: e.startTime, endTime: e.endTime })
-  //         ) {
-  //           disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-  //         }
-  //       }
-  //     });
-  //   });
-  //   console.log(display);
-
-  //   store.state.formDisplay = display;
-  // } else {
-  //   const data = emerPosters.value.filter((e) => e.incidentName === title);
-  //   const form = {
-  //     incidentName: title,
-  //     emergencyImage: data[0].emergencyImage,
-  //     description: data[0].description,
-  //   } as Emergency;
-  //   store.state.formEmer = form;
-  // }
+    // store.state.formDisplay = display;
+  } else {
+    store.state.editPoster.title = data.incidentName;
+    store.state.formEmer = {
+      ...data,
+      status: data.status === "Active" ? true : false,
+    };
+  }
+  store.state.editPoster.type = props.types || "";
+  store.state.showUpload = true;
 };
 
 onMounted(async () => {
   loading.value = true;
   if (!posters.value.length || !emerPosters.value.length) {
-    if (props.types === "nor") {
-      loadNor.value = true;
+    if (props.types === "NP") {
+      loadNP.value = true;
       const res = await getPoster();
       if (res.ok) {
         store.state.posters = setFieldPoster(res.poster);
         createUnique(posters.value);
       }
-      loadNor.value = false;
+      loadNP.value = false;
     } else {
       loadEmer.value = true;
       const res = await getEmergency();
@@ -156,7 +154,7 @@ onMounted(async () => {
       }
       loadEmer.value = false;
     }
-  } else if (!uniquePosters.value.length && props.types == "nor") {
+  } else if (!uniquePosters.value.length && props.types == "NP") {
     createUnique(posters.value);
   }
   loading.value = false;
@@ -165,47 +163,43 @@ onMounted(async () => {
 const del = async (poster: string) => {
   delP = poster;
   store.state.loading = true;
-  if (props.types == "nor") {
+  if (props.types == "NP") {
     const res = await deletePoster(delP);
-    store.state.posters = posters.value?.filter((e) => e.posterId !== delP);
-    store.state.uniquePosters = uniquePosters.value?.filter(
-      (e) => e.posterId !== delP
-    );
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Delete Poster successful.",
+      life: 3000,
+    });
   } else {
     const res = await deleteEmergency(delP);
-    store.state.emerPosters = emerPosters.value?.filter(
-      (e) => e.incidentName !== delP
-    );
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Delete Emergency successful.",
+      life: 3000,
+    });
   }
   store.state.loading = false;
   delP = null;
-  toast.add({
-    severity: "success",
-    summary: "Success",
-    detail: "Delete poster successful.",
-    life: 3000,
-  });
 };
 </script>
 
 <template>
-  <Skeleton
-    v-if="loading || loadEmer || loadNor"
-    class="bg-gray-200"
-  ></Skeleton>
+  <Skeleton v-if="loading || loadEmer || loadNP" class="bg-gray-200 flex"></Skeleton>
   <DataTable
-    v-else-if="!loading && !loadEmer && !loadNor"
-    :value="props.types === 'nor' ? uniquePosters : emerPosters"
+    v-else-if="!loading && !loadEmer && !loadNP"
+    :value="props.types === 'NP' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
     scrollable
     :scrollHeight="calculateScreenHeight()"
     class="mt-2 text-[14px] lg:text-[16px]"
   >
     <Column
-      :field="(e) => (props.types === 'emer' ? e.incidentName : e.title)"
+      :field="(e) => (props.types === 'NP' ? e.title : e.incidentName)"
       header="Title"
       sortable
-      :class="`${props.types === 'nor' ? 'w-1/5' : 'w-1/3'}`"
+      :class="`${props.types === 'NP' ? 'w-1/5' : 'w-1/3'}`"
     >
       <template #sorticon="slotProps">
         <i
@@ -219,7 +213,7 @@ const del = async (poster: string) => {
       </template>
     </Column>
     <Column
-      v-if="user?.isAdmin && props.types === 'nor'"
+      v-if="user?.isAdmin && props.types === 'NP'"
       field="uploader"
       header="Uploader"
       sortable
@@ -237,7 +231,7 @@ const del = async (poster: string) => {
       </template>
     </Column>
     <Column
-      v-if="props.types === 'nor'"
+      v-if="props.types === 'NP'"
       :field="(e) => dateFormatter(e.createdAt)"
       header="Upload Date"
       sortable
@@ -256,11 +250,12 @@ const del = async (poster: string) => {
     </Column>
     <Column
       field="status"
-      :class="`${props.types === 'nor' ? 'w-1/6' : 'w-1/3'}`"
+      :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"
     >
       <template #header>
         <div>Status</div>
         <i
+          v-if="store.state.selectTabview === 0"
           class="pi pi-info-circle cursor-pointer ml-1"
           @mouseover="(e) => toggleShowStatus(e)"
           @mouseleave="(e) => toggleShowStatus(e)"
@@ -299,7 +294,11 @@ const del = async (poster: string) => {
           :value="rowData.data.status"
           rounded
           :severity="
-            statusPoster.find((e) => rowData.data.status === e.status)?.severity
+            props.types === 'NP'
+              ? statusPoster.find((e) => rowData.data.status === e.status)
+                  ?.severity
+              : statusEmer.find((e) => rowData.data.status === e.status)
+                  ?.severity
           "
         />
       </template>
@@ -308,25 +307,24 @@ const del = async (poster: string) => {
     <Column
       field="management"
       header="Action"
-      :class="`${props.types === 'nor' ? 'w-1/6' : 'w-1/3'}`"
+      :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"
     >
       <template #body="rowData">
         <Button
           icon="pi pi-pencil"
           rounded
-          class="w-9 h-9"
+          class="w-8 h-8 md:w-9 md:h-9"
           severity="warning"
           @click="
             () => {
-              setForm(rowData.data.title || rowData.data.incidentName);
-              router.push('/editfile');
+              setForm(rowData.data);
             }
           "
         />
         <Button
           icon="pi pi-trash"
           rounded
-          class="w-9 h-9 ml-3"
+          class="w-8 h-8 md:w-9 md:h-9 ml-[5px] md:ml-3"
           severity="danger"
           :loading="
             loading &&

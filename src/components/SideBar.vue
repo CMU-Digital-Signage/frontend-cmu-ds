@@ -5,7 +5,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watchEffect} from "vue";
 import store from "@/store";
 import { signOut } from "@/services";
 
@@ -20,6 +20,12 @@ const openSidebar = computed(() => store.state.openSidebar);
 const toggleSidebar = () => {
   store.state.openSidebar = !openSidebar.value;
 };
+
+watchEffect(() => {
+  if (window.innerWidth <= 600) {
+    store.state.openSidebar = false;
+  }
+});
 </script>
 
 <template>
@@ -33,14 +39,14 @@ const toggleSidebar = () => {
         :class="{ 'p-4': !openSidebar }"
       >
         <div>
-          <div class="flex items-start gap-2 fixed">
+          <div class="flex items-center gap-2 fixed">
             <img
-              class="w-6 items-center"
+              class="w-6"
               alt="cmulogo"
               src="../assets/images/cpe-mini-logo.png"
             />
             <p
-              :class="{ ' font-bold text-[20px] -mt-1 ': openSidebar }"
+              :class="{ 'font-bold text-[18px] lg:text-[20px]': openSidebar }"
               v-show="openSidebar"
             >
               CPE Signage
@@ -56,6 +62,7 @@ const toggleSidebar = () => {
           :style="{
             transform: openSidebar ? '' : 'translateX(8px)',
             marginLeft: openSidebar ? '' : '-8px',
+            marginTop: openSidebar ? '2px' : '-2px',
           }"
           v-if="!$route.meta.crossIconSidebar"
         >

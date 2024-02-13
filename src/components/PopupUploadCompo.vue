@@ -6,18 +6,18 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import { computed, ref, reactive, watch, onMounted } from "vue";
 import store from "@/store";
 import router from "@/router";
-import { addEmergency, addPoster } from "@/services";
+import { addEmergency, addPoster, editEmergency } from "@/services";
 import { Poster } from "@/types";
-import { useToast } from "primevue/usetoast";
-import { computed, ref, reactive, watch } from "vue";
 import {
   dateFormatter,
   createUnique,
   setFieldPoster,
   newInitialFormDisplay,
 } from "@/utils/constant";
+import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
 
@@ -40,6 +40,7 @@ const selectedPosterType = ref({ header: "", code: "NP" });
 const currentState = ref(0);
 const scheduleTabs = reactive([{ header: "Schedule 1", index: 0 }]);
 const posters = computed(() => store.state.posters);
+const editPoster = computed(() => store.state.editPoster);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
@@ -48,16 +49,25 @@ const selectSchedule = ref(scheduleTabs[0]);
 const showSecondDialog = ref(false);
 const loading = ref(false);
 
-watch([show, showSecondDialog], () => {
-  if (show.value && !user.value.isAdmin) {
+watch([show, showSecondDialog, editPoster], () => {
+  if (editPoster.value.type && show.value) {
+    posterType.value.map((e) => {
+      if (e.code === editPoster.value.type) {
+        selectedPosterType.value = { ...e };
+      }
+    });
+    show.value = false;
+    showSecondDialog.value = true;
+  } else if (show.value && !user.value.isAdmin) {
     selectedPosterType.value = posterType.value[0];
     show.value = false;
     showSecondDialog.value = true;
   } else if (!show.value && !showSecondDialog.value) {
-    selectedPosterType.value = { header: "", code: "" };
-    currentState.value = 0;
+    if (editPoster.value.type.length)
+      store.state.editPoster = { title: "", type: "" };
     store.commit("resetForm");
   }
+  currentState.value = 0;
 });
 
 const validateForm = () => {
@@ -66,13 +76,6 @@ const validateForm = () => {
     (selectedPosterType.value.code === "EP" && !formEmer.value.incidentName)
   ) {
     return "Title Invalid";
-  }
-
-  if (
-    (selectedPosterType.value.code === "NP" && !formPoster.value.image) ||
-    (selectedPosterType.value.code === "EP" && !formEmer.value.emergencyImage)
-  ) {
-    return "Not Choose File Image.";
   }
 
   const invalidSchedule = formDisplay.value.find(
@@ -85,6 +88,15 @@ const validateForm = () => {
 
   if (invalidSchedule) {
     return "Schedule Invalid.";
+  }
+};
+
+const validateImage = () => {
+  if (
+    (selectedPosterType.value.code === "NP" && !formPoster.value.image) ||
+    (selectedPosterType.value.code === "EP" && !formEmer.value.emergencyImage)
+  ) {
+    return "Not Choose File Image.";
   }
 };
 
@@ -155,10 +167,78 @@ const handleAddPoster = async () => {
   loading.value = false;
 };
 
-const add = async () => {
+const handleEditEmergency = async () => {
+  const res = await editEmergency(editPoster.value.title, formEmer.value);
+  if (res.ok) {
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Emergency has been add successfully.",
+      life: 3000,
+    });
+    showSecondDialog.value = false;
+    store.commit("resetForm");
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
+  }
+  loading.value = false;
+};
+
+const handleEditPoster = async () => {
+  formDisplay.value.forEach((e, i) => {
+    if (e.allDay) store.commit("setAllTime", i);
+    if (e.allDevice) store.commit("setAllDevice", i);
+  });
+  const res = await addPoster(formPoster.value, formDisplay.value);
+  if (res.ok) {
+    let newPoster = [] as Poster[];
+    formDisplay.value.forEach((e) => {
+      e.time.forEach((time) => {
+        newPoster;
+        e.MACaddress.forEach(async (mac) => {
+          newPoster.push({
+            ...formPoster.value,
+            MACaddress: mac,
+            startDate: e.startDate!,
+            endDate: e.endDate!,
+            startTime: time.startTime!,
+            endTime: time.endTime!,
+          });
+        });
+      });
+    });
+    store.state.posters.push(...newPoster);
+    createUnique(posters.value);
+    showSecondDialog.value = false;
+    store.commit("resetForm");
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Poster has been add successfully.",
+      life: 3000,
+    });
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
+  }
+  loading.value = false;
+};
+
+const uploadPoster = async () => {
   loading.value = true;
   if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
-    handleAddEmergency();
+    editPoster.value.title.length
+      ? handleEditEmergency()
+      : handleAddEmergency();
   } else if (
     formPoster.value.title &&
     formPoster.value.image &&
@@ -170,7 +250,7 @@ const add = async () => {
         !e.endDate
     )
   ) {
-    handleAddPoster();
+    editPoster.value.title.length ? handleEditPoster() : handleAddPoster();
   } else {
     toast.add({
       severity: "error",
@@ -188,15 +268,9 @@ const isNextButtonDisabled = computed(() => {
 const showDifferentDialog = () => {
   store.state.showUpload = false;
   if (selectedPosterType.value.code === "NP") {
-    selectedPosterType.value = {
-      header: "Normal Poster",
-      code: "NP",
-    };
+    selectedPosterType.value = posterType.value[0];
   } else if (selectedPosterType.value.code === "EP") {
-    selectedPosterType.value = {
-      header: "Emergency Poster",
-      code: "EP",
-    };
+    selectedPosterType.value = posterType.value[1];
   }
   showSecondDialog.value = true;
 };
@@ -365,18 +439,12 @@ const nextStepUpload = () => {
 
     <Dialog
       v-model:visible="showSecondDialog"
-      header="Upload File"
+      :header="editPoster ? 'Edit File' : 'Upload File'"
       modal
       close-on-escape
       :draggable="false"
       class="w-[600px]"
     >
-      <!-- <template v-if="user?.isAdmin" #header>
-        <span
-          style="font-weight: bold; color: rgb(94, 94, 94); font-size: 22px"
-          >{{ selectedPosterType.header }}</span
-        >
-      </template> -->
       <div v-if="selectedPosterType.code === 'NP'">
         <Steps class="mb-5" :model="uploadState" :active-step="currentState" />
         <div v-if="currentState === 0">
@@ -488,7 +556,11 @@ const nextStepUpload = () => {
             :class="'secondaryButton'"
             @click="currentState = 1"
           ></Button>
-          <Button label="Upload" :class="'primaryButton'" @click="add"></Button>
+          <Button
+            label="Upload"
+            :class="'primaryButton'"
+            @click="uploadPoster"
+          ></Button>
         </div>
       </div>
 
@@ -530,7 +602,7 @@ const nextStepUpload = () => {
               label="Upload"
               :class="'primaryButtonEmer'"
               :loading="loading"
-              @click="add"
+              @click="uploadPoster"
             ></Button>
           </div>
         </div>

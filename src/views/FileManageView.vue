@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FileTable from "@/components/FileTableCompo.vue";
+import PopupUpload from "@/components/PopupUploadCompo.vue";
 import { computed, onUnmounted, watch } from "vue";
 import store from "../store";
 
@@ -18,13 +19,14 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <PopupUpload />
   <TabView
     v-if="store.state.userInfo.isAdmin"
     v-model:activeIndex="click"
     class="rectangle flex flex-col"
   >
     <TabPanel header="Normal File">
-      <FileTable :types="'nor'" />
+      <FileTable :types="'NP'" />
     </TabPanel>
     <TabPanel
       v-if="store.state.userInfo.isAdmin"
@@ -35,10 +37,10 @@ onUnmounted(() => {
         },
       }"
     >
-      <FileTable :types="'emer'" />
+      <FileTable :types="'EP'" />
     </TabPanel>
   </TabView>
-  <FileTable v-else :types="'nor'" class="rectangle flex flex-col" />
+  <FileTable v-else :types="'NP'" class="rectangle flex flex-col" />
 </template>
 
 <style scoped>

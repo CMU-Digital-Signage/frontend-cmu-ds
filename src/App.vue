@@ -1,11 +1,19 @@
 <script setup lang="ts">
 import store from "./store";
-import { computed } from "vue";
+import { computed, onBeforeUnmount, onMounted } from "vue";
 import SideBar from "./components/SideBar.vue";
 import NavBar from "./components/NavBar.vue";
 import NavbarBelow from "./components/NavbarBelow.vue";
-import PopupUpload from "@/components/PopupUploadCompo.vue";
 import router from "./router";
+import setupSocket, { socket } from "./utils/socket";
+
+onMounted(() => {
+  setupSocket();
+});
+
+onBeforeUnmount(() => {
+  socket.disconnect();
+});
 
 const user = computed(() => store.state.userInfo);
 </script>
@@ -23,10 +31,9 @@ const user = computed(() => store.state.userInfo);
     </div>
   </div>
   <div v-else>
-    <NavBar v-if="$route.path === '/emergency' " class="bg-white"/>
+    <NavBar v-if="$route.path === '/emergency'" class="bg-white" />
     <router-view />
   </div>
-  <PopupUpload />
 </template>
 
 <style lang="scss">
@@ -87,51 +94,42 @@ Button:focus {
   border-radius: 10px;
 }
 
-// running
-.p-tag-success {
-  background-color: #caf1d8;
-  color: #188a42;
+.p-tag {
   padding-right: 10px;
   padding-left: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
   border-radius: 15px;
   font-size: 14px;
+}
+
+// running
+.p-tag-success {
+  background-color: #caf1d8;
+  color: #188a42;
 }
 
 // expired
 .p-tag-danger {
   background-color: #ffd0ce;
   color: #b32b24;
-  padding-right: 10px;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 15px;
-  font-size: 14px;
 }
 
 // upcoming
 .p-tag-warning {
   background-color: #ffddc7;
   color: #ae510f;
-  padding-right: 10px;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 15px;
-  font-size: 14px;
 }
 
 // pending
 .p-tag-info {
   background-color: #d0e1fd;
   color: #4270ba;
-  padding-right: 10px;
-  padding-left: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  border-radius: 15px;
-  font-size: 14px;
+}
+
+// inactive
+.p-tag-secondary {
+  background-color: #f1f5f9;
+  color: #475569;
 }
 </style>
