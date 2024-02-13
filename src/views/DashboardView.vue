@@ -101,8 +101,7 @@ const calOptions = reactive<CalendarOptions>({
     calendar.value?.gotoDate(info.date);
     info.view.calendar.changeView("timeGridDay");
     store.state.currentViewDate = info.view.title;
-    // document
-    //   .getElementById("monthView")!.
+    store.state.viewType = false;
   },
 });
 
@@ -228,6 +227,7 @@ onMounted(async () => {
     document.getElementById("dayView")!.addEventListener("click", function () {
       calendar.value?.changeView("timeGridDay");
       store.state.currentViewDate = calendar.value?.view.title || "";
+      store.state.viewType = false;
     });
 
     document
@@ -235,6 +235,7 @@ onMounted(async () => {
       .addEventListener("click", function () {
         calendar.value?.changeView("dayGridMonth");
         store.state.currentViewDate = calendar.value?.view.title || "";
+        store.state.viewType = true;
       });
   }
 });
@@ -374,16 +375,23 @@ onUnmounted(() => {
   background-color: #f3f3f3 !important;
 }
 
-.fc-day-today .fc-daygrid-day-number {
-  background-color: #039be5 !important;
-  margin-right: 2px;
-  margin-top: 2px;
+.fc .fc-daygrid-day-number {
+  margin: 2px;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
-  color: #fff !important;
+  border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+  background-color: #039be5 !important;
+  color: #fff !important;
+}
+
+.fc .fc-daygrid-day-number:hover {
+  background-color: #d1d5db;
+  cursor: pointer;
 }
 </style>

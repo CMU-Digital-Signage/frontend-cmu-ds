@@ -9,6 +9,7 @@ export default createStore({
     openSidebar: true,
     loading: false,
     showUpload: false,
+    viewType: true,
     userInfo: <User>{},
     allUser: <User[]>[],
     selectTabview: <number>0,
