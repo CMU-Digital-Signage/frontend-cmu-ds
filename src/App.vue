@@ -20,7 +20,7 @@ const user = computed(() => store.state.userInfo);
 
 <template>
   <div
-    class="flex flex-row w-screen h-screen font-sf-pro"
+    class="flex flex-row w-screen h-screen font-sf-pro fixed"
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-white" />
@@ -31,7 +31,7 @@ const user = computed(() => store.state.userInfo);
     </div>
   </div>
   <div v-else>
-    <div class="w-screen flex flex-col h-full bg-[#fafafa]">
+    <div class="w-screen flex flex-col h-full bg-[#fafafa] fixed">
       <NavBar v-if="$route.path === '/emergency'" class="bg-white" />
       <router-view />
     </div>
