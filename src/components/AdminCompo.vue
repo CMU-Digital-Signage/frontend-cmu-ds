@@ -11,6 +11,10 @@ import { User } from "@/types";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
 
+const loading = computed({
+  get: () => store.state.loading,
+  set: (val) => (store.state.loading = val),
+});
 const toast = useToast();
 const user = ref<User>(store.state.userInfo);
 const admin = computed(() =>
@@ -60,8 +64,10 @@ const calculateScreenHeight = () => {
         type="text"
       ></InputText>
     </div>
-    <div>
+    <div class="flex flex-1">
+      <Skeleton v-if="loading" class="bg-gray-200 rounded-xl flex-1"></Skeleton>
       <DataTable
+        v-else
         :value="admin"
         scrollDirection="vertical"
         scrollable

@@ -105,45 +105,21 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if ("/emergency".includes(to.path) && !localStorage.getItem("token")) {
+  if (to.path.includes("/emergency") && !localStorage.getItem("token")) {
     next();
     return;
   }
-
-  const shouldFetchData = !to.meta.hideSidebar && !store.state.devices.length;
+  const shouldFetchData = !to.meta.hideSidebar;
   if (shouldFetchData) {
     if (!store.state.userInfo.id) {
       const userInfoRes = await getUserInfo();
-      if (userInfoRes.ok) store.state.userInfo = userInfoRes.user;
-      else next({ name: "Login", replace: true });
-    }
-
-    const [allUserRes, deviceRes] = await Promise.all([
-      getAllUser(),
-      getDevice(),
-    ]);
-    store.state.allUser = allUserRes.user;
-
-    if (deviceRes.ok) {
-      store.state.macNotUse = deviceRes.data
-        .filter((e: any) => !e.deviceName)
-        .map((e: any) => e.MACaddress);
-
-      const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
-      devices.map((e, i) => (e.color = color[i]));
-      store.state.devices = devices;
-      store.state.selectDevice = devices[0].MACaddress || "";
-      store.state.filterDevice = devices.map((e) => e.MACaddress);
-
-      if (
-        ("/admin".includes(to.path) || "/emergency".includes(to.path)) &&
-        !store.state.userInfo.isAdmin
-      ) {
-        next({ path: "/", replace: true });
-      } else next();
-    } else {
+      if (userInfoRes.ok) {
+        store.state.userInfo = userInfoRes.user;
+        if (store.state.userInfo.isAdmin) next();
+      }
       next({ path: "/login", replace: true });
     }
+    next();
   } else next();
 });
 

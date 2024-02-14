@@ -2,7 +2,6 @@ import io from "socket.io-client";
 import store from "@/store";
 import { Device, Emergency, Poster, User } from "@/types";
 import router from "@/router";
-import { getActivateEmergency } from "@/services";
 
 export const socket = io("localhost:8000", {
   transports: ["websocket"],
@@ -76,10 +75,8 @@ export default function setupSocket() {
   // activate emergency
   socket.on("activate", async (data: Emergency) => {
     const mac = router.currentRoute.value.params.mac as string;
-
     if (mac) {
-      const res = await getActivateEmergency(mac);
-      store.state.emerPosters = res.emergency;
+      store.state.emerPosters.push({ ...data });
     } else {
       const index = store.state.emerPosters.findIndex(
         (e) => e.incidentName === data.incidentName
@@ -91,7 +88,7 @@ export default function setupSocket() {
   socket.on("deactivate", (data: Emergency) => {
     const mac = router.currentRoute.value.params.mac as string;
     if (mac) {
-      store.state.emerPosters = <Emergency[]>[];
+      store.state.emerPosters.pop();
     } else {
       const index = store.state.emerPosters.findIndex(
         (e) => e.incidentName === data.incidentName

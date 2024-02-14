@@ -6,16 +6,51 @@ import NavBar from "./components/NavBar.vue";
 import NavbarBelow from "./components/NavbarBelow.vue";
 import router from "./router";
 import setupSocket, { socket } from "./utils/socket";
+import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
+import { color, createUnique, setFieldPoster } from "./utils/constant";
+import { Device, Emergency } from "./types";
 
-onMounted(() => {
+const user = computed(() => store.state.userInfo);
+const loading = computed({
+  get: () => store.state.loading,
+  set: (val) => (store.state.loading = val),
+});
+
+onMounted(async () => {
   setupSocket();
+  loading.value = true;
+  const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
+    getAllUser(),
+    getDevice(),
+    getPoster(),
+    getEmergency(),
+  ]);
+  store.state.allUser = allUserRes.user;
+
+  store.state.macNotUse = deviceRes.data
+    .filter((e: any) => !e.deviceName)
+    .map((e: any) => e.MACaddress);
+
+  const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
+  devices.map((e, i) => (e.color = color[i]));
+  store.state.devices = devices;
+  store.state.selectDevice = devices[0].MACaddress || "";
+  store.state.filterDevice = devices.map((e) => e.MACaddress);
+
+  store.state.posters = setFieldPoster(posterRes.poster);
+  createUnique(store.state.posters);
+
+  emerRes.emergency.forEach(
+    (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+  );
+  store.state.emerPosters = emerRes.emergency;
+
+  loading.value = false;
 });
 
 onBeforeUnmount(() => {
   socket.disconnect();
 });
-
-const user = computed(() => store.state.userInfo);
 </script>
 
 <template>

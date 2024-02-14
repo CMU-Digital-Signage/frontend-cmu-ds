@@ -16,7 +16,7 @@ import {
   activateEmergency,
   deactivateEmergency,
 } from "./emergency";
-import { getPosterEachDevice, getActivateEmergency } from "./pi";
+import { getPosterEachDevice } from "./pi";
 
 export {
   getUserInfo,
@@ -40,5 +40,4 @@ export {
   activateEmergency,
   deactivateEmergency,
   getPosterEachDevice,
-  getActivateEmergency,
 };

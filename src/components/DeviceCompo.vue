@@ -107,12 +107,7 @@ const calculateScreenHeight = () => {
 <template>
   <Toast />
   <div class="rectangle2">
-    <Skeleton
-      v-if="loading"
-      width="100%"
-      height="92%"
-      class="bg-gray-200 -mb-3"
-    ></Skeleton>
+    <Skeleton v-if="loading" class="bg-gray-200 rounded-xl flex-1"></Skeleton>
     <DataTable
       v-else
       :value="device"
