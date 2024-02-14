@@ -2,7 +2,7 @@ import io from "socket.io-client";
 import store from "@/store";
 import { Device, Emergency, Poster, User } from "@/types";
 
-export const socket = io("https://signage.se.cpe.eng.cmu.ac.th:8000", {
+export const socket = io("localhost:8000", {
   transports: ["websocket"],
 });
 

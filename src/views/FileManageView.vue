@@ -19,28 +19,26 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <PopupUpload />
-  <TabView
-    v-if="store.state.userInfo.isAdmin"
-    v-model:activeIndex="click"
-    class="rectangle flex flex-col"
-  >
-    <TabPanel header="Normal File">
-      <FileTable :types="'NP'" />
-    </TabPanel>
-    <TabPanel
-      v-if="store.state.userInfo.isAdmin"
-      header="Emergency File"
-      :pt="{
-        headerAction: {
-          class: `${click != 0 ? 'text-[#f00] border-[#f00]' : ''}`,
-        },
-      }"
-    >
-      <FileTable :types="'EP'" />
-    </TabPanel>
-  </TabView>
-  <FileTable v-else :types="'NP'" class="rectangle flex flex-col" />
+  <div class="rectangle flex flex-col">
+    <PopupUpload />
+    <TabView v-if="store.state.userInfo.isAdmin" v-model:activeIndex="click">
+      <TabPanel header="Normal File">
+        <FileTable :types="'NP'" />
+      </TabPanel>
+      <TabPanel
+        v-if="store.state.userInfo.isAdmin"
+        header="Emergency File"
+        :pt="{
+          headerAction: {
+            class: `${click != 0 ? 'text-[#f00] border-[#f00]' : ''}`,
+          },
+        }"
+      >
+        <FileTable :types="'EP'" />
+      </TabPanel>
+    </TabView>
+    <FileTable v-else :types="'NP'" class="rectangle flex flex-col" />
+  </div>
 </template>
 
 <style scoped>
