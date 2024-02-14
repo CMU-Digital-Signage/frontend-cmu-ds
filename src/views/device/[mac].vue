@@ -15,7 +15,6 @@ const route = useRoute();
 const posters = computed(() => store.state.posters);
 const image = ref<string>();
 let currentIndex = 0;
-let currentIndexImage = 0;
 let count = 0;
 
 const fetchData = async () => {
@@ -23,12 +22,19 @@ const fetchData = async () => {
     route.params.mac as string
   );
   if (ok) {
-    store.state.posters = setFieldPoster(poster);
-    posters.value.sort((a: Poster, b: Poster) => {
+    poster.forEach((e: Poster) => {
+      e.startDate = new Date(e.startDate);
+      e.endDate = new Date(e.endDate);
+      e.startTime = new Date(e.startTime);
+      e.endTime = new Date(e.endTime);
+    });
+    poster.sort((a: Poster, b: Poster) => {
       if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
       if (a.startTime.toTimeString() > b.startTime.toTimeString()) return 1;
       return 0;
     });
+    store.state.posters = poster;
+
     if (posters.value.length > 0) {
       if (posters.value.length === 1) {
         const currentTime = new Date().toTimeString();
@@ -37,14 +43,12 @@ const fetchData = async () => {
           currentPoster.startTime.toTimeString() <= currentTime &&
           currentPoster.endTime.toTimeString() >= currentTime
         ) {
-          image.value = posters.value[0].image[0].image;
+          image.value = posters.value[0].image as any;
           return;
         } else return;
       }
       showCurrentPoster();
     }
-  } else {
-    console.log(message);
   }
 };
 
@@ -56,14 +60,10 @@ const showCurrentPoster = () => {
       currentPoster.startTime.toTimeString() <= new Date().toTimeString() &&
       currentPoster.endTime.toTimeString() >= new Date().toTimeString()
     ) {
-      image.value = currentPoster.image[currentIndexImage].image;
+      image.value = currentPoster.image as any;
       count = 0;
       setTimeout(() => {
-        currentIndexImage = currentIndexImage + 1;
-        if (currentIndexImage === currentPoster.image.length) {
-          currentIndexImage = 0;
-          currentIndex = (currentIndex + 1) % posters.value.length;
-        }
+        currentIndex = (currentIndex + 1) % posters.value.length;
         updatePosterInterval();
       }, currentPoster.duration * 1000);
     } else {
