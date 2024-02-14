@@ -26,7 +26,7 @@
           @click="redirectToOAuth()"
         >
           <img
-            class="md:w-7 mr-2 w-5 ml-2"
+            class="md:w-7 mr-2 w-5 "
             alt="cmulogo"
             src="../assets/images/cmu-logo-th.png"
           />
