@@ -189,6 +189,34 @@ const setEvent = () => {
   calendar.value?.addEventSource(postersView.value);
 };
 
+const resizeCalendar = () => {
+  setTimeout(() => {
+    calendar.value?.updateSize();
+  }, 290);
+};
+const prevMonth = () => {
+  calendar.value?.prev();
+  store.state.currentViewDate = calendar.value?.view.title || "";
+};
+const nextMonth = () => {
+  calendar.value?.next();
+  store.state.currentViewDate = calendar.value?.view.title || "";
+};
+const goToday = () => {
+  calendar.value?.today();
+  store.state.currentViewDate = calendar.value?.view.title || "";
+};
+const dayView = () => {
+  calendar.value?.changeView("timeGridDay");
+  store.state.currentViewDate = calendar.value?.view.title || "";
+  store.state.viewType = false;
+};
+const monthView = () => {
+  calendar.value?.changeView("dayGridMonth");
+  store.state.currentViewDate = calendar.value?.view.title || "";
+  store.state.viewType = true;
+};
+
 onMounted(async () => {
   store.state.loading = true;
   if (!posters.value.length) {
@@ -205,40 +233,12 @@ onMounted(async () => {
 
     document
       .getElementById("sideBarButton")!
-      .addEventListener("click", function () {
-        setTimeout(() => {
-          calendar.value?.updateSize();
-        }, 290);
-      });
-
-    document.getElementById("prev")!.addEventListener("click", function () {
-      calendar.value?.prev();
-      store.state.currentViewDate = calendar.value?.view.title || "";
-    });
-
-    document.getElementById("next")!.addEventListener("click", function () {
-      calendar.value?.next();
-      store.state.currentViewDate = calendar.value?.view.title || "";
-    });
-
-    document.getElementById("today")!.addEventListener("click", function () {
-      calendar.value?.today();
-      store.state.currentViewDate = calendar.value?.view.title || "";
-    });
-
-    document.getElementById("dayView")!.addEventListener("click", function () {
-      calendar.value?.changeView("timeGridDay");
-      store.state.currentViewDate = calendar.value?.view.title || "";
-      store.state.viewType = false;
-    });
-
-    document
-      .getElementById("monthView")!
-      .addEventListener("click", function () {
-        calendar.value?.changeView("dayGridMonth");
-        store.state.currentViewDate = calendar.value?.view.title || "";
-        store.state.viewType = true;
-      });
+      .addEventListener("click", resizeCalendar);
+    document.getElementById("prev")!.addEventListener("click", prevMonth);
+    document.getElementById("next")!.addEventListener("click", nextMonth);
+    document.getElementById("today")!.addEventListener("click", goToday);
+    document.getElementById("dayView")!.addEventListener("click", dayView);
+    document.getElementById("monthView")!.addEventListener("click", monthView);
   }
   store.state.loading = false;
 });
@@ -248,6 +248,12 @@ watch([selectedDevice, posters], () => {
 });
 
 onUnmounted(() => {
+  removeEventListener("click", resizeCalendar);
+  removeEventListener("click", prevMonth);
+  removeEventListener("click", nextMonth);
+  removeEventListener("click", goToday);
+  removeEventListener("click", dayView);
+  removeEventListener("click", monthView);
   calendar.value?.destroy();
 });
 </script>

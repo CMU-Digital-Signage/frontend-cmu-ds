@@ -23,7 +23,7 @@ import UploadImage from "@/components/UploadImageCompo.vue";
 
 const toast = useToast();
 const user = computed(() => store.state.userInfo);
-const show = computed({
+const showUpload = computed({
   get: () => store.state.showUpload,
   set: (val) => (store.state.showUpload = val),
 });
@@ -49,20 +49,20 @@ const selectSchedule = ref(scheduleTabs[0]);
 const showSecondDialog = ref(false);
 const loading = ref(false);
 
-watch([show, showSecondDialog, editPoster], () => {
-  if (editPoster.value.type && show.value) {
+watch([showUpload, showSecondDialog, editPoster], () => {
+  if (editPoster.value.type && showUpload.value) {
     posterType.value.map((e) => {
       if (e.code === editPoster.value.type) {
         selectedPosterType.value = { ...e };
       }
     });
-    show.value = false;
+    showUpload.value = false;
     showSecondDialog.value = true;
-  } else if (show.value && !user.value.isAdmin) {
+  } else if (showUpload.value && !user.value.isAdmin) {
     selectedPosterType.value = posterType.value[0];
-    show.value = false;
+    showUpload.value = false;
     showSecondDialog.value = true;
-  } else if (!show.value && !showSecondDialog.value) {
+  } else if (!showUpload.value && !showSecondDialog.value) {
     if (editPoster.value.type.length)
       store.state.editPoster = { title: "", type: "" };
     store.commit("resetForm");
@@ -266,7 +266,7 @@ const isNextButtonDisabled = computed(() => {
   return !selectedPosterType.value.header;
 });
 const showDifferentDialog = () => {
-  store.state.showUpload = false;
+  showUpload.value = false;
   if (selectedPosterType.value.code === "NP") {
     selectedPosterType.value = posterType.value[0];
   } else if (selectedPosterType.value.code === "EP") {
@@ -393,7 +393,7 @@ const nextStepUpload = () => {
   <Toast />
   <div>
     <Dialog
-      v-model:visible="show"
+      v-model:visible="showUpload"
       modal
       close-on-escape
       :draggable="false"
@@ -422,7 +422,7 @@ const nextStepUpload = () => {
           <div class="flex flex-row gap-4 pt-3">
             <Button
               label="Cancel"
-              @click="store.state.showUpload = false"
+              @click="showUpload = false"
               :class="'secondaryButton'"
             ></Button>
             <Button

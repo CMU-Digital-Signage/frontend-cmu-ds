@@ -30,17 +30,14 @@ const isOverlayPanelVisible = ref();
 const toggleShowStatus = (e: any) => {
   isOverlayPanelVisible.value.toggle(e);
 };
-
 const calculateScreenHeight = () => {
   const screenHeight = window.innerHeight;
   const multiplier = 0.69;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
-
 const loadNP = ref(false);
 const loadEmer = ref(false);
-
 const loading = computed({
   get: () => store.state.loading,
   set: (val) => (store.state.loading = val),
@@ -133,31 +130,29 @@ const setForm = (data: any) => {
 };
 
 onMounted(async () => {
-  loading.value = true;
-  if (!posters.value.length || !emerPosters.value.length) {
-    if (props.types === "NP") {
-      loadNP.value = true;
-      const res = await getPoster();
-      if (res.ok) {
-        store.state.posters = setFieldPoster(res.poster);
-        createUnique(posters.value);
-      }
-      loadNP.value = false;
-    } else {
-      loadEmer.value = true;
-      const res = await getEmergency();
-      if (res.ok) {
-        res.emergency.forEach(
-          (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
-        );
-        store.state.emerPosters = res.emergency;
-      }
-      loadEmer.value = false;
+  if (!posters.value.length && props.types == "NP") {
+    loadNP.value = true;
+    const res = await getPoster();
+    if (res.ok) {
+      store.state.posters = setFieldPoster(res.poster);
+      createUnique(posters.value);
     }
-  } else if (!uniquePosters.value.length && props.types == "NP") {
+    loadNP.value = false;
+  }
+  if (!emerPosters.value.length && props.types == "EP") {
+    loadEmer.value = true;
+    const res = await getEmergency();
+    if (res.ok) {
+      res.emergency.forEach(
+        (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+      );
+      store.state.emerPosters = res.emergency;
+    }
+    loadEmer.value = false;
+  }
+  if (!uniquePosters.value.length && props.types == "NP") {
     createUnique(posters.value);
   }
-  loading.value = false;
 });
 
 const del = async (poster: string) => {
@@ -186,7 +181,10 @@ const del = async (poster: string) => {
 </script>
 
 <template>
-  <Skeleton v-if="loading || loadEmer || loadNP" class="bg-gray-200 flex"></Skeleton>
+  <Skeleton
+    v-if="(props.types == 'EP' && loadEmer) || (props.types == 'EP' && loadNP)"
+    class="bg-gray-200 flex"
+  ></Skeleton>
   <DataTable
     v-else-if="!loading && !loadEmer && !loadNP"
     :value="props.types === 'NP' ? uniquePosters : emerPosters"
