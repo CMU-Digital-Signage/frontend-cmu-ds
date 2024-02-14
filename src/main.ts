@@ -16,6 +16,7 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import FloatLabel from 'primevue/floatlabel';
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row"; // optional
 import FileUpload from "primevue/fileupload";
@@ -31,6 +32,10 @@ import Skeleton from "primevue/skeleton";
 import Calendar from "primevue/calendar";
 import Steps from "primevue/steps";
 import Tag from "primevue/tag";
+import TieredMenu from "primevue/tieredmenu";
+import Menu from "primevue/menu";
+import Password from "primevue/password";
+
 
 library.add(faBell);
 
@@ -126,4 +131,8 @@ createApp(App)
   .component("Skeleton", Skeleton)
   .component("Steps", Steps)
   .component("Tag", Tag)
+  .component("TieredMenu", TieredMenu)
+  .component("Menu", Menu)
+  .component("FloatLabel", FloatLabel)
+  .component("Password", Password)
   .mount("#app");
