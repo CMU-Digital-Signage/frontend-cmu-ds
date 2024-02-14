@@ -60,56 +60,54 @@ const calculateScreenHeight = () => {
         type="text"
       ></InputText>
     </div>
-    <div class="flex flex-1">
-      <DataTable
-        :value="admin"
-        scrollDirection="vertical"
-        scrollable
-        :scrollHeight="calculateScreenHeight()"
-        class="mt-2"
+    <DataTable
+      :value="admin"
+      scrollDirection="vertical"
+      scrollable
+      :scrollHeight="calculateScreenHeight()"
+      class="mt-2"
+    >
+      <Column
+        field="firstName"
+        header="Name"
+        sortable
+        class="h-8 w-1/12"
+        headerStyle="font-bold"
       >
-        <Column
-          field="firstName"
-          header="Name"
-          sortable
-          class="h-8 w-1/12"
-          headerStyle="font-bold"
-        >
-          <template #sorticon="rowData">
-            <i
-              class="m-3 pi"
-              :class="{
-                'pi-sort-alt': rowData.sortOrder === 0,
-                'pi-sort-alpha-down': rowData.sortOrder === 1,
-                'pi-sort-alpha-up': rowData.sortOrder === -1,
-              }"
-            ></i>
-          </template>
-          <template #body="rowData">
-            <p>{{ rowData.data.firstName }}</p>
-            <p v-if="!rowData.data.firstName">{{ rowData.data.email }}</p>
-          </template>
-        </Column>
-        <Column field="lastName" class="w-1/12"></Column>
-        <Column :field="'isCurrentUser'" class="w-auto">
-          <template #body="rowData">
-            <div v-if="isCurrentUser(rowData.data)" class="py-1">(You)</div>
-          </template>
-        </Column>
-        <Column header="Action" headerClass="w-1/2" :exportable="false">
-          <template #body="rowData">
-            <Button
-              icon="pi pi-trash"
-              rounded
-              class="w-9 h-9 mx-3"
-              severity="danger"
-              v-if="!isCurrentUser(rowData.data)"
-              @click="del(rowData.data.id)"
-            />
-          </template>
-        </Column>
-      </DataTable>
-    </div>
+        <template #sorticon="rowData">
+          <i
+            class="m-3 pi"
+            :class="{
+              'pi-sort-alt': rowData.sortOrder === 0,
+              'pi-sort-alpha-down': rowData.sortOrder === 1,
+              'pi-sort-alpha-up': rowData.sortOrder === -1,
+            }"
+          ></i>
+        </template>
+        <template #body="rowData">
+          <p>{{ rowData.data.firstName }}</p>
+          <p v-if="!rowData.data.firstName">{{ rowData.data.email }}</p>
+        </template>
+      </Column>
+      <Column field="lastName" class="w-1/12"></Column>
+      <Column :field="'isCurrentUser'" class="w-auto">
+        <template #body="rowData">
+          <div v-if="isCurrentUser(rowData.data)" class="py-1">(You)</div>
+        </template>
+      </Column>
+      <Column header="Action" headerClass="w-1/2" :exportable="false">
+        <template #body="rowData">
+          <Button
+            icon="pi pi-trash"
+            rounded
+            class="w-9 h-9 mx-3"
+            severity="danger"
+            v-if="!isCurrentUser(rowData.data)"
+            @click="del(rowData.data.id)"
+          />
+        </template>
+      </Column>
+    </DataTable>
   </div>
 </template>
 

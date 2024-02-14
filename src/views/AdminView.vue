@@ -31,7 +31,6 @@ watch([admin, devices], () => {
         v-if="loadAdmin"
         class="bg-gray-200 rounded-xl flex-1"
       ></Skeleton>
-
       <Admin v-else />
     </TabPanel>
     <TabPanel header="Device">
@@ -39,7 +38,6 @@ watch([admin, devices], () => {
         v-if="loadDevice"
         class="bg-gray-200 rounded-xl flex-1"
       ></Skeleton>
-
       <Device v-else />
     </TabPanel>
   </TabView>
