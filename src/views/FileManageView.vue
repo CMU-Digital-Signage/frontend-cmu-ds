@@ -1,12 +1,27 @@
 <script setup lang="ts">
 import FileTable from "@/components/FileTableCompo.vue";
 import PopupUpload from "@/components/PopupUploadCompo.vue";
-import { computed, onUnmounted, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import store from "../store";
 
 const click = computed({
   get: () => store.state.selectTabview,
   set: (val) => (store.state.selectTabview = val),
+});
+
+const uniquePosters = computed(() => store.state.uniquePosters);
+const emerPosters = computed(() => store.state.emerPosters);
+const loadPoster = ref(false);
+const loadEmer = ref(false);
+
+onMounted(() => {
+  if (!uniquePosters.value.length) loadPoster.value = true;
+  if (!emerPosters.value.length) loadEmer.value = true;
+});
+
+watch([uniquePosters, emerPosters], () => {
+  if (uniquePosters.value.length) loadPoster.value = false;
+  if (emerPosters.value.length) loadEmer.value = false;
 });
 
 watch(click, () => {
@@ -23,10 +38,10 @@ onUnmounted(() => {
     <PopupUpload />
     <TabView v-if="store.state.userInfo.isAdmin" v-model:activeIndex="click">
       <TabPanel header="Normal File">
-        <FileTable :types="'NP'" />
+        <Skeleton v-if="loadPoster" class="bg-gray-200 flex"></Skeleton>
+        <FileTable v-else :types="'NP'" />
       </TabPanel>
       <TabPanel
-        v-if="store.state.userInfo.isAdmin"
         header="Emergency File"
         :pt="{
           headerAction: {
@@ -34,10 +49,19 @@ onUnmounted(() => {
           },
         }"
       >
-        <FileTable :types="'EP'" />
+        <Skeleton v-if="loadEmer" class="bg-gray-200 flex"></Skeleton>
+        <FileTable v-else :types="'EP'" />
       </TabPanel>
     </TabView>
-    <FileTable v-else :types="'NP'" class="rectangle flex flex-col" />
+    <Skeleton v-else-if="loadPoster" class="bg-gray-200 flex"></Skeleton>
+    <FileTable
+      v-else-if="uniquePosters[0].title"
+      :types="'NP'"
+      class="rectangle flex flex-col"
+    />
+    <div v-else class="flex justify-center items-center align-middle">
+      No Data
+    </div>
   </div>
 </template>
 
