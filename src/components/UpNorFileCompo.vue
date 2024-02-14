@@ -234,7 +234,7 @@ const deleteSchedule = (index: number) => {
   </div>
 </template>
 
-<style>
+<style scope>
 .title-input {
   box-shadow: none;
   border: none;

@@ -28,7 +28,7 @@ const devices = computed(() => store.state.devices);
   </Button>
 </template>
 
-<style>
+<style scope>
 .button1 {
   margin-top: 3px;
   margin-bottom: 10px;

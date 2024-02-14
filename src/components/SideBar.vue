@@ -37,7 +37,7 @@ watchEffect(() => {
 
 const toast = useToast();
 
-const dialogVisible = ref(true);
+const dialogVisible = ref(false);
 const showDialog = () => {
   dialogVisible.value = true;
 };
@@ -376,44 +376,51 @@ const value = ref(null);
           v-model:visible="dialogVisible"
           class="h-auto w-[450px]"
           modal
-          close-on-escape
           :draggable="false"
         >
           <template #header>
-            <div class="header-popup">Change Emergency Password</div> </template
-          ><label class="text-[17px] font-semibold pt-2 w-32"> </label>
-          <div class="flex flex-col gap-2">
-            <FloatLabel class="mt-8">
+            <div class="header-popup">Change Emergency Password</div>
+          </template>
+
+          <label class="text-[17px] w- font-semibold pt-2 w-32"> </label>
+          <div class="flex flex-col gap-2 w-full">
+            <FloatLabel class="mt-6">
               <Password
                 id="currentPassword"
-                class="w-full rounded-lg h-12"
                 v-model="value"
+                input-class="w-screen rounded-[12px] border-2"
+                class="w-full"
+                :feedback="false"
                 toggle-mask
               />
               <label for="currentPassword">Current Password</label>
             </FloatLabel>
-            <FloatLabel class="mt-8">
+            <FloatLabel class="mt-6">
               <Password
                 id="newPassword"
-                class="w-full rounded-lg h-12"
                 v-model="value"
+                input-class="w-screen rounded-[12px] border-2"
+                class="w-full"
+                :feedback="false"
                 toggle-mask
               />
               <label for="newPassword">New Password</label>
             </FloatLabel>
-            <FloatLabel class="mt-8">
+            <FloatLabel class="mt-6">
               <Password
                 id="reTypeNewPassword"
-                class="w-full rounded-lg h-12"
+                input-class="w-screen rounded-[12px] border-2"
+                class="w-full"
                 v-model="value"
+                :feedback="false"
                 toggle-mask
               />
-              <label for="reTypeNewPassword">Re-type new Password</label>
+              <label for="reTypeNewPassword">Re-type new password</label>
             </FloatLabel>
-
             <Button
               label="Change Password"
               text
+              disabled
               :class="'primaryButton'"
               type="submit"
             ></Button></div
@@ -468,29 +475,21 @@ Button {
 .side-bar-close {
   width: 90px;
 }
- .p-password-panel {
-  width: 100vw;
-  border-radius: 20px;
- }
- .p-password-meter {
-  width: 100vw;
-  border-radius: 20px;
- }
 
- .p-password-info {
-  width: 100vw;
-  border-radius: 20px;
- }
+
+.p-inputtext.p-component.p-password-input {
+  width: 100%;
+}
 
 .primaryButton {
   width: 100%;
   border-width: 0;
-  border-radius: 8px;
+  border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 20px;
-  background-color: rgb(235, 235, 248);
-  color: rgb(43, 152, 255);
+  margin-top: 50px;
+  background-color: rgb(74, 158, 255);
+  color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
 }
