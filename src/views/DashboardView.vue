@@ -98,10 +98,12 @@ const calOptions = reactive<CalendarOptions>({
     alert("selected " + info.startStr + " to " + info.endStr);
   },
   dateClick: function (info) {
-    calendar.value?.gotoDate(info.date);
-    info.view.calendar.changeView("timeGridDay");
-    store.state.currentViewDate = info.view.title;
-    store.state.viewType = false;
+    if (".fc-daygrid-day-number".includes(info.jsEvent.target as any)) {
+      calendar.value?.gotoDate(info.date);
+      info.view.calendar.changeView("timeGridDay");
+      store.state.currentViewDate = info.view.title;
+      store.state.viewType = false;
+    }
   },
 });
 
