@@ -157,10 +157,10 @@ const validateEmail = () => {
 </script>
 
 <template>
-  <Toast />
   <div
     class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
   >
+    <Toast />
     <!-- "Management" -->
     <ul v-if="$route.path === '/admin'">
       <p>Management</p>

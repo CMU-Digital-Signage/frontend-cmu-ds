@@ -23,6 +23,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import PopupUpload from "@/components/PopupUploadCompo.vue";
 
+const loading = computed(() => store.state.loading);
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
 const fullCalendar = ref<any>(null);
@@ -189,13 +190,12 @@ const setEvent = () => {
 };
 
 onMounted(async () => {
+  store.state.loading = true;
   if (!posters.value.length) {
-    store.state.loading = true;
     const res = await getPoster();
     if (res.ok) {
       store.state.posters = setFieldPoster(res.poster);
     }
-    store.state.loading = false;
   }
   setEvent();
   if (fullCalendar.value) {
@@ -240,6 +240,7 @@ onMounted(async () => {
         store.state.viewType = true;
       });
   }
+  store.state.loading = false;
 });
 
 watch([selectedDevice, posters], () => {
@@ -252,88 +253,88 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <PopupUpload />
   <div class="rectangle flex flex-col">
-    <Skeleton v-if="!calendar" class="bg-gray-200 rounded-xl flex-1"></Skeleton>
+    <Skeleton v-if="loading" class="bg-gray-200 rounded-xl flex-1"></Skeleton>
     <div ref="fullCalendar"></div>
-  </div>
-  <Dialog
-    v-model:visible="showInfo"
-    modal
-    :draggable="false"
-    class="w-[500px] z-[100]"
-  >
-    <template #header>
-      <div class="inline-flex justify-between items-center w-full">
-        <div class="inline-flex font-bold text-2xl gap-3 items-center">
-          <i
-            class="pi pi-circle-fill"
-            :style="{ color: selectedEvent.color }"
-          ></i>
-          <p>{{ selectedEvent.title }}</p>
-          <p>({{ selectedEvent.type }})</p>
+    <PopupUpload />
+    <Dialog
+      v-model:visible="showInfo"
+      modal
+      :draggable="false"
+      class="w-[500px] z-[100]"
+    >
+      <template #header>
+        <div class="inline-flex justify-between items-center w-full">
+          <div class="inline-flex font-bold text-2xl gap-3 items-center">
+            <i
+              class="pi pi-circle-fill"
+              :style="{ color: selectedEvent.color }"
+            ></i>
+            <p>{{ selectedEvent.title }}</p>
+            <p>({{ selectedEvent.type }})</p>
+          </div>
+          <div class="inline-flex gap-5 mr-5">
+            <i class="pi pi-trash"></i>
+            <i class="pi pi-pencil"></i>
+          </div>
         </div>
-        <div class="inline-flex gap-5 mr-5">
-          <i class="pi pi-trash"></i>
-          <i class="pi pi-pencil"></i>
+      </template>
+      <div class="flex flex-col gap-2">
+        <!-- Start Date -->
+        <div class="posterDetail">
+          <p>Start Date</p>
+          <p>{{ selectedEvent.start }}</p>
         </div>
-      </div>
-    </template>
-    <div class="flex flex-col gap-2">
-      <!-- Start Date -->
-      <div class="posterDetail">
-        <p>Start Date</p>
-        <p>{{ selectedEvent.start }}</p>
-      </div>
-      <!-- End Date -->
-      <div class="posterDetail">
-        <p>End Date</p>
-        <p>{{ selectedEvent.end }}</p>
-      </div>
-      <!-- Running Time -->
-      <div class="posterDetail">
-        <p>Running Time</p>
-        <p v-if="selectedEvent.allDay">All Day</p>
-        <p v-else>
-          {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
-        </p>
-      </div>
-      <!-- Duration -->
-      <div class="posterDetail">
-        <p>Display Duration</p>
-        <p>{{ selectedEvent.duration }} sec</p>
-      </div>
-      <!-- Device -->
-      <div class="posterDetail">
-        <p>Device</p>
-        <div class="flex flex-col">
-          <p
-            v-for="(item, index) in selectedEvent.onDevice"
-            :key="index"
-            class="inline-flex justify-between gap-1"
-          >
-            <span>{{ item }}</span>
-            <span>
-              ({{
-                store.state.devices.find((e) => e.deviceName === item)?.room
-              }})
-            </span>
+        <!-- End Date -->
+        <div class="posterDetail">
+          <p>End Date</p>
+          <p>{{ selectedEvent.end }}</p>
+        </div>
+        <!-- Running Time -->
+        <div class="posterDetail">
+          <p>Running Time</p>
+          <p v-if="selectedEvent.allDay">All Day</p>
+          <p v-else>
+            {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
           </p>
         </div>
+        <!-- Duration -->
+        <div class="posterDetail">
+          <p>Display Duration</p>
+          <p>{{ selectedEvent.duration }} sec</p>
+        </div>
+        <!-- Device -->
+        <div class="posterDetail">
+          <p>Device</p>
+          <div class="flex flex-col">
+            <p
+              v-for="(item, index) in selectedEvent.onDevice"
+              :key="index"
+              class="inline-flex justify-between gap-1"
+            >
+              <span>{{ item }}</span>
+              <span>
+                ({{
+                  store.state.devices.find((e) => e.deviceName === item)?.room
+                }})
+              </span>
+            </p>
+          </div>
+        </div>
+        <!-- Description -->
+        <div class="posterDetail">
+          <p>Description</p>
+          <p>{{ selectedEvent.description }}</p>
+          <p v-if="!selectedEvent.description">-</p>
+        </div>
+        <!-- Uploader -->
+        <div class="posterDetail">
+          <p>Uploader</p>
+          <p>{{ selectedEvent.uploader }}</p>
+        </div>
       </div>
-      <!-- Description -->
-      <div class="posterDetail">
-        <p>Description</p>
-        <p>{{ selectedEvent.description }}</p>
-        <p v-if="!selectedEvent.description">-</p>
-      </div>
-      <!-- Uploader -->
-      <div class="posterDetail">
-        <p>Uploader</p>
-        <p>{{ selectedEvent.uploader }}</p>
-      </div>
-    </div>
-  </Dialog>
+    </Dialog>
+  </div>
 </template>
 
 <style scoped>
