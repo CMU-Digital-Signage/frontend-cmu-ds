@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, onUpdated, ref, watch } from "vue";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";
@@ -8,15 +8,39 @@ const click = computed({
   get: () => store.state.selectTabview,
   set: (val) => (store.state.selectTabview = val),
 });
+const admin = computed(() => store.state.allUser);
+const devices = computed(() => store.state.devices);
+const loadAdmin = ref(false);
+const loadDevice = ref(false);
+
+onMounted(() => {
+  if (!admin.value.length) loadAdmin.value = true;
+  if (!devices.value.length) loadDevice.value = true;
+});
+
+watch([admin, devices], () => {
+  if (admin.value.length) loadAdmin.value = false;
+  if (devices.value.length) loadDevice.value = false;
+});
 </script>
 
 <template>
   <TabView v-model:active-index="click" class="rectangle flex flex-col">
     <TabPanel header="Admin">
-      <Admin />
+      <Skeleton
+        v-if="loadAdmin"
+        class="bg-gray-200 rounded-xl flex-1"
+      ></Skeleton>
+
+      <Admin v-else />
     </TabPanel>
     <TabPanel header="Device">
-      <Device />
+      <Skeleton
+        v-if="loadDevice"
+        class="bg-gray-200 rounded-xl flex-1"
+      ></Skeleton>
+
+      <Device v-else />
     </TabPanel>
   </TabView>
 </template>

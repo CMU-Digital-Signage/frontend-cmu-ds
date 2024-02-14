@@ -36,14 +36,11 @@ const calculateScreenHeight = () => {
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
-const loadNP = ref(false);
-const loadEmer = ref(false);
 const loading = computed({
   get: () => store.state.loading,
   set: (val) => (store.state.loading = val),
 });
 const props = defineProps({ types: String });
-const posters = computed(() => store.state.posters);
 const filterInput = computed(() => store.state.filterInputPosters);
 const emerPosters = computed(() =>
   store.state.emerPosters.filter((e) => {
@@ -77,11 +74,6 @@ const uniquePosters = computed(() =>
 const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
 let delP = null as any;
-
-onMounted(() => {
-  if (!uniquePosters.value.length) loadNP.value = true;
-  if (!posters.value.length) loadEmer.value = true;
-});
 
 const setForm = (data: any) => {
   if (props.types === "NP") {
@@ -134,32 +126,6 @@ const setForm = (data: any) => {
   store.state.showUpload = true;
 };
 
-watch([uniquePosters, emerPosters], async () => {
-  // if (!posters.value.length && props.types == "NP") {
-  //   loadNP.value = true;
-  //   const res = await getPoster();
-  //   if (res.ok) {
-  //     store.state.posters = setFieldPoster(res.poster);
-  //     createUnique(posters.value);
-  //   }
-  // }
-  // if (!emerPosters.value.length && props.types == "EP") {
-  //   loadEmer.value = true;
-  //   const res = await getEmergency();
-  //   if (res.ok) {
-  //     res.emergency.forEach(
-  //       (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
-  //     );
-  //     store.state.emerPosters = res.emergency;
-  //   }
-  // }
-  // if (!uniquePosters.value.length && props.types == "NP") {
-  //   createUnique(posters.value);
-  // }
-  loadNP.value = false;
-  loadEmer.value = false;
-});
-
 const del = async (poster: string) => {
   delP = poster;
   store.state.loading = true;
@@ -186,12 +152,7 @@ const del = async (poster: string) => {
 </script>
 
 <template>
-  <Skeleton
-    v-if="(props.types == 'EP' && loadEmer) || (props.types == 'EP' && loadNP)"
-    class="bg-gray-200 flex"
-  ></Skeleton>
   <DataTable
-    v-else-if="props.types === 'NP' ? !loadNP : !loadEmer"
     :value="props.types === 'NP' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
     scrollable
@@ -339,9 +300,6 @@ const del = async (poster: string) => {
       </template>
     </Column>
   </DataTable>
-  <div v-else class="flex justify-center items-center align-middle">
-    No Data
-  </div>
 </template>
 
 <style scoped></style>

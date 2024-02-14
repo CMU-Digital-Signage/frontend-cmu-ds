@@ -23,7 +23,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import PopupUpload from "@/components/PopupUploadCompo.vue";
 
-const loading = computed(() => store.state.loading);
+const loadPoster = ref(false);
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
 const fullCalendar = ref<any>(null);
@@ -218,6 +218,7 @@ const monthView = () => {
 };
 
 onMounted(async () => {
+  if (!posters.value.length) loadPoster.value = true;
   setEvent();
   if (fullCalendar.value) {
     calendar.value = new Calendar(fullCalendar.value, calOptions);
@@ -235,7 +236,12 @@ onMounted(async () => {
   }
 });
 
+onUpdated(() => {
+  calendar.value?.updateSize();
+});
+
 watch([selectedDevice, posters], () => {
+  if (posters.value.length) loadPoster.value = false;
   setEvent();
 });
 
@@ -252,8 +258,11 @@ onUnmounted(() => {
 
 <template>
   <div class="rectangle flex flex-col">
-    <Skeleton v-if="loading" class="bg-gray-200 rounded-xl flex-1"></Skeleton>
-    <div v-else ref="fullCalendar"></div>
+    <Skeleton
+      v-if="loadPoster"
+      class="bg-gray-200 rounded-xl flex-1"
+    ></Skeleton>
+    <div v-show="!loadPoster" ref="fullCalendar"></div>
     <PopupUpload />
     <Dialog
       v-model:visible="showInfo"

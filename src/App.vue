@@ -11,14 +11,9 @@ import { color, createUnique, setFieldPoster } from "./utils/constant";
 import { Device, Emergency } from "./types";
 
 const user = computed(() => store.state.userInfo);
-const loading = computed({
-  get: () => store.state.loading,
-  set: (val) => (store.state.loading = val),
-});
 
 onMounted(async () => {
   setupSocket();
-  loading.value = true;
   const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
     getAllUser(),
     getDevice(),
@@ -44,8 +39,6 @@ onMounted(async () => {
     (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
   );
   store.state.emerPosters = emerRes.emergency;
-
-  loading.value = false;
 });
 
 onBeforeUnmount(() => {
