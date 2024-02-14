@@ -6,7 +6,11 @@ import Device from "@/components/DeviceCompo.vue";
 import Instructor from "@/components/InstructorCompo.vue";
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import { getEmergency } from "@/services";
+import {
+  activateEmergency,
+  deactivateEmergency,
+  getEmergency,
+} from "@/services";
 import { Emergency } from "@/types";
 
 const click = computed({
@@ -17,6 +21,7 @@ const click = computed({
 const emerPosters = computed(() => store.state.emerPosters);
 
 const selectEmer = ref("");
+// const selectEmerText = ref("");
 const selectedPosterImage = ref("");
 const confirmationText = ref("");
 const isConfirmationValid = computed(
@@ -50,71 +55,117 @@ onMounted(async () => {
   <div class="rectangleOut flex flex-row">
     <div class="rectangleLeft flex flex-col text-left justify-between">
       <div>
-        <p class="text-[18px] mb-8">
+        <!-- <p class="text-[18px] mb-8">
           <span style="color: red; font-weight: bold"
             >Activating the Emergency Poster</span
           >, there is overriding currently running poster.
           <span style="font-weight: bold">Please be certain. </span>
-        </p>
-        <p class="text-[17px] font-bold mb-2">Choose Poster to displayed</p>
+        </p> -->
         <div
-          class="border-[2px] border-black-200 rounded-lg h-60 p-5 overflow-y-scroll"
+          class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center justify-center"
         >
           <div
-            v-for="category in emerPosters"
-            :key="category.incidentName"
-            class="flex text-[16px] gap-2 m-1 mb-3"
+            class="w-8 h-8 -ml-2 flex items-center justify-center rounded-full"
           >
-            <RadioButton
-              v-model="selectEmer"
-              :inputId="category.incidentName"
-              :value="category.incidentName"
-            />
-            <label :for="category.incidentName" class="ml-2">{{
-              category.incidentName
-            }}</label>
+            <i
+              class="pi pi-exclamation-triangle mb-1 text-[#ff7474] text-3xl"
+            ></i>
+          </div>
+
+          <div>
+            <p class="text-[16px] font-bold" style="color: red">
+              <span>Activating the Emergency Poster</span>
+            </p>
+            <p>
+              there is overriding currently running poster.
+              <span class="font-semibold">Please be certain. </span>
+            </p>
           </div>
         </div>
-        <!-- <div class="flex justify-end">
-          <Button
-            class="flex bg-while my-2 p-2 bg-white w-38 py-1 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho hover:bg-gray-200"
-          >
-            <i class="pi pi-plus text-black"></i>
+        <div class="flex flex-col gap-5">
+          <div>
+            <p class="text-[16px] font-semibold mb-2">
+              Choose Poster to displayed
+            </p>
+            <div
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-40 overflow-y-scroll"
+            >
+              <div class="grid grid-cols-2 gap-y-10 p-8 pt-9">
+                <div
+                  v-for="category in emerPosters"
+                  :key="category.incidentName"
+                  class="flex text-[16px] gap-2 items-center h-1"
+                >
+                  <RadioButton
+                    v-model="selectEmer"
+                    :inputId="category.incidentName"
+                    :value="category.incidentName"
+                  />
+                  <label :for="category.incidentName" class="ml-2">{{
+                    category.incidentName
+                  }}</label>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            Add Text
-          </Button>
-        </div> -->
-        <div class="flex flex-row gap-3 mt-4">
-          <RadioButton v-model="selectEmer" :value="1" />
-          <div class="flex flex-col gap-2 w-full">
-            <label for="username">Text Title (ลอง)</label>
-            <textarea
-              class="border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[130px] bg-none resize-none"
-            ></textarea>
+          <div>
+            <p class="text-[16px] font-semibold mb-2">Type text to displayed</p>
+            <div
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-48"
+            >
+              <div class="flex flex-col gap-3 mx-8 my-5">
+                <div class="flex gap-2 items-center">
+                  <RadioButton v-model="selectEmer" :value="1" />
+                  <label for="username">Text Title</label>
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                  <textarea
+                    placeholder="Ex: There's a fire, do not use the elevator"
+                    class="border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <div v-if="selectEmer">
-        <p class="text-[18px] font-semibold mb-2">
-          To confirm, type password in the box below
+        <p class="text-[17px] font-semibold mb-2">
+          Type password in the box below
         </p>
         <div class="flex flex-col">
           <InputText class="w-full mb-2" v-model="confirmationText"></InputText>
           <Button
             class="w-full bg-red-500 rounded-lg border-0"
             :disabled="!isConfirmationValid"
-            label="Activate"
+            :label="
+              emerPosters.filter((e) => e.incidentName === selectEmer)[0]
+                .status === 'Active'
+                ? 'Deactivate'
+                : 'Activate'
+            "
+            @click="
+              async () => {
+                emerPosters.filter((e) => e.incidentName === selectEmer)[0]
+                  .status === 'Active'
+                  ? await deactivateEmergency(selectEmer)
+                  : await activateEmergency(selectEmer);
+              }
+            "
           ></Button>
         </div>
       </div>
     </div>
 
     <div class="rectangleRight flex flex-col">
-      <div class="rectangleRightIn">
-        <div class="w-full h-full overflow-hidden">
+      <div
+        class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#f8f8f8] flex items-center justify-center"
+      >
+        <div class="w-11/12 h-full flex items-center">
           <img
             v-if="selectedPosterImage"
-            class="m-auto mt-28 transition-opacity rotated-image"
+            class="m-auto w-full transition-opacity rotated-image"
             :src="selectedPosterImage"
             alt="poster-image"
           />
@@ -126,6 +177,7 @@ onMounted(async () => {
 
 <style scoped>
 .rectangleOut {
+  overscroll-behavior-y: contain;
   overflow: hidden;
   background-color: aquamarine;
   flex: 1 1;
@@ -133,6 +185,7 @@ onMounted(async () => {
 
 .rectangleLeft {
   background-color: #fafafa;
+  overflow-y: hidden;
   /* height: 100vh; */
   width: 40vw;
   padding-top: 25px;
@@ -148,32 +201,32 @@ onMounted(async () => {
 
 .rectangleLeftIn {
   background-color: #fafafa;
-  /* height: 10vh;
+  height: 10vh;
   padding-left: 15px;
   padding-top: 10px;
-  padding-bottom: 30px; */
+  padding-bottom: 30px;
   overflow-y: scroll;
   flex: 1 1;
 }
 
 .rectangleRight {
   background-color: #fafafa;
-  height: 100vh;
+  height: 98 100vh;
   width: 40vw;
-  padding-top: 30px;
-  padding-left: 26px;
+  padding-top: 25px;
+  padding-left: 30px;
   padding-right: 30px;
-  padding-bottom: 80px;
+  padding-bottom: 25px;
   flex: 1 1;
   border-left: solid 2px;
   border-color: #eaeaea;
 }
 
 .rectangleRightIn {
-  background-color: #fafafa;
+  background-color: #642121;
   height: 10vh;
-  border-radius: 15px;
-  overflow-y: scroll;
+  border-radius: 18px;
+  overflow-y: hidden;
   flex: 1 1;
 }
 </style>
