@@ -218,13 +218,6 @@ const monthView = () => {
 };
 
 onMounted(async () => {
-  store.state.loading = true;
-  if (!posters.value.length) {
-    const res = await getPoster();
-    if (res.ok) {
-      store.state.posters = setFieldPoster(res.poster);
-    }
-  }
   setEvent();
   if (fullCalendar.value) {
     calendar.value = new Calendar(fullCalendar.value, calOptions);
@@ -232,15 +225,14 @@ onMounted(async () => {
     store.state.currentViewDate = calendar.value.view.title;
 
     document
-      .getElementById("sideBarButton")!
-      .addEventListener("click", resizeCalendar);
-    document.getElementById("prev")!.addEventListener("click", prevMonth);
-    document.getElementById("next")!.addEventListener("click", nextMonth);
-    document.getElementById("today")!.addEventListener("click", goToday);
-    document.getElementById("dayView")!.addEventListener("click", dayView);
-    document.getElementById("monthView")!.addEventListener("click", monthView);
+      .getElementById("sideBarButton")
+      ?.addEventListener("click", resizeCalendar);
+    document.getElementById("prev")?.addEventListener("click", prevMonth);
+    document.getElementById("next")?.addEventListener("click", nextMonth);
+    document.getElementById("today")?.addEventListener("click", goToday);
+    document.getElementById("dayView")?.addEventListener("click", dayView);
+    document.getElementById("monthView")?.addEventListener("click", monthView);
   }
-  store.state.loading = false;
 });
 
 watch([selectedDevice, posters], () => {
@@ -261,7 +253,7 @@ onUnmounted(() => {
 <template>
   <div class="rectangle flex flex-col">
     <Skeleton v-if="loading" class="bg-gray-200 rounded-xl flex-1"></Skeleton>
-    <div ref="fullCalendar"></div>
+    <div v-else ref="fullCalendar"></div>
     <PopupUpload />
     <Dialog
       v-model:visible="showInfo"
