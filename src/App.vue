@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 #app {
-  font-family: "SF Pro", Helvetica, Arial, sans-serif;
+  font-family: "SF Pro", "NotoSansThai" Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

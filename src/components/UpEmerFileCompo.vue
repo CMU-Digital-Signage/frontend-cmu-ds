@@ -182,7 +182,7 @@ const errorSelectFile = () => {
   </div>
 </template>
 
-<style>
+<style scope>
 .title-input {
   box-shadow: none;
   border: none;

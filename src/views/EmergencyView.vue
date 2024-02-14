@@ -21,6 +21,7 @@ const click = computed({
 const emerPosters = computed(() => store.state.emerPosters);
 
 const selectEmer = ref("");
+const selectBanner = ref(false);
 // const selectEmerText = ref("");
 const selectedPosterImage = ref("");
 const confirmationText = ref("");
@@ -35,6 +36,14 @@ watch(selectEmer, () => {
   );
   if (selectedEmergency) {
     selectedPosterImage.value = selectedEmergency.emergencyImage;
+    selectBanner.value = false;
+  }
+});
+
+watch(selectBanner, () => {
+  if (selectBanner.value) {
+    selectEmer.value = "";
+    selectedPosterImage.value = "";
   }
 });
 
@@ -62,18 +71,18 @@ onMounted(async () => {
           <span style="font-weight: bold">Please be certain. </span>
         </p> -->
         <div
-          class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center justify-center"
+          class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center border-red-500 border-2"
         >
           <div
-            class="w-8 h-8 -ml-2 flex items-center justify-center rounded-full"
+            class="w-8 h-8 ml-5 flex items-center justify-center rounded-full"
           >
             <i
-              class="pi pi-exclamation-triangle mb-1 text-[#ff7474] text-3xl"
+              class="pi pi-exclamation-triangle mb-1 text-red-500 text-3xl"
             ></i>
           </div>
 
           <div>
-            <p class="text-[16px] font-bold" style="color: red">
+            <p class="text-[16px] font-bold text-red-500">
               <span>Activating the Emergency Poster</span>
             </p>
             <p>
@@ -110,29 +119,32 @@ onMounted(async () => {
           </div>
 
           <div>
-            <p class="text-[16px] font-semibold mb-2">Type text to displayed</p>
+            <p class="text-[16px] font-semibold mb-2">
+              Type text to display banner
+            </p>
             <div
               class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-48"
             >
               <div class="flex flex-col gap-3 mx-8 my-5">
                 <div class="flex gap-2 items-center">
-                  <RadioButton v-model="selectEmer" :value="1" />
-                  <label for="username">Text Title</label>
+                  <RadioButton :value="true" v-model="selectBanner" />
+                  <label for="username">Banner</label>
                 </div>
                 <div class="flex flex-col gap-2 w-full">
-                  <textarea
+                  <Textarea
+                    :disabled="!selectBanner"
                     placeholder="Ex: There's a fire, do not use the elevator"
                     class="border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none"
-                  ></textarea>
+                  ></Textarea>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div v-if="selectEmer">
+      <div v-if="selectEmer || selectBanner">
         <p class="text-[17px] font-semibold mb-2">
-          Type password in the box below
+          Type your password in the box below
         </p>
         <div class="flex flex-col">
           <InputText class="w-full mb-2" v-model="confirmationText"></InputText>

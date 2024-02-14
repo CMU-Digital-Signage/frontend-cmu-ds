@@ -17,7 +17,7 @@ onUpdated(() => {
   </div>
 </template>
 
-<style>
+<style scope>
 .rectangle8 {
   padding-inline: 1.5rem;
   overflow: hidden;
