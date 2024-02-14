@@ -1,6 +1,8 @@
 import io from "socket.io-client";
 import store from "@/store";
 import { Device, Emergency, Poster, User } from "@/types";
+import router from "@/router";
+import { getActivateEmergency } from "@/services";
 
 export const socket = io("localhost:8000", {
   transports: ["websocket"],
@@ -71,16 +73,43 @@ export default function setupSocket() {
     );
   });
 
-  // poster
-  socket.on("addPoster", (data: Emergency) => {
-    store.state.emerPosters.push({ ...data });
+  // activate emergency
+  socket.on("activate", async (data: Emergency) => {
+    const mac = router.currentRoute.value.params.mac as string;
+
+    if (mac) {
+      const res = await getActivateEmergency(mac);
+      store.state.emerPosters = res.emergency;
+    } else {
+      const index = store.state.emerPosters.findIndex(
+        (e) => e.incidentName === data.incidentName
+      );
+      if (index !== -1) store.state.emerPosters[index].status = "Active";
+    }
   });
-  socket.on("updatePoster", (incidentName, data: Emergency) => {
-    const index = store.state.emerPosters.findIndex(
-      (e) => e.incidentName === incidentName
+  // deactivate emergency
+  socket.on("deactivate", (data: Emergency) => {
+    const mac = router.currentRoute.value.params.mac as string;
+    if (mac) {
+      store.state.emerPosters = <Emergency[]>[];
+    } else {
+      const index = store.state.emerPosters.findIndex(
+        (e) => e.incidentName === data.incidentName
+      );
+      if (index !== -1) store.state.emerPosters[index].status = "Inactive";
+    }
+  });
+
+  // poster
+  socket.on("addPoster", (data: Poster) => {
+    // store.state.posters.push({ ...data });
+  });
+  socket.on("updatePoster", (data: Poster) => {
+    const index = store.state.posters.findIndex(
+      (e) => e.posterId === data.posterId
     );
     if (index !== -1) {
-      store.state.emerPosters[index] = {
+      store.state.posters[index] = {
         ...store.state.devices[index],
         ...data,
       };
@@ -88,10 +117,10 @@ export default function setupSocket() {
   });
   socket.on("deletePoster", (data: Poster) => {
     store.state.posters = store.state.posters.filter(
-      (e) => e.posterId !== data.posterId
+      (e) => e.title !== data.title
     );
     store.state.uniquePosters = store.state.uniquePosters.filter(
-      (e) => e.posterId !== data.posterId
+      (e) => e.title !== data.title
     );
   });
 }
