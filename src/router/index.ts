@@ -105,6 +105,11 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  if ("/emergency".includes(to.path) && !localStorage.getItem("token")) {
+    next();
+    return;
+  }
+
   const shouldFetchData = !to.meta.hideSidebar && !store.state.devices.length;
   if (shouldFetchData) {
     if (!store.state.userInfo.id) {
@@ -131,7 +136,7 @@ router.beforeEach(async (to, from, next) => {
       store.state.filterDevice = devices.map((e) => e.MACaddress);
 
       if (
-        (to.path === "/admin" || to.path === "/emergency") &&
+        ("/admin".includes(to.path) || "/emergency".includes(to.path)) &&
         !store.state.userInfo.isAdmin
       ) {
         next({ path: "/", replace: true });
