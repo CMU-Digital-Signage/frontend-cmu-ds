@@ -1,13 +1,15 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { an } from "@fullcalendar/core/internal-common";
 export default defineComponent({
   name: "SideBar",
 });
 </script>
 <script setup lang="ts">
-import { computed, watchEffect} from "vue";
+import { computed, watchEffect } from "vue";
 import store from "@/store";
 import { signOut } from "@/services";
+import { useToast } from "primevue/usetoast";
 
 const user = computed(() => store.state.userInfo);
 const device = computed(() => store.state.devices);
@@ -21,11 +23,43 @@ const toggleSidebar = () => {
   store.state.openSidebar = !openSidebar.value;
 };
 
+const menu = ref();
+
+const toggle = (event: any) => {
+  menu.value.toggle(event);
+};
+
 watchEffect(() => {
   if (window.innerWidth <= 600) {
     store.state.openSidebar = false;
   }
 });
+
+const toast = useToast();
+
+const dialogVisible = ref(true);
+const showDialog = () => {
+  dialogVisible.value = true;
+};
+
+const items = ref([
+  {
+    label: "Change Emergency Password",
+    icon: "pi pi-pencil",
+    command: () => {
+      showDialog();
+    },
+  },
+  {
+    label: "Log Out",
+    icon: "pi pi-sign-out",
+    command: () => {
+      signOut();
+    },
+  },
+]);
+
+const value = ref(null);
 </script>
 
 <template>
@@ -322,26 +356,74 @@ watchEffect(() => {
         </div>
       </div>
       <div class="flex justify-center items-center">
-        <button
-          @click="signOut()"
-          class="pi pi-sign-out"
+        <Button
+          text
+          @click="toggle"
+          aria-haspopup="true"
+          aria-controls="overlay_menu"
+          icon="pi pi-angle-up"
           :style="{
-            color: 'red',
-            transform: openSidebar ? '' : 'translateX(8px)',
-            marginLeft: openSidebar ? '' : '-8px',
+            transform: openSidebar ? 'translateX(-10px)' : 'translateX(3px)',
           }"
           :class="
             openSidebar
-              ? 'px-0.5 menu-ho-emergency rounded-full h-10 w-10'
-              : 'ml-3.5 rounded-full menu-ho-emergency-slide h-10 w-10'
+              ? '  rounded-full translateX(-3px) w-10'
+              : ' rounded-full  translateX(-3px) w-10'
           "
         />
+        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
+        <Dialog
+          v-model:visible="dialogVisible"
+          class="h-auto w-[450px]"
+          modal
+          close-on-escape
+          :draggable="false"
+        >
+          <template #header>
+            <div class="header-popup">Change Emergency Password</div> </template
+          ><label class="text-[17px] font-semibold pt-2 w-32"> </label>
+          <div class="flex flex-col gap-2">
+            <FloatLabel class="mt-8">
+              <Password
+                id="currentPassword"
+                class="w-full rounded-lg h-12"
+                v-model="value"
+                toggle-mask
+              />
+              <label for="currentPassword">Current Password</label>
+            </FloatLabel>
+            <FloatLabel class="mt-8">
+              <Password
+                id="newPassword"
+                class="w-full rounded-lg h-12"
+                v-model="value"
+                toggle-mask
+              />
+              <label for="newPassword">New Password</label>
+            </FloatLabel>
+            <FloatLabel class="mt-8">
+              <Password
+                id="reTypeNewPassword"
+                class="w-full rounded-lg h-12"
+                v-model="value"
+                toggle-mask
+              />
+              <label for="reTypeNewPassword">Re-type new Password</label>
+            </FloatLabel>
+
+            <Button
+              label="Change Password"
+              text
+              :class="'primaryButton'"
+              type="submit"
+            ></Button></div
+        ></Dialog>
       </div>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 Button {
   box-shadow: none;
 }
@@ -385,5 +467,42 @@ Button {
 }
 .side-bar-close {
   width: 90px;
+}
+ .p-password-panel {
+  width: 100vw;
+  border-radius: 20px;
+ }
+ .p-password-meter {
+  width: 100vw;
+  border-radius: 20px;
+ }
+
+ .p-password-info {
+  width: 100vw;
+  border-radius: 20px;
+ }
+
+.primaryButton {
+  width: 100%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: rgb(235, 235, 248);
+  color: rgb(43, 152, 255);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(228, 233, 255);
+  text-decoration-line: underline;
+}
+
+.header-popup {
+  font-weight: 700;
+  font-size: 22px;
 }
 </style>
