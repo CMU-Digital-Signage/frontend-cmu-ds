@@ -13,8 +13,10 @@ import {
   addEmergency,
   editEmergency,
   deleteEmergency,
+  activateEmergency,
+  deactivateEmergency,
 } from "./emergency";
-import { getPosterEachDevice } from "./pi";
+import { getPosterEachDevice, getActivateEmergency } from "./pi";
 
 export {
   getUserInfo,
@@ -35,5 +37,8 @@ export {
   addEmergency,
   editEmergency,
   deleteEmergency,
+  activateEmergency,
+  deactivateEmergency,
   getPosterEachDevice,
+  getActivateEmergency,
 };

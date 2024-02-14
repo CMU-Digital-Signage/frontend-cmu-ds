@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { getPosterEachDevice } from "@/services";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import { setFieldPoster } from "@/utils/constant";
@@ -13,6 +13,7 @@ import { ImageCollection, Poster } from "@/types";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
+const emerPoster = computed(() => store.state.emerPosters[0]);
 const image = ref<string>();
 let currentIndex = 0;
 let count = 0;
@@ -47,8 +48,8 @@ const fetchData = async () => {
           return;
         } else return;
       }
-      showCurrentPoster();
     }
+    showCurrentPoster();
   }
 };
 
@@ -60,8 +61,9 @@ const showCurrentPoster = () => {
       currentPoster.startTime.toTimeString() <= new Date().toTimeString() &&
       currentPoster.endTime.toTimeString() >= new Date().toTimeString()
     ) {
+      if (emerPoster.value) return;
+
       image.value = currentPoster.image as any;
-      count = 0;
       setTimeout(() => {
         currentIndex = (currentIndex + 1) % posters.value.length;
         updatePosterInterval();
@@ -94,6 +96,14 @@ const showCurrentPoster = () => {
 
 onMounted(() => {
   fetchData();
+});
+
+watch(emerPoster, () => {
+  if (emerPoster.value) {
+    image.value = emerPoster.value.emergencyImage;
+  } else {
+    showCurrentPoster();
+  }
 });
 </script>
 
