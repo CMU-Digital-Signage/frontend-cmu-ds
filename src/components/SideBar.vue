@@ -38,8 +38,15 @@ const toast = useToast();
 
 const dialogSetPassword = ref(false);
 const dialogVisible = ref(false);
+const secondDialogVisible = ref(false);
+
 const showDialog = () => {
   dialogVisible.value = true;
+};
+
+const showSecondDialog = () => {
+  dialogVisible.value = false;
+  secondDialogVisible.value = true;
 };
 
 const items = ref([
@@ -423,6 +430,13 @@ const value = ref(null);
               <label for="reTypeNewPassword">Re-type new password</label>
             </FloatLabel>
             <Button
+              text
+              link
+              @click="showSecondDialog"
+              class="-ml-3 w-fit underline font-semibold text-[#1b7be8] bg-none"
+              >Forget password?</Button
+            >
+            <Button
               label="Change Password"
               text
               disabled
@@ -430,6 +444,19 @@ const value = ref(null);
               type="submit"
             ></Button></div
         ></Dialog>
+
+        <Dialog
+          modal
+          v-model:visible="secondDialogVisible"
+          class="h-auto w-[450px]"
+          ><template #header>
+            <div class="header-popup">Forget Emergency Password</div>
+          </template>
+          <p v-if="user">
+            We'll send a password reset confirmation to <span class="text-[#1b7be8] font-extrabold underline">{{ user.email }}</span> Check
+            your inbox (including spam) to reset your emergency password.
+          </p>
+        </Dialog>
 
         <!-- //dialog Set Password -->
         <Dialog
@@ -561,7 +588,7 @@ Button {
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 50px;
+  margin-top: 30px;
   background-color: rgb(74, 158, 255);
   color: rgb(255, 255, 255);
   font-weight: 800;

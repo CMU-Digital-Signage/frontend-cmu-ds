@@ -22,7 +22,7 @@
           >ลงชื่อเข้าสู่ระบบ</span
         >
         <button
-          class="flex items-center md:mb-4 mb-3 justify-center w-auto md:p-5 md:h-11 h-fit p-2 relative rounded-[10px] bg-[#696CA3] text-white text-2xl button-container"
+          class="flex items-center md:mb-4 mb-3 justify-center w-auto md:p-6 md:h-11 h-fit p-2 relative rounded-[10px] bg-[#696CA3] text-white text-2xl button-container drop-shadow-xl"
           @click="redirectToOAuth()"
         >
           <img
@@ -36,8 +36,8 @@
         </button>
         <router-link to="/emergency">
           <Button
-            class="w-auto md:p-5 md:h-11 h-fit p-2 relative rounded-[10px] text-sm md:text-lg button-containerEmer"
-            outlined
+            class="w-auto md:p-5 md:h-11 h-fit p-2 bg-[#ff4747] relative rounded-[10px] text-sm md:text-lg button-containerEmer"
+            
             severity="danger"
           >
             <i class="pi pi-exclamation-triangle"></i>
@@ -87,7 +87,7 @@ export default defineComponent({
 }
 
 .button-containerEmer:hover {
-  background-color: #d65f5f;
+  background-color: #e93e3e;
   color: white;
 }
 </style>
