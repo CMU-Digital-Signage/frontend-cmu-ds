@@ -230,7 +230,7 @@ const del = async (poster: string) => {
         >
           <div class="flex flex-col gap-3">
             <div class="inline-flex gap-2">
-              <Tag severity="success" value="Running" />
+              <Tag severity="success" value="Displayed" />
               <p class="mt-1">Poster is currently being displayed.</p>
             </div>
             <div class="inline-flex gap-2">
@@ -240,14 +240,8 @@ const del = async (poster: string) => {
               </p>
             </div>
             <div class="inline-flex gap-2">
-              <Tag severity="warning" value="Upcoming" />
-              <p class="mt-1">Poster display date and time hasn't arrived.</p>
-            </div>
-            <div class="inline-flex gap-2">
-              <Tag severity="info" value="Pending" />
-              <p class="mt-1">
-                Poster display date has come, but it's not time to be displayed.
-              </p>
+              <Tag severity="warning" value="Awaited" />
+              <p class="mt-1">Poster will be displayed at a later date or time.</p>
             </div>
           </div>
         </OverlayPanel>
