@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUpdated, ref, watch } from "vue";
 import store from "@/store";
-import Admin from "@/components/AdminCompo.vue";
-import Device from "@/components/DeviceCompo.vue";
-import Instructor from "@/components/InstructorCompo.vue";
-import TabView from "primevue/tabview";
-import TabPanel from "primevue/tabpanel";
 import {
   activateEmergency,
   deactivateEmergency,
   getEmergency,
 } from "@/services";
+import TextPoster from "@/components/TextPoster.vue";
 import { Emergency } from "@/types";
+import LoginViewVue from "./LoginView.vue";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 const click = computed({
   get: () => store.state.selectTabview,
@@ -21,8 +19,8 @@ const click = computed({
 const emerPosters = computed(() => store.state.emerPosters);
 
 const selectEmer = ref("");
+const inputTextPoster = ref("");
 const selectBanner = ref(false);
-// const selectEmerText = ref("");
 const selectedPosterImage = ref("");
 const confirmationText = ref("");
 const isConfirmationValid = computed(
@@ -47,6 +45,16 @@ watch(selectBanner, () => {
   }
 });
 
+const test = (e: any) => {
+  console.log(e.target);
+  inputTextPoster.value = e.target;
+};
+
+onUpdated(() => {
+  console.log("inputTextPoster.value");
+  console.log(inputTextPoster.value);
+});
+
 onMounted(async () => {
   if (!emerPosters.value.length) {
     const res = await getEmergency();
@@ -64,14 +72,8 @@ onMounted(async () => {
   <div class="rectangleOut flex flex-row">
     <div class="rectangleLeft flex flex-col text-left justify-between">
       <div>
-        <p class="text-[18px] mb-8">
-          <span style="color: red; font-weight: bold"
-            >Activating the Emergency Poster</span
-          >, there is overriding currently running poster.
-          <span style="font-weight: bold">Please be certain. </span>
-        </p>
         <div
-          class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center border-red-500 border-2"
+          class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center border-red-500 border-[1px]"
         >
           <div
             class="w-8 h-8 ml-5 flex items-center justify-center rounded-full"
@@ -127,12 +129,18 @@ onMounted(async () => {
             >
               <div class="flex flex-col gap-3 mx-8 my-5">
                 <div class="flex gap-2 items-center">
-                  <RadioButton :value="true" v-model="selectBanner" />
-                  <label for="username">Banner</label>
+                  <RadioButton
+                    :value="true"
+                    :inputId="'Banner'"
+                    v-model="selectBanner"
+                  />
+                  <label :for="'Banner'">Banner</label>
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                   <Textarea
                     :disabled="!selectBanner"
+                    inputmode="text"
+                    v-model="inputTextPoster"
                     placeholder="Ex: There's a fire, do not use the elevator"
                     class="border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none"
                   ></Textarea>
@@ -149,6 +157,13 @@ onMounted(async () => {
         <div class="flex flex-col">
           <InputText class="w-full mb-2" v-model="confirmationText"></InputText>
           <Button
+            v-if="selectBanner"
+            class="w-full bg-red-500 rounded-lg border-0"
+            disabled
+            label="Activate"
+          ></Button>
+          <Button
+            v-else
             class="w-full bg-red-500 rounded-lg border-0"
             :disabled="!isConfirmationValid"
             :label="
@@ -181,6 +196,10 @@ onMounted(async () => {
             :src="selectedPosterImage"
             alt="poster-image"
           />
+          <div v-else>
+            {{ inputTextPoster }}
+            <TextPoster :text="inputTextPoster" />
+          </div>
         </div>
       </div>
     </div>
