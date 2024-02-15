@@ -36,6 +36,7 @@ watchEffect(() => {
 
 const toast = useToast();
 
+const dialogSetPassword = ref(false);
 const dialogVisible = ref(false);
 const showDialog = () => {
   dialogVisible.value = true;
@@ -374,6 +375,8 @@ const value = ref(null);
           "
         />
         <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
+
+        <!-- //dialog reset password -->
         <Dialog
           v-model:visible="dialogVisible"
           class="h-auto w-[450px]"
@@ -421,6 +424,76 @@ const value = ref(null);
             </FloatLabel>
             <Button
               label="Change Password"
+              text
+              disabled
+              :class="'primaryButton'"
+              type="submit"
+            ></Button></div
+        ></Dialog>
+
+        <!-- //dialog Set Password -->
+        <Dialog
+          v-model:visible="dialogSetPassword"
+          class="w-[550px]"
+          modal
+          :draggable="false"
+          :pt="{
+            mask: {
+              style: 'backdrop-filter: blur(2px)',
+            },
+          }"
+          :closable="false"
+        >
+          <template #header>
+            <div class="header-popup">Set Emergency Password</div>
+          </template>
+          <div
+            class="mb-6 gap-7 bg-[#C7EBFF] rounded-lg h-fit p-4 border-[#0067A0] border-2"
+          >
+            <div class="inline-flex">
+              <i
+                class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"
+              ></i>
+              <p class="text-xl mb-2 font-bold text-[#0067A0]">
+                Attention CPE Digital Signage users!
+              </p>
+            </div>
+            <p class="ml-9">
+              CPE Digital Signage have Emergency Activation function for
+              displaying emergency posters in all screens,
+              <span class="font-bold text-black">
+                all users have to set your password to activate the emergency
+                poster when an incident occurs.</span
+              >
+            </p>
+          </div>
+
+          <label class="text-[17px] w- font-semibold pt-2 w-32"> </label>
+          <div class="flex flex-col gap-2 w-full">
+            <FloatLabel class="mt-6">
+              <Password
+                id="Password"
+                v-model="value"
+                input-class="w-screen rounded-[12px] border-2"
+                class="w-full"
+                :feedback="false"
+                toggle-mask
+              />
+              <label for="newPassword">Password</label>
+            </FloatLabel>
+            <FloatLabel class="mt-6">
+              <Password
+                id="confirmPassword"
+                input-class="w-screen rounded-[12px] border-2"
+                class="w-full"
+                v-model="value"
+                :feedback="false"
+                toggle-mask
+              />
+              <label for="reTypeNewPassword">Confirm password</label>
+            </FloatLabel>
+            <Button
+              label="Done"
               text
               disabled
               :class="'primaryButton'"

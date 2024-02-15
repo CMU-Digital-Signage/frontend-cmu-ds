@@ -64,12 +64,12 @@ onMounted(async () => {
   <div class="rectangleOut flex flex-row">
     <div class="rectangleLeft flex flex-col text-left justify-between">
       <div>
-        <!-- <p class="text-[18px] mb-8">
+        <p class="text-[18px] mb-8">
           <span style="color: red; font-weight: bold"
             >Activating the Emergency Poster</span
           >, there is overriding currently running poster.
           <span style="font-weight: bold">Please be certain. </span>
-        </p> -->
+        </p>
         <div
           class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center border-red-500 border-2"
         >

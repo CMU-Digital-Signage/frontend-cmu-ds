@@ -30,7 +30,7 @@
             alt="cmulogo"
             src="../assets/images/cmu-logo-th.png"
           />
-          <span class="font-sf-pro-rounded md:text-lg text-sm font-semibold"
+          <span class="font-sf-pro-rounded md:text-lg text-sm font-medium"
             >Login with CMU Account</span
           >
         </button>
@@ -41,7 +41,7 @@
             severity="danger"
           >
             <i class="pi pi-exclamation-triangle"></i>
-            <p class="font-sf-pro-rounded ml-2 font-semibold">Emergency Activation</p>
+            <p class="font-sf-pro-rounded ml-2 font-medium">Emergency Activation</p>
           </Button>
         </router-link>
       </div>
