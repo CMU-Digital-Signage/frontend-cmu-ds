@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { an } from "@fullcalendar/core/internal-common";
 export default defineComponent({
   name: "SideBar",
 });
@@ -299,17 +298,20 @@ const value = ref(null);
             <Checkbox
               v-model="filterDevice"
               :value="item.MACaddress"
-              :input-style="{
-                'border-color': `${item.color}`,
-                'background-color': filterDevice.includes(
-                  item.MACaddress ? item.MACaddress : ''
-                )
-                  ? `${item.color}`
-                  : undefined,
+              :pt="{
+                box: {
+                  style: {
+                    'border-color': `${item.color}`,
+                    'background-color': filterDevice.includes(
+                      item.MACaddress ? item.MACaddress : ''
+                    )
+                      ? `${item.color}`
+                      : undefined,
+                  },
+                },
               }"
             />
-
-            <label class="" :for="item.deviceName">{{ item.deviceName }}</label>
+            <label :for="item.deviceName">{{ item.deviceName }}</label>
           </div>
         </div>
       </div>
@@ -475,7 +477,6 @@ Button {
 .side-bar-close {
   width: 90px;
 }
-
 
 .p-inputtext.p-component.p-password-input {
   width: 100%;
