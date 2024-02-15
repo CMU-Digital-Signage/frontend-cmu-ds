@@ -65,7 +65,11 @@ onBeforeUnmount(() => {
   </div>
   <div v-else>
     <div class="w-screen flex flex-col h-full bg-[#fafafa] fixed">
-      <NavBar v-if="$route.path === '/emergency'" class="bg-white" />
+      <NavBar
+        v-if="$route.path === '/emergency'"
+        class="bg-white"
+        :types="'Outside'"
+      />
       <router-view />
     </div>
   </div>

@@ -6,7 +6,14 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { computed, onUpdated, reactive, ref, watchEffect } from "vue";
+import {
+  computed,
+  onUpdated,
+  reactive,
+  ref,
+  watchEffect,
+  defineProps,
+} from "vue";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { addDevice, addAdmin, searchPoster } from "@/services";
@@ -39,6 +46,9 @@ const selectDevice = computed({
   get: () => store.state.selectDevice,
   set: (val) => (store.state.selectDevice = val),
 });
+
+const Emer = defineProps({ types: String });
+
 const email = ref<string>("");
 
 watchEffect(() => {
@@ -387,6 +397,14 @@ const validateEmail = () => {
 
     <!-- "Emergency" -->
     <ul v-if="$route.path === '/emergency'">
+      <router-link to="/login" v-if="Emer.types === 'Outside'">
+        <Button
+          icon="pi pi-arrow-left"
+          class="flex justify-center border-0 text-black rounded-md bg-white hover:bg-gray-200 mr-3"
+        >
+        </Button>
+      </router-link>
+
       <p class="text-[#FF0000]">Emergency Activation</p>
     </ul>
 
