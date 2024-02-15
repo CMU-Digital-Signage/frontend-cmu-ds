@@ -255,10 +255,9 @@ export const setFieldPoster = (data: Poster[]) => {
 };
 
 export const statusPoster = [
-  { status: "Running", severity: "success" },
-  { status: "Pending", severity: "info" },
-  { status: "Upcoming", severity: "warning" },
-  { status: "Expire", severity: "danger" },
+  { status: "Displayed", severity: "success" },
+  { status: "Awaited", severity: "warning" },
+  { status: "Expired", severity: "danger" },
 ];
 export const statusEmer = [
   { status: "Inactive", severity: "secondary" },
@@ -279,14 +278,14 @@ export const createUnique = (data: Poster[]) => {
           new Date().toTimeString() >= e.startTime.toTimeString() &&
           new Date().toTimeString() <= e.endTime.toTimeString()
         ) {
-          status = "Running";
+          status = "Displayed";
         } else {
-          status = "Pending";
+          status = "Awaited";
         }
       } else if (currentDate < e.startDate) {
-        status = "Upcoming";
+        status = "Awaited";
       } else {
-        status = "Expire";
+        status = "Expired";
       }
       if (store.state.userInfo.isAdmin) {
         acc.push({
