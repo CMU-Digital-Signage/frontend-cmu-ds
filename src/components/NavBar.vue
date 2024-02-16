@@ -645,5 +645,6 @@ li {
 .header-popup {
   font-weight: 700;
   font-size: 22px;
+  color: black;
 }
 </style>

@@ -240,7 +240,7 @@ const del = async (poster: string) => {
               </p>
             </div>
             <div class="inline-flex gap-2">
-              <Tag severity="warning" value="Awaited" />
+              <Tag severity="info" value="Awaited" />
               <p class="mt-1">Poster will be displayed at a later date or time.</p>
             </div>
           </div>

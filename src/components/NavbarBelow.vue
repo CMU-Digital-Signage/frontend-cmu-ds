@@ -137,7 +137,7 @@ const add = async () => {
 <template>
   <Toast />
   <div
-    class="bg-[#F6F6F6] border-t border-[#c7bbbb] h-14 px-6 flex items-center"
+    class="bg-[#ffffff] border-t border-[#c7bbbb] h-14 px-6 flex items-center"
   >
     <ul
       v-if="$route.path === '/uploadfile'"

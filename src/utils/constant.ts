@@ -256,7 +256,7 @@ export const setFieldPoster = (data: Poster[]) => {
 
 export const statusPoster = [
   { status: "Displayed", severity: "success" },
-  { status: "Awaited", severity: "warning" },
+  { status: "Awaited", severity: "info" },
   { status: "Expired", severity: "danger" },
 ];
 export const statusEmer = [

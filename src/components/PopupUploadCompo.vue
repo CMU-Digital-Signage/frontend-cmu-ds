@@ -626,6 +626,7 @@ const nextStepUpload = () => {
 .header-popup {
   font-weight: 700;
   font-size: 22px;
+  color: black;
 }
 
 .secondaryButton {

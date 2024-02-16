@@ -37,7 +37,7 @@ watchEffect(() => {
 const toast = useToast();
 
 const dialogSetPassword = ref(false);
-const dialogVisible = ref(false);
+const dialogVisible = ref(true);
 const secondDialogVisible = ref(false);
 
 const showDialog = () => {
@@ -148,12 +148,12 @@ const value = ref(null);
         >
           <router-link to="/">
             <Button
-              class="bg-white menu-ho w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
+              class="bg-none menu-ho w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/' ? '#70aaeb2c' : '',
-                color: $route.path === '/' ? '#1b7be8' : '',
+                'background-color': $route.path === '/' ? '#2E3F4A' : '',
+                'color': $route.path === '/' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-microsoft"></i>
@@ -161,7 +161,7 @@ const value = ref(null);
             </Button>
             <Button
               class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-              :class="{ 'bg-[#70aaeb2c] text-[#1b7be8]': $route.path === '/' }"
+              :class="{ 'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/' }"
               v-else
               link
             >
@@ -172,14 +172,13 @@ const value = ref(null);
           <router-link to="/file">
             <div>
               <Button
-                class="bg-white w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+                class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
                 v-if="openSidebar"
                 link
                 :style="{
-                  'background-color':
-                    $route.path === '/file' ? '#70aaeb2c' : '',
-                  color: $route.path === '/file' ? '#1b7be8' : '',
-                }"
+                'background-color': $route.path === '/file' ? '#2E3F4A' : '',
+                'color': $route.path === '/file' ? '#FFFFFF' : '',
+              }"
               >
                 <i class="pi pi-file"></i>
                 <span>File</span>
@@ -187,7 +186,7 @@ const value = ref(null);
               <Button
                 class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
                 :class="{
-                  'bg-[#70aaeb2c] text-[#1b7be8]': $route.path === '/file',
+                  'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/file',
                 }"
                 v-else
                 icon="pi pi-file"
@@ -198,13 +197,12 @@ const value = ref(null);
           </router-link>
           <router-link to="/deviceManage">
             <Button
-              class="bg-white w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+              class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
-                'background-color':
-                  $route.path === '/deviceManage' ? '#70aaeb2c' : '',
-                color: $route.path === '/deviceManage' ? '#1b7be8' : '',
+                'background-color': $route.path === '/deviceManage' ? '#2E3F4A' : '',
+                'color': $route.path === '/deviceManage' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-desktop"></i>
@@ -213,7 +211,7 @@ const value = ref(null);
             <Button
               class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
               :class="{
-                'bg-[#70aaeb2c] text-[#1b7be8]':
+                'bg-[#2E3F4A] text-[#FFFFFF]':
                   $route.path === '/deviceManage',
               }"
               v-else
@@ -242,12 +240,12 @@ const value = ref(null);
         >
           <router-link to="/admin">
             <Button
-              class="bg-white space-x-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
+              class="bg-none space-x-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/admin' ? '#70aaeb2c' : '',
-                color: $route.path === '/admin' ? '#1b7be8' : '',
+                'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
+                'color': $route.path === '/admin' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-users"></i>
@@ -256,7 +254,7 @@ const value = ref(null);
             <Button
               class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
               :class="{
-                'bg-[#70aaeb2c] text-[#1b7be8]': $route.path === '/admin',
+                'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/admin',
               }"
               v-else
               link
@@ -267,12 +265,13 @@ const value = ref(null);
 
           <router-link to="/emergency">
             <Button
-              class="bg-white space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
+              class="bg-none space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
               v-if="openSidebar"
               link
               :style="{
                 'background-color':
-                  $route.path === '/emergency' ? '#fbcfcf' : '',
+                  $route.path === '/emergency' ? '#FF5B5B' : '',
+                  'color': $route.path === '/emergency' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-exclamation-triangle"></i>
@@ -281,7 +280,7 @@ const value = ref(null);
             <Button
               class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
               :class="{
-                'bg-[#ffcfcf] text-[#f00]': $route.path === '/emergency',
+                'bg-[#FF5B5B] text-[#ffffff]': $route.path === '/emergency',
               }"
               v-else
               icon="pi pi-exclamation-triangle"
@@ -329,7 +328,7 @@ const value = ref(null);
     <div
       class="flex h-14 w-full pl-2 pr-4 items-center"
       :class="openSidebar ? 'justify-between' : 'justify-center'"
-      style="border-top: 1px solid #aaa"
+      style="border-top: 1px solid #c2c2c2"
     >
       <div class="flex items-center">
         <div
@@ -386,9 +385,23 @@ const value = ref(null);
         <!-- //dialog reset password -->
         <Dialog
           v-model:visible="dialogVisible"
-          class="h-auto w-[450px]"
+          class="h-auto w-[550px] "
           modal
+          :close-on-escape="false"
           :draggable="false"
+          :pt="{
+            content: {
+              style:
+                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            }, 
+            header: {
+              style:
+                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            },
+            mask: {
+              style: 'backdrop-filter: blur(2px)',
+            },
+          }"
         >
           <template #header>
             <div class="header-popup">Change Emergency Password</div>
@@ -434,7 +447,7 @@ const value = ref(null);
               link
               @click="showSecondDialog"
               class="-ml-3 w-fit underline font-semibold text-[#1b7be8] bg-none"
-              >Forget password?</Button
+              >Forget your password?</Button
             >
             <Button
               label="Change Password"
@@ -448,13 +461,34 @@ const value = ref(null);
         <Dialog
           modal
           v-model:visible="secondDialogVisible"
-          class="h-auto w-[450px]"
+          :draggable="false"
+          :close-on-escape="false"
+          class="h-auto w-[550px] "
+          :pt="{
+            content: {
+              style:
+                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            }, 
+            header: {
+              style:
+                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            },
+            mask: {
+              style: 'backdrop-filter: blur(2px)',
+            },
+          }"
           ><template #header>
             <div class="header-popup">Forget Emergency Password</div>
           </template>
+          <p v-if="user" class="mb-6">
+            {{ user.firstName }} {{ user.lastName }} · CPE Digital Signage
+          </p>
           <p v-if="user">
-            We'll send a password reset confirmation to <span class="text-[#1b7be8] font-extrabold underline">{{ user.email }}</span> Check
-            your inbox (including spam) to reset your emergency password.
+            We'll send a password reset confirmation to
+            <span class="text-[#1b7be8] font-extrabold underline">{{
+              user.email
+            }}</span>
+            Check your inbox (including spam) to reset your emergency password.
           </p>
         </Dialog>
 
@@ -463,8 +497,17 @@ const value = ref(null);
           v-model:visible="dialogSetPassword"
           class="w-[550px]"
           modal
+          :close-on-escape="false"
           :draggable="false"
           :pt="{
+            content: {
+              style:
+                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            }, 
+            header: {
+              style:
+                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            },
             mask: {
               style: 'backdrop-filter: blur(2px)',
             },
@@ -538,7 +581,7 @@ Button {
 }
 
 .menu-ho:hover {
-  background-color: #70aaeb2c;
+  background-color: #cfcfcf58;
   color: #282828;
 }
 
@@ -604,5 +647,6 @@ Button {
 .header-popup {
   font-weight: 700;
   font-size: 22px;
+  color: black;
 }
 </style>
