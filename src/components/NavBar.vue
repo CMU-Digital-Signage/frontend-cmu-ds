@@ -637,6 +637,7 @@ li {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
+  margin-right: 10px;
   background-color: none;
   color: black;
   cursor: pointer;
@@ -653,6 +654,7 @@ li {
   border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
+  margin-left: 10px;
   margin-top: 20px;
   background-color: none;
   color: rgb(255, 255, 255);

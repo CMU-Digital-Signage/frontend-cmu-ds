@@ -707,10 +707,12 @@ const nextStepPreview = () => {
   border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
+  margin-right: 10px;
   margin-top: 20px;
   background-color: none;
   color: black;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 .secondaryButton:hover {
@@ -723,6 +725,7 @@ const nextStepPreview = () => {
   border-width: 0;
   border-radius: 8px;
   padding-top: 10px;
+  margin-left: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
   background-color: none;

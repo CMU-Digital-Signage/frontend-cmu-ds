@@ -670,13 +670,22 @@ const handleChangePassword = async () => {
               />
               <label for="reTypeNewPassword">Confirm password</label>
             </FloatLabel>
-            <Button
-              label="Done"
-              text
-              @click="checkMatchPassword"
-              :class="'primaryButton'"
-              type="submit"
-            ></Button></div
+            <div class="inline-flex">
+              <Button
+                label="Later, Log Out"
+                text
+                @click="signOut()"
+                :class="'secondaryButton'"
+                type="submit"
+              ></Button>
+              <Button
+                label="Confirm"
+                text
+                @click="checkMatchPassword"
+                :class="'primaryButton'"
+                type="submit"
+              ></Button>
+            </div></div
         ></Dialog>
       </div>
     </div>
@@ -734,22 +743,42 @@ Button {
 }
 
 .primaryButton {
-  width: 100%;
+  width: 50%;
   border-width: 0;
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 30px;
+  margin-left: 10px;
   background-color: rgb(74, 158, 255);
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
 }
 
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 30px;
+  margin-right: 10px;
+  background-color: none;
+  color: rgb(255, 0, 0);
+  cursor: pointer;
+}
+
+
 .primaryButton:hover {
   cursor: pointer;
   background-color: rgb(9, 120, 247);
   text-decoration-line: underline;
+}
+
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
 }
 
 .header-popup {
