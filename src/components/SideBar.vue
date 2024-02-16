@@ -58,9 +58,19 @@ const showDialog = () => {
   resetChangeForm();
 };
 
+const loading = ref(false);
 const sendEmailDialog = () => {
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+    secondDialogVisible.value = false;
+    toast.add({
+      severity: "success",
+      summary: "Send email successfull",
+      life: 3000,
+    });
+  }, 7000);
   sendEmail();
-  secondDialogVisible.value = false;
 };
 
 const showSecondDialog = () => {
@@ -577,10 +587,11 @@ const handleChangePassword = async () => {
             <span class="text-[#1b7be8] font-extrabold underline">{{
               user.email
             }}</span>
-            Check your inbox (including spam) to reset your emergency password.
+            Check your inbox (including Spam and Junk) to reset your emergency password.
           </p>
           <Button
             label="Send Email"
+            :loading="loading"
             text
             @click="sendEmailDialog"
             :class="'primaryButton'"
