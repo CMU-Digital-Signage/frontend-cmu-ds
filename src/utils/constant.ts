@@ -2,6 +2,13 @@ import store from "@/store";
 import { Device, Display, Poster } from "@/types";
 import Compressor from "compressorjs";
 
+export const checkTokenExpired = (token: string) => {
+  const decode = JSON.parse(atob(token.split(".")[1]));
+  if (decode.exp * 1000 < new Date().getTime()) {
+    return true;
+  }
+};
+
 export const color = [
   "#7986CB",
   "#33B679",
@@ -125,7 +132,7 @@ export const onUpload = (e: any): Promise<string | undefined> => {
     const file = e.files[0];
     if (!file) reject("No file selected");
 
-    const targetSize = 700 * 1024; // 700 kb
+    const targetSize = 500 * 1024; // 500 kb
     let quality = 1;
 
     const compressFile = async (compressionQuality: number) => {
@@ -133,7 +140,7 @@ export const onUpload = (e: any): Promise<string | undefined> => {
         new Compressor(file, {
           quality: compressionQuality,
           async success(result) {
-            e.files[0] = new File([result], "image");
+            e.files[0] = new File([result], e.files[0].name);
             resolve();
           },
           error(error) {
