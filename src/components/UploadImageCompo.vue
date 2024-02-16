@@ -23,7 +23,8 @@ const props = defineProps<{ posType: string; maxImage: number | undefined }>();
 const { posType, maxImage } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
-const img = ref<File[]>([]);
+const oldFile = ref<File[]>([]);
+const newFile = ref<File[]>([]);
 const notChoose = ref(true);
 const currentDeg = ref(0);
 const toast = useToast();
@@ -31,9 +32,13 @@ const toast = useToast();
 onMounted(() => {
   if (posType.value === "NP" && formPoster.value.image) {
     formPoster.value.image.forEach(async (e) => {
-      img.value.push(new File([e.image], formPoster.value.title));
+      oldFile.value.push(new File([e.image], formPoster.value.title));
     });
-  } 
+  } else {
+    oldFile.value.push(
+      new File([formEmer.value.emergencyImage], formEmer.value.incidentName)
+    );
+  }
 });
 
 const errorSelectFile = () => {
@@ -44,10 +49,6 @@ const errorSelectFile = () => {
     life: 3000,
   });
 };
-
-watch(img, () => {
-  console.log(img.value);
-});
 </script>
 
 <template>
@@ -86,8 +87,7 @@ watch(img, () => {
             @click="
               () => {
                 clearCallback();
-                formPoster.image = [];
-                formEmer.emergencyImage = null;
+                newFile = [];
                 currentDeg = 0;
                 chooseCallback();
               }
@@ -98,7 +98,7 @@ watch(img, () => {
             outlined
           />
         </div>
-        <div v-if="posType === 'EP'" class="flex gap-3 items-center">
+        <div v-if="posType === 'EP' && files[0]" class="flex gap-3 items-center">
           <Button
             @click="
               async () => {
@@ -111,11 +111,11 @@ watch(img, () => {
                 currentDeg = newDeg;
               }
             "
-            :class="`${formEmer.emergencyImage ? '' : 'text-[#9c9b9b]'}`"
+            :class="`${newFile ? '' : 'text-[#9c9b9b]'}`"
             icon="pi pi-replay"
             rounded
             outlined
-            :disabled="!formEmer.emergencyImage"
+            :disabled="!newFile"
           />
           <Button
             @click="
@@ -140,7 +140,7 @@ watch(img, () => {
     </template>
     <template #content="{ files }">
       <div
-        v-if="posType === 'EP' && files.length"
+        v-if="posType === 'EP' && files[0] && formEmer.emergencyImage"
         class="flex flex-row justify-center text-center items-center gap-3"
       >
         <i class="pi pi-power-off"></i>
@@ -164,8 +164,8 @@ watch(img, () => {
       </div>
     </template>
     <template #empty>
-      <!-- <div
-        v-if="notChoose"
+      <div
+        v-if="posType === 'EP' && formEmer.emergencyImage"
         class="flex flex-row justify-center text-center items-center gap-3"
       >
         <i class="pi pi-power-off"></i>
@@ -178,7 +178,7 @@ watch(img, () => {
         >
           <img
             :alt="formEmer.incidentName || formPoster.title"
-            :src="formEmer.emergencyImage || formPoster.image[0]?.image"
+            :src="formEmer.emergencyImage"
             class="max-w-full max-h-full m-auto rotate-90"
             :style="{
               maxWidth: `${3840 / 20}px`,
@@ -186,7 +186,7 @@ watch(img, () => {
             }"
           />
         </div>
-      </div> -->
+      </div>
       <!-- <div v-if="notChoose" class="flex justify-between items-center w-full">
         <img
           alt="locationImage"
@@ -201,7 +201,7 @@ watch(img, () => {
           severity="danger"
         />
       </div> -->
-      <div class="flex flex-col text-center items-center">
+      <div v-else class="flex flex-col text-center items-center">
         <i
           class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
         />
