@@ -71,7 +71,7 @@ onMounted(async () => {
 <template>
   <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
     <div
-      class="py-[25px] px-[30px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+      class="py-[25px] px-[30px] flex  flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div>
         <div
@@ -155,7 +155,7 @@ onMounted(async () => {
       </div>
       <div v-if="selectEmer || selectBanner">
         <p class="md:text-[17px] text-[14px] font-semibold mb-2">
-          Type your password in the box below
+          Type your Emergency Password in the box below
         </p>
         <div class="flex flex-col">
           <InputText class="w-full mb-2" v-model="confirmationText"></InputText>
@@ -189,10 +189,10 @@ onMounted(async () => {
     </div>
 
     <div
-      class="flex-1 border-l-[2px]; border-[#eaeaea] py-[25px] px-[30px] h-[100vh] flex flex-col"
+      class="flex-1 border-l-[2px];  border-[#eaeaea] py-[25px] px-[30px]  flex flex-col"
     >
       <div
-        class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#f8f8f8] flex items-center justify-center"
+        class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
       >
         <div class="w-11/12 h-full flex items-center justify-center">
           <img
@@ -214,7 +214,7 @@ onMounted(async () => {
 .rectangleOut {
   overscroll-behavior-y: contain;
   overflow: hidden;
-  background: #fafafa;
+  background: #ffffff;
   flex: 1 1;
 }
 
@@ -223,7 +223,7 @@ onMounted(async () => {
 }
 
 .rectangleLeftIn {
-  background-color: #fafafa;
+  background-color: #ffffff;
   height: 10vh;
   padding-left: 15px;
   padding-top: 10px;

@@ -7,6 +7,7 @@ export const checkTokenExpired = (token: string) => {
   if (decode.exp * 1000 < new Date().getTime()) {
     return true;
   }
+  return false;
 };
 
 export const color = [

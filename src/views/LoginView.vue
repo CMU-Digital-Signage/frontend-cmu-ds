@@ -37,11 +37,12 @@
         <router-link to="/emergency">
           <Button
             class="w-auto md:p-5 md:h-11 h-fit p-2 bg-[#ff4747] relative rounded-[10px] text-sm md:text-lg button-containerEmer"
-            
             severity="danger"
           >
             <i class="pi pi-exclamation-triangle"></i>
-            <p class="font-sf-pro-rounded ml-2 font-medium">Emergency Activation</p>
+            <p class="font-sf-pro-rounded ml-2 font-medium">
+              Emergency Activation
+            </p>
           </Button>
         </router-link>
       </div>

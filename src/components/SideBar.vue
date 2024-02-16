@@ -1,11 +1,16 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import { cF } from "@fullcalendar/core/internal-common";
+import Dialog from "primevue/dialog";
+import { setPassword, changePassword } from "@/services";
+import { sendEmail } from "@/services/email";
+
 export default defineComponent({
   name: "SideBar",
 });
 </script>
 <script setup lang="ts">
-import { computed, watchEffect } from "vue";
+import { computed, watch, watchEffect, onMounted } from "vue";
 import store from "@/store";
 import { signOut } from "@/services";
 import { useToast } from "primevue/usetoast";
@@ -23,6 +28,9 @@ const toggleSidebar = () => {
 };
 
 const menu = ref();
+const oldPassword = ref("");
+const password = ref("");
+const cfPassword = ref("");
 
 const toggle = (event: any) => {
   menu.value.toggle(event);
@@ -37,11 +45,22 @@ watchEffect(() => {
 const toast = useToast();
 
 const dialogSetPassword = ref(false);
-const dialogVisible = ref(true);
-const secondDialogVisible = ref(false);
+
+const dialogVisible = ref(false); // dialog changePassword
+const secondDialogVisible = ref(false); // dialog forgetPassword
+
+onMounted(() => {
+  dialogSetPassword.value = user.value.password === null;
+});
 
 const showDialog = () => {
   dialogVisible.value = true;
+  resetChangeForm();
+};
+
+const sendEmailDialog = () => {
+  sendEmail();
+  secondDialogVisible.value = false;
 };
 
 const showSecondDialog = () => {
@@ -66,7 +85,75 @@ const items = ref([
   },
 ]);
 
-const value = ref(null);
+const resetChangeForm = () => {
+  oldPassword.value = "";
+  password.value = "";
+  cfPassword.value = "";
+};
+
+const checkMatchPassword = async () => {
+  if (!password.value.length || !cfPassword.value.length) {
+    toast.add({
+      severity: "error",
+      summary: "Empty Password or Confirm Password",
+      life: 3000,
+    });
+  } else if (password.value === cfPassword.value) {
+    const res = await setPassword(password.value);
+    if (res.ok) {
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Set Emergency Password successfully.",
+        life: 3000,
+      });
+    }
+    dialogSetPassword.value = false;
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Not Match",
+      life: 3000,
+    });
+  }
+};
+
+const handleChangePassword = async () => {
+  if (password.value.length || cfPassword.value.length) {
+    if (password.value === cfPassword.value) {
+      const res = await changePassword(oldPassword.value, password.value);
+      if (res.ok) {
+        toast.add({
+          severity: "success",
+          summary: "Success",
+          detail: "Change Emergency Password successfully.",
+          life: 3000,
+        });
+        dialogVisible.value = false;
+        resetChangeForm();
+      } else {
+        toast.add({
+          severity: "error",
+          summary: "Error",
+          detail: res.message,
+          life: 3000,
+        });
+      }
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Not Match",
+        life: 3000,
+      });
+    }
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Empty Password or Confirm Password",
+      life: 3000,
+    });
+  }
+};
 </script>
 
 <template>
@@ -153,7 +240,7 @@ const value = ref(null);
               link
               :style="{
                 'background-color': $route.path === '/' ? '#2E3F4A' : '',
-                'color': $route.path === '/' ? '#FFFFFF' : '',
+                color: $route.path === '/' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-microsoft"></i>
@@ -176,9 +263,9 @@ const value = ref(null);
                 v-if="openSidebar"
                 link
                 :style="{
-                'background-color': $route.path === '/file' ? '#2E3F4A' : '',
-                'color': $route.path === '/file' ? '#FFFFFF' : '',
-              }"
+                  'background-color': $route.path === '/file' ? '#2E3F4A' : '',
+                  color: $route.path === '/file' ? '#FFFFFF' : '',
+                }"
               >
                 <i class="pi pi-file"></i>
                 <span>File</span>
@@ -201,8 +288,9 @@ const value = ref(null);
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/deviceManage' ? '#2E3F4A' : '',
-                'color': $route.path === '/deviceManage' ? '#FFFFFF' : '',
+                'background-color':
+                  $route.path === '/deviceManage' ? '#2E3F4A' : '',
+                color: $route.path === '/deviceManage' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-desktop"></i>
@@ -211,8 +299,7 @@ const value = ref(null);
             <Button
               class="text-black rounded-full h-10 w-10 flex items-center justify-center menu-ho"
               :class="{
-                'bg-[#2E3F4A] text-[#FFFFFF]':
-                  $route.path === '/deviceManage',
+                'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/deviceManage',
               }"
               v-else
               icon="pi pi-desktop"
@@ -245,7 +332,7 @@ const value = ref(null);
               link
               :style="{
                 'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
-                'color': $route.path === '/admin' ? '#FFFFFF' : '',
+                color: $route.path === '/admin' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-users"></i>
@@ -271,7 +358,7 @@ const value = ref(null);
               :style="{
                 'background-color':
                   $route.path === '/emergency' ? '#FF5B5B' : '',
-                  'color': $route.path === '/emergency' ? '#FFFFFF' : '',
+                color: $route.path === '/emergency' ? '#FFFFFF' : '',
               }"
             >
               <i class="pi pi-exclamation-triangle"></i>
@@ -351,7 +438,8 @@ const value = ref(null);
             class="flex flex-col items-start font-normal text-[13px] left-14"
           >
             <p v-if="user" class="font-bold">
-              {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
+              {{ user.firstName }}
+              {{ (user?.lastName || "").charAt(0) }}.
             </p>
             <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
               <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
@@ -385,7 +473,7 @@ const value = ref(null);
         <!-- //dialog reset password -->
         <Dialog
           v-model:visible="dialogVisible"
-          class="h-auto w-[550px] "
+          class="h-auto w-[550px]"
           modal
           :close-on-escape="false"
           :draggable="false"
@@ -393,7 +481,7 @@ const value = ref(null);
             content: {
               style:
                 'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
-            }, 
+            },
             header: {
               style:
                 'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
@@ -407,12 +495,14 @@ const value = ref(null);
             <div class="header-popup">Change Emergency Password</div>
           </template>
 
-          <label class="text-[17px] w- font-semibold pt-2 w-32"> </label>
+          <p v-if="user" class="text-[#0067A0] text-lg mb-2 font-semibold">
+            {{ user.firstName }} {{ user.lastName }}
+          </p>
           <div class="flex flex-col gap-2 w-full">
             <FloatLabel class="mt-6">
               <Password
                 id="currentPassword"
-                v-model="value"
+                v-model="oldPassword"
                 input-class="w-screen rounded-[12px] border-2"
                 class="w-full"
                 :feedback="false"
@@ -423,7 +513,7 @@ const value = ref(null);
             <FloatLabel class="mt-6">
               <Password
                 id="newPassword"
-                v-model="value"
+                v-model="password"
                 input-class="w-screen rounded-[12px] border-2"
                 class="w-full"
                 :feedback="false"
@@ -436,7 +526,7 @@ const value = ref(null);
                 id="reTypeNewPassword"
                 input-class="w-screen rounded-[12px] border-2"
                 class="w-full"
-                v-model="value"
+                v-model="cfPassword"
                 :feedback="false"
                 toggle-mask
               />
@@ -452,9 +542,8 @@ const value = ref(null);
             <Button
               label="Change Password"
               text
-              disabled
               :class="'primaryButton'"
-              type="submit"
+              @click="handleChangePassword"
             ></Button></div
         ></Dialog>
 
@@ -463,12 +552,12 @@ const value = ref(null);
           v-model:visible="secondDialogVisible"
           :draggable="false"
           :close-on-escape="false"
-          class="h-auto w-[550px] "
+          class="h-auto w-[550px]"
           :pt="{
             content: {
               style:
                 'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
-            }, 
+            },
             header: {
               style:
                 'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
@@ -490,6 +579,13 @@ const value = ref(null);
             }}</span>
             Check your inbox (including spam) to reset your emergency password.
           </p>
+          <Button
+            label="Send Email"
+            text
+            @click="sendEmailDialog"
+            :class="'primaryButton'"
+            type="submit"
+          ></Button>
         </Dialog>
 
         <!-- //dialog Set Password -->
@@ -503,7 +599,7 @@ const value = ref(null);
             content: {
               style:
                 'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
-            }, 
+            },
             header: {
               style:
                 'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
@@ -515,35 +611,33 @@ const value = ref(null);
           :closable="false"
         >
           <template #header>
-            <div class="header-popup">Set Emergency Password</div>
+            <div class="header-popup">Set Your Emergency Password</div>
           </template>
-          <div
-            class="mb-6 gap-7 bg-[#C7EBFF] rounded-lg h-fit p-4 border-[#0067A0] border-2"
-          >
+          <div class="mb-6 gap-7 bg-[#C7EBFF] rounded-lg h-fit p-4">
             <div class="inline-flex">
               <i
                 class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"
               ></i>
-              <p class="text-xl mb-2 font-bold text-[#0067A0]">
-                Attention CPE Digital Signage users!
+              <p v-if="user" class="text-xl mb-2 font-bold text-[#0067A0]">
+                Hello! {{ user.firstName }} {{ user.lastName }}
               </p>
             </div>
             <p class="ml-9">
-              CPE Digital Signage have Emergency Activation function for
-              displaying emergency posters in all screens,
+              CPE Digital Signage offers an Emergency Activation function to
+              display emergency posters on all screens.
               <span class="font-bold text-black">
-                all users have to set your password to activate the emergency
-                poster when an incident occurs.</span
+                Before using this website, set your Emergency Password to
+                activate the emergency poster during an incident.</span
               >
             </p>
           </div>
 
           <label class="text-[17px] w- font-semibold pt-2 w-32"> </label>
           <div class="flex flex-col gap-2 w-full">
-            <FloatLabel class="mt-6">
+            <FloatLabel class="mt-4">
               <Password
                 id="Password"
-                v-model="value"
+                v-model="password"
                 input-class="w-screen rounded-[12px] border-2"
                 class="w-full"
                 :feedback="false"
@@ -556,7 +650,7 @@ const value = ref(null);
                 id="confirmPassword"
                 input-class="w-screen rounded-[12px] border-2"
                 class="w-full"
-                v-model="value"
+                v-model="cfPassword"
                 :feedback="false"
                 toggle-mask
               />
@@ -565,7 +659,7 @@ const value = ref(null);
             <Button
               label="Done"
               text
-              disabled
+              @click="checkMatchPassword"
               :class="'primaryButton'"
               type="submit"
             ></Button></div
@@ -640,7 +734,7 @@ Button {
 
 .primaryButton:hover {
   cursor: pointer;
-  background-color: rgb(228, 233, 255);
+  background-color: rgb(9, 120, 247);
   text-decoration-line: underline;
 }
 

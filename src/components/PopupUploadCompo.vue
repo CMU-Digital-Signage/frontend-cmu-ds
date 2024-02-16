@@ -458,6 +458,7 @@ const nextStepUpload = () => {
 
           <div class="flex flex-row gap-4 pt-3">
             <Button
+              text
               label="Cancel"
               @click="showUpload = false"
               :class="'secondaryButton'"
@@ -542,6 +543,7 @@ const nextStepUpload = () => {
 
           <div class="flex flex-row gap-4 pt-3">
             <Button
+              text
               label="Add Schedule"
               :class="'secondaryButton'"
               @click="addSchedule"
@@ -561,6 +563,7 @@ const nextStepUpload = () => {
           />
           <div class="flex flex-row gap-4 pt-3">
             <Button
+              text
               label="Back"
               :class="'secondaryButton'"
               @click="currentState = 0"
@@ -606,6 +609,7 @@ const nextStepUpload = () => {
             Review
           </label>
           <Button
+            text
             label="Back"
             :class="'secondaryButton'"
             @click="currentState = 1"
@@ -693,7 +697,7 @@ const nextStepUpload = () => {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: white;
+  background-color: none;
   color: black;
   cursor: pointer;
 }
@@ -710,15 +714,15 @@ const nextStepUpload = () => {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: white;
-  color: rgb(43, 152, 255);
+  background-color: none;
+  color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
 }
 
 .primaryButton:hover {
   cursor: pointer;
-  background-color: rgb(228, 233, 255);
+  background-color: rgb(37, 135, 240);
   text-decoration-line: underline;
 }
 
@@ -729,8 +733,8 @@ const nextStepUpload = () => {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: white;
-  color: rgb(255, 107, 43);
+  background-color: rgb(255, 120, 47);
+  color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
 }

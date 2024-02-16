@@ -12,6 +12,7 @@ import SearchPage from "../views/SearchFileView.vue";
 import AdminDashboard from "../views/AdminView.vue";
 import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
+import Token from "@/views/reset/[token].vue";
 import { Device } from "@/types";
 import { color } from "@/utils/constant";
 import PosterpreView from "@/views/PosterpreView.vue";
@@ -21,6 +22,14 @@ const routes: Array<RouteRecordRaw> = [
     path: "/device/:mac",
     name: "DeviceView",
     component: Mac,
+    meta: {
+      hideSidebar: true,
+    },
+  },
+  {
+    path: "/reset/:token",
+    name: "ResetView",
+    component: Token,
     meta: {
       hideSidebar: true,
     },

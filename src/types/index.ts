@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   email: string;
   isAdmin: boolean;
+  password: string;
 }
 
 export interface Device {
