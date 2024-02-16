@@ -1,7 +1,6 @@
 import store from "@/store";
 import { Device, Display, Poster } from "@/types";
 import Compressor from "compressorjs";
-import { FileUploadSelectEvent } from "primevue/fileupload";
 
 export const color = [
   "#7986CB",
@@ -121,9 +120,7 @@ export const newInitialFormDisplay = () => {
   };
 };
 
-export const onUpload = (
-  e: FileUploadSelectEvent
-): Promise<string | undefined> => {
+export const onUpload = (e: any): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
     const file = e.files[0];
     if (!file) reject("No file selected");
