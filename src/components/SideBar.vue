@@ -587,7 +587,8 @@ const handleChangePassword = async () => {
             <span class="text-[#1b7be8] font-extrabold underline">{{
               user.email
             }}</span>
-            Check your inbox (including Spam and Junk) to reset your emergency password.
+            Check your inbox (including Spam and Junk) to reset your emergency
+            password.
           </p>
           <Button
             label="Send Email"
@@ -634,11 +635,13 @@ const handleChangePassword = async () => {
               </p>
             </div>
             <p class="ml-9">
-              CPE Digital Signage offers an Emergency Activation function to
-              display emergency posters on all screens.
+              CPE Digital Signage provides an Emergency Activation feature, as
+              shown on the login page, to display emergency posters on all
+              screens.
               <span class="font-bold text-black">
-                Before using this website, set your Emergency Password to
-                activate the emergency poster during an incident.</span
+                Before using this website, please set your Emergency Password.
+                This password is used to activate the emergency poster during an
+                incident.</span
               >
             </p>
           </div>
