@@ -192,6 +192,19 @@ const validateEmail = () => {
           close-on-escape
           :draggable="false"
           @after-hide="resetForm()"
+          :pt="{
+            content: {
+              style:
+                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            },
+            header: {
+              style:
+                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            },
+            mask: {
+              style: 'backdrop-filter: blur(2px)',
+            },
+          }"
         >
           <template #header>
             <div class="header-popup">Add Admin</div>
@@ -215,7 +228,6 @@ const validateEmail = () => {
                 ></Button>
                 <Button
                   label="Add"
-                  text
                   :class="'primaryButton'"
                   type="submit"
                   :disabled="!email.length || !validateEmail()"
@@ -243,6 +255,19 @@ const validateEmail = () => {
           close-on-escape
           :draggable="false"
           @after-hide="resetForm()"
+          :pt="{
+            content: {
+              style:
+                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            },
+            header: {
+              style:
+                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            },
+            mask: {
+              style: 'backdrop-filter: blur(2px)',
+            },
+          }"
         >
           <template #header>
             <div class="header-popup">Add Device</div>
@@ -385,7 +410,6 @@ const validateEmail = () => {
             ></Button>
             <Button
               label="Add"
-              text
               :class="'primaryButton'"
               @click="add"
               :disabled="!macNotUse.length"
@@ -613,7 +637,7 @@ li {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: white;
+  background-color: none;
   color: black;
   cursor: pointer;
 }
@@ -630,15 +654,15 @@ li {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: white;
-  color: rgb(43, 152, 255);
+  background-color: none;
+  color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
 }
 
 .primaryButton:hover {
   cursor: pointer;
-  background-color: rgb(228, 233, 255);
+  background-color: rgb(37, 135, 240);
   text-decoration-line: underline;
 }
 

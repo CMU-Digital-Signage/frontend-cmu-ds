@@ -215,6 +215,19 @@ const calculateScreenHeight = () => {
     modal
     close-on-escape
     @after-hide="resetForm()"
+    :pt="{
+      content: {
+        style:
+          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+      },
+      header: {
+        style:
+          'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+      },
+      mask: {
+        style: 'backdrop-filter: blur(2px)',
+      },
+    }"
   >
     <div class="flex flex-col gap-2">
       <div class="inline-block">
@@ -337,14 +350,9 @@ const calculateScreenHeight = () => {
         label="Cancel"
         text
         @click="showPopup = false"
-        class="flex-1 border-1 border-white-alpha-30 bold-ho rounded-lg py-2 bold-ho mt-2"
+        class="secondaryButton"
       ></Button>
-      <Button
-        label="Done"
-        text
-        class="flex-1 border-1 font-semibold border-white-alpha-30 bold-ho-add rounded-lg py-2 bold-ho-add mt-2"
-        @click="edit"
-      ></Button>
+      <Button label="Done" class="primaryButton" @click="edit"></Button>
     </div>
   </Dialog>
 </template>
@@ -364,5 +372,41 @@ const calculateScreenHeight = () => {
   font-weight: 600;
   text-decoration: underline;
   background-color: #a9ddf8;
+}
+
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: none;
+  color: black;
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+}
+
+.primaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: none;
+  color: rgb(255, 255, 255);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(37, 135, 240);
+  text-decoration-line: underline;
 }
 </style>
