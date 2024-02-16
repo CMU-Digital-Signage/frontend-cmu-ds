@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
     </div>
   </div>
   <div v-else>
-    <div class="w-screen flex flex-col h-full bg-[#fafafa] fixed">
+    <div class="w-screen flex flex-col h-full bg-[#fafafa] md:fixed">
       <NavBar
         v-if="$route.path === '/emergency'"
         class="bg-white"

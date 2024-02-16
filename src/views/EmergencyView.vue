@@ -45,9 +45,9 @@ watch(selectBanner, () => {
   }
 });
 
-const test = (e: any) => {
+const getTextPoster = (e: any) => {
   console.log(e.target);
-  inputTextPoster.value = e.target;
+  inputTextPoster.value = e.target.value;
 };
 
 onUpdated(() => {
@@ -69,8 +69,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="rectangleOut flex flex-row">
-    <div class="rectangleLeft flex flex-col text-left justify-between">
+  <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
+    <div
+      class="py-[25px] px-[30px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+    >
       <div>
         <div
           class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center border-red-500 border-[1px]"
@@ -83,8 +85,8 @@ onMounted(async () => {
             ></i>
           </div>
 
-          <div>
-            <p class="text-[16px] font-bold text-red-500">
+          <div class="md:text-[16px] text-[14px]">
+            <p class="font-bold text-red-500">
               <span>Activating the Emergency Poster</span>
             </p>
             <p>
@@ -95,17 +97,17 @@ onMounted(async () => {
         </div>
         <div class="flex flex-col gap-5">
           <div>
-            <p class="text-[16px] font-semibold mb-2">
+            <p class="md:text-[16px] text-[14px] font-semibold mb-2">
               Choose Poster to displayed
             </p>
             <div
               class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-40 overflow-y-scroll"
             >
-              <div class="grid grid-cols-2 gap-y-10 p-8 pt-9">
+              <div class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9">
                 <div
                   v-for="category in emerPosters"
                   :key="category.incidentName"
-                  class="flex text-[16px] gap-2 items-center h-1"
+                  class="flex md:text-[16px] text-[14px] gap-2 items-center h-1"
                 >
                   <RadioButton
                     v-model="selectEmer"
@@ -121,13 +123,13 @@ onMounted(async () => {
           </div>
 
           <div>
-            <p class="text-[16px] font-semibold mb-2">
+            <p class="md:text-[16px] text-[14px] font-semibold mb-2">
               Type text to display banner
             </p>
             <div
               class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-48"
             >
-              <div class="flex flex-col gap-3 mx-8 my-5">
+              <div class="flex flex-col gap-3 md:mx-8 my-5 mx-5">
                 <div class="flex gap-2 items-center">
                   <RadioButton
                     :value="true"
@@ -139,10 +141,11 @@ onMounted(async () => {
                 <div class="flex flex-col gap-2 w-full">
                   <Textarea
                     :disabled="!selectBanner"
-                    inputmode="text"
-                    v-model="inputTextPoster"
+                    @input="getTextPoster"
+                    :maxlength="215"
+                    :rows="2"
                     placeholder="Ex: There's a fire, do not use the elevator"
-                    class="border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none"
+                    class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none"
                   ></Textarea>
                 </div>
               </div>
@@ -151,7 +154,7 @@ onMounted(async () => {
         </div>
       </div>
       <div v-if="selectEmer || selectBanner">
-        <p class="text-[17px] font-semibold mb-2">
+        <p class="md:text-[17px] text-[14px] font-semibold mb-2">
           Type your password in the box below
         </p>
         <div class="flex flex-col">
@@ -185,11 +188,13 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="rectangleRight flex flex-col">
+    <div
+      class="flex-1 border-l-[2px]; border-[#eaeaea] py-[25px] px-[30px] h-[100vh] flex flex-col"
+    >
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#f8f8f8] flex items-center justify-center"
       >
-        <div class="w-11/12 h-full flex items-center">
+        <div class="w-11/12 h-full flex items-center justify-center">
           <img
             v-if="selectedPosterImage"
             class="m-auto w-full transition-opacity rotated-image"
@@ -197,7 +202,6 @@ onMounted(async () => {
             alt="poster-image"
           />
           <div v-else>
-            {{ inputTextPoster }}
             <TextPoster :text="inputTextPoster" />
           </div>
         </div>
@@ -210,19 +214,7 @@ onMounted(async () => {
 .rectangleOut {
   overscroll-behavior-y: contain;
   overflow: hidden;
-  background-color: aquamarine;
-  flex: 1 1;
-}
-
-.rectangleLeft {
-  background-color: #fafafa;
-  overflow-y: hidden;
-  /* height: 100vh; */
-  width: 40vw;
-  padding-top: 25px;
-  padding-left: 26px;
-  padding-right: 30px;
-  padding-bottom: 25px;
+  background: #fafafa;
   flex: 1 1;
 }
 
@@ -238,19 +230,6 @@ onMounted(async () => {
   padding-bottom: 30px;
   overflow-y: scroll;
   flex: 1 1;
-}
-
-.rectangleRight {
-  background-color: #fafafa;
-  height: 98 100vh;
-  width: 40vw;
-  padding-top: 25px;
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-bottom: 25px;
-  flex: 1 1;
-  border-left: solid 2px;
-  border-color: #eaeaea;
 }
 
 .rectangleRightIn {

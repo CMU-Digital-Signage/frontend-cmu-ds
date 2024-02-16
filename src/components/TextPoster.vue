@@ -10,15 +10,53 @@ import { defineProps, toRefs, onUpdated } from "vue";
 
 const props = defineProps({ text: String });
 
-const { text } = toRefs(props);
-onUpdated(() => {
-  console.log(text);
-});
+const processText = (text: any) => {
+  if (!text) {
+    return "";
+  }
+
+  let processedText = "";
+  let charCount = 0;
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === "\n" || text[i] === " ") {
+      processedText += text[i];
+      charCount = 0;
+    } else {
+      processedText += text[i];
+      charCount++;
+    }
+    if (charCount === 35) {
+      processedText += "\n";
+      charCount = 0;
+    }
+  }
+
+  return processedText;
+};
 </script>
 
 <template>
-  <div class="bg-black-500 w-[100px] h-[100px]">
-    <p>sssssssssssssss</p>
+  <div class="w-96 h-[550px] bg-[#FF5252] flex flex-col gap-1">
+    <div class="flex flex-col items-center justify-center gap-16 py-8">
+      <p
+        class="font-sf-pro-rounded text-white text-5xl font-bold tracking-wider"
+      >
+        Emergency
+      </p>
+      <div class="w-8 h-8 flex items-center justify-center rounded-full">
+        <i class="pi pi-exclamation-triangle text-white text-7xl"></i>
+      </div>
+    </div>
+    <div
+      class="font-notoThai text-white text-xl tracking-wide flex flex-col gap-1"
+    >
+      <p class="text-2xl mb-10">ฉุกเฉิน!</p>
+      <div class="flex justify-center">
+        <p class="w-11/12 whitespace-pre-line">
+          {{ processText(props.text) }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
