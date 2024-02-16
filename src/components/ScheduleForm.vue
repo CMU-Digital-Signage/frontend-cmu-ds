@@ -61,11 +61,11 @@ const changeEndTime = (i: number) => {
 };
 
 const addTime = () => {
-  const newStartTime = formDisplay.value.time.at(
-    formDisplay.value.time.length - 1
-  )?.endTime;
+  const newStartTime = new Date(
+    formDisplay.value.time[formDisplay.value.time.length - 1].endTime!
+  );
   newStartTime?.setHours(newStartTime.getHours() + 1);
-  const newEndTime = newStartTime;
+  const newEndTime = new Date(newStartTime);
   newEndTime?.setHours(newEndTime.getHours() + 1);
 
   store.state.formDisplay[index.value].time.push({
