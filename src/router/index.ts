@@ -115,8 +115,8 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   if (localStorage.getItem("token")) {
-    const expired = checkTokenExpired(localStorage.getItem("token") || "");
-    if (expired) {
+    const pass = checkTokenExpired(localStorage.getItem("token") || "");
+    if (!pass.includes("Success")) {
       localStorage.clear();
       next({ path: "/login", replace: true });
     }

@@ -3,11 +3,20 @@ import { Device, Display, Poster } from "@/types";
 import Compressor from "compressorjs";
 
 export const checkTokenExpired = (token: string) => {
-  const decode = JSON.parse(atob(token.split(".")[1]));
-  if (decode.exp * 1000 < new Date().getTime()) {
-    return true;
+  try {
+    const decode = JSON.parse(atob(token.split(".")[1]));
+    // check email
+    if (decode.email.includes(store.state.userInfo.email)) {
+      // check expired
+      if (decode.exp * 1000 >= new Date().getTime()) {
+        return "Success";
+      }
+    }
+    return "Link Expired.";
+  } catch (err) {
+    // token invalid
+    return "Invalid Token.";
   }
-  return false;
 };
 
 export const color = [
