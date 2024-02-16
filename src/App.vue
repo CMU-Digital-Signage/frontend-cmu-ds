@@ -56,10 +56,10 @@ onBeforeUnmount(() => {
     class="flex flex-row w-screen h-screen font-sf-pro fixed"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar class="bg-white" />
+    <SideBar class="bg-gradient-to-r from-[#f4feff] to-[#F6FDF7]" />
     <div class="w-screen flex flex-col h-full bg-[#fafafa]">
-      <NavBar class="bg-white" />
-      <router-view class="bg-[#fafafa] w-full" />
+      <NavBar class="bg-gradient-to-r from-[#F6FDF7] to-[#F8FDF7]" />
+      <router-view class="bg-[#ffffff] w-full" />
       <!-- <NavbarBelow v-if="$route.meta.showNavbarBelow" /> -->
     </div>
   </div>
@@ -110,17 +110,17 @@ Button:focus {
 }
 
 .p-tabview-nav-link {
-  background-color: #fafafa;
+  background-color: #ffffff;
 }
 .p-tabview-nav {
-  background-color: #fafafa;
+  background-color: #ffffff;
 }
 .p-tabview-panels {
-  background-color: #fafafa;
+  background-color: #ffffff;
 }
 
 .p-datatable-wrapper {
-  border-color: #dbdbdb;
+  border-color: #ffffff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
   border-width: 1px;
   border-radius: 10px;
@@ -130,7 +130,8 @@ Button:focus {
 }
 
 .p-dialog {
-  border-radius: 10px;
+  border-radius: 40px;
+
 }
 
 .p-tag {

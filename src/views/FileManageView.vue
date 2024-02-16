@@ -69,5 +69,6 @@ onUnmounted(() => {
 .rectangle {
   padding-inline: 1.5rem;
   overflow: hidden;
+  background-color: white;
 }
 </style>
