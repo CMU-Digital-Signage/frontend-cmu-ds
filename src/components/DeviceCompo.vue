@@ -271,6 +271,7 @@ const calculateScreenHeight = () => {
         :multiple="false"
         @select="
           async (e) => {
+            if (e.files.length > 1) e.files.shift();
             if (e.files[0]) chooseFile = await onUpload(e);
             else errorSelectFile();
           }

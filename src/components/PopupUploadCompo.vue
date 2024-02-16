@@ -9,7 +9,7 @@ export default defineComponent({
 import { computed, ref, reactive, watch, onMounted } from "vue";
 import store from "@/store";
 import router from "@/router";
-import { addEmergency, addPoster, editEmergency } from "@/services";
+import { addEmergency, addPoster, editEmergency, editPoster } from "@/services";
 import { Poster } from "@/types";
 import {
   dateFormatter,
@@ -36,23 +36,24 @@ const posterType = ref([
   { header: "Normal Poster", code: "NP" },
   { header: "Emergency Poster", code: "EP" },
 ]);
-const selectedPosterType = ref({ header: "", code: "NP" });
+const selectedPosterType = ref({ header: "", code: "" });
 const currentState = ref(0);
 const scheduleTabs = reactive([{ header: "Schedule 1", index: 0 }]);
 const posters = computed(() => store.state.posters);
-const editPoster = computed(() => store.state.editPoster);
+const editPosterType = computed(() => store.state.editPoster);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
+const maxImage = ref(0);
 const currentDeg = ref(0);
 const selectSchedule = ref(scheduleTabs[0]);
 const showSecondDialog = ref(false);
 const loading = ref(false);
 
-watch([showUpload, showSecondDialog, editPoster], () => {
-  if (editPoster.value.type && showUpload.value) {
+watch([showUpload, showSecondDialog, editPosterType], () => {
+  if (editPosterType.value.type && showUpload.value) {
     posterType.value.map((e) => {
-      if (e.code === editPoster.value.type) {
+      if (e.code === editPosterType.value.type) {
         selectedPosterType.value = { ...e };
       }
     });
@@ -63,8 +64,9 @@ watch([showUpload, showSecondDialog, editPoster], () => {
     showUpload.value = false;
     showSecondDialog.value = true;
   } else if (!showUpload.value && !showSecondDialog.value) {
-    if (editPoster.value.type.length)
+    if (editPosterType.value.type.length)
       store.state.editPoster = { title: "", type: "" };
+    selectedPosterType.value = { header: "", code: "" };
     store.commit("resetForm");
   }
   currentState.value = 0;
@@ -124,10 +126,6 @@ const handleAddEmergency = async () => {
 };
 
 const handleAddPoster = async () => {
-  formDisplay.value.forEach((e, i) => {
-    if (e.allDay) store.commit("setAllTime", i);
-    if (e.allDevice) store.commit("setAllDevice", i);
-  });
   const res = await addPoster(formPoster.value, formDisplay.value);
   if (res.ok) {
     let newPoster = [] as Poster[];
@@ -168,7 +166,7 @@ const handleAddPoster = async () => {
 };
 
 const handleEditEmergency = async () => {
-  const res = await editEmergency(editPoster.value.title, formEmer.value);
+  const res = await editEmergency(editPosterType.value.title, formEmer.value);
   if (res.ok) {
     toast.add({
       severity: "success",
@@ -190,11 +188,7 @@ const handleEditEmergency = async () => {
 };
 
 const handleEditPoster = async () => {
-  formDisplay.value.forEach((e, i) => {
-    if (e.allDay) store.commit("setAllTime", i);
-    if (e.allDevice) store.commit("setAllDevice", i);
-  });
-  const res = await addPoster(formPoster.value, formDisplay.value);
+  const res = await editPoster(formPoster.value, formDisplay.value);
   if (res.ok) {
     let newPoster = [] as Poster[];
     formDisplay.value.forEach((e) => {
@@ -236,7 +230,7 @@ const handleEditPoster = async () => {
 const uploadPoster = async () => {
   loading.value = true;
   if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
-    editPoster.value.title.length
+    editPosterType.value.title.length
       ? handleEditEmergency()
       : handleAddEmergency();
   } else if (
@@ -250,7 +244,7 @@ const uploadPoster = async () => {
         !e.endDate
     )
   ) {
-    editPoster.value.title.length ? handleEditPoster() : handleAddPoster();
+    editPosterType.value.title.length ? handleEditPoster() : handleAddPoster();
   } else {
     toast.add({
       severity: "error",
@@ -338,50 +332,80 @@ const nextStepUpload = () => {
     });
   } else {
     let durationTime = [] as any;
-    let temp2 = [] as any;
-    formDisplay.value.forEach((form, index) => {
-      const temp = posters.value.filter((all) => {
-        // filter date
+    let filterTime = [] as Poster[];
+    formDisplay.value.forEach((e, i) => {
+      if (e.allDay) store.commit("setAllTime", i);
+      if (e.allDevice) store.commit("setAllDevice", i);
+    });
+    formDisplay.value.forEach((form) => {
+      const filterDate = posters.value.filter((all) => {
         return (
           (dateFormatter(form.startDate) <= dateFormatter(all.startDate) &&
             dateFormatter(all.startDate) <= dateFormatter(form.endDate)) ||
           (dateFormatter(form.startDate) <= dateFormatter(all.endDate) &&
-            dateFormatter(all.endDate) <= dateFormatter(form.endDate))
+            dateFormatter(all.endDate) <= dateFormatter(form.endDate)) ||
+          (dateFormatter(all.startDate) <= dateFormatter(form.startDate) &&
+            dateFormatter(form.startDate) <= dateFormatter(all.endDate))
         );
       });
 
       form.time.forEach((item) => {
-        durationTime.push({
-          startDate: form.startDate,
-          endDate: form.endDate,
-          startTime: item.startTime,
-          endTime: item.endTime,
-          duration: 0,
-        });
-        temp2 = temp.filter((all) => {
+        let date = new Date(
+          form.startDate!.getFullYear(),
+          form.startDate!.getMonth(),
+          form.startDate!.getDate()
+        );
+        let count = 0;
+        while (dateFormatter(date) <= dateFormatter(form.endDate!)) {
+          form.MACaddress.forEach((e) => {
+            durationTime.push({
+              MACaddress: e,
+              date: new Date(
+                form.startDate!.getFullYear(),
+                form.startDate!.getMonth(),
+                form.startDate!.getDate() + count
+              ),
+              startTime: item.startTime,
+              endTime: item.endTime,
+              durationForm: form.duration,
+              duration: 0,
+            });
+            date!.setDate(date!.getDate() + 1);
+            count++;
+          });
+        }
+        filterTime = filterDate.filter((all) => {
           return (
             (item.startTime!.toTimeString() <= all.startTime.toTimeString() &&
               all.startTime.toTimeString() <= item.endTime!.toTimeString()) ||
             (item.startTime!.toTimeString() <= all.endTime.toTimeString() &&
-              all.endTime.toTimeString() <= item.endTime!.toTimeString())
+              all.endTime.toTimeString() <= item.endTime!.toTimeString()) ||
+            (all.startTime.toTimeString() <= item.startTime!.toTimeString() &&
+              item.startTime!.toTimeString() <= all.endTime.toTimeString())
           );
         });
       });
     });
-    // durationTime.forEach((form: any) => {
-    //   const time = temp2.filter((all: any) => {
-    //     return (
-    //       temp2.startTime.toTimeString() === form.startTime.toTimeString() &&
-    //       temp2.endTime.toTimeString() === form.endTime.toTimeString() &&
-    //       dateFormatter(temp2.startDate) === dateFormatter(form.startDate) &&
-    //       dateFormatter(temp2.endDate) === dateFormatter(form.endDate)
-    //     );
-    //   });
-    //   form.duration = time.reduce((prev: any, cur: any) => {
-    //     return prev + cur.duration;
-    //   }, 0);
-    // });
 
+    durationTime.forEach((form: any) => {
+      filterTime.forEach((all) => {
+        if (
+          (all.MACaddress === form.MACaddress &&
+            dateFormatter(all.startDate) <= dateFormatter(form.date)) ||
+          dateFormatter(form.date) <= dateFormatter(all.endDate)
+        ) {
+          form.duration += all.duration * all.image.length;
+        }
+      });
+    });
+
+    let numImage = [] as number[];
+    durationTime.forEach((e: any) => {
+      const num =
+        ((e.endTime - e.startTime) / 1000 - e.duration) / e.durationForm;
+      numImage.push(Math.floor(num - (num * (0.5 / e.durationForm)) / 100));
+    });
+    maxImage.value = Math.min(...numImage);
     currentState.value = 1;
   }
 };
@@ -398,6 +422,19 @@ const nextStepUpload = () => {
       close-on-escape
       :draggable="false"
       class="w-96"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+        },
+        mask: {
+          style: 'backdrop-filter: blur(2px)',
+        },
+      }"
     >
       <template #header>
         <div class="header-popup">Upload File</div>
@@ -439,11 +476,24 @@ const nextStepUpload = () => {
 
     <Dialog
       v-model:visible="showSecondDialog"
-      :header="editPoster ? 'Edit File' : 'Upload File'"
+      :header="editPosterType.type ? 'Edit File' : 'Upload File'"
       modal
       close-on-escape
       :draggable="false"
       class="w-[600px]"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+        },
+        mask: {
+          style: 'backdrop-filter: blur(2px)',
+        },
+      }"
     >
       <div v-if="selectedPosterType.code === 'NP'">
         <Steps class="mb-5" :model="uploadState" :active-step="currentState" />
@@ -504,7 +554,11 @@ const nextStepUpload = () => {
           </div>
         </div>
         <div v-if="currentState === 1">
-          <UploadImage :posType="selectedPosterType.code" />
+          <div class="text-center text-red-500">Max Image: {{ maxImage }}</div>
+          <UploadImage
+            :posType="selectedPosterType.code"
+            :maxImage="maxImage"
+          />
           <div class="flex flex-row gap-4 pt-3">
             <Button
               label="Back"
@@ -582,7 +636,10 @@ const nextStepUpload = () => {
               class="title-input mb-3"
             />
             <!-- File Upload -->
-            <UploadImage :posType="selectedPosterType.code" />
+            <UploadImage
+              :posType="selectedPosterType.code"
+              :maxImage="undefined"
+            />
 
             <!-- Description -->
             <div class="flex flex-col gap-1 w-full">

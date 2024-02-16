@@ -5,7 +5,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { computed, defineProps, toRefs, onMounted, watch } from "vue";
+import { computed, defineProps, toRefs, watch } from "vue";
 import store from "@/store";
 
 const props = defineProps<{ index: number }>();
@@ -13,7 +13,7 @@ const { index } = toRefs(props);
 const device = computed(() => store.state.devices);
 const formDisplay = computed(() => store.state.formDisplay[index.value]);
 
-watch(store.state.formDisplay[index.value], () => {
+watch(store.state.formDisplay[index.value].startDate!, () => {
   if (
     formDisplay.value.startDate &&
     formDisplay.value.startDate > formDisplay.value.endDate!
@@ -22,25 +22,41 @@ watch(store.state.formDisplay[index.value], () => {
   }
 });
 
-const changeStartTime = (startTime: Date | undefined, i: number) => {
+const changeStartTime = (i: number) => {
   if (
-    startTime !== undefined &&
+    formDisplay.value.time[i].startTime !== undefined &&
     formDisplay.value.time[i].endTime &&
-    startTime.toTimeString() ===
+    formDisplay.value.time[i].startTime!.toTimeString() >=
       formDisplay.value.time[i].endTime!.toTimeString()
   ) {
-    store.state.formDisplay[index.value].time[i].endTime = undefined;
+    store.state.formDisplay[index.value].time[i].endTime = new Date(
+      formDisplay.value.time[i].startTime!.getFullYear(),
+      formDisplay.value.time[i].startTime!.getMonth(),
+      formDisplay.value.time[i].startTime!.getDate(),
+      formDisplay.value.time[i].startTime!.getHours(),
+      formDisplay.value.time[i].startTime!.getMinutes() + 30,
+      formDisplay.value.time[i].startTime!.getSeconds()
+    );
+    changeEndTime(i);
   }
 };
 
-const changeEndTime = (endTime: Date | undefined, i: number) => {
+const changeEndTime = (i: number) => {
   if (
-    endTime !== undefined &&
+    formDisplay.value.time[i].endTime !== undefined &&
     formDisplay.value.time[i + 1] &&
-    endTime.toTimeString() ===
+    formDisplay.value.time[i].endTime!.toTimeString() >=
       formDisplay.value.time[i + 1].startTime!.toTimeString()
   ) {
-    store.state.formDisplay[index.value].time[i + 1].startTime = undefined;
+    store.state.formDisplay[index.value].time[i + 1].startTime = new Date(
+      formDisplay.value.time[i].endTime!.getFullYear(),
+      formDisplay.value.time[i].endTime!.getMonth(),
+      formDisplay.value.time[i].endTime!.getDate(),
+      formDisplay.value.time[i].endTime!.getHours(),
+      formDisplay.value.time[i].endTime!.getMinutes() + 30,
+      formDisplay.value.time[i].endTime!.getSeconds()
+    );
+    changeStartTime(i + 1);
   }
 };
 
@@ -49,10 +65,12 @@ const addTime = () => {
     formDisplay.value.time.length - 1
   )?.endTime;
   newStartTime?.setHours(newStartTime.getHours() + 1);
+  const newEndTime = newStartTime;
+  newEndTime?.setHours(newEndTime.getHours() + 1);
 
   store.state.formDisplay[index.value].time.push({
     startTime: newStartTime,
-    endTime: undefined,
+    endTime: newEndTime,
   });
 };
 
@@ -80,14 +98,6 @@ const minEndTime = (i: number) => {
   const min = new Date(formDisplay.value.time[i].startTime!);
   min.setMinutes(min.getMinutes() + 30);
   return min;
-};
-
-const maxEndTime = (i: number) => {
-  if (i < formDisplay.value.time.length - 1) {
-    const max = new Date(formDisplay.value.time[i + 1].startTime!);
-    max.setHours(max.getHours() - 1);
-    return max;
-  }
 };
 </script>
 
@@ -125,11 +135,10 @@ const maxEndTime = (i: number) => {
                     iconDisplay="input"
                     timeOnly
                     :manualInput="false"
-                    :value="time.startTime"
-                    @change="changeStartTime(time.startTime, i)"
                     :stepMinute="30"
                     class="w-[170px]"
                     :minDate="minStartTime(i)"
+                    @update:model-value="changeStartTime(i)"
                   >
                     <template #inputicon="{ clickCallback }">
                       <i class="pi pi-clock" @click="clickCallback" />
@@ -142,11 +151,10 @@ const maxEndTime = (i: number) => {
                     iconDisplay="input"
                     timeOnly
                     :manualInput="false"
-                    :value="time.endTime"
-                    @change="changeEndTime(time.startTime, i)"
                     :stepMinute="30"
                     class="w-[170px]"
                     :minDate="minEndTime(i)"
+                    @update:model-value="changeEndTime(i)"
                     :disabled="!time.startTime || formDisplay.allDay"
                   >
                     <template #inputicon="{ clickCallback }">
@@ -181,13 +189,12 @@ const maxEndTime = (i: number) => {
       <div class="flex flex-col justify-start gap-2">
         <div class="inline-flex items-center">
           <label
-            class="flex justify-start font-semibold text-[18px] text-[#282828] "
+            class="flex justify-start font-semibold text-[18px] text-[#282828]"
           >
             Running Date
           </label>
-       
-        <label class="text-[#FF0000] font-medium"> * </label>
-      </div>
+          <label class="text-[#FF0000] font-medium"> * </label>
+        </div>
         <div class="flex flex-row items-star gap-3">
           <div class="flex flex-row gap-2 items-center">
             <div
@@ -203,9 +210,7 @@ const maxEndTime = (i: number) => {
                 @date-select="formDisplay.startDate?.setHours(23, 59, 59, 0)"
                 class="flex justify-start w-[170px]"
               />
-
               <p>to</p>
-
               <Calendar
                 v-model="formDisplay.endDate"
                 showIcon
