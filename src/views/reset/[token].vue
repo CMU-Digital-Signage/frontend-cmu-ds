@@ -11,7 +11,6 @@ import { setPassword } from "@/services/user";
 import { checkTokenExpired } from "@/utils/constant";
 import router from "@/router";
 
-let expired = false;
 const message = ref("");
 const route = useRoute();
 const token = route.params.token as string;
@@ -21,10 +20,7 @@ const cfPassword = ref("");
 const toast = useToast();
 
 watchEffect(() => {
-  expired = checkTokenExpired(token);
-  if (expired) {
-    message.value = "link expired";
-  }
+  message.value = checkTokenExpired(token);
 });
 
 const resetPassword = async () => {
@@ -62,7 +58,7 @@ const resetPassword = async () => {
     class="bg-gradient-to-r from-[#E5F9FA] to-[#F6FDF7] h-screen flex items-center justify-center overflow-hidden"
   >
     <Toast />
-    <h1 class="text-xl" v-if="expired">{{ message }}</h1>
+    <h1 class="text-xl" v-if="!message.includes('Success')">{{ message }}</h1>
     <div
       v-else
       class="w-full rounded-none md:w-2/3 h-full relative md:h-3/4 md:bg-gradient-to-r md:from-[#F8FEFE] md:to-[#f3fcfa] border-2 border-[#B8F1F0] drop-shadow-xl md:rounded-[15px] flex flex-col items-center text-center"
