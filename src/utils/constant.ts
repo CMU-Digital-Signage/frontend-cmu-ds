@@ -130,7 +130,7 @@ export const newInitialFormDisplay = () => {
 
 export const onUpload = (e: any): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    const file = e.files[0];
+    const file = e;
     if (!file) reject("No file selected");
 
     const targetSize = 500 * 1024; // 500 kb
@@ -141,7 +141,7 @@ export const onUpload = (e: any): Promise<string | undefined> => {
         new Compressor(file, {
           quality: compressionQuality,
           async success(result) {
-            e.files[0] = new File([result], e.files[0].name);
+            e = new File([result], e.name);
             resolve();
           },
           error(error) {
@@ -154,9 +154,9 @@ export const onUpload = (e: any): Promise<string | undefined> => {
     const attemptCompression = async () => {
       try {
         await compressFile(quality);
-        if (e.files[0].size < targetSize) {
+        if (e.size < targetSize) {
           const reader = new FileReader();
-          reader.readAsDataURL(e.files[0]);
+          reader.readAsDataURL(e);
           reader.onloadend = function () {
             resolve(reader.result as string);
           };

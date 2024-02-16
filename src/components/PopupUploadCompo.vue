@@ -410,7 +410,18 @@ const nextStepUpload = () => {
   }
 };
 
-// const preview = () => {};
+const nextStepPreview = () => {
+  if (formPoster.value.image) {
+    currentState.value = 2;
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Invalid",
+      detail: "Image selected not found.",
+      life: 3000,
+    });
+  }
+};
 </script>
 
 <template>

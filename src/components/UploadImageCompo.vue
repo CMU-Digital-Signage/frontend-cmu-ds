@@ -18,14 +18,13 @@ import {
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
+import { FileUploadSelectEvent } from "primevue/fileupload";
 
 const props = defineProps<{ posType: string; maxImage: number | undefined }>();
 const { posType, maxImage } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
 const oldFile = ref<File[]>([]);
-const newFile = ref<File[]>([]);
-const notChoose = ref(true);
 const currentDeg = ref(0);
 const toast = useToast();
 
@@ -34,7 +33,7 @@ onMounted(() => {
     formPoster.value.image.forEach(async (e) => {
       oldFile.value.push(new File([e.image], formPoster.value.title));
     });
-  } else {
+  } else if (posType.value === "EP") {
     oldFile.value.push(
       new File([formEmer.value.emergencyImage], formEmer.value.incidentName)
     );
@@ -47,6 +46,14 @@ const errorSelectFile = () => {
     summary: "Invalid file type",
     detail: "Allowed file types: image/*.",
     life: 3000,
+  });
+};
+
+const uploadImage = (e: FileUploadSelectEvent) => {
+  store.state.formPoster.image = [];
+  e.files.forEach(async (image: any, i: number) => {
+    const imageDataUrl = await onUpload(image);
+    store.state.formPoster.image.push({ image: imageDataUrl, priority: i + 1 });
   });
 };
 </script>
@@ -68,26 +75,23 @@ const errorSelectFile = () => {
         class: `${posType === 'EP' ? 'border-[#f00]' : ''}`,
       },
     }"
-    @upload="onUpload($event)"
+    customUpload
     @select="
       async (e) => {
         if (posType === 'EP') {
           if (e.files.length > 1) e.files.shift();
-          if (e.files[0]) {
-            formEmer.emergencyImage = await onUpload(e);
-          } else errorSelectFile();
-        }
+          if (e.files[0]) formEmer.emergencyImage = await onUpload(e.files[0]);
+        } else if (e.files[0]) uploadImage(e);
+        else errorSelectFile();
       }
     "
   >
-    <template #header="{ files, chooseCallback, clearCallback }">
+    <template #header="{ files, chooseCallback }">
       <div class="flex w-full gap-3 items-center justify-between">
         <div class="flex gap-3 items-center">
           <Button
             @click="
               () => {
-                clearCallback();
-                newFile = [];
                 currentDeg = 0;
                 chooseCallback();
               }
@@ -98,7 +102,10 @@ const errorSelectFile = () => {
             outlined
           />
         </div>
-        <div v-if="posType === 'EP' && files[0]" class="flex gap-3 items-center">
+        <div
+          v-if="posType === 'EP' && files[0]"
+          class="flex gap-3 items-center"
+        >
           <Button
             @click="
               async () => {
@@ -111,11 +118,11 @@ const errorSelectFile = () => {
                 currentDeg = newDeg;
               }
             "
-            :class="`${newFile ? '' : 'text-[#9c9b9b]'}`"
+            :class="`${formEmer.emergencyImage ? '' : 'text-[#9c9b9b]'}`"
             icon="pi pi-replay"
             rounded
             outlined
-            :disabled="!newFile"
+            :disabled="!formEmer.emergencyImage"
           />
           <Button
             @click="
@@ -187,20 +194,6 @@ const errorSelectFile = () => {
           />
         </div>
       </div>
-      <!-- <div v-if="notChoose" class="flex justify-between items-center w-full">
-        <img
-          alt="locationImage"
-          :src="formEmer.emergencyImage || formPoster.image[0].image"
-          class="w-2/4 h-2/4"
-        />
-        <Button
-          icon="pi pi-times"
-          @click="notChoose = false"
-          outlined
-          rounded
-          severity="danger"
-        />
-      </div> -->
       <div v-else class="flex flex-col text-center items-center">
         <i
           class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
