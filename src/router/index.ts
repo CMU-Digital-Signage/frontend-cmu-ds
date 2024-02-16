@@ -14,7 +14,7 @@ import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
 import Token from "@/views/reset/[token].vue";
 import { Device } from "@/types";
-import { color } from "@/utils/constant";
+import { checkTokenExpired, color } from "@/utils/constant";
 import PosterpreView from "@/views/PosterpreView.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -114,6 +114,14 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  if (localStorage.getItem("token")) {
+    const expired = checkTokenExpired(localStorage.getItem("token") || "");
+    if (expired) {
+      localStorage.clear();
+      next({ path: "/login", replace: true });
+    }
+    next();
+  }
   if (to.path.includes("/emergency") && !localStorage.getItem("token")) {
     next();
     return;
