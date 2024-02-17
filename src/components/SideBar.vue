@@ -666,14 +666,14 @@ const handleChangePassword = async () => {
                 label="Later, Log Out"
                 text
                 @click="signOut()"
-                :class="'secondaryButton'"
+                :class="'secondaryButton1'"
                 type="submit"
               ></Button>
               <Button
                 label="Confirm"
                 text
                 @click="checkMatchPassword"
-                :class="'primaryButton'"
+                :class="'primaryButton1'"
                 type="submit"
               ></Button>
             </div></div
@@ -733,7 +733,7 @@ Button {
   width: 100%;
 }
 
-.primaryButton {
+.primaryButton1 {
   width: 50%;
   border-width: 0;
   border-radius: 12px;
@@ -747,8 +747,46 @@ Button {
   cursor: pointer;
 }
 
-.secondaryButton {
+.secondaryButton1 {
   width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 30px;
+  margin-right: 10px;
+  background-color: none;
+  color: rgb(255, 0, 0);
+  cursor: pointer;
+}
+
+.primaryButton1:hover {
+  cursor: pointer;
+  background-color: rgb(9, 120, 247);
+  text-decoration-line: underline;
+}
+
+.secondaryButton1:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+}
+
+.primaryButton {
+  width: 100%;
+  border-width: 0;
+  border-radius: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 30px;
+  margin-left: 10px;
+  background-color: rgb(74, 158, 255);
+  color: rgb(255, 255, 255);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.secondaryButton {
+  width: 100%;
   border-width: 0;
   border-radius: 8px;
   padding-top: 10px;
