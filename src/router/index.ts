@@ -129,16 +129,7 @@ router.beforeEach(async (to, from, next) => {
       next({ path: "/login", replace: true });
     }
     next();
-  } else {
-    if (store.state.userInfo.email && localStorage.getItem("token")) {
-      const pass = checkTokenExpired(localStorage.getItem("token") || "");
-      if (pass !== "Success") {
-        localStorage.clear();
-        next({ path: "/login", replace: true });
-      }
-      next();
-    }
-  }
+  } else next();
 });
 
 export default router;
