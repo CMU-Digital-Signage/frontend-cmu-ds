@@ -108,6 +108,7 @@ const checkMatchPassword = async () => {
         detail: "Set Emergency Password successfully.",
         life: 3000,
       });
+      store.state.userInfo.password = password.value;
     }
     dialogSetPassword.value = false;
   } else {
