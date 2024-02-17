@@ -384,6 +384,7 @@ const calculateScreenHeight = () => {
   background-color: none;
   color: black;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 .secondaryButton:hover {
@@ -397,11 +398,13 @@ const calculateScreenHeight = () => {
   border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
+  margin-left: 10px;
   margin-top: 20px;
   background-color: none;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 .primaryButton:hover {

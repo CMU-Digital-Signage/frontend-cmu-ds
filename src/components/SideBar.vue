@@ -49,6 +49,7 @@ const showDialog = () => {
   resetChangeForm();
 };
 
+
 const sendEmailDialog = async () => {
   loading.value = true;
   const res = await sendEmail();
@@ -56,7 +57,7 @@ const sendEmailDialog = async () => {
     toast.add({
       severity: "success",
       summary: "Success",
-      detail: "Email has beeen send.",
+      detail: "Send email successfull.",
       life: 3000,
     });
     loading.value = false;
@@ -578,10 +579,12 @@ const handleChangePassword = async () => {
             <span class="text-[#1b7be8] font-extrabold underline">{{
               user.email
             }}</span>
-            Check your inbox (including spam) to reset your emergency password.
+            Check your inbox (including Spam and Junk) to reset your emergency
+            password.
           </p>
           <Button
             label="Send Email"
+            :loading="loading"
             text
             @click="sendEmailDialog"
             :class="'primaryButton'"
@@ -624,11 +627,13 @@ const handleChangePassword = async () => {
               </p>
             </div>
             <p class="ml-9">
-              CPE Digital Signage offers an Emergency Activation function to
-              display emergency posters on all screens.
+              CPE Digital Signage provides an Emergency Activation feature, as
+              shown on the login page, to display emergency posters on all
+              screens.
               <span class="font-bold text-black">
-                Before using this website, set your Emergency Password to
-                activate the emergency poster during an incident.</span
+                Before using this website, please set your Emergency Password.
+                This password is used to activate the emergency poster during an
+                incident.</span
               >
             </p>
           </div>
@@ -657,13 +662,22 @@ const handleChangePassword = async () => {
               />
               <label for="reTypeNewPassword">Confirm password</label>
             </FloatLabel>
-            <Button
-              label="Done"
-              text
-              @click="checkMatchPassword"
-              :class="'primaryButton'"
-              type="submit"
-            ></Button></div
+            <div class="inline-flex">
+              <Button
+                label="Later, Log Out"
+                text
+                @click="signOut()"
+                :class="'secondaryButton'"
+                type="submit"
+              ></Button>
+              <Button
+                label="Confirm"
+                text
+                @click="checkMatchPassword"
+                :class="'primaryButton'"
+                type="submit"
+              ></Button>
+            </div></div
         ></Dialog>
       </div>
     </div>
@@ -721,22 +735,42 @@ Button {
 }
 
 .primaryButton {
-  width: 100%;
+  width: 50%;
   border-width: 0;
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 30px;
+  margin-left: 10px;
   background-color: rgb(74, 158, 255);
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
 }
 
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 30px;
+  margin-right: 10px;
+  background-color: none;
+  color: rgb(255, 0, 0);
+  cursor: pointer;
+}
+
+
 .primaryButton:hover {
   cursor: pointer;
   background-color: rgb(9, 120, 247);
   text-decoration-line: underline;
+}
+
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
 }
 
 .header-popup {
