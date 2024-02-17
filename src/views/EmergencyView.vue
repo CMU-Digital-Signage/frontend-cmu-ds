@@ -8,8 +8,7 @@ import {
 } from "@/services";
 import TextPoster from "@/components/TextPoster.vue";
 import { Emergency } from "@/types";
-import LoginViewVue from "./LoginView.vue";
-import { text } from "@fortawesome/fontawesome-svg-core";
+import { useToast } from "primevue/usetoast";
 
 const click = computed({
   get: () => store.state.selectTabview,
@@ -22,13 +21,10 @@ const selectEmer = ref("");
 const inputTextPoster = ref("");
 const selectBanner = ref(false);
 const selectedPosterImage = ref("");
-const confirmationText = ref("");
-const isConfirmationValid = computed(
-  () => selectEmer.value === confirmationText.value
-);
+const password = ref("");
+const toast = useToast();
 
 watch(selectEmer, () => {
-  console.log(selectEmer.value);
   const selectedEmergency = emerPosters.value.find(
     (emergency) => emergency.incidentName === selectEmer.value
   );
@@ -66,12 +62,39 @@ onMounted(async () => {
     }
   }
 });
+
+const handleEmergency = async () => {
+  const status = emerPosters.value.filter(
+    (e) => e.incidentName === selectEmer.value
+  )[0].status;
+  if (status === "Active") {
+    await deactivateEmergency(selectEmer.value);
+  } else {
+    const res = await activateEmergency(selectEmer.value, password.value);
+    if (res.ok) {
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: `${selectEmer.value} has been activate.`,
+        life: 3000,
+      });
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: res.message,
+        life: 3000,
+      });
+    }
+  }
+};
 </script>
 
 <template>
   <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
+    <Toast />
     <div
-      class="py-[25px] px-[30px] flex  flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+      class="py-[25px] px-[30px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div>
         <div
@@ -158,7 +181,7 @@ onMounted(async () => {
           Type your Emergency Password in the box below
         </p>
         <div class="flex flex-col">
-          <InputText class="w-full mb-2" v-model="confirmationText"></InputText>
+          <InputText class="w-full mb-2" v-model="password"></InputText>
           <Button
             v-if="selectBanner"
             class="w-full bg-red-500 rounded-lg border-0"
@@ -168,28 +191,21 @@ onMounted(async () => {
           <Button
             v-else
             class="w-full bg-red-500 rounded-lg border-0"
-            :disabled="!isConfirmationValid"
+            :disabled="!password.length"
             :label="
               emerPosters.filter((e) => e.incidentName === selectEmer)[0]
                 .status === 'Active'
                 ? 'Deactivate'
                 : 'Activate'
             "
-            @click="
-              async () => {
-                emerPosters.filter((e) => e.incidentName === selectEmer)[0]
-                  .status === 'Active'
-                  ? await deactivateEmergency(selectEmer)
-                  : await activateEmergency(selectEmer);
-              }
-            "
+            @click="handleEmergency()"
           ></Button>
         </div>
       </div>
     </div>
 
     <div
-      class="flex-1 border-l-[2px];  border-[#eaeaea] py-[25px] px-[30px]  flex flex-col"
+      class="flex-1 border-l-[2px]; border-[#eaeaea] py-[25px] px-[30px] flex flex-col"
     >
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"

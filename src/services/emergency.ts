@@ -92,11 +92,16 @@ export async function deleteEmergency(incidentName: string) {
   }
 }
 
-export async function activateEmergency(incidentName: string) {
+export async function activateEmergency(
+  incidentName: string,
+  password: string
+) {
   try {
     const res = await axios.post(
       `${process.env.VUE_APP_API_BASE_URL}${prefix}/emergency/activate`,
-      {},
+      {
+        password,
+      },
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
