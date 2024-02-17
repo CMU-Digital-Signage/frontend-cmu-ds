@@ -49,7 +49,6 @@ const showDialog = () => {
   resetChangeForm();
 };
 
-
 const sendEmailDialog = async () => {
   loading.value = true;
   const res = await sendEmail();
@@ -588,7 +587,6 @@ const handleChangePassword = async () => {
             text
             @click="sendEmailDialog"
             :class="'primaryButton'"
-            :loading="loading"
           ></Button>
         </Dialog>
 
@@ -760,7 +758,6 @@ Button {
   color: rgb(255, 0, 0);
   cursor: pointer;
 }
-
 
 .primaryButton:hover {
   cursor: pointer;
