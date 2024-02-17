@@ -43,71 +43,69 @@ createApp(App)
   .use(store)
   .use(router)
   .use(PrimeVue, {
-    pt: {
-      Toast: {
-        container: (slotProps: any) => ({
-          class: [
-            "rounded-lg w-full border-solid border-0 border-l-[6px] shadow-md",
-            {
-              "border-blue-500": slotProps.props.message.severity == "info",
-              "border-green-500": slotProps.props.message.severity == "success",
-              "border-orange-500": slotProps.props.message.severity == "warn",
-              "border-red-500": slotProps.props.message.severity == "error",
-            },
-            {
-              "bg-blue-300": slotProps.props.message.severity == "info",
-              "bg-green-300": slotProps.props.message.severity == "success",
-              "bg-orange-300": slotProps.props.message.severity == "warn",
-              "bg-red-300": slotProps.props.message.severity == "error",
-            },
-            {
-              "text-blue-500": slotProps.props.message.severity == "info",
-              "text-green-500": slotProps.props.message.severity == "success",
-              "text-orange-500": slotProps.props.message.severity == "warn",
-              "text-red-500": slotProps.props.message.severity == "error",
-            },
-          ],
-        }),
-        content: (slotProps: any) => ({
-          class: ["border-none rounded-lg"],
-        }),
-        detail: () => ({
-          class: ["m-0"],
-        }),
-        icon: (slotProps: any) => ({
-          class: [
-            {
-              "text-blue-500": slotProps.props.message.severity == "info",
-              "text-green-500": slotProps.props.message.severity == "success",
-              "text-orange-500": slotProps.props.message.severity == "warn",
-              "text-red-500": slotProps.props.message.severity == "error",
-            },
-          ],
-        }),
-        closeIcon: (slotProps: any) => ({
-          class: [
-            {
-              "text-blue-500 ": slotProps.props.message.severity == "info",
-              "text-green-500": slotProps.props.message.severity == "success",
-              "text-orange-500": slotProps.props.message.severity == "warn",
-              "text-red-500": slotProps.props.message.severity == "error",
-            },
-          ],
-        }),
-      },
-      Column: {
-        sorticon: (slotProps: any) => ({
-          class: [
-            "m-3 pi",
-            {
-              "pi-sort-alt": slotProps.props.sortOrder == 0,
-              "pi-sort-alpha-down": slotProps.props.sortOrder == 1,
-              "pi-sort-alpha-up": slotProps.props.sortOrder == -1,
-            },
-          ],
-        }),
-      },
-    },
+    // pt: {
+    //   Toast: {
+    //     container: (slotProps: any) => ({
+    //       class: [
+    //         "rounded-lg w-full border-solid border-0 border-l-[6px] shadow-md",
+    //         {
+    //           "border-blue-500": slotProps.props.message.severity == "info",
+    //           "border-green-500": slotProps.props.message.severity == "success",
+    //           "border-orange-500": slotProps.props.message.severity == "warn",
+    //           "border-red-500": slotProps.props.message.severity == "error",
+    //         },
+  //           {
+  //             "bg-blue-300": slotProps.props.message.severity == "info",
+  //             "bg-green-300": slotProps.props.message.severity == "success",
+  //             "bg-orange-300": slotProps.props.message.severity == "warn",
+  //             "bg-red-300": slotProps.props.message.severity == "error",
+  //           },
+  //           {
+  //             "text-blue-500": slotProps.props.message.severity == "info",
+  //             "text-green-500": slotProps.props.message.severity == "success",
+  //             "text-orange-500": slotProps.props.message.severity == "warn",
+  //             "text-red-500": slotProps.props.message.severity == "error",
+  //           },
+  //         ],
+  //       }),
+  //       content: (slotProps: any) => ({
+  //         class: ["border-none rounded-lg"],
+  //       }),
+  //       detail: () => ({
+  //         class: ["m-0"],
+  //       }),
+  //       icon: (slotProps: any) => ({
+  //         class: [
+  //           {
+  //             "text-blue-500": slotProps.props.message.severity == "info",
+  //             "text-green-500": slotProps.props.message.severity == "success",
+  //             "text-orange-500": slotProps.props.message.severity == "warn",
+  //             "text-red-500": slotProps.props.message.severity == "error",
+  //           },
+  //         ],
+  //       }),
+  //       closeIcon: (slotProps: any) => ({
+  //         class: [
+  //           {
+  //             "text-blue-500 ": slotProps.props.message.severity == "info",
+  //             "text-green-500": slotProps.props.message.severity == "success",
+  //             "text-orange-500": slotProps.props.message.severity == "warn",
+  //             "text-red-500": slotProps.props.message.severity == "error",
+  //           },
+  //         ],
+  //       }),
+  //     },
+  //     Column: {
+  //       sorticon: (slotProps: any) => ({
+  //         class: [
+  //           "m-3 pi",
+  //           {
+  //             "pi-sort-alt": slotProps.props.sortOrder == 0,
+  //             "pi-sort-alpha-down": slotProps.props.sortOrder == 1,
+  //             "pi-sort-alpha-up": slotProps.props.sortOrder == -1,
+  //           },
+  //         ],
+  //       }),
   })
   .use(ToastService)
   .component("font-awesome-icon", FontAwesomeIcon)
