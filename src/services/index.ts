@@ -1,4 +1,10 @@
-import { getUserInfo, getAllUser, signOut, setPassword, changePassword } from "./user";
+import {
+  getUserInfo,
+  getAllUser,
+  signOut,
+  setPassword,
+  changePassword,
+} from "./user";
 import { addAdmin, deleteAdmin } from "./admin";
 import { getDevice, addDevice, editDevice, deleteDevice } from "./device";
 import {
@@ -17,7 +23,7 @@ import {
   deactivateEmergency,
 } from "./emergency";
 import { getPosterEachDevice } from "./pi";
-
+import { sendEmail } from "./email";
 
 export {
   getUserInfo,
@@ -43,4 +49,5 @@ export {
   getPosterEachDevice,
   setPassword,
   changePassword,
+  sendEmail,
 };

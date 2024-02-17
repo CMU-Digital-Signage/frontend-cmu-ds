@@ -1,10 +1,5 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import { cF } from "@fullcalendar/core/internal-common";
-import Dialog from "primevue/dialog";
-import { setPassword, changePassword } from "@/services";
-import { sendEmail } from "@/services/email";
-
 export default defineComponent({
   name: "SideBar",
 });
@@ -12,9 +7,10 @@ export default defineComponent({
 <script setup lang="ts">
 import { computed, watch, watchEffect, onMounted } from "vue";
 import store from "@/store";
-import { signOut } from "@/services";
+import { signOut, setPassword, changePassword, sendEmail } from "@/services";
 import { useToast } from "primevue/usetoast";
 
+const loading = ref(false);
 const user = computed(() => store.state.userInfo);
 const device = computed(() => store.state.devices);
 const filterDevice = computed({
@@ -22,32 +18,27 @@ const filterDevice = computed({
   set: (val) => (store.state.filterDevice = val),
 });
 const openSidebar = computed(() => store.state.openSidebar);
-
 const toggleSidebar = () => {
   store.state.openSidebar = !openSidebar.value;
 };
-
 const menu = ref();
 const oldPassword = ref("");
 const password = ref("");
 const cfPassword = ref("");
-
 const toggle = (event: any) => {
   menu.value.toggle(event);
 };
+
+const toast = useToast();
+const dialogSetPassword = ref(false);
+const dialogVisible = ref(false); // dialog changePassword
+const secondDialogVisible = ref(false); // dialog forgetPassword
 
 watchEffect(() => {
   if (window.innerWidth <= 600) {
     store.state.openSidebar = false;
   }
 });
-
-const toast = useToast();
-
-const dialogSetPassword = ref(false);
-
-const dialogVisible = ref(false); // dialog changePassword
-const secondDialogVisible = ref(false); // dialog forgetPassword
 
 onMounted(() => {
   dialogSetPassword.value = user.value.password === null;
@@ -58,19 +49,20 @@ const showDialog = () => {
   resetChangeForm();
 };
 
-const loading = ref(false);
-const sendEmailDialog = () => {
+
+const sendEmailDialog = async () => {
   loading.value = true;
-  setTimeout(() => {
-    loading.value = false;
-    secondDialogVisible.value = false;
+  const res = await sendEmail();
+  if (res.ok) {
     toast.add({
       severity: "success",
-      summary: "Send email successfull",
+      summary: "Success",
+      detail: "Send email successfull.",
       life: 3000,
     });
-  }, 7000);
-  sendEmail();
+    loading.value = false;
+    secondDialogVisible.value = false;
+  }
 };
 
 const showSecondDialog = () => {
@@ -596,7 +588,7 @@ const handleChangePassword = async () => {
             text
             @click="sendEmailDialog"
             :class="'primaryButton'"
-            type="submit"
+            :loading="loading"
           ></Button>
         </Dialog>
 

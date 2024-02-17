@@ -114,20 +114,12 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (localStorage.getItem("token")) {
-    const pass = checkTokenExpired(localStorage.getItem("token") || "");
-    if (!pass.includes("Success")) {
-      localStorage.clear();
-      next({ path: "/login", replace: true });
-    }
-    next();
-  }
   if (to.path.includes("/emergency") && !localStorage.getItem("token")) {
     next();
     return;
   }
   const shouldFetchData = !to.meta.hideSidebar;
-  if (shouldFetchData) {
+  if (shouldFetchData || to.path.includes("/reset")) {
     if (!store.state.userInfo.id) {
       const userInfoRes = await getUserInfo();
       if (userInfoRes.ok) {
@@ -137,7 +129,16 @@ router.beforeEach(async (to, from, next) => {
       next({ path: "/login", replace: true });
     }
     next();
-  } else next();
+  } else {
+    if (store.state.userInfo.email && localStorage.getItem("token")) {
+      const pass = checkTokenExpired(localStorage.getItem("token") || "");
+      if (pass !== "Success") {
+        localStorage.clear();
+        next({ path: "/login", replace: true });
+      }
+      next();
+    }
+  }
 });
 
 export default router;
