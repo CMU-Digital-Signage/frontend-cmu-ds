@@ -778,7 +778,6 @@ Button {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 30px;
-  margin-left: 10px;
   background-color: rgb(74, 158, 255);
   color: rgb(255, 255, 255);
   font-weight: 800;
