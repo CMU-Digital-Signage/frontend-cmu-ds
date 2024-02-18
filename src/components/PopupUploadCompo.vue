@@ -38,7 +38,7 @@ const posterType = ref([
 ]);
 const selectedPosterType = ref({ header: "", code: "" });
 const currentState = ref(0);
-const scheduleTabs = reactive([{ header: "Schedule 1", index: 0 }]);
+const scheduleTabs = reactive<{ header: string; index: number }[]>([]);
 const posters = computed(() => store.state.posters);
 const editPosterType = computed(() => store.state.editPoster);
 const formPoster = computed(() => store.state.formPoster);
@@ -46,9 +46,16 @@ const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
 const maxImage = ref(0);
 const currentDeg = ref(0);
-const selectSchedule = ref(scheduleTabs[0]);
+const selectSchedule = ref();
 const showSecondDialog = ref(false);
 const loading = ref(false);
+
+onMounted(() => {
+  formDisplay.value.forEach((e, i) => {
+    scheduleTabs.push({ header: `Schedule ${i + 1}`, index: i });
+  });
+  selectSchedule.value = scheduleTabs[0];
+});
 
 watch([showUpload, showSecondDialog, editPosterType], () => {
   if (editPosterType.value.type && showUpload.value) {
@@ -90,15 +97,6 @@ const validateForm = () => {
 
   if (invalidSchedule) {
     return "Schedule Invalid.";
-  }
-};
-
-const validateImage = () => {
-  if (
-    (selectedPosterType.value.code === "NP" && !formPoster.value.image) ||
-    (selectedPosterType.value.code === "EP" && !formEmer.value.emergencyImage)
-  ) {
-    return "Not Choose File Image.";
   }
 };
 
@@ -298,18 +296,18 @@ const addSchedule = () => {
 const deleteSchedule = (index: number) => {
   if (index >= 0 && index < scheduleTabs.length) {
     store.state.formDisplay.splice(index, 1);
-    scheduleTabs.splice(index, 1);
-    selectSchedule.value.index == scheduleTabs.length
-      ? selectSchedule.value.index--
-      : selectSchedule.value.index;
-
-    if (scheduleTabs.length > 1) {
-      scheduleTabs.forEach((schedule, i) => {
-        if (i > 0) {
-          schedule.header = `${i + 1}`;
-        }
-      });
+    scheduleTabs.pop();
+    if (scheduleTabs.length === index) {
+      selectSchedule.value = scheduleTabs[scheduleTabs.length - 1];
+    } else if (!(scheduleTabs.values.length - 1)) {
+      selectSchedule.value = scheduleTabs[0];
     }
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Delete schedule successfully.",
+      life: 3000,
+    });
   }
 };
 
@@ -538,13 +536,23 @@ const nextStepPreview = () => {
 
           <div class="line-separator"></div>
 
-          <Dropdown
-            v-model="selectSchedule"
-            :options="scheduleTabs"
-            optionLabel="header"
-            class="w-full md:w-14rem mt-3"
-          >
-          </Dropdown>
+          <div class="flex flex-col items-end">
+            <Dropdown
+              v-model="selectSchedule"
+              :options="scheduleTabs"
+              optionLabel="header"
+              class="w-full md:w-14rem mt-3"
+            >
+            </Dropdown>
+            <Button
+              v-if="selectSchedule.index"
+              text
+              class="bg-red-400 w-fit"
+              @click="deleteSchedule(selectSchedule.index)"
+            >
+              <i class="pi pi-trash text-white"></i
+            ></Button>
+          </div>
           <ScheduleForm
             v-for="(schedule, index) in scheduleTabs"
             v-show="index === selectSchedule.index"
