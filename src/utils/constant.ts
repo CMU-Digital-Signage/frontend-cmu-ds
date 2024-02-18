@@ -115,7 +115,7 @@ export const initialFormDevice = {
   description: null,
 } as Device;
 
-export const initialFormDisplay = {
+const initialFormDisplay = {
   MACaddress: [],
   allDay: false,
   allDevice: false,
@@ -128,6 +128,7 @@ export const initialFormDisplay = {
 export const newInitialFormDisplay = () => {
   return {
     ...initialFormDisplay,
+    MACaddress: [],
     time: [
       {
         startTime: new Date("2024-02-09 08:00:00"),
@@ -226,7 +227,6 @@ export const rotate = (file: File, currentDeg: number, deg: number) => {
 };
 
 export const setFieldPoster = (data: Poster[]) => {
-  const posterCol = [] as Poster[];
   data.forEach((e: Poster) => {
     e.createdAt = new Date(e.createdAt);
     e.updatedAt = new Date(e.updatedAt);
@@ -238,27 +238,10 @@ export const setFieldPoster = (data: Poster[]) => {
     const uploader = `${users.firstName} ${users?.lastName?.charAt(0) || ""}.`;
     e.uploader = uploader;
 
-    const temp = { ...e };
-
-    if (temp.image.length > 1) {
-      temp.type = "Collection";
-    } else temp.type = "Individual";
-
-    if (
-      !posterCol.find(
-        (p) =>
-          p.MACaddress === e.MACaddress &&
-          p.title === e.title &&
-          dateFormatter(p.startDate) === dateFormatter(e.startDate) &&
-          dateFormatter(p.endDate) === dateFormatter(e.endDate) &&
-          p.startTime.toTimeString() === e.startTime.toTimeString() &&
-          p.endTime.toTimeString() === e.endTime.toTimeString()
-      )
-    ) {
-      posterCol.push(temp);
-    }
+    if (e.image.length > 1) {
+      e.type = "Collection";
+    } else e.type = "Individual";
   });
-  return [...posterCol];
 };
 
 export const statusPoster = [

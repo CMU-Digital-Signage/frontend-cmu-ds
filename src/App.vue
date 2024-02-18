@@ -35,8 +35,9 @@ watch(user, async () => {
     store.state.devices = devices;
     store.state.selectDevice = devices[0].MACaddress || "";
     store.state.filterDevice = devices.map((e) => e.MACaddress);
-
-    store.state.posters = setFieldPoster(posterRes.poster);
+    
+    setFieldPoster(posterRes.poster);  
+    store.state.posters = posterRes.poster; 
     createUnique(store.state.posters);
 
     emerRes.emergency.forEach(
@@ -131,7 +132,6 @@ Button:focus {
 
 .p-dialog {
   border-radius: 40px;
-
 }
 
 .p-tag {

@@ -6,39 +6,17 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import {
-  computed,
-  watch,
-  ref,
-  toRefs,
-  defineProps,
-  onMounted,
-  onUpdated,
-} from "vue";
+import { computed, ref, toRefs, onMounted, defineProps } from "vue";
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
-import { FileUploadSelectEvent } from "primevue/fileupload";
 
 const props = defineProps<{ posType: string; maxImage: number | undefined }>();
 const { posType, maxImage } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
-const oldFile = ref<File[]>([]);
 const currentDeg = ref(0);
 const toast = useToast();
-
-onMounted(() => {
-  if (posType.value === "NP" && formPoster.value.image) {
-    formPoster.value.image.forEach(async (e) => {
-      oldFile.value.push(new File([e.image], formPoster.value.title));
-    });
-  } else if (posType.value === "EP") {
-    oldFile.value.push(
-      new File([formEmer.value.emergencyImage], formEmer.value.incidentName)
-    );
-  }
-});
 
 const errorSelectFile = () => {
   toast.add({
@@ -49,12 +27,15 @@ const errorSelectFile = () => {
   });
 };
 
-const uploadImage = (e: FileUploadSelectEvent) => {
-  store.state.formPoster.image = [];
+const selectImage = (e: any) => {
   e.files.forEach(async (image: any, i: number) => {
     const imageDataUrl = await onUpload(image);
-    store.state.formPoster.image.push({ image: imageDataUrl, priority: i + 1 });
+    store.state.formPoster.image.push({
+      image: imageDataUrl,
+      priority: formPoster.value.image.length,
+    });
   });
+  e.files = [];
 };
 </script>
 
@@ -75,14 +56,14 @@ const uploadImage = (e: FileUploadSelectEvent) => {
         class: `${posType === 'EP' ? 'border-[#f00]' : ''}`,
       },
     }"
-    customUpload
     @select="
       async (e) => {
         if (posType === 'EP') {
           if (e.files.length > 1) e.files.shift();
           if (e.files[0]) formEmer.emergencyImage = await onUpload(e.files[0]);
-        } else if (e.files[0]) uploadImage(e);
-        else errorSelectFile();
+        } else if (e.files[0]) {
+          selectImage(e);
+        } else errorSelectFile();
       }
     "
   >
@@ -145,7 +126,7 @@ const uploadImage = (e: FileUploadSelectEvent) => {
         </div>
       </div>
     </template>
-    <template #content="{ files }">
+    <template #content="{ files, removeFileCallback }">
       <div
         v-if="posType === 'EP' && files[0] && formEmer.emergencyImage"
         class="flex flex-row justify-center text-center items-center gap-3"
@@ -168,6 +149,26 @@ const uploadImage = (e: FileUploadSelectEvent) => {
             }"
           />
         </div>
+      </div>
+      <div
+        v-else
+        v-for="(image, index) in formPoster.image"
+        :key="index"
+        class="content-image"
+      >
+        <img
+          :alt="formPoster.title"
+          :src="image.image"
+          width="100%"
+          height="100%"
+          @click="
+            () => {
+              removeFileCallback(index);
+              formPoster.image.splice(index, 1);
+            }
+          "
+        />
+        <div class="text-remove-image">Remove</div>
       </div>
     </template>
     <template #empty>
@@ -194,7 +195,10 @@ const uploadImage = (e: FileUploadSelectEvent) => {
           />
         </div>
       </div>
-      <div v-else class="flex flex-col text-center items-center">
+      <div
+        v-else-if="posType !== 'NP' || !formPoster.image.length"
+        class="flex flex-col text-center items-center"
+      >
         <i
           class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
         />
@@ -204,4 +208,36 @@ const uploadImage = (e: FileUploadSelectEvent) => {
   </FileUpload>
 </template>
 
-<style></style>
+<style scoped>
+.content-image {
+  position: relative;
+  width: 20%;
+  height: 20%;
+  display: inline-flex;
+  margin-right: 5px;
+  border-width: 1px;
+  border-color: black;
+}
+
+.text-remove-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  background: #f85a5a;
+  color: #000000;
+  opacity: 0;
+  visibility: hidden;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-image:hover {
+  cursor: pointer;
+}
+
+.content-image:hover .text-remove-image {
+  visibility: visible;
+  opacity: 80%;
+}
+</style>

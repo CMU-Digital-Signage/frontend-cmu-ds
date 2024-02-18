@@ -114,13 +114,10 @@ const setEvent = () => {
     (e) => e.MACaddress === selectedDevice.value
   );
   currentDevice.forEach((e) => {
-    const numPoster = e.image.length;
-    const displayDuration = numPoster * e.duration;
-    if (numPoster > 1) {
+    const displayDuration = e.image.length * e.duration;
+    if (e.image.length > 1) {
       e.type = "Collection";
     } else e.type = "Individual";
-
-    if (postersView.value.find((p) => p.title === e.title)) return;
 
     const allDay =
       e.startTime.toTimeString().includes("00:00") &&
