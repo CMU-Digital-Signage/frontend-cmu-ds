@@ -61,6 +61,14 @@ const sendEmailDialog = async () => {
     });
     loading.value = false;
     secondDialogVisible.value = false;
+  } else {
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: res.message,
+      life: 3000,
+    });
+    loading.value = false;
   }
 };
 
