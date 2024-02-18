@@ -181,7 +181,13 @@ const handleEmergency = async () => {
           Type your Emergency Password in the box below
         </p>
         <div class="flex flex-col">
-          <InputText class="w-full mb-2" v-model="password"></InputText>
+          <Password
+            class="w-full mb-2"
+            v-model="password"
+            input-class="w-full rounded-[12px] border-2"
+            :feedback="false"
+            toggle-mask
+          ></Password>
           <Button
             v-if="selectBanner"
             class="w-full bg-red-500 rounded-lg border-0"
