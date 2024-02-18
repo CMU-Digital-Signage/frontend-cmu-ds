@@ -239,14 +239,6 @@ export const setFieldPoster = (data: Poster[]) => {
     e.uploader = uploader;
 
     const temp = { ...e };
-    const imgCol = data.filter((p: Poster) => p.title === e.title);
-    temp.image = [];
-    imgCol.forEach((p: Poster) => {
-      if (!temp.image.find((e) => e.priority === p.priority)) {
-        temp.image.push({ image: p.image, priority: p.priority });
-      }
-    });
-    temp.image.sort((a: any, b: any) => a.priority - b.priority);
 
     if (temp.image.length > 1) {
       temp.type = "Collection";
@@ -255,6 +247,7 @@ export const setFieldPoster = (data: Poster[]) => {
     if (
       !posterCol.find(
         (p) =>
+          p.MACaddress === e.MACaddress &&
           p.title === e.title &&
           dateFormatter(p.startDate) === dateFormatter(e.startDate) &&
           dateFormatter(p.endDate) === dateFormatter(e.endDate) &&
