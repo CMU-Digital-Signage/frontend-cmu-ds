@@ -398,6 +398,12 @@ const nextStepUpload = () => {
     });
 
     let numImage = [] as number[];
+    if (editPosterType.value.type == "NP") {
+      numImage.push(formPoster.value.image.length);
+    } else if (!formPoster.value.image) {
+      store.state.formPoster.image = [];
+    }
+
     durationTime.forEach((e: any) => {
       const num =
         ((e.endTime - e.startTime) / 1000 - e.duration) / e.durationForm;

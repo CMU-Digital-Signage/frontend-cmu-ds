@@ -10,20 +10,13 @@ import { ref, watch, computed, onMounted } from "vue";
 import store from "@/store";
 import router from "@/router";
 import {
-  createUnique,
   dateFormatter,
-  initialFormDisplay,
-  setFieldPoster,
+  newInitialFormDisplay,
   statusEmer,
 } from "@/utils/constant";
-import { Display, Emergency, Poster, User } from "@/types";
+import { Display, Poster, User } from "@/types";
 import { statusPoster } from "@/utils/constant";
-import {
-  getPoster,
-  deletePoster,
-  deleteEmergency,
-  getEmergency,
-} from "@/services";
+import { deletePoster, deleteEmergency } from "@/services";
 import { useToast } from "primevue/usetoast";
 
 const isOverlayPanelVisible = ref();
@@ -78,43 +71,49 @@ let delP = null as any;
 const setForm = (data: any) => {
   if (props.types === "NP") {
     store.state.editPoster.title = data.title;
+    const poster = store.state.posters.filter((e) => e.title === data.title);
     // poster form
     const form = {
+      posterId: data.posterId,
       title: data.title,
-      image: data.image,
-      description: data.description,
+      description: poster[0].description,
+      image: [...poster[0].image],
     } as Poster;
     store.state.formPoster = { ...form };
 
     // display form
-    // const display = [{ ...initialFormDisplay }] as Display[];
-    // data.forEach((e: any) => {
-    //   display.find((disp) => {
-    //     if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
-    //       disp.startDate = e.startDate;
-    //       disp.endDate = e.endDate;
-    //       disp.duration = e.duration;
-    //       if (
-    //         e.startTime.toTimeString().includes("00:00") &&
-    //         e.endTime.toTimeString().includes("23:59")
-    //       ) {
-    //         disp.allDay = true;
-    //       } else {
-    //         display[0].time.pop();
-    //         disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-    //       }
-    //     } else {
-    //       if (
-    //         !disp.time.includes({ startTime: e.startTime, endTime: e.endTime })
-    //       ) {
-    //         disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-    //       }
-    //     }
-    //   });
-    // });
-    // console.log(display);
+    const display = [] as Display[];
+    poster.forEach((e: any) => {
+      display.push(newInitialFormDisplay());
+      display.find((disp) => {
+        if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
+          disp.startDate = e.startDate;
+          disp.endDate = e.endDate;
+          disp.duration = e.duration;
+          disp.MACaddress.push(e.MACaddress);
+          if (
+            e.startTime.toTimeString().includes("00:00") &&
+            e.endTime.toTimeString().includes("23:59")
+          ) {
+            disp.allDay = true;
+          } else {
+            display[0].time.pop();
+            disp.time.push({ startTime: e.startTime, endTime: e.endTime });
+          }
+        } else {
+          if (!disp.MACaddress.includes(e.MACaddress)) {
+            disp.MACaddress.push(e.MACaddress);
+          }
+          if (
+            !disp.time.includes({ startTime: e.startTime, endTime: e.endTime })
+          ) {
+            disp.time.push({ startTime: e.startTime, endTime: e.endTime });
+          }
+        }
+      });
+    });
 
-    // store.state.formDisplay = display;
+    store.state.formDisplay = display;
   } else {
     store.state.editPoster.title = data.incidentName;
     store.state.formEmer = {
@@ -241,7 +240,9 @@ const del = async (poster: string) => {
             </div>
             <div class="inline-flex gap-2">
               <Tag severity="info" value="Awaited" />
-              <p class="mt-1">Poster will be displayed at a later date or time.</p>
+              <p class="mt-1">
+                Poster will be displayed at a later date or time.
+              </p>
             </div>
           </div>
         </OverlayPanel>
