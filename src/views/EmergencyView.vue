@@ -9,6 +9,7 @@ import {
 import TextPoster from "@/components/TextPoster.vue";
 import { Emergency } from "@/types";
 import { useToast } from "primevue/usetoast";
+import { Key } from "@fullcalendar/core/preact";
 
 const click = computed({
   get: () => store.state.selectTabview,
@@ -44,6 +45,32 @@ watch(selectBanner, () => {
 const getTextPoster = (e: any) => {
   console.log(e.target);
   inputTextPoster.value = e.target.value;
+};
+
+const checkNumOfRowsandCols = (e: any) => {
+  const text = e.target.value;
+  const lines = text.split("\n");
+  const currentLineIndex =
+    text.substr(0, e.target.selectionStart).split("\n").length - 1;
+  const currentLine = lines[currentLineIndex];
+  const numberOfLines = lines.length;
+  const numberOfCols = currentLine.length;
+
+  if (
+    numberOfCols >= 30 &&
+    e.key !== "Enter" &&
+    e.key !== "Backspace" &&
+    e.key !== "ArrowLeft" &&
+    e.key !== "ArrowRight" &&
+    e.key !== "ArrowUp" &&
+    e.key !== "ArrowDown"
+  ) {
+    e.preventDefault();
+  }
+
+  if (numberOfLines === 8 && e.key === "Enter") {
+    e.preventDefault();
+  }
 };
 
 onUpdated(() => {
@@ -163,10 +190,10 @@ const handleEmergency = async () => {
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                   <Textarea
+                    @keydown="checkNumOfRowsandCols"
                     :disabled="!selectBanner"
                     @input="getTextPoster"
                     :maxlength="215"
-                    :rows="2"
                     placeholder="Ex: There's a fire, do not use the elevator"
                     class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none"
                   ></Textarea>
@@ -196,7 +223,12 @@ const handleEmergency = async () => {
           ></Button>
           <Button
             v-else
-            class="w-full bg-red-500 rounded-lg border-0"
+            class="w-full rounded-lg border-0 bg-red-500"
+            :class="{
+              'bg-[#000] opacity-80':
+                emerPosters.filter((e) => e.incidentName === selectEmer)[0]
+                  .status === 'Active',
+            }"
             :disabled="!password.length"
             :label="
               emerPosters.filter((e) => e.incidentName === selectEmer)[0]

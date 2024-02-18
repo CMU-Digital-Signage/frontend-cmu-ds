@@ -10,29 +10,29 @@ import { defineProps, toRefs, onUpdated } from "vue";
 
 const props = defineProps({ text: String });
 
-const processText = (text: any) => {
-  if (!text) {
-    return "";
-  }
+// const processText = (text: any) => {
+//   if (!text) {
+//     return "";
+//   }
 
-  let processedText = "";
-  let charCount = 0;
-  for (let i = 0; i < text.length; i++) {
-    if (text[i] === "\n" || text[i] === " ") {
-      processedText += text[i];
-      charCount = 0;
-    } else {
-      processedText += text[i];
-      charCount++;
-    }
-    if (charCount === 35) {
-      processedText += "\n";
-      charCount = 0;
-    }
-  }
+//   let processedText = "";
+//   let charCount = 0;
+//   for (let i = 0; i < text.length; i++) {
+//     if (text[i] === "\n" || text[i] === " ") {
+//       processedText += text[i];
+//       charCount = 0;
+//     } else {
+//       processedText += text[i];
+//       charCount++;
+//     }
+//     if (charCount === 6) {
+//       processedText += "\n";
+//       charCount = 0;
+//     }
+//   }
 
-  return processedText;
-};
+//   return processedText;
+// };
 </script>
 
 <template>
@@ -52,8 +52,8 @@ const processText = (text: any) => {
     >
       <p class="text-2xl mb-10">ฉุกเฉิน!</p>
       <div class="flex justify-center">
-        <p class="w-11/12 whitespace-pre-line">
-          {{ processText(props.text) }}
+        <p class="whitespace-pre-line text-center text-white">
+          {{ props.text }}
         </p>
       </div>
     </div>
