@@ -83,6 +83,7 @@ const showCurrentPoster = () => {
       poster.startTime.toTimeString() <= currentTime &&
       poster.endTime.toTimeString() >= currentTime
     ) {
+      count = 0;
       return currentIndex;
     } else {
       count++;
