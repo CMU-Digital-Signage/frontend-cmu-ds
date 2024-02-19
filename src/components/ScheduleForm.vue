@@ -13,14 +13,17 @@ const { index } = toRefs(props);
 const device = computed(() => store.state.devices);
 const formDisplay = computed(() => store.state.formDisplay[index.value]);
 
-watch(store.state.formDisplay[index.value].startDate!, () => {
-  if (
-    formDisplay.value.startDate &&
-    formDisplay.value.startDate > formDisplay.value.endDate!
-  ) {
-    store.state.formDisplay[index.value].endDate = undefined;
+watch(
+  () => store.state.formDisplay[index.value].startDate!,
+  () => {
+    if (
+      formDisplay.value.startDate &&
+      formDisplay.value.startDate > formDisplay.value.endDate!
+    ) {
+      store.state.formDisplay[index.value].endDate = undefined;
+    }
   }
-});
+);
 
 const changeStartTime = (i: number) => {
   if (

@@ -124,12 +124,16 @@ router.beforeEach(async (to, from, next) => {
       const userInfoRes = await getUserInfo();
       if (userInfoRes.ok) {
         store.state.userInfo = userInfoRes.user;
-        if (store.state.userInfo.isAdmin) next();
+        if (store.state.userInfo.isAdmin) {
+          next();
+          return;
+        }
       }
       next({ path: "/login", replace: true });
+      return;
     }
-    next();
-  } else next();
+  }
+  next();
 });
 
 export default router;

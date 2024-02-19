@@ -73,6 +73,17 @@ const setForm = (data: any) => {
   if (props.types === "NP") {
     store.state.editPoster.title = data.title;
     const poster = store.state.posters.filter((e) => e.title === data.title);
+    poster.sort((a: Poster, b: Poster) => {
+      if (a.startDate < b.startDate) return -1;
+      else if (a.startDate > b.startDate) return 1;
+      else {
+        if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
+        else if (a.startTime.toTimeString() > b.startTime.toTimeString())
+          return 1;
+        else return 0;
+      }
+    });
+
     // poster form
     const form = {
       posterId: data.posterId,
@@ -86,7 +97,9 @@ const setForm = (data: any) => {
     store.state.formDisplay.pop();
     poster.forEach((e: any) => {
       const index = formDisplay.value.findIndex(
-        (disp) => disp.startDate === e.startDate && disp.endDate === e.endDate
+        (disp) =>
+          dateFormatter(disp.startDate) === dateFormatter(e.startDate) &&
+          dateFormatter(disp.endDate) === dateFormatter(e.endDate)
       );
 
       if (index === -1) {
@@ -109,14 +122,15 @@ const setForm = (data: any) => {
           });
         }
       } else {
-        if (!store.state.formDisplay[index].MACaddress.includes(e.MACaddress)) {
+        if (!formDisplay.value[index].MACaddress.includes(e.MACaddress)) {
           store.state.formDisplay[index].MACaddress.push(e.MACaddress);
         }
         if (
-          !store.state.formDisplay[index].time.includes({
-            startTime: e.startTime,
-            endTime: e.endTime,
-          })
+          formDisplay.value[index].time.findIndex(
+            (time) =>
+              time.startTime?.toTimeString() === e.startTime.toTimeString() &&
+              time.endTime?.toTimeString() === e.endTime.toTimeString()
+          ) === -1
         ) {
           store.state.formDisplay[index].time.push({
             startTime: e.startTime,
@@ -132,8 +146,6 @@ const setForm = (data: any) => {
         e.allDevice = true;
       }
     });
-
-    console.log(formDisplay.value);
   } else {
     store.state.editPoster.title = data.incidentName;
     store.state.formEmer = {
