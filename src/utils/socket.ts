@@ -3,7 +3,7 @@ import store from "@/store";
 import { Device, Emergency, Poster, User } from "@/types";
 import router from "@/router";
 
-export const socket = io("localhost:8000", {
+export const socket = io(process.env.VUE_APP_API_BASE_URL!, {
   transports: ["websocket"],
 });
 
