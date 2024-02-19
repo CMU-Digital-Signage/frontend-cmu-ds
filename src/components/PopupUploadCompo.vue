@@ -38,7 +38,9 @@ const posterType = ref([
 ]);
 const selectedPosterType = ref({ header: "", code: "" });
 const currentState = ref(0);
-const scheduleTabs = ref<{ header: string; index: number }[]>([]);
+const scheduleTabs = ref<{ header: string; index: number }[]>([
+  { header: `Schedule 1`, index: 0 },
+]);
 const posters = computed(() => store.state.posters);
 const editPosterType = computed(() => store.state.editPoster);
 const formPoster = computed(() => store.state.formPoster);
@@ -46,27 +48,27 @@ const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
 const maxImage = ref(0);
 const selectRotate = ref({ image: "", priority: 1 });
-const selectSchedule = ref();
+const selectSchedule = ref({ header: `Schedule 1`, index: 0 });
 const showSecondDialog = ref(false);
 const loading = ref(false);
 
 const createScheduleTabs = () => {
-  scheduleTabs.value = [];
   formDisplay.value.forEach((e, i) => {
     scheduleTabs.value.push({ header: `Schedule ${i + 1}`, index: i });
   });
   selectSchedule.value = scheduleTabs.value[0];
 };
 
-onMounted(() => {
-  createScheduleTabs();
-});
+watch(
+  () => store.state.formDisplay,
+  () => {
+    scheduleTabs.value = [];
+    createScheduleTabs();
+  },
+  { deep: true }
+);
 
-watch(formDisplay, () => {
-  createScheduleTabs();
-});
-
-watch([showUpload, showSecondDialog, editPosterType], () => {
+watch([showUpload, showSecondDialog, editPosterType.value], () => {
   if (editPosterType.value.type && showUpload.value) {
     posterType.value.map((e) => {
       if (e.code === editPosterType.value.type) {
@@ -80,8 +82,7 @@ watch([showUpload, showSecondDialog, editPosterType], () => {
     showUpload.value = false;
     showSecondDialog.value = true;
   } else if (!showUpload.value && !showSecondDialog.value) {
-    if (editPosterType.value.type.length)
-      store.state.editPoster = { title: "", type: "" };
+    store.state.editPoster = { title: "", type: "" };
     selectedPosterType.value = { header: "", code: "" };
     store.commit("resetForm");
   }
@@ -338,6 +339,14 @@ const nextStepUpload = () => {
       life: 3000,
     });
   } else {
+    let poster = [] as Poster[];
+    if (editPosterType.value.type === "NP") {
+      poster = posters.value.filter(
+        (e) => e.posterId !== formPoster.value.posterId
+      );
+    } else {
+      poster = posters.value;
+    }
     let durationTime = [] as any;
     let filterTime = [] as Poster[];
     formDisplay.value.forEach((e, i) => {
@@ -345,7 +354,7 @@ const nextStepUpload = () => {
       if (e.allDevice) store.commit("setAllDevice", i);
     });
     formDisplay.value.forEach((form) => {
-      const filterDate = posters.value.filter((all) => {
+      const filterDate = poster.filter((all) => {
         return (
           (dateFormatter(form.startDate) <= dateFormatter(all.startDate) &&
             dateFormatter(all.startDate) <= dateFormatter(form.endDate)) ||
@@ -377,9 +386,9 @@ const nextStepUpload = () => {
               durationForm: form.duration,
               duration: 0,
             });
-            date!.setDate(date!.getDate() + 1);
-            count++;
           });
+          date!.setDate(date!.getDate() + 1);
+          count++;
         }
         filterTime = filterDate.filter((all) => {
           return (
@@ -397,8 +406,8 @@ const nextStepUpload = () => {
     durationTime.forEach((form: any) => {
       filterTime.forEach((all) => {
         if (
-          (all.MACaddress === form.MACaddress &&
-            dateFormatter(all.startDate) <= dateFormatter(form.date)) ||
+          all.MACaddress === form.MACaddress &&
+          dateFormatter(all.startDate) <= dateFormatter(form.date) &&
           dateFormatter(form.date) <= dateFormatter(all.endDate)
         ) {
           form.duration += all.duration * all.image.length;
@@ -414,8 +423,11 @@ const nextStepUpload = () => {
     }
 
     durationTime.forEach((e: any) => {
-      const num =
-        ((e.endTime - e.startTime) / 1000 - e.duration) / e.durationForm;
+      const endTimeSec =
+        e.endTime.getHours() * 3600 + e.endTime.getMinutes() * 60;
+      const startTimeSec =
+        e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
+      const num = (endTimeSec - startTimeSec - e.duration) / e.durationForm;
       numImage.push(Math.floor(num - (num * (0.5 / e.durationForm)) / 100));
     });
     maxImage.value = Math.min(...numImage);
@@ -426,8 +438,6 @@ const nextStepUpload = () => {
 const nextStepPreview = () => {
   if (formPoster.value.image) {
     selectRotate.value = { ...formPoster.value.image[0] };
-    console.log(selectRotate.value);
-
     currentState.value = 2;
   } else {
     toast.add({
@@ -682,17 +692,16 @@ const nextStepPreview = () => {
               :key="index"
               class="content-image"
               @click="
-                  () => {
-                    selectRotate = { ...formPoster.image[index] };
-                  }
-                "
+                () => {
+                  selectRotate = { ...formPoster.image[index] };
+                }
+              "
             >
               <img
                 :alt="formPoster.title"
                 :src="image.image"
                 width="100%"
                 height="100%"
-               
               />
               <div class="text-image bg-[#8fff98]">Choose</div>
             </div>
