@@ -187,43 +187,27 @@ export const onUpload = (e: any): Promise<string | undefined> => {
   });
 };
 
-export const rotate = (file: File, currentDeg: number, deg: number) => {
-  return new Promise<{ imageDataUrl: string; newDeg: number }>(
-    (resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = function () {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d")!;
+export const rotate = (base64Image: string, deg: number) => {
+  return new Promise<string>((resolve, reject) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")!;
+    const img = new Image();
+    img.src = base64Image;
+    img.onload = function () {
+      // Rotate the image
+      canvas.width = img.height;
+      canvas.height = img.width;
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((deg * Math.PI) / 180);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
 
-        const img = new Image();
-        img.src = reader.result as string;
+      const fileType = base64Image.substring(5, base64Image.indexOf(";"));
 
-        img.onload = function () {
-          let newDeg = currentDeg + deg;
-          if (Math.abs(newDeg) === 360) {
-            newDeg = 0;
-          }
-
-          // Rotate the image
-          if (Math.abs(newDeg) === 180 || Math.abs(newDeg) === 0) {
-            canvas.width = img.width;
-            canvas.height = img.height;
-          } else {
-            canvas.width = img.height;
-            canvas.height = img.width;
-          }
-          ctx.translate(canvas.width / 2, canvas.height / 2);
-          ctx.rotate((newDeg * Math.PI) / 180);
-          ctx.drawImage(img, -img.width / 2, -img.height / 2);
-
-          // Convert the rotated image to base64
-          const imageDataUrl = canvas.toDataURL(file.type, 1.0);
-          resolve({ imageDataUrl, newDeg });
-        };
-      };
-    }
-  );
+      // Convert the rotated image to base64
+      const imageDataUrl = canvas.toDataURL(fileType, 1.0);
+      resolve(imageDataUrl);
+    };
+  });
 };
 
 export const setFieldPoster = (data: Poster[]) => {

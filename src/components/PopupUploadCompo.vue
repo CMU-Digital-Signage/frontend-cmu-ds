@@ -6,7 +6,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, ref, reactive, watch, onMounted } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import store from "@/store";
 import router from "@/router";
 import { addEmergency, addPoster, editEmergency, editPoster } from "@/services";
@@ -14,8 +14,8 @@ import { Poster } from "@/types";
 import {
   dateFormatter,
   createUnique,
-  setFieldPoster,
   newInitialFormDisplay,
+  rotate,
 } from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
@@ -38,23 +38,32 @@ const posterType = ref([
 ]);
 const selectedPosterType = ref({ header: "", code: "" });
 const currentState = ref(0);
-const scheduleTabs = reactive<{ header: string; index: number }[]>([]);
+const scheduleTabs = ref<{ header: string; index: number }[]>([]);
 const posters = computed(() => store.state.posters);
 const editPosterType = computed(() => store.state.editPoster);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
 const maxImage = ref(0);
-const currentDeg = ref(0);
+const selectRotate = ref({ image: "", priority: 1 });
 const selectSchedule = ref();
 const showSecondDialog = ref(false);
 const loading = ref(false);
 
-onMounted(() => {
+const createScheduleTabs = () => {
+  scheduleTabs.value = [];
   formDisplay.value.forEach((e, i) => {
-    scheduleTabs.push({ header: `Schedule ${i + 1}`, index: i });
+    scheduleTabs.value.push({ header: `Schedule ${i + 1}`, index: i });
   });
-  selectSchedule.value = scheduleTabs[0];
+  selectSchedule.value = scheduleTabs.value[0];
+};
+
+onMounted(() => {
+  createScheduleTabs();
+});
+
+watch(formDisplay, () => {
+  createScheduleTabs();
 });
 
 watch([showUpload, showSecondDialog, editPosterType], () => {
@@ -286,21 +295,21 @@ const addSchedule = () => {
 
   store.state.formDisplay.push(newInitialFormDisplay());
   const newSchedule = {
-    header: `Schedule ${scheduleTabs.length + 1}`,
-    index: scheduleTabs.length,
+    header: `Schedule ${scheduleTabs.value.length + 1}`,
+    index: scheduleTabs.value.length,
   };
-  scheduleTabs.push(newSchedule);
-  selectSchedule.value = scheduleTabs[scheduleTabs.length - 1];
+  scheduleTabs.value.push(newSchedule);
+  selectSchedule.value = scheduleTabs.value[scheduleTabs.value.length - 1];
 };
 
 const deleteSchedule = (index: number) => {
-  if (index >= 0 && index < scheduleTabs.length) {
+  if (index >= 0 && index < scheduleTabs.value.length) {
     store.state.formDisplay.splice(index, 1);
-    scheduleTabs.pop();
-    if (scheduleTabs.length === index) {
-      selectSchedule.value = scheduleTabs[scheduleTabs.length - 1];
-    } else if (!(scheduleTabs.values.length - 1)) {
-      selectSchedule.value = scheduleTabs[0];
+    scheduleTabs.value.pop();
+    if (scheduleTabs.value.length === index) {
+      selectSchedule.value = scheduleTabs.value[scheduleTabs.value.length - 1];
+    } else if (!(scheduleTabs.value.values.length - 1)) {
+      selectSchedule.value = scheduleTabs.value[0];
     }
     toast.add({
       severity: "success",
@@ -416,6 +425,9 @@ const nextStepUpload = () => {
 
 const nextStepPreview = () => {
   if (formPoster.value.image) {
+    selectRotate.value = { ...formPoster.value.image[0] };
+    console.log(selectRotate.value);
+
     currentState.value = 2;
   } else {
     toast.add({
@@ -596,36 +608,93 @@ const nextStepPreview = () => {
             <Button
               label="Next"
               :class="'primaryButton'"
-              @click="currentState = 2"
+              @click="nextStepPreview()"
             ></Button>
           </div>
         </div>
         <div v-if="currentState === 2">
-          <label
-            class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
-          >
-            Orientation
-          </label>
+          <div class="flex justify-between">
+            <div>
+              <label
+                class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
+              >
+                Orientation
+              </label>
+            </div>
+            <div class="inline-flex gap-2">
+              <Button
+                @click="
+                  async () => {
+                    formPoster.image[selectRotate.priority - 1].image =
+                      await rotate(selectRotate.image, -90);
+                    selectRotate.image =
+                      formPoster.image[selectRotate.priority - 1].image;
+                  }
+                "
+                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                icon="pi pi-replay"
+                rounded
+                outlined
+                :disabled="!formPoster.image"
+              />
+              <Button
+                @click="
+                  async () => {
+                    formPoster.image[selectRotate.priority - 1].image =
+                      await rotate(selectRotate.image, -90);
+                    selectRotate.image =
+                      formPoster.image[selectRotate.priority - 1].image;
+                  }
+                "
+                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                icon="pi pi-refresh"
+                rounded
+                outlined
+                :disabled="!formPoster.image"
+              />
+            </div>
+          </div>
           <div class="orientOut">
-            <div class="flex gap-3 items-center">
-              <template header="files">
-                <!-- <Button
-                  @click="rotate(files[0], currentDeg, -90)"
-                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                  icon="pi pi-replay"
-                  rounded
-                  outlined
-                  :disabled="!formPoster.image"
+            <div
+              class="flex flex-row justify-center text-center items-center gap-3 mb-3"
+            >
+              <i class="pi pi-power-off"></i>
+              <div
+                class="flex justify-center border-2 border-black bg-black"
+                :style="{
+                  width: `${2160 / 20}px`,
+                  height: `${3840 / 20}px`,
+                }"
+              >
+                <img
+                  :alt="formPoster.title"
+                  :src="formPoster.image[selectRotate.priority - 1].image"
+                  class="max-w-full max-h-full m-auto rotate-90"
+                  :style="{
+                    maxWidth: `${3840 / 20}px`,
+                    maxHeight: `${2160 / 20}px`,
+                  }"
                 />
-                <Button
-                  @click="rotate(files[0], currentDeg, 90)"
-                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                  icon="pi pi-refresh"
-                  rounded
-                  outlined
-                  :disabled="!formPoster.image"
-                /> -->
-              </template>
+              </div>
+            </div>
+            <div
+              v-for="(image, index) in formPoster.image"
+              :key="index"
+              class="content-image"
+              @click="
+                  () => {
+                    selectRotate = { ...formPoster.image[index] };
+                  }
+                "
+            >
+              <img
+                :alt="formPoster.title"
+                :src="image.image"
+                width="100%"
+                height="100%"
+               
+              />
+              <div class="text-image bg-[#8fff98]">Choose</div>
             </div>
           </div>
           <label
@@ -779,9 +848,9 @@ const nextStepPreview = () => {
 }
 
 .orientOut {
-  background-color: rgb(194, 88, 88);
-  height: 50vh;
-  width: full;
+  background-color: #ffffff;
+  /* height: 50vh; */
+  width: 100%;
   padding-top: 30px;
   padding-left: 26px;
   padding-right: 30px;

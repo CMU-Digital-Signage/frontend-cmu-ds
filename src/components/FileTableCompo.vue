@@ -64,6 +64,7 @@ const uniquePosters = computed(() =>
     );
   })
 );
+const formDisplay = computed(() => store.state.formDisplay);
 const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
 let delP = null as any;
@@ -82,38 +83,57 @@ const setForm = (data: any) => {
     store.state.formPoster = { ...form };
 
     // display form
-    const display = [] as Display[];
+    store.state.formDisplay.pop();
     poster.forEach((e: any) => {
-      display.push(newInitialFormDisplay());
-      display.find((disp) => {
-        if (disp.startDate !== e.startDate && disp.endDate !== e.endDate) {
-          disp.startDate = e.startDate;
-          disp.endDate = e.endDate;
-          disp.duration = e.duration;
-          disp.MACaddress.push(e.MACaddress);
-          if (
-            e.startTime.toTimeString().includes("00:00") &&
-            e.endTime.toTimeString().includes("23:59")
-          ) {
-            disp.allDay = true;
-          } else {
-            display[0].time.pop();
-            disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-          }
+      const index = formDisplay.value.findIndex(
+        (disp) => disp.startDate === e.startDate && disp.endDate === e.endDate
+      );
+
+      if (index === -1) {
+        const last = formDisplay.value.length;
+        store.state.formDisplay.push(newInitialFormDisplay());
+        store.state.formDisplay[last].startDate = e.startDate;
+        store.state.formDisplay[last].endDate = e.endDate;
+        store.state.formDisplay[last].duration = e.duration;
+        store.state.formDisplay[last].MACaddress.push(e.MACaddress);
+        if (
+          e.startTime.toTimeString().includes("00:00") &&
+          e.endTime.toTimeString().includes("23:59")
+        ) {
+          store.state.formDisplay[last].allDay = true;
         } else {
-          if (!disp.MACaddress.includes(e.MACaddress)) {
-            disp.MACaddress.push(e.MACaddress);
-          }
-          if (
-            !disp.time.includes({ startTime: e.startTime, endTime: e.endTime })
-          ) {
-            disp.time.push({ startTime: e.startTime, endTime: e.endTime });
-          }
+          store.state.formDisplay[last].time.pop();
+          store.state.formDisplay[last].time.push({
+            startTime: e.startTime,
+            endTime: e.endTime,
+          });
         }
-      });
+      } else {
+        if (!store.state.formDisplay[index].MACaddress.includes(e.MACaddress)) {
+          store.state.formDisplay[index].MACaddress.push(e.MACaddress);
+        }
+        if (
+          !store.state.formDisplay[index].time.includes({
+            startTime: e.startTime,
+            endTime: e.endTime,
+          })
+        ) {
+          store.state.formDisplay[index].time.push({
+            startTime: e.startTime,
+            endTime: e.endTime,
+          });
+        }
+      }
     });
 
-    store.state.formDisplay = display;
+    formDisplay.value.forEach((e) => {
+      if (e.MACaddress.length === store.state.devices.length) {
+        e.MACaddress = [];
+        e.allDevice = true;
+      }
+    });
+
+    console.log(formDisplay.value);
   } else {
     store.state.editPoster.title = data.incidentName;
     store.state.formEmer = {
