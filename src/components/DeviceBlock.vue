@@ -16,7 +16,10 @@ const devices = computed(() => store.state.devices);
 </script>
 
 <template>
-  <Button class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300">
+  <Button
+    @click="$router.push(`/preview/${device.MACaddress}`)"
+    class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300"
+  >
     <i class="pi pi-desktop text-[70px] text-[#62ccca]"></i>
     <div>
       <p class="font-bold text-[16px] text-black">

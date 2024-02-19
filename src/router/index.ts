@@ -84,7 +84,7 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/preview",
+    path: "/preview/:mac",
     name: "Preview",
     component: PosterpreView,
   },
