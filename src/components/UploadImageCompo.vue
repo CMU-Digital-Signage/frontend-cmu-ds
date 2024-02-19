@@ -15,7 +15,6 @@ const props = defineProps<{ posType: string; maxImage: number | undefined }>();
 const { posType, maxImage } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
-const currentDeg = ref(0);
 const toast = useToast();
 
 const errorSelectFile = () => {
@@ -28,14 +27,16 @@ const errorSelectFile = () => {
 };
 
 const selectImage = (e: any) => {
+  store.state.formPoster.image.forEach((e, index) => {
+    e.priority = index + 1;
+  });
   e.files.forEach(async (image: any, i: number) => {
     const imageDataUrl = await onUpload(image);
     store.state.formPoster.image.push({
       image: imageDataUrl,
-      priority: formPoster.value.image.length,
+      priority: formPoster.value.image.length + 1,
     });
   });
-  e.files = [];
 };
 </script>
 
@@ -67,15 +68,13 @@ const selectImage = (e: any) => {
       }
     "
   >
-    <template #header="{ files, chooseCallback }">
+    <template #header="{ chooseCallback, clearCallback }">
       <div class="flex w-full gap-3 items-center justify-between">
         <div class="flex gap-3 items-center">
           <Button
             @click="
-              () => {
-                currentDeg = 0;
-                chooseCallback();
-              }
+              chooseCallback();
+              clearCallback();
             "
             icon="pi pi-plus"
             label="Choose File"
@@ -84,19 +83,16 @@ const selectImage = (e: any) => {
           />
         </div>
         <div
-          v-if="posType === 'EP' && files[0]"
+          v-if="posType === 'EP' && formEmer.emergencyImage"
           class="flex gap-3 items-center"
         >
           <Button
             @click="
               async () => {
-                const { imageDataUrl, newDeg } = await rotate(
-                  files[0],
-                  currentDeg,
+                formEmer.emergencyImage = await rotate(
+                  formEmer.emergencyImage,
                   -90
                 );
-                formEmer.emergencyImage = imageDataUrl;
-                currentDeg = newDeg;
               }
             "
             :class="`${formEmer.emergencyImage ? '' : 'text-[#9c9b9b]'}`"
@@ -108,13 +104,10 @@ const selectImage = (e: any) => {
           <Button
             @click="
               async () => {
-                const { imageDataUrl, newDeg } = await rotate(
-                  files[0],
-                  currentDeg,
+                formEmer.emergencyImage = await rotate(
+                  formEmer.emergencyImage,
                   90
                 );
-                formEmer.emergencyImage = imageDataUrl;
-                currentDeg = newDeg;
               }
             "
             :class="`${formEmer.emergencyImage ? '' : 'text-[#9c9b9b]'}`"
@@ -155,20 +148,20 @@ const selectImage = (e: any) => {
         v-for="(image, index) in formPoster.image"
         :key="index"
         class="content-image"
+        @click="
+          () => {
+            removeFileCallback(index);
+            formPoster.image.splice(index, 1);
+          }
+        "
       >
         <img
           :alt="formPoster.title"
           :src="image.image"
           width="100%"
           height="100%"
-          @click="
-            () => {
-              removeFileCallback(index);
-              formPoster.image.splice(index, 1);
-            }
-          "
         />
-        <div class="text-remove-image">Remove</div>
+        <div class="text-image bg-[#f85a5a]">Remove</div>
       </div>
     </template>
     <template #empty>
@@ -208,7 +201,7 @@ const selectImage = (e: any) => {
   </FileUpload>
 </template>
 
-<style scoped>
+<style>
 .content-image {
   position: relative;
   width: 20%;
@@ -219,12 +212,11 @@ const selectImage = (e: any) => {
   border-color: black;
 }
 
-.text-remove-image {
+.text-image {
   width: 100%;
   height: 100%;
   display: flex;
   position: absolute;
-  background: #f85a5a;
   color: #000000;
   opacity: 0;
   visibility: hidden;
@@ -236,7 +228,7 @@ const selectImage = (e: any) => {
   cursor: pointer;
 }
 
-.content-image:hover .text-remove-image {
+.content-image:hover .text-image {
   visibility: visible;
   opacity: 80%;
 }
