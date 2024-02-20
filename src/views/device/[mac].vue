@@ -4,10 +4,11 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { getPosterEachDevice } from "@/services";
-import { computed, onMounted, ref, watch } from "vue";
+import { getEmergency, getPosterEachDevice } from "@/services";
+import { computed, onMounted, ref, watch, onUpdated } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
+import TextPoster from "@/components/TextPoster.vue";
 import { setFieldPoster } from "@/utils/constant";
 import { ImageCollection, Poster } from "@/types";
 
@@ -95,8 +96,12 @@ const showCurrentPoster = () => {
   updatePosterInterval();
 };
 
-onMounted(() => {
-  fetchData();
+onMounted(async () => {
+  // fetchData();
+  const res = await getEmergency();
+  if (res.ok) {
+    store.state.emerPosters = res.emergency;
+  }
 });
 
 watch(emerPoster, () => {
@@ -109,7 +114,10 @@ watch(emerPoster, () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen bg-black overflow-hidden">
+  <!-- <div
+    v-if="!inputTextPoster.length"
+    class="w-screen h-screen bg-black overflow-hidden"
+  >
     <transition v-if="image" name="fade">
       <img
         class="max-w-screen h-screen m-auto transition-opacity"
@@ -118,10 +126,17 @@ watch(emerPoster, () => {
         :src="image"
       />
     </transition>
+  </div> -->
+  <div class="rotateText flex justify-center items-center h-screen w-screen">
+    <TextPoster />
   </div>
 </template>
 
 <style scoped>
+.rotateText {
+  writing-mode: vertical-rl;
+  text-orientation: sideways;
+}
 .fade-enter-active {
   transition: opacity 0.5s;
 }
