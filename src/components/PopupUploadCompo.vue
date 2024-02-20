@@ -301,6 +301,12 @@ const addSchedule = () => {
   };
   scheduleTabs.value.push(newSchedule);
   selectSchedule.value = scheduleTabs.value[scheduleTabs.value.length - 1];
+  toast.add({
+    severity: "success",
+    summary: "Success",
+    detail: "Add schedule successfully.",
+    life: 3000,
+  });
 };
 
 const deleteSchedule = (index: number) => {
