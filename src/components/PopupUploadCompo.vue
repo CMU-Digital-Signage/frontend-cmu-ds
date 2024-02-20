@@ -49,7 +49,7 @@ const formEmer = computed(() => store.state.formEmer);
 const maxImage = ref(0);
 const selectRotate = ref({ image: "", priority: 1 });
 const selectSchedule = ref({ header: `Schedule 1`, index: 0 });
-const showSecondDialog = ref(true);
+const showSecondDialog = ref(false);
 const loading = ref(false);
 
 const createScheduleTabs = () => {
@@ -434,7 +434,7 @@ const nextStepUpload = () => {
       const startTimeSec =
         e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
       const num = (endTimeSec - startTimeSec - e.duration) / e.durationForm;
-      numImage.push(Math.floor(num - (num * (0.5 / e.durationForm))));
+      numImage.push(Math.floor(num - num * (0.5 / e.durationForm)));
     });
     maxImage.value = Math.min(...numImage);
     currentState.value = 1;
@@ -547,7 +547,7 @@ const nextStepPreview = () => {
         <div v-if="currentState === 0">
           <div class="inline-flex items-center">
             <label
-              class="text-[#282828] font-semibold text-[18px] flex justify-start mt-5 mb-1"
+              class="text-[#4e93f3] font-semibold text-[18px] flex justify-start mt-4 mb-1"
             >
               Title
             </label>
@@ -557,35 +557,34 @@ const nextStepPreview = () => {
             v-model="formPoster.title"
             type="text"
             placeholder="Ex.CPE Music Box"
-            class="title-input w-full mb-3"
+            class="title-input w-full mb-3 rounded-[12px]"
           />
 
           <label
-            class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
+            class="text-[#4e93f3] font-semibold text-[18px] flex justify-start mb-1"
           >
             Description
           </label>
           <InputText
             v-model="formPoster.description"
-            class="description-input h-full w-full mb-5"
+            class="description-input h-full w-full mb-5 rounded-[12px]"
             placeholder="(Optional)"
           />
 
           <div class="line-separator"></div>
 
-          <div class="flex flex-col items-end">
+          <div class="flex flex-inline items-end">
             <Dropdown
               v-model="selectSchedule"
               :options="scheduleTabs"
               optionLabel="header"
-              class="w-full md:w-14rem mt-3"
+              class="w-full md:w-14rem mt-3 rounded-lg bg-blue-100 drop-shadow-lg border-2 border-blue-400 text-black font-medium"
             >
             </Dropdown>
             <Button
               v-if="selectSchedule.index"
               text
-              class="bg-red-400 w-fit mt-1"
-
+              class="bg-red-500 w-fit mt-1 ml-2 h-11 rounded-md"
               @click="deleteSchedule(selectSchedule.index)"
             >
               <i class="pi pi-trash text-white"></i
@@ -864,7 +863,7 @@ const nextStepPreview = () => {
 }
 
 .line-separator {
-  border-top: 3px solid #b4b4b4;
+  border-top: 3px solid #4e93f3;
   margin: 15px 0;
 }
 
