@@ -4,6 +4,7 @@ import store from "@/store";
 import {
   activateEmergency,
   deactivateEmergency,
+  editEmergency,
   getEmergency,
 } from "@/services";
 import TextPoster from "@/components/TextPoster.vue";
@@ -19,12 +20,12 @@ const click = computed({
 const emerPosters = computed(() => store.state.emerPosters);
 
 const selectEmer = ref("");
-const inputTextPoster = ref("");
+const isTextPostActive = ref(false);
 const selectBanner = ref(false);
 const selectedPosterImage = ref("");
 const password = ref("");
 const toast = useToast();
-
+const inputTextEmer = ref("");
 watch(selectEmer, () => {
   const selectedEmergency = emerPosters.value.find(
     (emergency) => emergency.incidentName === selectEmer.value
@@ -44,7 +45,7 @@ watch(selectBanner, () => {
 
 const getTextPoster = (e: any) => {
   console.log(e.target);
-  inputTextPoster.value = e.target.value;
+  inputTextEmer.value = e.target.value;
 };
 
 const checkNumOfRowsandCols = (e: any) => {
@@ -60,6 +61,7 @@ const checkNumOfRowsandCols = (e: any) => {
     numberOfCols >= 30 &&
     e.key !== "Enter" &&
     e.key !== "Backspace" &&
+    e.key !== "Spacebar " &&
     e.key !== "ArrowLeft" &&
     e.key !== "ArrowRight" &&
     e.key !== "ArrowUp" &&
@@ -72,11 +74,6 @@ const checkNumOfRowsandCols = (e: any) => {
     e.preventDefault();
   }
 };
-
-onUpdated(() => {
-  console.log("inputTextPoster.value");
-  console.log(inputTextPoster.value);
-});
 
 onMounted(async () => {
   if (!emerPosters.value.length) {
@@ -92,12 +89,22 @@ onMounted(async () => {
 
 const handleEmergency = async () => {
   const status = emerPosters.value.filter(
-    (e) => e.incidentName === selectEmer.value
+    (e) => e.incidentName === selectEmer.value || e.incidentName === "banner"
   )[0].status;
   if (status === "Active") {
     await deactivateEmergency(selectEmer.value);
   } else {
-    const res = await activateEmergency(selectEmer.value, password.value);
+    let res;
+    if (inputTextEmer.value.length) {
+      const emerTextPoster = {
+        incidentName: "banner",
+        emergencyImage: inputTextEmer.value,
+        status: true,
+      } as Emergency;
+      res = await editEmergency("banner", emerTextPoster);
+    } else {
+      res = await activateEmergency(selectEmer.value, password.value);
+    }
     if (res.ok) {
       toast.add({
         severity: "success",
@@ -114,6 +121,10 @@ const handleEmergency = async () => {
       });
     }
   }
+};
+
+const handleTextPoster = () => {
+  // const state = isTextPostActive;
 };
 </script>
 
@@ -191,11 +202,11 @@ const handleEmergency = async () => {
                 <div class="flex flex-col gap-2 w-full">
                   <Textarea
                     @keydown="checkNumOfRowsandCols"
-                    :disabled="!selectBanner"
+                    :disabled="!selectBanner || isTextPostActive"
                     @input="getTextPoster"
                     :maxlength="215"
                     placeholder="Ex: There's a fire, do not use the elevator"
-                    class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none"
+                    class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
                   ></Textarea>
                 </div>
               </div>
@@ -215,24 +226,40 @@ const handleEmergency = async () => {
             :feedback="false"
             toggle-mask
           ></Password>
-          <Button
-            v-if="selectBanner"
-            class="w-full bg-red-500 rounded-lg border-0"
-            disabled
-            label="Activate"
-          ></Button>
-          <Button
-            v-else
-            class="w-full rounded-lg border-0 bg-red-500"
+          <!-- <Button
+          ]
             :class="{
-              'bg-[#000] opacity-80':
-                emerPosters.filter((e) => e.incidentName === selectEmer)[0]
-                  .status === 'Active',
+              'bg-red-500': !isTextPostActive,
+              'bg-black opacity-80': isTextPostActive,
+            }"
+            class="w-full rounded-lg border-0"
+            :label="!isTextPostActive ? 'Activate' : 'Deactivate'"
+            @click="
+              () => {
+                isTextPostActive = !isTextPostActive;
+              }
+            "
+          ></Button> -->
+          <Button
+            class="w-full rounded-lg border-0"
+            :class="{
+              'bg-red-500':
+                emerPosters.filter(
+                  (e) =>
+                    e.incidentName === selectEmer || e.incidentName === 'banner'
+                )[0].status !== 'Active',
+              'bg-black opacity-80':
+                emerPosters.filter(
+                  (e) =>
+                    e.incidentName === selectEmer || e.incidentName === 'banner'
+                )[0].status === 'Active',
             }"
             :disabled="!password.length"
             :label="
-              emerPosters.filter((e) => e.incidentName === selectEmer)[0]
-                .status === 'Active'
+              emerPosters.filter(
+                (e) =>
+                  e.incidentName === selectEmer || e.incidentName === 'banner'
+              )[0].status === 'Active'
                 ? 'Deactivate'
                 : 'Activate'
             "
@@ -256,7 +283,7 @@ const handleEmergency = async () => {
             alt="poster-image"
           />
           <div v-else>
-            <TextPoster :text="inputTextPoster" />
+            <TextPoster :text="inputTextEmer" />
           </div>
         </div>
       </div>
