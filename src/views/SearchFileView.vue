@@ -63,7 +63,7 @@ watch(filterDevice, () => {
 
 <template>
   <div class="flex-1">
-    <div class="h-full overflow-y-auto ">
+    <div class="h-full overflow-y-auto">
       <DataTable v-if="loading" :value="new Array(10)">
         <Column class="w-[243px] border-r-[#CFCECE] border-r-2">
           <template #body
@@ -86,7 +86,10 @@ watch(filterDevice, () => {
         rowGroupMode="rowspan"
         groupRowsBy="date"
       >
-        <Column field="date" class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6">
+        <Column
+          field="date"
+          class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6"
+        >
           <template #body="item">
             <div class="flex flex-row gap-1 items-center">
               <p class="w-fit mr-2 text-black font-bold text-[20px]">
@@ -122,8 +125,11 @@ watch(filterDevice, () => {
         <Column field="title" class="w-full"></Column>
       </DataTable>
       <div v-else-if="!searchPosters"></div>
-      <div v-else class="flex justify-center items-center align-middle">
-        No Result Found.
+      <div
+        v-else
+        class="flex justify-center h-screen  items-center align-middle"
+      >
+        No results found
       </div>
     </div>
   </div>

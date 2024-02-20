@@ -25,27 +25,31 @@ watch([admin, devices], () => {
 </script>
 
 <template>
-  <TabView v-model:active-index="click" class="rectangle flex flex-col">
-    <TabPanel header="Admin">
-      <Skeleton
-        v-if="loadAdmin"
-        class="bg-gray-200 rounded-xl flex-1"
-      ></Skeleton>
-      <Admin v-else />
-    </TabPanel>
-    <TabPanel header="Device">
-      <Skeleton
-        v-if="loadDevice"
-        class="bg-gray-200 rounded-xl flex-1"
-      ></Skeleton>
-      <Device v-else />
-    </TabPanel>
-  </TabView>
+  <div class="rectangle flex flex-col">
+    <Skeleton
+      v-if="loadAdmin"
+      class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
+    ></Skeleton>
+    <TabView v-else v-model:active-index="click" class="flex flex-col">
+      <TabPanel header="Admin">
+        <Admin />
+      </TabPanel>
+      <TabPanel header="Device">
+        <Skeleton
+          v-if="loadDevice"
+          class="bg-gray-200 rounded-xl flex-1"
+        ></Skeleton>
+        <Device v-else />
+      </TabPanel>
+    </TabView>
+  </div>
 </template>
 
 <style scoped>
 /* Add styles for the rectangle */
 .rectangle {
+  width: 100%;
+  height: 100%;
   padding-inline: 1.5rem;
   overflow: hidden;
 }
