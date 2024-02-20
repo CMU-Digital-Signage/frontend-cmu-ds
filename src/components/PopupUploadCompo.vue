@@ -56,7 +56,7 @@ const createScheduleTabs = () => {
   formDisplay.value.forEach((e, i) => {
     scheduleTabs.value.push({ header: `Schedule ${i + 1}`, index: i });
   });
-  selectSchedule.value = scheduleTabs.value[0];
+  selectSchedule.value = scheduleTabs.value[scheduleTabs.value.length - 1];
 };
 
 watch(
