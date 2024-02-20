@@ -35,9 +35,9 @@ watch(user, async () => {
     store.state.devices = devices;
     store.state.selectDevice = devices[0].MACaddress || "";
     store.state.filterDevice = devices.map((e) => e.MACaddress);
-    
-    setFieldPoster(posterRes.poster);  
-    store.state.posters = posterRes.poster; 
+
+    setFieldPoster(posterRes.poster);
+    store.state.posters = posterRes.poster;
     createUnique(store.state.posters);
 
     emerRes.emergency.forEach(
@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-gradient-to-r from-[#f4feff] to-[#F6FDF7]" />
-    <div class="w-screen flex flex-col h-full bg-[#fafafa]">
+    <div class="w-screen h-screen flex flex-col bg-[#ffffff]">
       <NavBar class="bg-gradient-to-r from-[#F6FDF7] to-[#F8FDF7]" />
       <router-view class="bg-[#ffffff] w-full" />
       <!-- <NavbarBelow v-if="$route.meta.showNavbarBelow" /> -->

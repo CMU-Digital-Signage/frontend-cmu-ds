@@ -579,7 +579,7 @@ const validateEmail = () => {
           v-model="searchP"
           autofocus
           class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
-          placeholder="Search Poster"
+          placeholder="Title of Poster"
         ></InputText>
         <button
           class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3"

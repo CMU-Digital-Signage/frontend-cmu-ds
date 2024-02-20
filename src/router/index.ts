@@ -128,6 +128,8 @@ router.beforeEach(async (to, from, next) => {
           next();
           return;
         }
+        next({ path: "/", replace: true });
+      return;
       }
       next({ path: "/login", replace: true });
       return;

@@ -468,11 +468,11 @@ const nextStepPreview = () => {
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
         },
         mask: {
           style: 'backdrop-filter: blur(2px)',
@@ -520,25 +520,28 @@ const nextStepPreview = () => {
 
     <Dialog
       v-model:visible="showSecondDialog"
-      :header="editPosterType.type ? 'Edit File' : 'Upload File'"
       modal
       close-on-escape
       :draggable="false"
-      class="w-[600px]"
+      class="w-[600px] header-popup"
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;',
         },
         header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+          style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;',
         },
         mask: {
           style: 'backdrop-filter: blur(2px)',
         },
       }"
     >
+      <template #header>
+        <div class="header-popup">
+          {{ editPosterType.type ? "Edit File" : "Upload File" }}
+        </div>
+      </template>
       <div v-if="selectedPosterType.code === 'NP'">
         <Steps class="mb-5" :model="uploadState" :active-step="currentState" />
         <div v-if="currentState === 0">
