@@ -28,9 +28,9 @@ const showUpload = computed({
   set: (val) => (store.state.showUpload = val),
 });
 const uploadState = ref([
-  { label: "Schedule" },
-  { label: "Uploaded" },
-  { label: "Review" },
+  { label: " Set Schedule" },
+  { label: "Upload Content" },
+  { label: "Orientation & Review" },
 ]);
 const posterType = ref([
   { header: "Normal Poster", code: "NP" },
@@ -49,7 +49,7 @@ const formEmer = computed(() => store.state.formEmer);
 const maxImage = ref(0);
 const selectRotate = ref({ image: "", priority: 1 });
 const selectSchedule = ref({ header: `Schedule 1`, index: 0 });
-const showSecondDialog = ref(false);
+const showSecondDialog = ref(true);
 const loading = ref(false);
 
 const createScheduleTabs = () => {
@@ -434,7 +434,7 @@ const nextStepUpload = () => {
       const startTimeSec =
         e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
       const num = (endTimeSec - startTimeSec - e.duration) / e.durationForm;
-      numImage.push(Math.floor(num - (num * (0.5 / e.durationForm)) / 100));
+      numImage.push(Math.floor(num - (num * (0.5 / e.durationForm))));
     });
     maxImage.value = Math.min(...numImage);
     currentState.value = 1;
@@ -523,7 +523,7 @@ const nextStepPreview = () => {
       modal
       close-on-escape
       :draggable="false"
-      class="w-[600px] header-popup"
+      class="w-[800px] header-popup"
       :pt="{
         content: {
           style:
@@ -551,7 +551,7 @@ const nextStepPreview = () => {
             >
               Title
             </label>
-            <label class="text-[#FF0000] mt-1 font-medium"> * </label>
+            <label class="text-[#FF0000] font-medium"> * </label>
           </div>
           <InputText
             v-model="formPoster.title"
@@ -584,7 +584,8 @@ const nextStepPreview = () => {
             <Button
               v-if="selectSchedule.index"
               text
-              class="bg-red-400 w-fit"
+              class="bg-red-400 w-fit mt-1"
+
               @click="deleteSchedule(selectSchedule.index)"
             >
               <i class="pi pi-trash text-white"></i
@@ -640,6 +641,8 @@ const nextStepPreview = () => {
                 Orientation
               </label>
             </div>
+          </div>
+          <div class="orientOut border-2 border-black">
             <div class="inline-flex gap-2">
               <Button
                 @click="
@@ -672,12 +675,10 @@ const nextStepPreview = () => {
                 :disabled="!formPoster.image"
               />
             </div>
-          </div>
-          <div class="orientOut">
             <div
               class="flex flex-row justify-center text-center items-center gap-3 mb-3"
             >
-              <i class="pi pi-power-off"></i>
+              <p>Logo TV</p>
               <div
                 class="flex justify-center border-2 border-black bg-black"
                 :style="{
@@ -720,17 +721,19 @@ const nextStepPreview = () => {
           >
             Review
           </label>
-          <Button
-            text
-            label="Back"
-            :class="'secondaryButton'"
-            @click="currentState = 1"
-          ></Button>
-          <Button
-            label="Upload"
-            :class="'primaryButton'"
-            @click="uploadPoster"
-          ></Button>
+          <div class="flex flex-inline gap-4 pt-3">
+            <Button
+              text
+              label="Back"
+              :class="'secondaryButton'"
+              @click="currentState = 1"
+            ></Button>
+            <Button
+              label="Upload"
+              :class="'primaryButton'"
+              @click="uploadPoster"
+            ></Button>
+          </div>
         </div>
       </div>
 
