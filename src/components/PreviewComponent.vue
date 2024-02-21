@@ -12,29 +12,22 @@ import { defineProps, computed } from "vue";
 import store from "@/store";
 
 const posters = computed(() => store.state.posters);
-const duration = computed(() => store.state.formDisplay);
 </script>
 
 <template>
-  <div class="rectangle">
-    <div class="flex flex-wrap">
-      <button class="button1" style="">
-        <i class="pi pi-play" style="color: gray; font-size: 3rem"></i>
-      </button>
-      <DataTable
-        class="mt-2 text-[14px] lg:text-[16px]"
-        :value="posters"
-        tableStyle="min-width: 36rem"
-      >
-        <Column field="no" header="No" class="w-1/3"></Column>
-        <Column field="title" header="Title" class="w-1/3"></Column>
-        <Column
-          field="duration"
-          header="Display duration"
-          class="w-1/3"
-        ></Column>
-      </DataTable>
-    </div>
+  <div class="flex flex-wrap">
+    <button class="button1" style="">
+      <i class="pi pi-play" style="color: gray; font-size: 3rem"></i>
+    </button>
+    <DataTable
+      class="mt-2 text-[14px] lg:text-[16px]"
+      :value="posters"
+      tableStyle="min-width: 36rem"
+    >
+      <Column field="no" header="No" class="w-1/3"></Column>
+      <Column field="title" header="Title" class="w-1/3"></Column>
+      <Column field="duration" header="Display duration" class="w-1/3"></Column>
+    </DataTable>
   </div>
 </template>
 
@@ -47,11 +40,5 @@ const duration = computed(() => store.state.formDisplay);
   border-width: 2px;
   border-style: solid;
   border-color: rgb(157, 157, 157);
-}
-.rectangle {
-  flex: 1 1;
-  padding-inline: 1.5rem;
-  margin-bottom: 3.5rem;
-  overflow-y: auto;
 }
 </style>

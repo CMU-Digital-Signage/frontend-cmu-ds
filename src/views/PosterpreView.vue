@@ -3,9 +3,16 @@ import PreviewComponent from "@/components/PreviewComponent.vue";
 </script>
 
 <template>
-  <div class="">
+  <div class="rectangle">
     <PreviewComponent />
   </div>
 </template>
 
-<style></style>
+<style>
+.rectangle {
+  flex: 1 1;
+  padding-inline: 1.5rem;
+  margin-bottom: 3.5rem;
+  overflow-y: auto;
+}
+</style>

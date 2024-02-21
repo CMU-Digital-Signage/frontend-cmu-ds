@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
     <div class="w-screen h-screen flex flex-col bg-[#ffffff]">
       <NavBar class="bg-gradient-to-r from-[#F6FDF7] to-[#F8FDF7]" />
       <router-view class="bg-[#ffffff] w-full" />
-      <!-- <NavbarBelow v-if="$route.meta.showNavbarBelow" /> -->
+      <NavbarBelow v-if="$route.meta.showNavbarBelow" />
     </div>
   </div>
   <div v-else>
