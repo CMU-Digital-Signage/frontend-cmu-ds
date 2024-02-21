@@ -436,6 +436,15 @@ const validateEmail = () => {
     <ul v-if="$route.path === '/deviceManage'">
       <p>Device</p>
     </ul>
+    <!-- Preview -->
+    <ul v-if="$route.path.includes('/preview')">
+      <p>
+        {{
+          devices.filter((e) => e.MACaddress === $route.params.mac)[0]
+            .deviceName
+        }}
+      </p>
+    </ul>
 
     <!-- "File Manage" -->
     <ul

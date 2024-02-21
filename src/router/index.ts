@@ -87,6 +87,10 @@ const routes: Array<RouteRecordRaw> = [
     path: "/preview/:mac",
     name: "Preview",
     component: PosterpreView,
+    meta: {
+      crossIconSidebar: true,
+      showNavbarBelow: true,
+    },
   },
   // {
   //   path: "/uploadfile",
@@ -129,7 +133,7 @@ router.beforeEach(async (to, from, next) => {
           return;
         }
         next({ path: "/", replace: true });
-      return;
+        return;
       }
       next({ path: "/login", replace: true });
       return;

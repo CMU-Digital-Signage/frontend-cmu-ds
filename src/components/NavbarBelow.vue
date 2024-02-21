@@ -140,28 +140,26 @@ const add = async () => {
     class="bg-[#ffffff] border-t border-[#c7bbbb] h-14 px-6 flex items-center"
   >
     <ul
-      v-if="$route.path === '/uploadfile'"
-      class="flex items-center justify-end w-full"
+      v-if="$route.path.includes('/preview')"
+      class="flex items-center justify-end w-full gap-3"
     >
       <Button
         type="button"
-        label="Upload"
-        icon="pi pi-upload"
-        :loading="loading"
-        @click="add"
-        class="bg-[#36BFA7] border-[#36BFA7] font-semibold text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+        label="About"
+        icon="pi pi-info bg-[#039BE5] rounded-full text-white p-[4px] shadow-md"
+        class="border-[hsl(0,0%,68%)] bg-white text-[#039BE5] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
       />
-    </ul>
-    <!-- edit file -->
-    <ul
-      v-if="$route.path === '/editfile'"
-      class="flex items-center justify-end w-full"
-    >
       <Button
         type="button"
-        label="Save"
-        :loading="loading"
-        class="bg-[#36BFA7] border-[#36BFA7] font-semibold text-white gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+        label="Edit"
+        icon="pi pi-pencil bg-[#FF9900] rounded-full text-white p-[4px] shadow-md"
+        class="border-[hsl(0,0%,68%)] bg-white text-[#FF9900] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+      />
+      <Button
+        type="button"
+        label="Delete"
+        icon="pi pi-trash bg-[#ff5e5e] rounded-full text-white p-[4px] shadow-md"
+        class="border-[hsl(0,0%,68%)] bg-white text-[#ff5e5e] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
       />
     </ul>
   </div>
