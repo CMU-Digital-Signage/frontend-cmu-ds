@@ -442,7 +442,7 @@ const nextStepUpload = () => {
 };
 
 const nextStepPreview = () => {
-  if (formPoster.value.image) {
+  if (formPoster.value.image.length) {
     selectRotate.value = { ...formPoster.value.image[0] };
     currentState.value = 2;
   } else {

@@ -18,7 +18,10 @@ const devices = computed(() => store.state.devices);
 <template>
   <div style="position: relative">
     <Button
-      @click="$router.push(`/preview/${device.MACaddress}`)"
+      @click="
+        $router.push(`/preview/${device.MACaddress}`);
+        store.state.openSidebar = true;
+      "
       class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300"
     >
       <i class="pi pi-desktop text-[70px] text-[#62ccca]"></i>
