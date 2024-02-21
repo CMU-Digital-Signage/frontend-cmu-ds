@@ -17,13 +17,24 @@ const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
 const toast = useToast();
 
-const errorSelectFile = () => {
-  toast.add({
-    severity: "error",
-    summary: "Invalid file type",
-    detail: "Allowed file types: image/*.",
-    life: 3000,
-  });
+const errorSelectFile = async (e: any) => {
+  if (formPoster.value.image.length + e.files.length >= maxImage.value!) {
+    toast.add({
+      severity: "error",
+      summary: "Invalid file limit",
+      detail: `File limit : ${maxImage.value}`,
+      life: 3000,
+    });
+  } else {
+    const message =
+      e.originalEvent.target.__vueParentComponent.data.messages[0].split(", ");
+    toast.add({
+      severity: "error",
+      summary: message[0],
+      detail: message[1],
+      life: 3000,
+    });
+  }
 };
 
 const selectImage = (e: any) => {
@@ -47,6 +58,10 @@ const selectImage = (e: any) => {
     :show-upload-button="false"
     :multiple="posType === 'NP'"
     :fileLimit="maxImage"
+    :maxFileSize="5243000"
+    invalidFileTypeMessage="Invalid file type, Allowed file types: image/*."
+    invalidFileSizeMessage="Invalid file size, File size should be smaller than 5 MB."
+    :invalidFileLimitMessage="`Invalid file limit, File limit ${maxImage}`"
     :pt="{
       buttonbar: {
         class: `${
@@ -59,23 +74,24 @@ const selectImage = (e: any) => {
     }"
     @select="
       async (e) => {
-        if (posType === 'EP') {
-          if (e.files.length > 1) e.files.shift();
-          if (e.files[0]) formEmer.emergencyImage = await onUpload(e.files[0]);
-        } else if (e.files[0]) {
+        if (posType === 'EP' && e.files[0]) {
+          formEmer.emergencyImage = await onUpload(e.files[0]);
+        } else if (
+          e.files[0] &&
+          maxImage &&
+          formPoster.image.length + e.files.length <= maxImage
+        ) {
           selectImage(e);
-        } else errorSelectFile();
+        } else errorSelectFile(e);
+        e.files.splice(0, e.files.length);
       }
     "
   >
-    <template #header="{ chooseCallback, clearCallback }">
+    <template #header="{ chooseCallback }">
       <div class="flex w-full gap-3 items-center justify-between">
         <div class="flex gap-3 items-center">
           <Button
-            @click="
-              chooseCallback();
-              clearCallback();
-            "
+            @click="chooseCallback()"
             icon="pi pi-plus"
             label="Choose File"
             rounded
@@ -231,5 +247,9 @@ const selectImage = (e: any) => {
 .content-image:hover .text-image {
   visibility: visible;
   opacity: 80%;
+}
+
+.p-message.p-message-error {
+  display: none;
 }
 </style>
