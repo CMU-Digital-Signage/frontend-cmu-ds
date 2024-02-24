@@ -22,7 +22,7 @@ import {
   activateEmergency,
   deactivateEmergency,
 } from "./emergency";
-import { getPosterEachDevice } from "./pi";
+import { getPosterEachDevice, turnOnDevice, turnOffDevice } from "./pi";
 import { sendEmail } from "./email";
 
 export {
@@ -50,4 +50,6 @@ export {
   setPassword,
   changePassword,
   sendEmail,
+  turnOnDevice,
+  turnOffDevice,
 };
