@@ -2,6 +2,7 @@ import io from "socket.io-client";
 import store from "@/store";
 import { Device, Emergency, Poster, User } from "@/types";
 import router from "@/router";
+import { createUnique, setFieldPoster } from "./constant";
 
 export const socket = io(process.env.VUE_APP_API_BASE_URL!, {
   transports: ["websocket"],
@@ -24,6 +25,12 @@ export default function setupSocket() {
   // pi
   socket.on("addPi", (data: Device) => {
     store.state.macNotUse.push(data.MACaddress);
+  });
+  socket.on("turnOnDevice", (mac: string) => {
+    store.state.devices.find((e) => e.MACaddress === mac)!.status = true;
+  });
+  socket.on("turnOffDevice", (mac: string) => {
+    store.state.devices.find((e) => e.MACaddress === mac)!.status = false;
   });
 
   // device
@@ -98,19 +105,21 @@ export default function setupSocket() {
   });
 
   // poster
-  socket.on("addPoster", (data: Poster) => {
-    // store.state.posters.push({ ...data });
+  socket.on("addPoster", (data: Poster[]) => {
+    setFieldPoster(data);
+    store.state.posters.push(...data);
+    // createUnique(posters.value);
   });
-  socket.on("updatePoster", (data: Poster) => {
-    const index = store.state.posters.findIndex(
-      (e) => e.posterId === data.posterId
-    );
-    if (index !== -1) {
-      store.state.posters[index] = {
-        ...store.state.devices[index],
-        ...data,
-      };
-    }
+  socket.on("updatePoster", (data: Poster[]) => {
+    // const index = store.state.posters.findIndex(
+    //   (e) => e.posterId === data.posterId
+    // );
+    // if (index !== -1) {
+    //   store.state.posters[index] = {
+    //     ...store.state.devices[index],
+    //     ...data,
+    //   };
+    // }
   });
   socket.on("deletePoster", (data: Poster) => {
     store.state.posters = store.state.posters.filter(

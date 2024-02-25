@@ -121,7 +121,6 @@ const handleAddEmergency = async () => {
     });
     showSecondDialog.value = false;
     store.commit("resetForm");
-    store.state.emerPosters.push(res.emergency);
   } else {
     toast.add({
       severity: "error",
@@ -152,8 +151,6 @@ const handleAddPoster = async () => {
         });
       });
     });
-    store.state.posters.push(...newPoster);
-    createUnique(posters.value);
     showSecondDialog.value = false;
     store.commit("resetForm");
     toast.add({
@@ -214,8 +211,6 @@ const handleEditPoster = async () => {
         });
       });
     });
-    store.state.posters.push(...newPoster);
-    createUnique(posters.value);
     showSecondDialog.value = false;
     store.commit("resetForm");
     toast.add({
@@ -300,7 +295,6 @@ const addSchedule = () => {
     index: scheduleTabs.value.length,
   };
   scheduleTabs.value.push(newSchedule);
-  selectSchedule.value = scheduleTabs.value[scheduleTabs.value.length - 1];
   toast.add({
     severity: "success",
     summary: "Success",
