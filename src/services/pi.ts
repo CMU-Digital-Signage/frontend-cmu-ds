@@ -23,6 +23,7 @@ export async function turnOnDevice(mac: string) {
   try {
     const res = await axios.post(
       `${process.env.VUE_APP_API_BASE_URL}/pi/on`,
+      {},
       {
         params: { mac },
         withCredentials: true,
@@ -42,6 +43,7 @@ export async function turnOffDevice(mac: string) {
   try {
     const res = await axios.post(
       `${process.env.VUE_APP_API_BASE_URL}/pi/off`,
+      {},
       {
         params: { mac },
         withCredentials: true,

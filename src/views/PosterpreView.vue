@@ -41,18 +41,21 @@ watch(selectTitle, () => {
 <template>
   <div class="rectangle">
     <div class="flex flex-wrap">
-      <!-- <i class="pi pi-play" style="color: gray; font-size: 3rem"></i> -->
       <div
         class="flex-1 border-l-[2px]; border-[#eaeaea] py-[25px] px-[30px] flex flex-col"
       >
         <div
-          class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
+          class="w-full h-full rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
         >
           <div class="w-11/12 h-full flex items-center justify-center">
             <img
+              v-if="selectImage"
               class="m-auto h-full w-full transition-opacity rotated-image"
               :src="selectImage"
             />
+            <div v-else style="">
+              <i class="pi pi-play" style="color: gray; font-size: 3rem"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -72,7 +75,10 @@ watch(selectTitle, () => {
           class="w-1/3"
           :bodyClass="'hover:bg-gray-200'"
           ><template #body="rowData">
-            <div @click="selectTitle = rowData.data.image">
+            <div
+              style="cursor: pointer"
+              @click="selectTitle = rowData.data.image"
+            >
               {{ rowData.data.title }}
             </div>
           </template></Column

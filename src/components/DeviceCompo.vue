@@ -8,7 +8,12 @@ export default defineComponent({
 <script setup lang="ts">
 import { ref, reactive, computed } from "vue";
 import store from "@/store";
-import { editDevice, deleteDevice } from "@/services";
+import {
+  editDevice,
+  deleteDevice,
+  turnOffDevice,
+  turnOnDevice,
+} from "@/services";
 import { filesize } from "filesize";
 import { initialFormDevice, onUpload } from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
@@ -101,6 +106,14 @@ const calculateScreenHeight = () => {
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };
+
+const changeStatusDevice = async (device: Device) => {
+  if (device.status) {
+    const res = await turnOffDevice(device.MACaddress!);
+  } else {
+    const res = await turnOnDevice(device.MACaddress!);
+  }
+};
 </script>
 
 <template>
@@ -185,7 +198,14 @@ const calculateScreenHeight = () => {
       </Column>
       <Column header="Action" :exportable="false">
         <template #body="rowData">
-          <div class="">
+          <div class="inline-flex gap-3">
+            <Button
+              class="w-9 h-9 border-0"
+              :class="[rowData.data.status ? 'bg-[#62ccca]' : 'bg-[#b3b2b2]']"
+              icon="pi pi-power-off"
+              rounded
+              @click="changeStatusDevice(rowData.data)"
+            ></Button>
             <Button
               icon="pi pi-pencil"
               rounded
@@ -199,7 +219,7 @@ const calculateScreenHeight = () => {
             <Button
               icon="pi pi-trash"
               rounded
-              class="w-9 h-9 mx-3"
+              class="w-9 h-9"
               severity="danger"
               @click="del(rowData.data.MACaddress)"
             />
