@@ -9,8 +9,7 @@ import { computed, onMounted, ref, watch, onUpdated } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
-import { setFieldPoster } from "@/utils/constant";
-import { ImageCollection, Poster } from "@/types";
+import { Poster } from "@/types";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
@@ -23,6 +22,12 @@ const fetchData = async () => {
   const { ok, poster, message } = await getPosterEachDevice(
     route.params.mac as string
   );
+  const res = await getEmergency();
+  if (res.ok) {
+    store.state.emerPosters = res.emergency.filter(
+      (e: any) => e.status === true
+    );
+  }
   if (ok) {
     poster.forEach((e: Poster) => {
       e.startDate = new Date(e.startDate);
@@ -97,11 +102,7 @@ const showCurrentPoster = () => {
 };
 
 onMounted(async () => {
-  // fetchData();
-  const res = await getEmergency();
-  if (res.ok) {
-    store.state.emerPosters = res.emergency;
-  }
+  fetchData();
 });
 
 watch(emerPoster, () => {
@@ -114,10 +115,12 @@ watch(emerPoster, () => {
 </script>
 
 <template>
-  <!-- <div
-    v-if="!inputTextPoster.length"
-    class="w-screen h-screen bg-black overflow-hidden"
-  >
+  <div v-if="emerPoster?.incidentName === 'banner'" class="bg-[#FF5252]">
+    <div class="rotateText flex justify-center items-center h-screen w-screen">
+      <TextPoster />
+    </div>
+  </div>
+  <div v-else class="w-screen h-screen bg-black overflow-hidden">
     <transition v-if="image" name="fade">
       <img
         class="max-w-screen h-screen m-auto transition-opacity"
@@ -126,16 +129,12 @@ watch(emerPoster, () => {
         :src="image"
       />
     </transition>
-  </div> -->
-  <div class="rotateText flex justify-center items-center h-screen w-screen">
-    <TextPoster />
   </div>
 </template>
 
 <style scoped>
 .rotateText {
-  writing-mode: vertical-rl;
-  text-orientation: sideways;
+  transform: rotate(-90deg);
 }
 .fade-enter-active {
   transition: opacity 0.5s;
