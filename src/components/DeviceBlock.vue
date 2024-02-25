@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import store from "@/store";
-import LoginView from "@/views/LoginView.vue";
+import { turnOffDevice, turnOnDevice } from "@/services";
 
 export default defineComponent({
   name: "DeviceBlock",
@@ -14,9 +14,6 @@ import { Device } from "@/types";
 const props = defineProps<{ device: Device }>();
 const { device } = toRefs(props);
 const devices = computed(() => store.state.devices);
-
-// :disabled="device.status == false"
-// onupdated
 </script>
 
 <template>
@@ -28,6 +25,7 @@ const devices = computed(() => store.state.devices);
           store.state.openSidebar = true;
         "
         class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300"
+        :disabled="device.status == false"
       >
         <i
           :class="[
@@ -39,28 +37,21 @@ const devices = computed(() => store.state.devices);
         <div class="mr-5">
           <p
             :class="[
-              device.status ? 'text-black' : 'text-gray-400',
+              device.status ? 'text-black' : 'text-gray-500',
               'font-bold',
               'text-[16px]',
             ]"
           >
             {{ device.deviceName }}
           </p>
-          <p :class="[device.status ? 'text-black' : 'text-gray-400']">
+          <p :class="[device.status ? 'text-black' : 'text-gray-500']">
             Room: {{ device.room }}
           </p>
-          <p class="text-gray-400" v-if="device.status == false">Off</p>
+          <p class="text-gray-500" v-if="device.status == false">Off</p>
           <p class="text-[#62ccca]" v-if="device.status == true">On</p>
         </div>
       </Button>
     </div>
-    <Button
-      class="w-8 h-8 roundbtn"
-      icon="pi pi-power-off"
-      rounded
-      :class="{ 'bg-gray-400': device.status === false }"
-      @click="device.status == true"
-    ></Button>
   </div>
 </template>
 
@@ -74,13 +65,5 @@ const devices = computed(() => store.state.devices);
   text-align: left;
   border-color: #bbbaba;
   padding: 20px 35px;
-}
-
-.roundbtn {
-  background-color: #62ccca;
-  border: none;
-  position: absolute;
-  bottom: 15px;
-  right: 8px;
 }
 </style>
