@@ -72,6 +72,10 @@ export default function setupSocket() {
         status: data.status ? "Active" : "Inactive",
       };
     }
+    const mac = router.currentRoute.value.params.mac as string;
+    if (data.status && mac) {
+      store.state.emerPosters.push({ ...data });
+    }
   });
   socket.on("deleteEmergency", (data: Emergency) => {
     store.state.emerPosters = store.state.emerPosters.filter(
