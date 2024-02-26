@@ -13,29 +13,33 @@ const mac = route.params.mac as string;
 const currentDate = new Date();
 const posters = computed(() =>
   store.state.posters.filter(
-    (e) => e.MACaddress == mac
-    // &&
-    // dateFormatter(currentDate) >= dateFormatter(e.startDate) &&
-    // dateFormatter(currentDate) <= dateFormatter(e.endDate) &&
-    // new Date().toTimeString() >= e.startTime.toTimeString() &&
-    // new Date().toTimeString() <= e.endTime.toTimeString()
+    (e) =>
+      e.MACaddress == mac &&
+      dateFormatter(currentDate) >= dateFormatter(e.startDate) &&
+      dateFormatter(currentDate) <= dateFormatter(e.endDate) &&
+      new Date().toTimeString() >= e.startTime.toTimeString() &&
+      new Date().toTimeString() <= e.endTime.toTimeString()
   )
 );
 
-const PosterImage = ref();
 const selectTitle = ref<any>([]);
 const selectImage = ref("");
-
-onMounted(() => {
-  console.log(posters.value);
-});
+let currentindex = 0;
 
 watch(selectTitle, () => {
-  console.log(selectTitle.value);
-
+  // console.log(selectTitle.value);
   selectImage.value = selectTitle.value[0].image;
-  console.log(selectImage.value);
+  currentindex = 0;
+  // console.log(selectImage.value);
 });
+
+const changeImage = (index: number) => {
+  if (selectTitle.value.length > 1) {
+    const newIndex = (currentindex + index) % selectTitle.value.length;
+    currentindex = newIndex;
+    selectImage.value = selectTitle.value[newIndex].image;
+  }
+};
 </script>
 
 <template>
@@ -47,16 +51,40 @@ watch(selectTitle, () => {
         <div
           class="w-full h-full rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
         >
-          <div class="w-11/12 h-full flex items-center justify-center">
+          <button
+            v-if="selectTitle.length > 1"
+            class="pi pi-angle-left text-[30px]"
+            @click="changeImage(-1)"
+            :disabled="currentindex == 0"
+            :class="
+              currentindex == 0
+                ? 'text-gray-400 hover:bg-white'
+                : 'text-black hover:bg-gray-300 rounded-xl'
+            "
+          />
+          <div
+            class="w-11/12 h-full flex flex-wrap items-center justify-center"
+          >
             <img
               v-if="selectImage"
-              class="m-auto h-full w-full transition-opacity rotated-image"
+              class="m-auto h-full w-full rotated-image"
               :src="selectImage"
             />
             <div v-else style="">
-              <i class="pi pi-play" style="color: gray; font-size: 3rem"></i>
+              <button class="pi pi-play" style="color: gray; font-size: 3rem" />
             </div>
           </div>
+          <button
+            v-if="selectTitle.length > 1"
+            class="pi pi-angle-right text-[30px]"
+            @click="changeImage(1)"
+            :disabled="currentindex == selectTitle.length - 1"
+            :class="
+              currentindex == selectTitle.length - 1
+                ? 'text-gray-400 hover:bg-white'
+                : 'text-black hover:bg-gray-300 rounded-xl'
+            "
+          />
         </div>
       </div>
       <DataTable
@@ -99,5 +127,19 @@ watch(selectTitle, () => {
   padding-inline: 1.5rem;
   margin-bottom: 3.5rem;
   overflow-y: auto;
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
 }
 </style>
