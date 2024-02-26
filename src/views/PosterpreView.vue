@@ -80,7 +80,7 @@ const changeImage = (index: number) => {
       >
         <button
           v-if="selectTitle.length > 1"
-          class="pi pi-angle-left text-[30px]"
+          class="pi pi-angle-left text-[50px] mr-5"
           @click="changeImage(-1)"
           :disabled="currentindex == 0"
           :class="
@@ -131,7 +131,7 @@ const changeImage = (index: number) => {
         </div>
         <button
           v-if="selectTitle.length > 1"
-          class="pi pi-angle-right text-[30px]"
+          class="pi pi-angle-right text-[50px] ml-5"
           @click="changeImage(1)"
           :disabled="currentindex == selectTitle.length - 1"
           :class="
