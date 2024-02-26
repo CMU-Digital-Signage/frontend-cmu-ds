@@ -282,3 +282,94 @@ export const createUnique = (data: Poster[]) => {
     return acc;
   }, []);
 };
+
+export const setNorForm = (data: any) => {
+  store.state.editPoster.title = data.title;
+  const poster = store.state.posters.filter((e) => e.title === data.title);
+  poster.sort((a: Poster, b: Poster) => {
+    if (a.startDate < b.startDate) return -1;
+    else if (a.startDate > b.startDate) return 1;
+    else {
+      if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
+      else if (a.startTime.toTimeString() > b.startTime.toTimeString())
+        return 1;
+      else return 0;
+    }
+  });
+
+  // poster form
+  const form = {
+    posterId: data.posterId,
+    title: data.title,
+    description: poster[0].description,
+    image: [...poster[0].image],
+  } as Poster;
+  store.state.formPoster = { ...form };
+
+  // display form
+  store.state.formDisplay.pop();
+  poster.forEach((e: any) => {
+    const index = store.state.formDisplay.findIndex(
+      (disp) =>
+        dateFormatter(disp.startDate) === dateFormatter(e.startDate) &&
+        dateFormatter(disp.endDate) === dateFormatter(e.endDate)
+    );
+
+    if (index === -1) {
+      const last = store.state.formDisplay.length;
+      store.state.formDisplay.push(newInitialFormDisplay());
+      store.state.formDisplay[last].startDate = e.startDate;
+      store.state.formDisplay[last].endDate = e.endDate;
+      store.state.formDisplay[last].duration = e.duration;
+      store.state.formDisplay[last].MACaddress.push(e.MACaddress);
+      if (
+        e.startTime.toTimeString().includes("00:00") &&
+        e.endTime.toTimeString().includes("23:59")
+      ) {
+        store.state.formDisplay[last].allDay = true;
+      } else {
+        store.state.formDisplay[last].time.pop();
+        store.state.formDisplay[last].time.push({
+          startTime: e.startTime,
+          endTime: e.endTime,
+        });
+      }
+    } else {
+      if (!store.state.formDisplay[index].MACaddress.includes(e.MACaddress)) {
+        store.state.formDisplay[index].MACaddress.push(e.MACaddress);
+      }
+      if (
+        store.state.formDisplay[index].time.findIndex(
+          (time) =>
+            time.startTime?.toTimeString() === e.startTime.toTimeString() &&
+            time.endTime?.toTimeString() === e.endTime.toTimeString()
+        ) === -1
+      ) {
+        store.state.formDisplay[index].time.push({
+          startTime: e.startTime,
+          endTime: e.endTime,
+        });
+      }
+    }
+  });
+
+  store.state.formDisplay.forEach((e) => {
+    if (e.MACaddress.length === store.state.devices.length) {
+      e.MACaddress = [];
+      e.allDevice = true;
+    }
+  });
+
+  store.state.editPoster.type = "NP";
+  store.state.showUpload = true;
+};
+
+export const setEmerForm = (data: any) => {
+  store.state.editPoster.title = data.incidentName;
+  store.state.formEmer = {
+    ...data,
+    status: data.status === "Active" ? true : false,
+  };
+  store.state.editPoster.type = "EP";
+  store.state.showUpload = true;
+};

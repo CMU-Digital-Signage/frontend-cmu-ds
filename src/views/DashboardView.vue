@@ -14,15 +14,18 @@ import {
   computed,
   onUpdated,
 } from "vue";
-import { color, dateFormatter, day, setFieldPoster } from "@/utils/constant";
+import { color, dateFormatter, setNorForm } from "@/utils/constant";
 import store from "@/store";
-import { getPoster } from "@/services";
+import { deletePoster, getPoster } from "@/services";
 import { Calendar, CalendarOptions } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import PopupUpload from "@/components/PopupUploadCompo.vue";
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
+const user = computed(() => store.state.userInfo);
 const loadPoster = ref(false);
 const showInfo = ref(false);
 const selectedEvent = ref<any>(null);
@@ -82,6 +85,7 @@ const calOptions = reactive<CalendarOptions>({
     selectedEvent.value = {
       color: info.event.backgroundColor,
       type: info.event._def.extendedProps.type,
+      posterId: info.event._def.extendedProps.posterId,
       title: info.event.title,
       start: dateFormatter(start || info.event.start),
       end: dateFormatter(endMinus1 || info.event.start),
@@ -92,6 +96,7 @@ const calOptions = reactive<CalendarOptions>({
       onDevice: info.event._def.extendedProps.onDevice,
       description: info.event._def.extendedProps.description,
       uploader: info.event._def.extendedProps.uploader,
+      userId: info.event._def.extendedProps.userId,
     };
     showInfo.value = true;
   },
@@ -170,10 +175,12 @@ const setEvent = () => {
     postersView.value.push({
       allDay: allDay,
       type: e.type,
+      posterId: e.posterId,
       title: e.title,
       description: e.description,
       displayDuration: displayDuration,
       uploader: e.uploader,
+      userId: e.id,
       onDevice: posterOnDevice,
       backgroundColor: exist
         ? exist.backgroundColor
@@ -237,10 +244,14 @@ onUpdated(() => {
   calendar.value?.updateSize();
 });
 
-watch([selectedDevice, posters], () => {
-  if (posters.value.length) loadPoster.value = false;
-  setEvent();
-});
+watch(
+  [selectedDevice, posters],
+  () => {
+    if (posters.value.length) loadPoster.value = false;
+    setEvent();
+  },
+  { deep: true }
+);
 
 onUnmounted(() => {
   removeEventListener("click", resizeCalendar);
@@ -251,10 +262,21 @@ onUnmounted(() => {
   removeEventListener("click", monthView);
   calendar.value?.destroy();
 });
+
+const del = async (posterId: string) => {
+  const res = await deletePoster(posterId);
+  toast.add({
+    severity: "success",
+    summary: "Success",
+    detail: "Delete Poster successful.",
+    life: 3000,
+  });
+};
 </script>
 
 <template>
   <div class="rectangle flex flex-col">
+    <Toast />
     <Skeleton
       v-if="loadPoster"
       class="bg-gray-200 rounded-xl flex-1"
@@ -277,9 +299,24 @@ onUnmounted(() => {
             <p>{{ selectedEvent.title }}</p>
             <p>({{ selectedEvent.type }})</p>
           </div>
-          <div class="inline-flex gap-5 mr-5">
-            <i class="pi pi-trash"></i>
-            <i class="pi pi-pencil"></i>
+          <div
+            v-if="user.isAdmin || user.id === selectedEvent.userId"
+            class="inline-flex gap-5 mr-5"
+          >
+            <i
+              class="pi pi-trash cursor-pointer rounded-full p-2 hover:bg-gray-200"
+              @click="
+                del(selectedEvent.posterId);
+                showInfo = false;
+              "
+            ></i>
+            <i
+              class="pi pi-pencil cursor-pointer rounded-full p-2 hover:bg-gray-200"
+              @click="
+                setNorForm(selectedEvent);
+                showInfo = false;
+              "
+            ></i>
           </div>
         </div>
       </template>
