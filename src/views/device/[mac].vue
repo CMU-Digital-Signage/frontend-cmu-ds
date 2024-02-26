@@ -5,18 +5,18 @@ export default {
 </script>
 <script setup lang="ts">
 import { getEmergency, getPosterEachDevice } from "@/services";
-import { computed, onMounted, ref, watch, onUpdated } from "vue";
+import { computed, onMounted, ref, watch, onUpdated, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
 import { Poster } from "@/types";
+import { loopPoster, setFieldPoster } from "@/utils/constant";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
 const emerPoster = computed(() => store.state.emerPosters[0]);
-const image = ref<string>();
-let currentIndex = 0;
-let count = 0;
+const image = computed(() => store.state.currentImage);
+const stopLoop = ref();
 
 const fetchData = async () => {
   const { ok, poster, message } = await getPosterEachDevice(
@@ -29,12 +29,7 @@ const fetchData = async () => {
     );
   }
   if (ok) {
-    poster.forEach((e: Poster) => {
-      e.startDate = new Date(e.startDate);
-      e.endDate = new Date(e.endDate);
-      e.startTime = new Date(e.startTime);
-      e.endTime = new Date(e.endTime);
-    });
+    setFieldPoster(poster);
     poster.sort((a: Poster, b: Poster) => {
       if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
       if (a.startTime.toTimeString() > b.startTime.toTimeString()) return 1;
@@ -42,63 +37,8 @@ const fetchData = async () => {
     });
     store.state.posters = poster;
 
-    if (posters.value.length > 0) {
-      if (posters.value.length === 1) {
-        const currentTime = new Date().toTimeString();
-        const currentPoster = posters.value[0];
-        if (
-          currentPoster.startTime.toTimeString() <= currentTime &&
-          currentPoster.endTime.toTimeString() >= currentTime
-        ) {
-          image.value = posters.value[0].image as any;
-          return;
-        } else return;
-      }
-    }
-    showCurrentPoster();
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
   }
-};
-
-const showCurrentPoster = () => {
-  const updatePosterInterval = () => {
-    if (currentIndex === -1) return;
-    const currentPoster = posters.value[currentIndex];
-    if (
-      currentPoster.startTime.toTimeString() <= new Date().toTimeString() &&
-      currentPoster.endTime.toTimeString() >= new Date().toTimeString()
-    ) {
-      if (emerPoster.value) return;
-
-      image.value = currentPoster.image as any;
-      setTimeout(() => {
-        currentIndex = (currentIndex + 1) % posters.value.length;
-        updatePosterInterval();
-      }, currentPoster.duration * 1000);
-    } else {
-      currentIndex = findNextValidPosterIndex();
-      updatePosterInterval();
-    }
-  };
-
-  const findNextValidPosterIndex = () => {
-    const currentTime = new Date().toTimeString();
-    currentIndex = (currentIndex + 1) % posters.value.length;
-    const poster = posters.value[currentIndex];
-    if (count > posters.value.length) return -1;
-    else if (
-      poster.startTime.toTimeString() <= currentTime &&
-      poster.endTime.toTimeString() >= currentTime
-    ) {
-      count = 0;
-      return currentIndex;
-    } else {
-      count++;
-      findNextValidPosterIndex();
-    }
-    return currentIndex;
-  };
-
-  updatePosterInterval();
 };
 
 onMounted(async () => {
@@ -107,10 +47,17 @@ onMounted(async () => {
 
 watch(emerPoster, () => {
   if (emerPoster.value) {
-    image.value = emerPoster.value.emergencyImage;
+    store.state.currentImage = emerPoster.value.emergencyImage;
+    store.state.currentImage.key = emerPoster.value.incidentName;
   } else {
-    showCurrentPoster();
+    loopPoster(posters.value, emerPoster.value);
   }
+});
+
+onUnmounted(() => {
+  if (stopLoop.value) stopLoop.value();
+  image.value.key = "";
+  image.value.image = "";
 });
 </script>
 
@@ -121,33 +68,25 @@ watch(emerPoster, () => {
     </div>
   </div>
   <div v-else class="w-screen h-screen bg-black overflow-hidden">
-    <transition v-if="image" name="fade">
+    <transition
+      v-if="image.key.length"
+      enter-active-class="transition duration-500"
+      enter-from-class="opacity-0"
+      leave-active-class="transition duration-500"
+      leave-to-class="opacity-0"
+    >
       <img
         class="max-w-screen h-screen m-auto transition-opacity"
         alt="poster"
-        :key="currentIndex"
-        :src="image"
+        :key="image.key"
+        :src="image.image"
       />
     </transition>
   </div>
 </template>
 
-<style scoped>
+<style>
 .rotateText {
   transform: rotate(-90deg);
-}
-.fade-enter-active {
-  transition: opacity 0.5s;
-}
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.v-enter-to {
-  position: relative;
-  opacity: 1;
-}
-.v-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>

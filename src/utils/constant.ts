@@ -1,6 +1,13 @@
 import store from "@/store";
-import { Device, Display, Poster } from "@/types";
+import { Device, Display, Emergency, Poster } from "@/types";
 import Compressor from "compressorjs";
+
+export const calculateScreenHeight = () => {
+  const screenHeight = window.innerHeight;
+  const multiplier = 0.69;
+  const scrollHeight = screenHeight * multiplier;
+  return `${scrollHeight}px`;
+};
 
 export const checkTokenExpired = (token: string) => {
   try {
@@ -218,14 +225,19 @@ export const setFieldPoster = (data: Poster[]) => {
     e.endDate = new Date(e.endDate);
     e.startTime = new Date(e.startTime);
     e.endTime = new Date(e.endTime);
-    const users = store.getters.getUserById(e.id);
-    const uploader = `${users.firstName} ${users?.lastName?.charAt(0) || ""}.`;
-    e.uploader = uploader;
+    if (e.id) {
+      const users = store.getters.getUserById(e.id);
+      const uploader = `${users.firstName} ${
+        users?.lastName?.charAt(0) || ""
+      }.`;
+      e.uploader = uploader;
+    }
 
     if (e.image.length > 1) {
       e.type = "Collection";
     } else e.type = "Individual";
   });
+  data.sort((a: any, b: any) => a.createdAt - b.createdAt);
 };
 
 export const statusPoster = [
@@ -372,4 +384,68 @@ export const setEmerForm = (data: any) => {
   };
   store.state.editPoster.type = "EP";
   store.state.showUpload = true;
+};
+
+let currentIndexPoster = 0;
+let currentIndexImage = 0;
+let count = 0;
+
+export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
+  let timeoutId: NodeJS.Timeout | null = null;
+  const updatePosterInterval = () => {
+    if (currentIndexPoster === -1) return;
+    const currentPoster = posters[currentIndexPoster];
+    if (
+      currentPoster.startTime.toTimeString() <= new Date().toTimeString() &&
+      currentPoster.endTime.toTimeString() >= new Date().toTimeString()
+    ) {
+      if (emerPoster) return;
+
+      store.state.currentImage.image = currentPoster.image[currentIndexImage]
+        .image as any;
+      store.state.currentImage.key =
+        currentPoster.title + currentPoster.image[currentIndexImage].priority;
+      timeoutId = setTimeout(() => {
+        currentIndexImage = currentIndexImage + 1;
+        if (currentIndexImage === currentPoster.image.length) {
+          currentIndexImage = 0;
+          currentIndexPoster = (currentIndexPoster + 1) % posters.length;
+        }
+        updatePosterInterval();
+      }, currentPoster.duration * 1000);
+    } else {
+      currentIndexPoster = findNextValidPosterIndex();
+      updatePosterInterval();
+    }
+  };
+
+  const findNextValidPosterIndex = () => {
+    const currentTime = new Date().toTimeString();
+    currentIndexPoster = (currentIndexPoster + 1) % posters.length;
+    const poster = posters[currentIndexPoster];
+    if (count > posters.length) return -1;
+    else if (
+      poster.startTime.toTimeString() <= currentTime &&
+      poster.endTime.toTimeString() >= currentTime
+    ) {
+      count = 0;
+      return currentIndexPoster;
+    } else {
+      count++;
+      findNextValidPosterIndex();
+    }
+    return currentIndexPoster;
+  };
+
+  updatePosterInterval();
+
+  const stopLoop = () => {
+    if (timeoutId !== null) clearTimeout(timeoutId);
+    currentIndexImage = 0;
+    currentIndexPoster = 0;
+    count = 0;
+    return;
+  };
+
+  return stopLoop;
 };

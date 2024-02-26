@@ -428,7 +428,7 @@ const nextStepUpload = () => {
       const startTimeSec =
         e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
       const num = (endTimeSec - startTimeSec - e.duration) / e.durationForm;
-      numImage.push(Math.floor(num - num * (0.5 / e.durationForm)));
+      numImage.push(Math.floor(num - num * (1 / e.durationForm)));
     });
     maxImage.value = Math.min(...numImage);
     currentState.value = 1;
