@@ -11,8 +11,9 @@ import store from "@/store";
 import router from "@/router";
 import {
   dateFormatter,
-  newInitialFormDisplay,
   statusEmer,
+  setNorForm,
+  setEmerForm,
 } from "@/utils/constant";
 import { Display, Poster, User } from "@/types";
 import { statusPoster } from "@/utils/constant";
@@ -68,94 +69,6 @@ const formDisplay = computed(() => store.state.formDisplay);
 const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
 let delP = null as any;
-
-const setForm = (data: any) => {
-  if (props.types === "NP") {
-    store.state.editPoster.title = data.title;
-    const poster = store.state.posters.filter((e) => e.title === data.title);
-    poster.sort((a: Poster, b: Poster) => {
-      if (a.startDate < b.startDate) return -1;
-      else if (a.startDate > b.startDate) return 1;
-      else {
-        if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
-        else if (a.startTime.toTimeString() > b.startTime.toTimeString())
-          return 1;
-        else return 0;
-      }
-    });
-
-    // poster form
-    const form = {
-      posterId: data.posterId,
-      title: data.title,
-      description: poster[0].description,
-      image: [...poster[0].image],
-    } as Poster;
-    store.state.formPoster = { ...form };
-
-    // display form
-    store.state.formDisplay.pop();
-    poster.forEach((e: any) => {
-      const index = formDisplay.value.findIndex(
-        (disp) =>
-          dateFormatter(disp.startDate) === dateFormatter(e.startDate) &&
-          dateFormatter(disp.endDate) === dateFormatter(e.endDate)
-      );
-
-      if (index === -1) {
-        const last = formDisplay.value.length;
-        store.state.formDisplay.push(newInitialFormDisplay());
-        store.state.formDisplay[last].startDate = e.startDate;
-        store.state.formDisplay[last].endDate = e.endDate;
-        store.state.formDisplay[last].duration = e.duration;
-        store.state.formDisplay[last].MACaddress.push(e.MACaddress);
-        if (
-          e.startTime.toTimeString().includes("00:00") &&
-          e.endTime.toTimeString().includes("23:59")
-        ) {
-          store.state.formDisplay[last].allDay = true;
-        } else {
-          store.state.formDisplay[last].time.pop();
-          store.state.formDisplay[last].time.push({
-            startTime: e.startTime,
-            endTime: e.endTime,
-          });
-        }
-      } else {
-        if (!formDisplay.value[index].MACaddress.includes(e.MACaddress)) {
-          store.state.formDisplay[index].MACaddress.push(e.MACaddress);
-        }
-        if (
-          formDisplay.value[index].time.findIndex(
-            (time) =>
-              time.startTime?.toTimeString() === e.startTime.toTimeString() &&
-              time.endTime?.toTimeString() === e.endTime.toTimeString()
-          ) === -1
-        ) {
-          store.state.formDisplay[index].time.push({
-            startTime: e.startTime,
-            endTime: e.endTime,
-          });
-        }
-      }
-    });
-
-    formDisplay.value.forEach((e) => {
-      if (e.MACaddress.length === store.state.devices.length) {
-        e.MACaddress = [];
-        e.allDevice = true;
-      }
-    });
-  } else {
-    store.state.editPoster.title = data.incidentName;
-    store.state.formEmer = {
-      ...data,
-      status: data.status === "Active" ? true : false,
-    };
-  }
-  store.state.editPoster.type = props.types || "";
-  store.state.showUpload = true;
-};
 
 const del = async (poster: string) => {
   delP = poster;
@@ -307,9 +220,9 @@ const del = async (poster: string) => {
           class="w-8 h-8 md:w-9 md:h-9"
           severity="warning"
           @click="
-            () => {
-              setForm(rowData.data);
-            }
+            props.types === 'NP'
+              ? setNorForm(rowData.data)
+              : setEmerForm(rowData.data)
           "
         />
         <Button
