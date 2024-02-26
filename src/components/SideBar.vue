@@ -177,7 +177,7 @@ const handleChangePassword = async () => {
         :class="{ 'p-4': !openSidebar }"
       >
         <div>
-          <div class="flex items-center gap-2 fixed">
+          <div class="flex items-center gap-2 md:fixed">
             <img
               class="w-6"
               alt="cmulogo"
@@ -364,19 +364,19 @@ const handleChangePassword = async () => {
               <span>Management</span>
             </Button>
             <Button
-                class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-                :class="{
-                  'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/admin',
-                }"
-                v-else
-                icon="pi pi-user"
-                link
-                :style="{
-                  'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
-                  color: $route.path === '/admin' ? '#FFFFFF' : '',
-                }"
-              >
-              </Button>
+              class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+              :class="{
+                'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/admin',
+              }"
+              v-else
+              icon="pi pi-user"
+              link
+              :style="{
+                'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
+                color: $route.path === '/admin' ? '#FFFFFF' : '',
+              }"
+            >
+            </Button>
           </router-link>
 
           <router-link to="/emergency">
@@ -394,19 +394,20 @@ const handleChangePassword = async () => {
               <span>Emergency</span>
             </Button>
             <Button
-                class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
-                :class="{
-                  'bg-[#ff5b5b] text-[#FFFFFF]': $route.path === '/emergency',
-                }"
-                v-else
-                icon="pi pi-exclamation-triangle"
-                link
-                :style="{
-                  'background-color': $route.path === '/emergency' ? '#ff5b5b' : '',
-                  color: $route.path === '/emergency' ? '#FFFFFF' : '',
-                }"
-              >
-              </Button>
+              class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
+              :class="{
+                'bg-[#ff5b5b] text-[#FFFFFF]': $route.path === '/emergency',
+              }"
+              v-else
+              icon="pi pi-exclamation-triangle"
+              link
+              :style="{
+                'background-color':
+                  $route.path === '/emergency' ? '#ff5b5b' : '',
+                color: $route.path === '/emergency' ? '#FFFFFF' : '',
+              }"
+            >
+            </Button>
           </router-link>
         </ul>
       </div>
@@ -749,7 +750,6 @@ Button {
   border-bottom: 1px solid #f00;
 }
 .side-bar {
-  overflow: hidden;
   transition: all 300ms ease-in-out;
 }
 

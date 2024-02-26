@@ -98,7 +98,7 @@ const handleEmergency = async () => {
       toast.add({
         severity: "success",
         summary: "Success",
-        detail: `${selectEmer.value} has been activate.`,
+        detail: `${selectEmer.value.incidentName} has been activate.`,
         life: 3000,
       });
     } else {
@@ -154,6 +154,7 @@ const handleEmergency = async () => {
                   v-for="category in emerPosters.filter(
                     (e) => e.incidentName !== 'banner'
                   )"
+                  :inputId="category.incidentName"
                   :key="category.incidentName"
                   class="flex md:text-[16px] text-[14px] gap-2 items-center h-1"
                 >
@@ -217,7 +218,14 @@ const handleEmergency = async () => {
               'bg-red-500': selectEmer.status !== 'Active',
               'bg-black opacity-80': selectEmer.status === 'Active',
             }"
-            :disabled="!password.length"
+            :disabled="
+              !password.length ||
+              emerPosters.some(
+                (e) =>
+                  e.status === 'Active' &&
+                  e.incidentName !== selectEmer.incidentName
+              )
+            "
             :label="selectEmer.status === 'Active' ? 'Deactivate' : 'Activate'"
             @click="handleEmergency()"
           ></Button>
