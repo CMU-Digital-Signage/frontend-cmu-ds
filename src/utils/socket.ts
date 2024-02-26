@@ -112,18 +112,15 @@ export default function setupSocket() {
   socket.on("addPoster", (data: Poster[]) => {
     setFieldPoster(data);
     store.state.posters.push(...data);
-    // createUnique(posters.value);
+    createUnique(store.state.posters);
   });
   socket.on("updatePoster", (data: Poster[]) => {
-    // const index = store.state.posters.findIndex(
-    //   (e) => e.posterId === data.posterId
-    // );
-    // if (index !== -1) {
-    //   store.state.posters[index] = {
-    //     ...store.state.devices[index],
-    //     ...data,
-    //   };
-    // }
+    setFieldPoster(data);
+    store.state.posters = store.state.posters.filter(
+      (e) => e.posterId !== data[0].posterId
+    );
+    store.state.posters.push(...data);
+    createUnique(store.state.posters);
   });
   socket.on("deletePoster", (data: Poster) => {
     store.state.posters = store.state.posters.filter(
