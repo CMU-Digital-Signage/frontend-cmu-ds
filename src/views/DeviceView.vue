@@ -4,19 +4,38 @@ import DeviceBlock from "@/components/DeviceBlock.vue";
 import { computed, onMounted, ref, watch } from "vue";
 
 const devices = computed(() => store.state.devices);
+const loading = ref(false);
 const floors = ref<string[] | any>([]);
 onMounted(() => {
-  devices.value?.forEach((e) => {
-    if (!floors.value?.includes(e.room?.charAt(0))) {
-      floors.value.push(e.room?.charAt(0));
-    }
-  });
+  if (!devices.value.length) loading.value = true;
+  else {
+    devices.value.forEach((e) => {
+      if (!floors.value?.includes(e.room?.charAt(0))) {
+        floors.value.push(e.room?.charAt(0));
+      }
+    });
+  }
+});
+watch(devices, () => {
+  if (devices.value.length) {
+    devices.value.forEach((e) => {
+      if (!floors.value?.includes(e.room?.charAt(0))) {
+        floors.value.push(e.room?.charAt(0));
+      }
+    });
+    loading.value = false;
+  }
 });
 </script>
 
 <template>
-  <div class="rectangle">
+  <div class="rectangle flex flex-col">
+    <Skeleton
+      v-if="loading"
+      class="bg-gray-200 rounded-xl flex-1 my-6"
+    ></Skeleton>
     <div
+      v-else
       v-for="(floor, index) in floors"
       :key="index"
       class="text-left mt-5 ml-5"
@@ -44,7 +63,6 @@ onMounted(() => {
 .rectangle {
   flex: 1 1;
   padding-inline: 1.5rem;
-  margin-bottom: 3.5rem;
   overflow-y: auto;
 }
 .column {

@@ -164,10 +164,13 @@ const changeImage = (index: number) => {
               style="cursor: pointer"
               @click="
                 () => {
-                  stopLoop();
-                  image.key = '';
                   selectTitle = rowData.data.image;
                   selectPoster = rowData.data;
+                  if (stopLoop) {
+                    stopLoop();
+                    image.key = '';
+                    image.image = '';
+                  }
                 }
               "
             >
