@@ -47,10 +47,11 @@ onMounted(async () => {
 
 watch(emerPoster, () => {
   if (emerPoster.value) {
-    store.state.currentImage = emerPoster.value.emergencyImage;
+    stopLoop.value();
+    store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
   } else {
-    loopPoster(posters.value, emerPoster.value);
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
   }
 });
 
