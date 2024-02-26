@@ -1,20 +1,16 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
-import { getAllUser, getDevice, getUserInfo } from "@/services";
+import { getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
 import FileManage from "../views/FileManageView.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
-import EditFile from "../views/EditFileView.vue";
 import SearchPage from "../views/SearchFileView.vue";
 import AdminDashboard from "../views/AdminView.vue";
-import UploadFile from "../views/UploadFileView.vue";
 import Mac from "@/views/device/[mac].vue";
 import Token from "@/views/reset/[token].vue";
-import { Device } from "@/types";
-import { checkTokenExpired, color } from "@/utils/constant";
 import PosterpreView from "@/views/PosterpreView.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -89,27 +85,8 @@ const routes: Array<RouteRecordRaw> = [
     component: PosterpreView,
     meta: {
       crossIconSidebar: true,
-      showNavbarBelow: true,
     },
   },
-  // {
-  //   path: "/uploadfile",
-  //   name: "UploadFile",
-  //   component: UploadFile,
-  //   meta: {
-  //     showNavbarBelow: true,
-  //     crossIconSidebar: true,
-  //   },
-  // },
-  // {
-  //   path: "/editfile",
-  //   name: "EditFile",
-  //   component: EditFile,
-  //   meta: {
-  //     showNavbarBelow: true,
-  //     crossIconSidebar: true,
-  //   },
-  // },
 ];
 
 const router = createRouter({

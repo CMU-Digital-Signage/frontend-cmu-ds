@@ -16,19 +16,13 @@ import {
   setEmerForm,
 } from "@/utils/constant";
 import { Display, Poster, User } from "@/types";
-import { statusPoster } from "@/utils/constant";
+import { statusPoster, calculateScreenHeight } from "@/utils/constant";
 import { deletePoster, deleteEmergency } from "@/services";
 import { useToast } from "primevue/usetoast";
 
 const isOverlayPanelVisible = ref();
 const toggleShowStatus = (e: any) => {
   isOverlayPanelVisible.value.toggle(e);
-};
-const calculateScreenHeight = () => {
-  const screenHeight = window.innerHeight;
-  const multiplier = 0.69;
-  const scrollHeight = screenHeight * multiplier;
-  return `${scrollHeight}px`;
 };
 const loading = computed({
   get: () => store.state.loading,

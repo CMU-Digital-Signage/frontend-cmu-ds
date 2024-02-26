@@ -10,6 +10,7 @@ import { deleteAdmin } from "@/services";
 import { User } from "@/types";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
+import { calculateScreenHeight } from "@/utils/constant";
 
 const toast = useToast();
 const user = ref<User>(store.state.userInfo);
@@ -37,13 +38,6 @@ const del = async (id: number) => {
       life: 3000,
     });
   }
-};
-
-const calculateScreenHeight = () => {
-  const screenHeight = window.innerHeight;
-  const multiplier = 0.69;
-  const scrollHeight = screenHeight * multiplier;
-  return `${scrollHeight}px`;
 };
 </script>
 

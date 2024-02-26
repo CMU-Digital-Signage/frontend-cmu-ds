@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
-import { defineProps, computed, ref, onMounted, watch } from "vue";
+import NavbarBelow from "@/components/NavbarBelow.vue";
+import PopupUpload from "@/components/PopupUploadCompo.vue";
+import { computed, ref, onMounted, watch, onUnmounted } from "vue";
 import store from "@/store";
 import { useRoute } from "vue-router";
-import Mac from "./device/[mac].vue";
-import { dateFormatter } from "@/utils/constant";
-import { ImageCollection } from "@/types";
+import {
+  dateFormatter,
+  loopPoster,
+  calculateScreenHeight,
+} from "@/utils/constant";
+import { Poster } from "@/types";
 
 const route = useRoute();
 const mac = route.params.mac as string;
@@ -21,16 +24,42 @@ const posters = computed(() =>
       new Date().toTimeString() <= e.endTime.toTimeString()
   )
 );
-
+const image = computed(() => store.state.currentImage);
+const stopLoop = ref();
+const selectPoster = ref<Poster>();
 const selectTitle = ref<any>([]);
 const selectImage = ref("");
 let currentindex = 0;
 
-watch(selectTitle, () => {
-  // console.log(selectTitle.value);
-  selectImage.value = selectTitle.value[0].image;
-  currentindex = 0;
-  // console.log(selectImage.value);
+watch(selectPoster, () => {
+  if (!selectPoster.value) {
+    selectTitle.value = "";
+    selectImage.value = "";
+    currentindex = 0;
+  }
+});
+
+watch(
+  [selectTitle, posters],
+  () => {
+    if (
+      !posters.value.find((e) => e.posterId === selectPoster.value?.posterId)
+    ) {
+      selectPoster.value = undefined;
+      selectTitle.value = "";
+      selectImage.value = "";
+    } else {
+      selectImage.value = selectTitle.value[0].image;
+    }
+    currentindex = 0;
+  },
+  { deep: true }
+);
+
+onUnmounted(() => {
+  if (stopLoop.value) stopLoop.value();
+  image.value.key = "";
+  image.value.image = "";
 });
 
 const changeImage = (index: number) => {
@@ -44,51 +73,79 @@ const changeImage = (index: number) => {
 
 <template>
   <div class="rectangle">
-    <div class="flex flex-wrap">
+    <PopupUpload />
+    <div class="flex flex-1 flex-wrap py-[25px] gap-6">
       <div
-        class="flex-1 border-l-[2px]; border-[#eaeaea] py-[25px] px-[30px] flex flex-col"
+        class="flex flex-1 items-center justify-center w-full lg:w-1/2 rounded-xl border-[3px] border-[#eaeaea] bg-[#ffffff]"
       >
+        <button
+          v-if="selectTitle.length > 1"
+          class="pi pi-angle-left text-[30px]"
+          @click="changeImage(-1)"
+          :disabled="currentindex == 0"
+          :class="
+            currentindex == 0
+              ? 'text-gray-400 hover:bg-white'
+              : 'text-black hover:bg-gray-300 rounded-xl'
+          "
+        />
         <div
-          class="w-full h-full rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
+          class="flex justify-center items-center bg-black"
+          :style="{
+            width: `${2160 / 6.5}px`,
+            height: `${3840 / 6.5}px`,
+          }"
         >
-          <button
-            v-if="selectTitle.length > 1"
-            class="pi pi-angle-left text-[30px]"
-            @click="changeImage(-1)"
-            :disabled="currentindex == 0"
-            :class="
-              currentindex == 0
-                ? 'text-gray-400 hover:bg-white'
-                : 'text-black hover:bg-gray-300 rounded-xl'
-            "
+          <img
+            v-if="selectImage"
+            class="max-w-full h-full m-auto rotate-90"
+            :src="selectImage"
+            :style="{
+              maxWidth: `${3840 / 6.5}px`,
+              maxHeight: `${2160 / 6.5}px`,
+            }"
           />
-          <div
-            class="w-11/12 h-full flex flex-wrap items-center justify-center"
+          <transition
+            v-else-if="image.key.length"
+            enter-active-class="transition duration-500"
+            enter-from-class="opacity-0"
+            leave-active-class="transition duration-500"
+            leave-to-class="opacity-0"
           >
             <img
-              v-if="selectImage"
-              class="m-auto h-full w-full rotated-image"
-              :src="selectImage"
+              class="max-w-full h-full m-auto rotate-90 absolute"
+              alt="poster"
+              :key="image.key"
+              :src="image.image"
+              :style="{
+                maxWidth: `${3840 / 6.5}px`,
+                maxHeight: `${2160 / 6.5}px`,
+              }"
             />
-            <div v-else style="">
-              <button class="pi pi-play" style="color: gray; font-size: 3rem" />
-            </div>
-          </div>
+          </transition>
           <button
-            v-if="selectTitle.length > 1"
-            class="pi pi-angle-right text-[30px]"
-            @click="changeImage(1)"
-            :disabled="currentindex == selectTitle.length - 1"
-            :class="
-              currentindex == selectTitle.length - 1
-                ? 'text-gray-400 hover:bg-white'
-                : 'text-black hover:bg-gray-300 rounded-xl'
-            "
+            v-else
+            class="pi pi-play text-[#808080] text-5xl"
+            @click="stopLoop = loopPoster(posters)"
           />
         </div>
+        <button
+          v-if="selectTitle.length > 1"
+          class="pi pi-angle-right text-[30px]"
+          @click="changeImage(1)"
+          :disabled="currentindex == selectTitle.length - 1"
+          :class="
+            currentindex == selectTitle.length - 1
+              ? 'text-gray-400 hover:bg-white'
+              : 'text-black hover:bg-gray-300 rounded-xl'
+          "
+        />
       </div>
       <DataTable
-        class="mt-2 text-[14px] lg:text-[16px]"
+        scrollDirection="vertical"
+        scrollable
+        :scrollHeight="calculateScreenHeight()"
+        class="text-[14px] lg:text-[16px]"
         :value="posters"
         tableStyle="min-width: 36rem"
       >
@@ -105,41 +162,35 @@ const changeImage = (index: number) => {
           ><template #body="rowData">
             <div
               style="cursor: pointer"
-              @click="selectTitle = rowData.data.image"
+              @click="
+                () => {
+                  stopLoop();
+                  image.key = '';
+                  selectTitle = rowData.data.image;
+                  selectPoster = rowData.data;
+                }
+              "
             >
               {{ rowData.data.title }}
             </div>
-          </template></Column
-        >
+          </template>
+        </Column>
         <Column
-          field="duration"
+          :field="(e) => (e.duration * e.image.length).toString()"
           header="Display duration"
           class="w-1/3"
         ></Column>
       </DataTable>
     </div>
   </div>
+  <NavbarBelow v-model="selectPoster" />
 </template>
 
 <style scoped>
 .rectangle {
   flex: 1 1;
   padding-inline: 1.5rem;
-  margin-bottom: 3.5rem;
   overflow-y: auto;
-}
-
-.fade {
-  animation-name: fade;
-  animation-duration: 1.5s;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0.4;
-  }
-  to {
-    opacity: 1;
-  }
+  overflow-x: hidden;
 }
 </style>

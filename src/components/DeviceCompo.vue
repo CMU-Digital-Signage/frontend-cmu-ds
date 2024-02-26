@@ -15,7 +15,11 @@ import {
   turnOnDevice,
 } from "@/services";
 import { filesize } from "filesize";
-import { initialFormDevice, onUpload } from "@/utils/constant";
+import {
+  initialFormDevice,
+  onUpload,
+  calculateScreenHeight,
+} from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 
 const form = reactive({ ...initialFormDevice });
@@ -98,13 +102,6 @@ const del = async (MACaddress: any) => {
     detail: res.message,
     life: 3000,
   });
-};
-
-const calculateScreenHeight = () => {
-  const screenHeight = window.innerHeight;
-  const multiplier = 0.69;
-  const scrollHeight = screenHeight * multiplier;
-  return `${scrollHeight}px`;
 };
 
 const changeStatusDevice = async (device: Device) => {

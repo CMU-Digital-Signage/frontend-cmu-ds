@@ -5,133 +5,27 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { addEmergency, addPoster } from "@/services";
 import store from "@/store";
-import router from "@/router";
 import { Poster } from "@/types";
-import { computed, ref } from "vue";
+import { computed, ref, defineModel, toRefs } from "vue";
 import { useToast } from "primevue/usetoast";
-import { createUnique, setFieldPoster } from "@/utils/constant";
+import { dateFormatter, setNorForm } from "@/utils/constant";
+import { deletePoster } from "@/services";
 
+const poster = defineModel<Poster | undefined>({ default: undefined });
 const toast = useToast();
-// const loading = ref(false);
-// const posters = computed(() => store.state.posters);
-// const formPoster = computed(() => store.state.formPoster);
-// const formDisplay = computed(() => store.state.formDisplay);
-// const formEmer = computed(() => store.state.formEmer);
+const user = computed(() => store.state.userInfo);
+const showInfo = ref(false);
 
-// const validateForm = () => {
-//   if (
-//     (!formPoster.value.title || !formPoster.value.image) &&
-//     (!formEmer.value.incidentName || !formEmer.value.emergencyImage)
-//   ) {
-//     return "Title Invalid or Not Choose File Image.";
-//   }
-
-//   const invalidSchedule = formDisplay.value.find(
-//     (e) =>
-//       (!e.MACaddress.length && !e.allDevice) ||
-//       !e.duration ||
-//       !e.startDate ||
-//       !e.endDate
-//   );
-
-//   if (invalidSchedule) {
-//     return "Schedule Invalid.";
-//   }
-// };
-
-// const handleAddEmergency = async () => {
-//   const res = await addEmergency(formEmer.value);
-//   if (res.ok) {
-//     toast.add({
-//       severity: "success",
-//       summary: "Success",
-//       detail: "Emergency has been add successfully.",
-//       life: 3000,
-//     });
-//     store.commit("resetForm");
-//   } else {
-//     toast.add({
-//       severity: "error",
-//       summary: "Error",
-//       detail: res.message,
-//       life: 3000,
-//     });
-//   }
-//   loading.value = false;
-// };
-
-// const handleAddPoster = async () => {
-//   formDisplay.value.forEach((e, i) => {
-//     if (e.allDay) store.commit("setAllTime", i);
-//     if (e.allDevice) store.commit("setAllDevice", i);
-//   });
-
-//   const res = await addPoster(formPoster.value, formDisplay.value);
-//   if (res.ok) {
-//     setFieldPoster(res.createPoster);
-//     let newPoster = [] as Poster[];
-//     formDisplay.value.forEach((e) => {
-//       e.time.forEach((time) => {
-//         e.MACaddress.forEach(async (mac) => {
-//           newPoster.push({
-//             ...res.createPoster,
-//             MACaddress: mac,
-//             startDate: e.startDate,
-//             endDate: e.endDate,
-//             startTime: time.startTime,
-//             endTime: time.endTime,
-//           });
-//         });
-//       });
-//     });
-//     store.state.posters.push(...newPoster);
-//     createUnique(posters.value);
-//     store.commit("resetForm");
-//     toast.add({
-//       severity: "success",
-//       summary: "Success",
-//       detail: "Poster has been add successfully.",
-//       life: 3000,
-//     });
-//   } else {
-//     toast.add({
-//       severity: "error",
-//       summary: "Error",
-//       detail: res.message,
-//       life: 3000,
-//     });
-//   }
-//   loading.value = false;
-// };
-
-// const add = async () => {
-//   loading.value = true;
-//   if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
-//     handleAddEmergency();
-//   } else if (
-//     formPoster.value.title &&
-//     formPoster.value.image &&
-//     !formDisplay.value.find(
-//       (e) =>
-//         (!e.MACaddress.length && !e.allDevice) ||
-//         !e.duration ||
-//         !e.startDate ||
-//         !e.endDate
-//     )
-//   ) {
-//     handleAddPoster();
-//   } else {
-//     toast.add({
-//       severity: "error",
-//       summary: "Error",
-//       detail: validateForm(),
-//       life: 3000,
-//     });
-//     loading.value = false;
-//   }
-// };
+const del = async () => {
+  const res = await deletePoster(poster.value!.posterId);
+  toast.add({
+    severity: "success",
+    summary: "Success",
+    detail: "Delete Poster successful.",
+    life: 3000,
+  });
+};
 </script>
 
 <template>
@@ -140,29 +34,99 @@ const toast = useToast();
     class="bg-[#ffffff] border-t border-[#c7bbbb] h-14 px-6 flex items-center"
   >
     <ul
-      v-if="$route.path.includes('/preview')"
-      class="flex items-center justify-end w-full gap-3"
+      v-if="$route.path.includes('/preview') && poster"
+      class="inline-flex flex-1"
     >
       <Button
-        type="button"
-        label="About"
-        icon="pi pi-info bg-[#039BE5] rounded-full text-white p-[4px] shadow-md"
-        class="border-[hsl(0,0%,68%)] bg-white text-[#039BE5] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+        label="Back to Preview"
+        class="border-[#adadad] bg-white text-[#9a9a9a] font-semibold w-fit h-10 rounded-lg"
+        @click="poster = undefined"
       />
-      <Button
-        type="button"
-        label="Edit"
-        icon="pi pi-pencil bg-[#FF9900] rounded-full text-white p-[4px] shadow-md"
-        class="border-[hsl(0,0%,68%)] bg-white text-[#FF9900] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
-      />
-      <Button
-        type="button"
-        label="Delete"
-        icon="pi pi-trash bg-[#ff5e5e] rounded-full text-white p-[4px] shadow-md"
-        class="border-[hsl(0,0%,68%)] bg-white text-[#ff5e5e] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
-      />
+
+      <div class="flex items-center justify-end w-full gap-3">
+        <Button
+          label="About"
+          icon="pi pi-info bg-[#039BE5] rounded-full text-white p-[4px] shadow-md"
+          class="border-[#adadad] bg-white text-[#039BE5] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+          :disabled="!poster"
+          @click="showInfo = true"
+        />
+        <Button
+          v-if="user.isAdmin || user.id === poster?.id"
+          label="Edit"
+          icon="pi pi-pencil bg-[#FF9900] rounded-full text-white p-[4px] shadow-md"
+          class="border-[#adadad] bg-white text-[#FF9900] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+          @click="setNorForm(poster)"
+        />
+        <Button
+          v-if="user.isAdmin || user.id === poster?.id"
+          label="Delete"
+          icon="pi pi-trash bg-[#ff5e5e] rounded-full text-white p-[4px] shadow-md"
+          class="border-[#adadad] bg-white text-[#ff5e5e] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center"
+          @click="del()"
+        />
+      </div>
     </ul>
   </div>
+  <Dialog
+    v-if="poster"
+    v-model:visible="showInfo"
+    modal
+    :draggable="false"
+    class="w-[500px] z-[100]"
+  >
+    <template #header>
+      <div class="inline-flex font-bold text-2xl gap-3 items-center">
+        <p>{{ poster.title }}</p>
+        <p>({{ poster.type }})</p>
+      </div>
+    </template>
+    <div class="flex flex-col gap-2">
+      <!-- Start Date -->
+      <div class="posterDetail">
+        <p>Start Date</p>
+        <p>{{ dateFormatter(poster.startDate) }}</p>
+      </div>
+      <!-- End Date -->
+      <div class="posterDetail">
+        <p>End Date</p>
+        <p>{{ dateFormatter(poster.endDate) }}</p>
+      </div>
+      <!-- Running Time -->
+      <div class="posterDetail">
+        <p>Running Time</p>
+        <p
+          v-if="
+            poster.startTime.getHours() === 0 &&
+            poster.endTime.getHours() === 23 &&
+            poster.endTime.getMinutes() === 59
+          "
+        >
+          All Day
+        </p>
+        <p v-else>
+          {{ poster.startTime.toTimeString().slice(0, 5) }} -
+          {{ poster.endTime.toTimeString().slice(0, 5) }}
+        </p>
+      </div>
+      <!-- Duration -->
+      <div class="posterDetail">
+        <p>Display Duration</p>
+        <p>{{ poster.duration }} sec (One)</p>
+      </div>
+      <!-- Description -->
+      <div class="posterDetail">
+        <p>Description</p>
+        <p>{{ poster.description }}</p>
+        <p v-if="!poster.description">-</p>
+      </div>
+      <!-- Uploader -->
+      <div class="posterDetail">
+        <p>Uploader</p>
+        <p>{{ poster.uploader }}</p>
+      </div>
+    </div>
+  </Dialog>
 </template>
 
 <style></style>
