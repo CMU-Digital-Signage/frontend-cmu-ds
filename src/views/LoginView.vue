@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-gradient-to-r from-[#c6edff] to-[#dbffe1] h-screen flex items-center justify-center overflow-hidden"
+    class="bg-gradient-to-r from-[#d9f2fd] to-[#e3fde7d9] h-screen flex items-center justify-center overflow-hidden"
   >
     <div
       class="w-full rounded-none md:w-2/3 h-full relative md:h-3/4 md:bg-gradient-to-r md:from-[#F8FEFE] md:to-[#f3fcfa] md:border-2 md:border-[#B8F1F0] drop-shadow-xl md:rounded-[15px] flex flex-col items-center text-center"
