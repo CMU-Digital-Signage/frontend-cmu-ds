@@ -117,7 +117,7 @@ const handleEmergency = async () => {
   <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
     <Toast />
     <div
-      class="py-[25px] px-[30px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+      class="py-[20px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div>
         <div
@@ -131,7 +131,7 @@ const handleEmergency = async () => {
             ></i>
           </div>
 
-          <div class="md:text-[16px] text-[14px]">
+          <div class="md:text-[16px] text-[13px]">
             <p class="font-bold text-red-500">
               <span>Activating the Emergency Poster</span>
             </p>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-gradient-to-r from-[#c6fbff] to-[#c9ffd2] h-screen flex items-center justify-center overflow-hidden"
+    class="bg-gradient-to-r from-[#c6edff] to-[#dbffe1] h-screen flex items-center justify-center overflow-hidden"
   >
     <div
       class="w-full rounded-none md:w-2/3 h-full relative md:h-3/4 md:bg-gradient-to-r md:from-[#F8FEFE] md:to-[#f3fcfa] md:border-2 md:border-[#B8F1F0] drop-shadow-xl md:rounded-[15px] flex flex-col items-center text-center"
@@ -40,8 +40,8 @@
         </button>
         <router-link to="/emergency">
           <Button
-            class="w-auto md:p-5 md:h-11 h-fit p-2 bg-[#ff4747] relative rounded-[10px] text-sm md:text-lg button-containerEmer"
-            severity="danger"
+            class="w-auto md:p-5 md:h-11 h-fit p-2 bg-[#ff4747] relative rounded-[10px] text-sm md:text-lg border-0 button-containerEmer"
+           
           >
             <i class="pi pi-exclamation-triangle"></i>
             <p class="font-sf-pro-rounded ml-2 font-medium">
