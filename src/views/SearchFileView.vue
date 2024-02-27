@@ -122,7 +122,7 @@ watch(filterDevice, () => {
             </div>
           </template>
         </Column>
-        <Column field="title" class="w-full"></Column>
+        <Column field="title" class="w-full"></Column>˝
       </DataTable>
       <div v-else-if="!searchPosters"></div>
       <div

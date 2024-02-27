@@ -16,6 +16,7 @@ onMounted(() => {
 });
 
 watch(user, async () => {
+  store.state.loading = true
   if (user.value.id) {
     const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
       getAllUser(),
@@ -44,6 +45,7 @@ watch(user, async () => {
     );
     store.state.emerPosters = emerRes.emergency;
   }
+  store.state.loading = false
 });
 
 onBeforeUnmount(() => {

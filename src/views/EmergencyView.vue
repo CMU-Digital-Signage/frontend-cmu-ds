@@ -121,10 +121,10 @@ const handleEmergency = async () => {
     >
       <div>
         <div
-          class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center border-red-500 border-[1px]"
+          class="flex flex-row px-4 py-2 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
         >
           <div
-            class="w-8 h-8 ml-5 flex items-center justify-center rounded-full"
+            class="w-8 h-8  flex items-center justify-center rounded-full"
           >
             <i
               class="pi pi-exclamation-triangle mb-1 text-red-500 text-3xl"
@@ -231,7 +231,7 @@ const handleEmergency = async () => {
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
       >
-        <div class="w-11/12 h-full flex items-center justify-center">
+        <div v-if="selectEmer.incidentName" class="w-11/12 h-full flex items-center justify-center">
           <img
             v-if="selectEmer.incidentName !== 'banner'"
             class="m-auto w-full transition-opacity rotated-image"
@@ -242,6 +242,7 @@ const handleEmergency = async () => {
             <TextPoster :text="selectEmer.emergencyImage" />
           </div>
         </div>
+        <div v-else>Preview Poster</div>
       </div>
     </div>
   </div>

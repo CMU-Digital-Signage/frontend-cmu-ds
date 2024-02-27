@@ -49,6 +49,15 @@ const selectImage = (e: any) => {
     });
   });
 };
+
+const removeImage = (i: number) => {
+  store.state.formPoster.image.splice(i, 1);
+  store.state.formPoster.image.forEach((e, index) => {
+    e.priority = index + 1;
+  });
+ 
+};
+
 </script>
 
 <template>
@@ -167,7 +176,7 @@ const selectImage = (e: any) => {
         @click="
           () => {
             removeFileCallback(index);
-            formPoster.image.splice(index, 1);
+            removeImage(index)
           }
         "
       >
