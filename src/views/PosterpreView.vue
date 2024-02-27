@@ -19,6 +19,7 @@ const posters = computed(() =>
   store.state.posters.filter(
     (e) =>
       e.MACaddress == mac &&
+      filterTime.value &&
       dateFormatter(filterDate.value) >= dateFormatter(e.startDate) &&
       dateFormatter(filterDate.value) <= dateFormatter(e.endDate) &&
       filterTime.value.toTimeString() >= e.startTime.toTimeString() &&
@@ -84,73 +85,7 @@ const rowStyle = (rowData: any) => {
 <template>
   <div class="rectangle">
     <PopupUpload />
-    <div class="flex flex-1 flex-wrap py-[25px] gap-6">
-      <div
-        class="flex flex-1 items-center justify-center w-full lg:w-1/2 rounded-xl border-[3px] border-[#eaeaea] bg-[#ffffff]"
-      >
-        <button
-          v-if="selectPoster && selectPoster.image.length > 1"
-          class="pi pi-angle-left text-[50px] mr-5"
-          @click="changeImage(-1)"
-          :disabled="currentindex == 0"
-          :class="
-            currentindex == 0
-              ? 'text-gray-400 hover:bg-white'
-              : 'text-black hover:bg-gray-300 rounded-xl'
-          "
-        />
-        <div
-          class="flex justify-center items-center bg-black"
-          :style="{
-            width: `${2160 / 6.5}px`,
-            height: `${3840 / 6.5}px`,
-          }"
-        >
-          <img
-            v-if="selectImage"
-            class="max-w-full h-full m-auto rotate-90"
-            :src="selectImage"
-            :style="{
-              maxWidth: `${3840 / 6.5}px`,
-              maxHeight: `${2160 / 6.5}px`,
-            }"
-          />
-          <transition
-            v-else-if="image.key.length"
-            enter-active-class="transition duration-500"
-            enter-from-class="opacity-0"
-            leave-active-class="transition duration-500"
-            leave-to-class="opacity-0"
-          >
-            <img
-              class="max-w-full h-full m-auto rotate-90 absolute"
-              alt="poster"
-              :key="image.key"
-              :src="image.image"
-              :style="{
-                maxWidth: `${3840 / 6.5}px`,
-                maxHeight: `${2160 / 6.5}px`,
-              }"
-            />
-          </transition>
-          <button
-            v-else
-            class="pi pi-play text-[#808080] text-5xl"
-            @click="stopLoop = loopPoster(posters)"
-          />
-        </div>
-        <button
-          v-if="selectPoster && selectPoster.image.length > 1"
-          class="pi pi-angle-right text-[50px] ml-5"
-          @click="changeImage(1)"
-          :disabled="currentindex == selectPoster.image.length - 1"
-          :class="
-            currentindex == selectPoster.image.length - 1
-              ? 'text-gray-400 hover:bg-white'
-              : 'text-black hover:bg-gray-300 rounded-xl'
-          "
-        />
-      </div>
+    <div class="flex flex-1 flex-wrap py-[25px] gap-6 h-full">
       <DataTable
         scrollDirection="vertical"
         scrollable
@@ -174,6 +109,72 @@ const rowStyle = (rowData: any) => {
           class="w-1/3"
         ></Column>
       </DataTable>
+      <div
+        class="flex flex-1 items-center justify-center md:w-1/2 rounded-xl border-[3px] border-[#eaeaea] bg-[#ffffff]"
+      >
+        <button
+          v-if="selectPoster && selectPoster.image.length > 1"
+          class="pi pi-angle-left text-[50px] mr-5"
+          @click="changeImage(-1)"
+          :disabled="currentindex == 0"
+          :class="
+            currentindex == 0
+              ? 'text-gray-400 hover:bg-white'
+              : 'text-black hover:bg-gray-300 rounded-xl'
+          "
+        />
+        <div
+          class="flex justify-center items-center"
+          :style="{
+            width: `${2160 / 5}px`,
+            height: `${3840 / 5}px`,
+          }"
+        >
+          <img
+            v-if="selectImage"
+            class="max-w-full h-full m-auto rotate-90"
+            :src="selectImage"
+            :style="{
+              maxWidth: `${3840 / 5}px`,
+              maxHeight: `${2160 / 5}px`,
+            }"
+          />
+          <transition
+            v-else-if="image.key.length"
+            enter-active-class="transition duration-500"
+            enter-from-class="opacity-0"
+            leave-active-class="transition duration-500"
+            leave-to-class="opacity-0"
+          >
+            <img
+              class="max-w-full h-full m-auto rotate-90 absolute"
+              alt="poster"
+              :key="image.key"
+              :src="image.image"
+              :style="{
+                maxWidth: `${3840 / 5}px`,
+                maxHeight: `${2160 / 5}px`,
+              }"
+            />
+          </transition>
+          <button
+            v-else
+            class="pi pi-play text-[#808080] text-5xl"
+            @click="stopLoop = loopPoster(posters)"
+          />
+        </div>
+        <button
+          v-if="selectPoster && selectPoster.image.length > 1"
+          class="pi pi-angle-right text-[50px] ml-5"
+          @click="changeImage(1)"
+          :disabled="currentindex == selectPoster.image.length - 1"
+          :class="
+            currentindex == selectPoster.image.length - 1
+              ? 'text-gray-400 hover:bg-white'
+              : 'text-black hover:bg-gray-300 rounded-xl'
+          "
+        />
+      </div>
     </div>
   </div>
   <NavbarBelow v-model="selectPoster" />
@@ -182,7 +183,7 @@ const rowStyle = (rowData: any) => {
 <style scoped>
 .rectangle {
   flex: 1 1;
-  padding-inline: 1.5rem;
+  padding-inline: 0.75rem;
   overflow-y: auto;
   overflow-x: hidden;
 }
