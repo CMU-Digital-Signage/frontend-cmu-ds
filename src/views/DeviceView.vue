@@ -32,13 +32,13 @@ watch(devices, () => {
   <div class="rectangle flex flex-col">
     <Skeleton
       v-if="loading"
-      class="bg-gray-200 rounded-xl flex-1 my-6"
+      class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
     ></Skeleton>
     <div
       v-else
       v-for="(floor, index) in floors"
       :key="index"
-      class="text-left mt-5 ml-5"
+      class="text-left "
     >
       <p class="font-bold text-[18px] mt-3">{{ floor }}th Floor</p>
       <p class="text-[#3671BF] text-[15px]">
@@ -61,9 +61,11 @@ watch(devices, () => {
 
 <style scoped>
 .rectangle {
-  flex: 1 1;
+  width: 100%;
+  height: 100%;
   padding-inline: 1.5rem;
-  overflow-y: auto;
+  
+  overflow: hidden;
 }
 .column {
   margin-top: 1%;

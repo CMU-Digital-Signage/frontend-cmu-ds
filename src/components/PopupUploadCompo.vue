@@ -152,6 +152,7 @@ const handleAddPoster = async () => {
       });
     });
     showSecondDialog.value = false;
+    loading.value = false;
     store.commit("resetForm");
     toast.add({
       severity: "success",
@@ -166,8 +167,8 @@ const handleAddPoster = async () => {
       detail: res.message,
       life: 3000,
     });
+    loading.value = false;
   }
-  loading.value = false;
 };
 
 const handleEditEmergency = async () => {
@@ -212,6 +213,7 @@ const handleEditPoster = async () => {
       });
     });
     showSecondDialog.value = false;
+    loading.value = false;
     store.commit("resetForm");
     toast.add({
       severity: "success",
@@ -226,8 +228,8 @@ const handleEditPoster = async () => {
       detail: res.message,
       life: 3000,
     });
+    loading.value = false;
   }
-  loading.value = false;
 };
 
 const uploadPoster = async () => {
@@ -431,6 +433,7 @@ const nextStepUpload = () => {
       numImage.push(Math.floor(num - num * (1 / e.durationForm)));
     });
     maxImage.value = Math.min(...numImage);
+    store.state.formPoster.image = []
     currentState.value = 1;
   }
 };
@@ -517,17 +520,17 @@ const nextStepPreview = () => {
       modal
       close-on-escape
       :draggable="false"
-      class="w-[800px] header-popup"
+      class="w-[800px] header-popup z-10"
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10',
         },
         header: {
-          style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;',
+          style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;  z-index: 10',
         },
         mask: {
-          style: 'backdrop-filter: blur(2px)',
+          style: 'backdrop-filter: blur(2px); z-index: 10',
         },
       }"
     >
@@ -607,6 +610,7 @@ const nextStepPreview = () => {
         </div>
         <div v-if="currentState === 1">
           <div class="text-center text-red-500">Max Image: {{ maxImage }}</div>
+          <div class="text-center text-blue-500">Current Image: {{ formPoster.image.length }}</div>
           <UploadImage
             :posType="selectedPosterType.code"
             :maxImage="maxImage"
@@ -713,7 +717,9 @@ const nextStepPreview = () => {
             class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1 mt-3"
           >
             Review
+            
           </label>
+          
           <div class="flex flex-inline gap-4 pt-3">
             <Button
               text
@@ -724,6 +730,7 @@ const nextStepPreview = () => {
             <Button
               label="Upload"
               :class="'primaryButton'"
+              :loading="loading"
               @click="uploadPoster"
             ></Button>
           </div>
@@ -871,4 +878,6 @@ const nextStepPreview = () => {
   padding-bottom: 80px;
   flex: 1 1;
 }
+
+
 </style>

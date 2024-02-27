@@ -11,18 +11,10 @@ const click = computed({
 
 const uniquePosters = computed(() => store.state.uniquePosters);
 const emerPosters = computed(() => store.state.emerPosters);
-const loadPoster = ref(false);
-const loadEmer = ref(false);
+const loading = computed(() => store.state.loading)
+const noData = computed(() => !store.state.uniquePosters.length);
 
-onMounted(() => {
-  if (!uniquePosters.value.length) loadPoster.value = true;
-  if (!emerPosters.value.length) loadEmer.value = true;
-});
 
-watch([uniquePosters, emerPosters], () => {
-  if (uniquePosters.value.length) loadPoster.value = false;
-  if (emerPosters.value.length) loadEmer.value = false;
-});
 
 watch(click, () => {
   store.commit("resetFilter");
@@ -36,10 +28,16 @@ onUnmounted(() => {
 <template>
   <div class="rectangle flex flex-col">
     <PopupUpload />
-    <TabView v-if="store.state.userInfo.isAdmin" v-model:activeIndex="click">
+    <Skeleton
+      v-if="loading"
+      class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
+    ></Skeleton>
+    <TabView
+      v-else-if="store.state.userInfo.isAdmin"
+      v-model:activeIndex="click"
+    >
       <TabPanel header="Normal File">
-        <Skeleton v-if="loadPoster" class="bg-gray-200 flex"></Skeleton>
-        <FileTable v-else :types="'NP'" />
+        <FileTable :types="'NP'" />
       </TabPanel>
       <TabPanel
         header="Emergency File"
@@ -49,26 +47,26 @@ onUnmounted(() => {
           },
         }"
       >
-        <Skeleton v-if="loadEmer" class="bg-gray-200 flex"></Skeleton>
-        <FileTable v-else :types="'EP'" />
+        <FileTable :types="'EP'" />
       </TabPanel>
     </TabView>
-    <Skeleton v-else-if="loadPoster" class="bg-gray-200 flex"></Skeleton>
+
     <FileTable
-      v-else-if="uniquePosters[0].title"
+      v-else-if="!noData"
       :types="'NP'"
       class="rectangle flex flex-col"
     />
-    <div v-else class="flex justify-center items-center align-middle">
-      No Data
+    <div v-else class=" my-[0.75rem] flex h-full  justify-center items-center align-middle">
+      Your Content not found
     </div>
   </div>
 </template>
 
 <style scoped>
 .rectangle {
-  padding-inline: 1.5rem;
+  width: 100%;
+  height: 100%;
+  padding-inline: 0.75rem;
   overflow: hidden;
-  background-color: white;
 }
 </style>

@@ -16,13 +16,17 @@
       >
         <span
           class="font-sf-pro-rounded mt-48 text-2xl lg:mt-12 md:text-4xl lg:mb-8 mb-10 font-medium text-[#000000]"
-          >CPE Digital Signage</span
-        >
-        <span class="md:text-lg text-sm mb-1 mt-2 font-notoThai"
-          >ลงชื่อเข้าสู่ระบบ</span
-        >
+          >CPE Digital Signage
+        </span>
+        <span class="md:text-lg text-sm mb-1 mt-2 font-notoThai hide-on-mobile"
+          >ลงชื่อเข้าสู่ระบบ
+        </span>
+        <span class="show-on-mobile">
+          Cannot Login <br />
+          Support tablet and desktop view only
+        </span>
         <button
-          class="flex items-center md:mb-4 mb-3 justify-center w-auto md:p-6 md:h-11 h-fit p-2 relative rounded-[10px] bg-[#696CA3] text-white text-2xl button-container drop-shadow-xl"
+          class="flex items-center hide-on-mobile md:mb-4 mb-3 justify-center w-auto md:p-6 md:h-11 h-fit p-2 relative rounded-[10px] bg-[#696CA3] text-white text-2xl button-container drop-shadow-xl"
           @click="redirectToOAuth()"
         >
           <img
@@ -31,8 +35,8 @@
             src="../assets/images/cmu-logo-th.png"
           />
           <span class="font-sf-pro-rounded md:text-lg text-sm font-medium"
-            >Login with CMU Account</span
-          >
+            >Login with CMU Account
+          </span>
         </button>
         <router-link to="/emergency">
           <Button
@@ -90,5 +94,20 @@ export default defineComponent({
 .button-containerEmer:hover {
   background-color: #e93e3e;
   color: white;
+}
+
+.show-on-mobile {
+  display: none;
+}
+
+@media (max-width: 790px) or (max-height: 600px) {
+  .hide-on-mobile {
+    display: none;
+  }
+  .show-on-mobile {
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+  }
 }
 </style>
