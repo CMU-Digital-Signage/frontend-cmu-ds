@@ -18,7 +18,7 @@ const formEmer = computed(() => store.state.formEmer);
 const toast = useToast();
 
 const errorSelectFile = async (e: any) => {
-  if (formPoster.value.image.length + e.files.length >= maxImage.value!) {
+  if (formPoster.value.image?.length + e.files.length >= maxImage.value!) {
     toast.add({
       severity: "error",
       summary: "Invalid file limit",
@@ -55,9 +55,7 @@ const removeImage = (i: number) => {
   store.state.formPoster.image.forEach((e, index) => {
     e.priority = index + 1;
   });
- 
 };
-
 </script>
 
 <template>
@@ -176,7 +174,7 @@ const removeImage = (i: number) => {
         @click="
           () => {
             removeFileCallback(index);
-            removeImage(index)
+            removeImage(index);
           }
         "
       >
