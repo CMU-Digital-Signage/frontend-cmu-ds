@@ -12,7 +12,7 @@
       />
 
       <div
-        class="absolute top-48 h-fit lg:top-40 sm:left-0 w-auto lg:px-14 md:px-10 md:h-1/2 md:ml-20 rounded-[15px] flex flex-col md:items-center md:justify-center md:text-center"
+        class="absolute top-48 h-fit lg:top-40 sm:left-0 w-auto lg:px-14 md:px-10 md:h-1/2 md:ml-32 rounded-[15px] flex flex-col md:items-center md:justify-center md:text-center"
       >
         <span
           class="font-sf-pro-rounded mt-48 text-2xl lg:mt-12 md:text-xl lg:text-3xl lg:mb-8 mb-7 font-medium text-[#2a2a2a]"
@@ -51,7 +51,7 @@
         </router-link>
       </div>
       <img
-        class="absolute top-24 lg:right-0 w-64 md:w-72 lg:w-1/2"
+        class="absolute lg:top-16 top-24 lg:right-0 w-64 md:w-72 lg:w-1/2"
         alt="picLogin"
         src="../assets/images/picLogin.png"
       />
