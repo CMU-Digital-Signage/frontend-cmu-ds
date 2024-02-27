@@ -52,6 +52,14 @@ const routes: Array<RouteRecordRaw> = [
     component: Dashboard,
   },
   {
+    path: "/searchfile",
+    name: "SearchFile",
+    component: SearchPage,
+    meta: {
+      crossIconSidebar: true,
+    },
+  },
+  {
     path: "/file",
     name: "File",
     component: FileManage,
@@ -71,14 +79,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Emergency",
     component: EmergencyManage,
   },
-  {
-    path: "/searchfile",
-    name: "SearchFile",
-    component: SearchPage,
-    meta: {
-      crossIconSidebar: true,
-    },
-  },
+
   {
     path: "/preview/:mac",
     name: "Preview",
@@ -105,7 +106,7 @@ router.beforeEach(async (to, from, next) => {
       const userInfoRes = await getUserInfo();
       if (userInfoRes.ok) {
         store.state.userInfo = userInfoRes.user;
-        if (store.state.userInfo.isAdmin) {
+        if (store.state.userInfo.isAdmin || !to.path.includes("/admin")) {
           next();
           return;
         }
