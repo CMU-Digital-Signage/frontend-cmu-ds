@@ -73,6 +73,12 @@ const changeImage = (index: number) => {
     selectImage.value = selectPoster.value.image[newIndex].image;
   }
 };
+
+const rowStyle = (rowData: any) => {
+  if (rowData === selectPoster.value) {
+    return { "background-color": "#caf1d8" };
+  }
+};
 </script>
 
 <template>
@@ -154,8 +160,7 @@ const changeImage = (index: number) => {
         :value="posters"
         selectionMode="single"
         tableStyle="min-width: 36rem"
-        :rowClass="(rowData) => [{ 'bg-green-200': rowData === selectPoster }]"
-        :stripedRows="false"
+        :rowStyle="rowStyle"
       >
         <Column header="No." class="w-1/3">
           <template #body="{ index }">
