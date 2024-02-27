@@ -476,7 +476,6 @@ const toggleOverlay = (e: any) => {
         <label class="text-[14px] lg:text-[16px]">Date</label>
         <Calendar
           v-model="filterInput.date"
-          showButtonBar
           :manualInput="false"
           showIcon
           iconDisplay="input"
