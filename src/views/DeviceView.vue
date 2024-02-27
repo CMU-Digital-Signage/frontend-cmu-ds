@@ -34,7 +34,7 @@ watch(devices, () => {
       v-if="loading"
       class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
     ></Skeleton>
-    <div v-else v-for="(floor, index) in floors" :key="index" class="text-left">
+    <div v-else v-for="(floor, index) in floors" :key="index" class="text-left last:pb-7">
       <p
         class="font-semibold text-[16px] px-4 py-3 border-b-2 border-[#dee2e6]"
       >
