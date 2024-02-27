@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Device } from "@/types";
+
 export default defineComponent({
   name: "DeviceCompo",
 });
@@ -15,6 +15,7 @@ import {
   turnOnDevice,
 } from "@/services";
 import { filesize } from "filesize";
+import { Device } from "@/types";
 import {
   initialFormDevice,
   onUpload,

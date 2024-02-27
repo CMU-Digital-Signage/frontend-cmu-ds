@@ -30,6 +30,8 @@ export default createStore({
       uploader: "",
       uploadDate: undefined as Date | undefined,
       status: "" as string,
+      date: new Date() as Date,
+      time: new Date() as Date,
     },
     filterDevice: <(string | null)[]>[],
     formPoster: <Poster>{},
@@ -57,6 +59,8 @@ export default createStore({
         uploader: "",
         uploadDate: undefined,
         status: "",
+        date: new Date(),
+        time: new Date(),
       };
     },
     setAllTime(state, index) {
