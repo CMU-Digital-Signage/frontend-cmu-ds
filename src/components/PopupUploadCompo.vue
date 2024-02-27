@@ -433,7 +433,7 @@ const nextStepUpload = () => {
       numImage.push(Math.floor(num - num * (1 / e.durationForm)));
     });
     maxImage.value = Math.min(...numImage);
-    store.state.formPoster.image = []
+    if (!editPosterType.value.type.length) store.state.formPoster.image = [];
     currentState.value = 1;
   }
 };
@@ -518,6 +518,7 @@ const nextStepPreview = () => {
     <Dialog
       v-model:visible="showSecondDialog"
       modal
+      :closable="!loading"
       close-on-escape
       :draggable="false"
       class="w-[800px] header-popup z-10"
@@ -527,7 +528,8 @@ const nextStepPreview = () => {
             'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10',
         },
         header: {
-          style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;  z-index: 10',
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  z-index: 10',
         },
         mask: {
           style: 'backdrop-filter: blur(2px); z-index: 10',
@@ -610,7 +612,9 @@ const nextStepPreview = () => {
         </div>
         <div v-if="currentState === 1">
           <div class="text-center text-red-500">Max Image: {{ maxImage }}</div>
-          <div class="text-center text-blue-500">Current Image: {{ formPoster.image.length }}</div>
+          <div class="text-center text-blue-500">
+            Current Image: {{ formPoster.image.length }}
+          </div>
           <UploadImage
             :posType="selectedPosterType.code"
             :maxImage="maxImage"
@@ -717,13 +721,13 @@ const nextStepPreview = () => {
             class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1 mt-3"
           >
             Review
-            
           </label>
-          
+
           <div class="flex flex-inline gap-4 pt-3">
             <Button
               text
               label="Back"
+              :loading="loading"
               :class="'secondaryButton'"
               @click="currentState = 1"
             ></Button>
@@ -878,6 +882,4 @@ const nextStepPreview = () => {
   padding-bottom: 80px;
   flex: 1 1;
 }
-
-
 </style>

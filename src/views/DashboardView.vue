@@ -97,6 +97,7 @@ const calOptions = reactive<CalendarOptions>({
       description: info.event._def.extendedProps.description,
       uploader: info.event._def.extendedProps.uploader,
       userId: info.event._def.extendedProps.userId,
+      amount: info.event._def.extendedProps.amount,
     };
     showInfo.value = true;
   },
@@ -181,6 +182,7 @@ const setEvent = () => {
       displayDuration: displayDuration,
       uploader: e.uploader,
       userId: e.id,
+      amount: e.image.length,
       onDevice: posterOnDevice,
       backgroundColor: exist
         ? exist.backgroundColor
@@ -321,6 +323,14 @@ const del = async (posterId: string) => {
         </div>
       </template>
       <div class="flex flex-col gap-2">
+        <!-- Number of Poster -->
+        <div class="posterDetail">
+          <p>Number of Poster</p>
+          <p>
+            {{ selectedEvent.amount }}
+            {{ selectedEvent.amount > 1 ? "Posters" : "Poster" }}
+          </p>
+        </div>
         <!-- Start Date -->
         <div class="posterDetail">
           <p>Start Date</p>

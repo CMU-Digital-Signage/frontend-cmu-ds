@@ -443,6 +443,7 @@ const toggleOverlay = (e: any) => {
         </Button>
       </div>
     </ul>
+   
     <!-- Preview -->
     <ul
       v-if="$route.path.includes('/preview') && devicePreview"
@@ -501,7 +502,7 @@ const toggleOverlay = (e: any) => {
         </Calendar>
         <Button
           label="Now"
-          class="bg-while text-black items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
+          class="text-green-800 items-center rounded-lg border-green-600 max-h-fit px-3 py-1  border-2 font-semibold bg-green-300 hover:bg-green-400"
           @click="
             filterInput.date = new Date();
             filterInput.time = new Date();

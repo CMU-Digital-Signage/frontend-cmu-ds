@@ -33,6 +33,7 @@ const filterInput = computed(() => store.state.filterInputPosters);
 const emerPosters = computed(() =>
   store.state.emerPosters.filter((e) => {
     return (
+      e.incidentName !== "banner" &&
       (!filterInput.value.title ||
         e.incidentName
           .toLowerCase()
