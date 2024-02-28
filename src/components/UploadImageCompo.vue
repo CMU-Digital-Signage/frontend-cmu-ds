@@ -6,7 +6,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, ref, toRefs, onMounted, defineProps } from "vue";
+import { computed, ref, toRefs, onMounted, defineProps, onUpdated } from "vue";
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
@@ -16,9 +16,13 @@ const { posType, maxImage } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
 const toast = useToast();
+const fileUpload = ref();
 
-const errorSelectFile = async (e: any) => {
-  if (formPoster.value.image?.length + e.files.length >= maxImage.value!) {
+const errorSelectFile = async () => {
+  if (
+    formPoster.value.image?.length + fileUpload.value.files.length >=
+    maxImage.value!
+  ) {
     toast.add({
       severity: "error",
       summary: "Invalid file limit",
@@ -26,8 +30,11 @@ const errorSelectFile = async (e: any) => {
       life: 3000,
     });
   } else {
-    const message =
-      e.originalEvent.target.__vueParentComponent.data.messages[0].split(", ");
+    const message = fileUpload.value.messages[0]
+      .split(": ")
+      .slice(1)
+      .join(" ")
+      .split(", ");
     toast.add({
       severity: "error",
       summary: message[0],
@@ -60,15 +67,13 @@ const removeImage = (i: number) => {
 
 <template>
   <FileUpload
+    ref="fileUpload"
     class="mt-12"
     accept="image/*"
     :show-upload-button="false"
     :multiple="posType === 'NP'"
     :fileLimit="maxImage"
     :maxFileSize="5243000"
-    invalidFileTypeMessage="Invalid file type, Allowed file types: image/*."
-    invalidFileSizeMessage="Invalid file size, File size should be smaller than 5 MB."
-    :invalidFileLimitMessage="`Invalid file limit, File limit ${maxImage}`"
     :pt="{
       buttonbar: {
         class: `${
@@ -89,8 +94,8 @@ const removeImage = (i: number) => {
           formPoster.image.length + e.files.length <= maxImage
         ) {
           selectImage(e);
-        } else errorSelectFile(e);
-        e.files.splice(0, e.files.length);
+        } else errorSelectFile();
+        if (e.files.length) e.files.splice(0, e.files.length);
       }
     "
   >
