@@ -349,6 +349,7 @@ const nextStepUpload = () => {
     } else {
       poster = posters.value;
     }
+    const transition = 1;
     let durationTime = [] as any;
     let filterTime = [] as Poster[];
     formDisplay.value.forEach((e, i) => {
@@ -412,7 +413,7 @@ const nextStepUpload = () => {
           dateFormatter(all.startDate) <= dateFormatter(form.date) &&
           dateFormatter(form.date) <= dateFormatter(all.endDate)
         ) {
-          form.duration += all.duration * all.image.length;
+          form.duration += (all.duration + transition) * all.image.length;
         }
       });
     });
@@ -429,8 +430,10 @@ const nextStepUpload = () => {
         e.endTime.getHours() * 3600 + e.endTime.getMinutes() * 60;
       const startTimeSec =
         e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
-      const num = (endTimeSec - startTimeSec - e.duration) / e.durationForm;
-      numImage.push(Math.floor(num - num * (1 / e.durationForm)));
+      const num =
+        (endTimeSec - startTimeSec - e.duration) /
+        (e.durationForm + transition);
+      numImage.push(num);
     });
     maxImage.value = Math.min(...numImage);
     if (!editPosterType.value.type.length) store.state.formPoster.image = [];

@@ -147,14 +147,14 @@ const removeImage = (i: number) => {
         </div>
       </div>
     </template>
-    <template #content="{ files, removeFileCallback }">
+    <template #content="{ removeFileCallback }">
       <div
-        v-if="posType === 'EP' && files[0] && formEmer.emergencyImage"
+        v-if="posType === 'EP' && formEmer.emergencyImage"
         class="flex flex-row justify-center text-center items-center gap-3"
       >
         <i class="pi pi-power-off"></i>
         <div
-          class="flex justify-center border-2 border-black bg-black"
+          class="flex justify-center bg-black"
           :style="{
             width: `${2160 / 20}px`,
             height: `${3840 / 20}px`,
@@ -194,30 +194,7 @@ const removeImage = (i: number) => {
     </template>
     <template #empty>
       <div
-        v-if="posType === 'EP' && formEmer.emergencyImage"
-        class="flex flex-row justify-center text-center items-center gap-3"
-      >
-        <i class="pi pi-power-off"></i>
-        <div
-          class="flex justify-center border-2 border-black bg-black"
-          :style="{
-            width: `${2160 / 20}px`,
-            height: `${3840 / 20}px`,
-          }"
-        >
-          <img
-            :alt="formEmer.incidentName || formPoster.title"
-            :src="formEmer.emergencyImage"
-            class="max-w-full max-h-full m-auto rotate-90"
-            :style="{
-              maxWidth: `${3840 / 20}px`,
-              maxHeight: `${2160 / 20}px`,
-            }"
-          />
-        </div>
-      </div>
-      <div
-        v-else-if="posType !== 'NP' || !formPoster.image.length"
+        v-if="!formEmer.emergencyImage && !formPoster.image?.length"
         class="flex flex-col text-center items-center"
       >
         <i
