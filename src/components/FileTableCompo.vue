@@ -51,8 +51,7 @@ const uniquePosters = computed(() =>
           .toLowerCase()
           .includes(filterInput.value.uploader.toLowerCase())) &&
       (!filterInput.value.uploadDate ||
-        dateFormatter(e.createdAt) ===
-          dateFormatter(filterInput.value.uploadDate)) &&
+        e.createdAt === filterInput.value.uploadDate) &&
       (!filterInput.value.status || e.status === filterInput.value.status)
     );
   })

@@ -18,7 +18,7 @@ watch(
   () => {
     if (
       formDisplay.value.startDate &&
-      formDisplay.value.startDate > formDisplay.value.endDate!
+      formDisplay.value.startDate.getTime() > formDisplay.value.endDate!.getTime()
     ) {
       store.state.formDisplay[index.value].endDate = undefined;
     }
@@ -29,8 +29,8 @@ const changeStartTime = (i: number) => {
   if (
     formDisplay.value.time[i].startTime !== undefined &&
     formDisplay.value.time[i].endTime &&
-    formDisplay.value.time[i].startTime!.toTimeString() >=
-      formDisplay.value.time[i].endTime!.toTimeString()
+    formDisplay.value.time[i].startTime!.getTime() >=
+      formDisplay.value.time[i].endTime!.getTime()
   ) {
     store.state.formDisplay[index.value].time[i].endTime = new Date(
       formDisplay.value.time[i].startTime!.getFullYear(),
@@ -48,8 +48,8 @@ const changeEndTime = (i: number) => {
   if (
     formDisplay.value.time[i].endTime !== undefined &&
     formDisplay.value.time[i + 1] &&
-    formDisplay.value.time[i].endTime!.toTimeString() >=
-      formDisplay.value.time[i + 1].startTime!.toTimeString()
+    formDisplay.value.time[i].endTime!.getTime() >=
+      formDisplay.value.time[i + 1].startTime!.getTime()
   ) {
     store.state.formDisplay[index.value].time[i + 1].startTime = new Date(
       formDisplay.value.time[i].endTime!.getFullYear(),
