@@ -2,7 +2,7 @@ import io from "socket.io-client";
 import store from "@/store";
 import { Device, Emergency, Poster, User } from "@/types";
 import router from "@/router";
-import { createUnique, setFieldPoster } from "./constant";
+import { color, createUnique, setFieldPoster } from "./constant";
 
 export const socket = io(process.env.VUE_APP_API_BASE_URL!, {
   transports: ["websocket"],
@@ -11,7 +11,8 @@ export const socket = io(process.env.VUE_APP_API_BASE_URL!, {
 export default function setupSocket() {
   // user
   socket.on("addAdmin", (data: User) => {
-    store.state.allUser.push(data);
+    if (!store.state.allUser.filter((e) => e.id === data.id))
+      store.state.allUser.push(data);
   });
   socket.on("updateUser", (data: User) => {
     store.state.allUser.find((e) => {
@@ -35,7 +36,13 @@ export default function setupSocket() {
 
   // device
   socket.on("addDevice", (data: Device) => {
-    store.state.devices.push({ ...data });
+    if (!store.state.devices.filter((e) => e.MACaddress === data.MACaddress)) {
+      store.state.devices.push({
+        ...data,
+        color: color[store.state.devices.length],
+      });
+      store.state.filterDevice.push(data.MACaddress);
+    }
     store.state.macNotUse = store.state.macNotUse.filter(
       (e: any) => e !== data.MACaddress
     );
@@ -56,10 +63,15 @@ export default function setupSocket() {
 
   // emergency
   socket.on("addEmergency", (data: Emergency) => {
-    store.state.emerPosters.push({
-      ...data,
-      status: data.status ? "Active" : "Inactive",
-    });
+    if (
+      !store.state.emerPosters.filter(
+        (e) => e.incidentName !== data.incidentName
+      )
+    )
+      store.state.emerPosters.push({
+        ...data,
+        status: data.status ? "Active" : "Inactive",
+      });
   });
   socket.on("updateEmergency", (incidentName, data: Emergency) => {
     const index = store.state.emerPosters.findIndex(
@@ -111,7 +123,8 @@ export default function setupSocket() {
   // poster
   socket.on("addPoster", (data: Poster[]) => {
     setFieldPoster(data);
-    store.state.posters.push(...data);
+    if (!store.state.posters.filter((e) => e.posterId !== data[0].posterId))
+      store.state.posters.push(...data);
     createUnique(store.state.posters);
   });
   socket.on("updatePoster", (data: Poster[]) => {
@@ -124,10 +137,10 @@ export default function setupSocket() {
   });
   socket.on("deletePoster", (data: Poster) => {
     store.state.posters = store.state.posters.filter(
-      (e) => e.title !== data.title
+      (e) => e.title !== data.posterId
     );
     store.state.uniquePosters = store.state.uniquePosters.filter(
-      (e) => e.title !== data.title
+      (e) => e.title !== data.posterId
     );
   });
 }

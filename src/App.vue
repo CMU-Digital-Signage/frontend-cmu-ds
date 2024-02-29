@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import store from "./store";
-import { computed, onBeforeUnmount, onMounted, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, onUnmounted, watch } from "vue";
 import SideBar from "./components/SideBar.vue";
 import NavBar from "./components/NavBar.vue";
 import router from "./router";
@@ -10,46 +10,51 @@ import { color, createUnique, setFieldPoster } from "./utils/constant";
 import { Device, Emergency } from "./types";
 
 const user = computed(() => store.state.userInfo);
+let interval: any = null;
+
+const fetchData = async () => {
+  const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
+    getAllUser(),
+    getDevice(),
+    getPoster(),
+    getEmergency(),
+  ]);
+  store.state.allUser = allUserRes.user;
+
+  store.state.macNotUse = deviceRes.data
+    .filter((e: any) => !e.deviceName)
+    .map((e: any) => e.MACaddress);
+
+  const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
+  devices.map((e, i) => (e.color = color[i]));
+  store.state.devices = devices;
+  store.state.selectDevice = devices[0].MACaddress || "";
+  store.state.filterDevice = devices.map((e) => e.MACaddress);
+
+  setFieldPoster(posterRes.poster);
+  store.state.posters = posterRes.poster;
+  createUnique(store.state.posters);
+
+  emerRes.emergency.forEach(
+    (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+  );
+  store.state.emerPosters = emerRes.emergency;
+};
 
 onMounted(() => {
   setupSocket();
+  // interval = setInterval(() => {
+  //   fetchData();
+  // }, 20000);
 });
 
 watch(user, async () => {
-  store.state.loading = true
-  if (user.value.id) {
-    const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
-      getAllUser(),
-      getDevice(),
-      getPoster(),
-      getEmergency(),
-    ]);
-    store.state.allUser = allUserRes.user;
-
-    store.state.macNotUse = deviceRes.data
-      .filter((e: any) => !e.deviceName)
-      .map((e: any) => e.MACaddress);
-
-    const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
-    devices.map((e, i) => (e.color = color[i]));
-    store.state.devices = devices;
-    store.state.selectDevice = devices[0].MACaddress || "";
-    store.state.filterDevice = devices.map((e) => e.MACaddress);
-
-    setFieldPoster(posterRes.poster);
-    store.state.posters = posterRes.poster;
-    createUnique(store.state.posters);
-
-    emerRes.emergency.forEach(
-      (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
-    );
-    store.state.emerPosters = emerRes.emergency;
-  }
-  store.state.loading = false
+  if (user.value.id) fetchData();
 });
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
   socket.disconnect();
+  clearInterval(interval);
 });
 </script>
 

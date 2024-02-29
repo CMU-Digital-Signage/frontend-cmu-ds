@@ -7,8 +7,12 @@ export default defineComponent({
 <script setup lang="ts">
 import { ref, reactive, computed } from "vue";
 import store from "@/store";
-import { editDevice, deleteDevice } from "@/services";
-import { filesize } from "filesize";
+import {
+  editDevice,
+  deleteDevice,
+  turnOffDevice,
+  turnOnDevice,
+} from "@/services";
 import { Device } from "@/types";
 import {
   initialFormDevice,
@@ -73,15 +77,20 @@ const edit = async () => {
 
 const del = async (MACaddress: any) => {
   const res = await deleteDevice(MACaddress);
-  store.state.devices = device.value?.filter(
-    (e) => e.MACaddress !== MACaddress
-  );
   toast.add({
     severity: "success",
     summary: "Success",
     detail: res.message,
     life: 3000,
   });
+};
+
+const changeStatusDevice = async (data: Device) => {
+  if (data.status) {
+    const res = await turnOffDevice(data.MACaddress!);
+  } else {
+    const res = await turnOnDevice(data.MACaddress!);
+  }
 };
 </script>
 
@@ -168,6 +177,13 @@ const del = async (MACaddress: any) => {
       <Column header="Action" :exportable="false">
         <template #body="rowData">
           <div class="inline-flex gap-3">
+            <Button
+              class="w-9 h-9 border-0"
+              :class="[rowData.data.status ? 'bg-[#62ccca]' : 'bg-[#b3b2b2]']"
+              icon="pi pi-power-off"
+              rounded
+              @click="changeStatusDevice(rowData.data)"
+            ></Button>
             <Button
               icon="pi pi-pencil"
               rounded

@@ -11,10 +11,17 @@ const click = computed({
 
 const uniquePosters = computed(() => store.state.uniquePosters);
 const emerPosters = computed(() => store.state.emerPosters);
-const loading = computed(() => store.state.loading)
+const loading = ref(false);
 const noData = computed(() => !store.state.uniquePosters.length);
 
+onMounted(() => {
+  if (!uniquePosters.value.length || !emerPosters.value.length)
+    loading.value = true;
+});
 
+watch([uniquePosters, emerPosters], () => {
+  if (emerPosters.value.length) loading.value = false;
+});
 
 watch(click, () => {
   store.commit("resetFilter");
@@ -56,7 +63,10 @@ onUnmounted(() => {
       :types="'NP'"
       class="rectangle flex flex-col"
     />
-    <div v-else class=" my-[0.75rem] flex h-full  justify-center items-center align-middle">
+    <div
+      v-else
+      class="my-[0.75rem] flex h-full justify-center items-center align-middle"
+    >
       Your Content not found
     </div>
   </div>
