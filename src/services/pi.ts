@@ -1,3 +1,4 @@
+import store from "@/store";
 import axios from "axios";
 
 export async function getPosterEachDevice(mac: string) {
@@ -30,6 +31,8 @@ export async function turnOnDevice(mac: string) {
       }
     );
 
+    store.state.devices.find((e) => e.MACaddress === mac)!.status = true;
+
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -49,6 +52,8 @@ export async function turnOffDevice(mac: string) {
         withCredentials: true,
       }
     );
+
+    store.state.devices.find((e) => e.MACaddress === mac)!.status = false;
 
     return res.data;
   } catch (err: any) {

@@ -1,3 +1,4 @@
+import store from "@/store";
 import axios from "axios";
 
 export async function addAdmin(email: string) {
@@ -13,6 +14,8 @@ export async function addAdmin(email: string) {
         withCredentials: true,
       }
     );
+
+    store.state.allUser.push(res.data.admin);
 
     return res.data;
   } catch (err: any) {
@@ -37,6 +40,9 @@ export async function deleteAdmin(id: number) {
         withCredentials: true,
       }
     );
+
+    store.state.allUser.find((e) => e.email === res.data.user.email)!.isAdmin =
+      false;
 
     return res.data;
   } catch (err: any) {

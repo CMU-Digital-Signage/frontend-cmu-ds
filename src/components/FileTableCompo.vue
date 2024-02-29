@@ -24,10 +24,7 @@ const isOverlayPanelVisible = ref();
 const toggleShowStatus = (e: any) => {
   isOverlayPanelVisible.value.toggle(e);
 };
-const loading = computed({
-  get: () => store.state.loading,
-  set: (val) => (store.state.loading = val),
-});
+const loading = ref(false);
 const props = defineProps({ types: String });
 const filterInput = computed(() => store.state.filterInputPosters);
 const emerPosters = computed(() =>
@@ -67,7 +64,7 @@ let delP = null as any;
 
 const del = async (poster: string) => {
   delP = poster;
-  store.state.loading = true;
+  loading.value = true;
   if (props.types == "NP") {
     const res = await deletePoster(delP);
     toast.add({
@@ -85,7 +82,7 @@ const del = async (poster: string) => {
       life: 3000,
     });
   }
-  store.state.loading = false;
+  loading.value = false;
   delP = null;
 };
 </script>

@@ -97,6 +97,13 @@ const validateForm = () => {
     return "Title Invalid";
   }
 
+  if (
+    selectedPosterType.value.code === "EP" &&
+    !formEmer.value.emergencyImage
+  ) {
+    return "Image selected not found.";
+  }
+
   const invalidSchedule = formDisplay.value.find(
     (e) =>
       (!e.MACaddress.length && !e.allDevice) ||
@@ -135,24 +142,7 @@ const handleAddEmergency = async () => {
 const handleAddPoster = async () => {
   const res = await addPoster(formPoster.value, formDisplay.value);
   if (res.ok) {
-    let newPoster = [] as Poster[];
-    formDisplay.value.forEach((e) => {
-      e.time.forEach((time) => {
-        newPoster;
-        e.MACaddress.forEach(async (mac) => {
-          newPoster.push({
-            ...formPoster.value,
-            MACaddress: mac,
-            startDate: e.startDate!,
-            endDate: e.endDate!,
-            startTime: time.startTime!,
-            endTime: time.endTime!,
-          });
-        });
-      });
-    });
     showSecondDialog.value = false;
-    loading.value = false;
     store.commit("resetForm");
     toast.add({
       severity: "success",
@@ -167,8 +157,8 @@ const handleAddPoster = async () => {
       detail: res.message,
       life: 3000,
     });
-    loading.value = false;
   }
+  loading.value = false;
 };
 
 const handleEditEmergency = async () => {
@@ -196,24 +186,7 @@ const handleEditEmergency = async () => {
 const handleEditPoster = async () => {
   const res = await editPoster(formPoster.value, formDisplay.value);
   if (res.ok) {
-    let newPoster = [] as Poster[];
-    formDisplay.value.forEach((e) => {
-      e.time.forEach((time) => {
-        newPoster;
-        e.MACaddress.forEach(async (mac) => {
-          newPoster.push({
-            ...formPoster.value,
-            MACaddress: mac,
-            startDate: e.startDate!,
-            endDate: e.endDate!,
-            startTime: time.startTime!,
-            endTime: time.endTime!,
-          });
-        });
-      });
-    });
     showSecondDialog.value = false;
-    loading.value = false;
     store.commit("resetForm");
     toast.add({
       severity: "success",
@@ -228,8 +201,8 @@ const handleEditPoster = async () => {
       detail: res.message,
       life: 3000,
     });
-    loading.value = false;
   }
+  loading.value = false;
 };
 
 const uploadPoster = async () => {
