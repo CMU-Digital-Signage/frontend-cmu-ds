@@ -4,19 +4,13 @@ export default defineComponent({
   name: "PopupUpload",
 });
 </script>
-
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from "vue";
+import { computed, ref, watch } from "vue";
 import store from "@/store";
 import router from "@/router";
 import { addEmergency, addPoster, editEmergency, editPoster } from "@/services";
 import { Poster } from "@/types";
-import {
-  dateFormatter,
-  createUnique,
-  newInitialFormDisplay,
-  rotate,
-} from "@/utils/constant";
+import { newInitialFormDisplay, rotate } from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
@@ -332,12 +326,14 @@ const nextStepUpload = () => {
     formDisplay.value.forEach((form) => {
       const filterDate = poster.filter((all) => {
         return (
-          (dateFormatter(form.startDate) <= dateFormatter(all.startDate) &&
-            dateFormatter(all.startDate) <= dateFormatter(form.endDate)) ||
-          (dateFormatter(form.startDate) <= dateFormatter(all.endDate) &&
-            dateFormatter(all.endDate) <= dateFormatter(form.endDate)) ||
-          (dateFormatter(all.startDate) <= dateFormatter(form.startDate) &&
-            dateFormatter(form.startDate) <= dateFormatter(all.endDate))
+          form.startDate &&
+          form.endDate &&
+          ((form.startDate.getTime() <= all.startDate.getTime() &&
+            all.startDate.getTime() <= form.endDate.getTime()) ||
+            (form.startDate.getTime() <= all.endDate.getTime() &&
+              all.endDate.getTime() <= form.endDate.getTime()) ||
+            (all.startDate.getTime() <= form.startDate.getTime() &&
+              form.startDate.getTime() <= all.endDate.getTime()))
         );
       });
 
@@ -348,7 +344,7 @@ const nextStepUpload = () => {
           form.startDate!.getDate()
         );
         let count = 0;
-        while (dateFormatter(date) <= dateFormatter(form.endDate!)) {
+        while (date <= form.endDate!) {
           form.MACaddress.forEach((e) => {
             durationTime.push({
               MACaddress: e,
@@ -368,12 +364,12 @@ const nextStepUpload = () => {
         }
         filterTime = filterDate.filter((all) => {
           return (
-            (item.startTime!.toTimeString() <= all.startTime.toTimeString() &&
-              all.startTime.toTimeString() <= item.endTime!.toTimeString()) ||
-            (item.startTime!.toTimeString() <= all.endTime.toTimeString() &&
-              all.endTime.toTimeString() <= item.endTime!.toTimeString()) ||
-            (all.startTime.toTimeString() <= item.startTime!.toTimeString() &&
-              item.startTime!.toTimeString() <= all.endTime.toTimeString())
+            (item.startTime!.getTime() <= all.startTime.getTime() &&
+              all.startTime.getTime() <= item.endTime!.getTime()) ||
+            (item.startTime!.getTime() <= all.endTime.getTime() &&
+              all.endTime.getTime() <= item.endTime!.getTime()) ||
+            (all.startTime.getTime() <= item.startTime!.getTime() &&
+              item.startTime!.getTime() <= all.endTime.getTime())
           );
         });
       });
@@ -383,8 +379,8 @@ const nextStepUpload = () => {
       filterTime.forEach((all) => {
         if (
           all.MACaddress === form.MACaddress &&
-          dateFormatter(all.startDate) <= dateFormatter(form.date) &&
-          dateFormatter(form.date) <= dateFormatter(all.endDate)
+          all.startDate.getTime() <= form.date.getTime() &&
+          form.date.getTime() <= all.endDate.getTime()
         ) {
           form.duration += (all.duration + transition) * all.image.length;
         }

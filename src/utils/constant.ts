@@ -138,8 +138,8 @@ export const newInitialFormDisplay = () => {
     MACaddress: [],
     time: [
       {
-        startTime: new Date("2024-02-09 08:00:00"),
-        endTime: new Date("2024-02-09 09:00:00"),
+        startTime: new Date("1970-01-01 08:00:00"),
+        endTime: new Date("1970-01-01 09:00:00"),
       },
     ],
   };
@@ -221,10 +221,10 @@ export const setFieldPoster = (data: Poster[]) => {
   data.forEach((e: Poster) => {
     e.createdAt = new Date(e.createdAt);
     e.updatedAt = new Date(e.updatedAt);
-    e.startDate = new Date(e.startDate);
-    e.endDate = new Date(e.endDate);
-    e.startTime = new Date(e.startTime);
-    e.endTime = new Date(e.endTime);
+    e.startDate = new Date(new Date(e.startDate).setHours(0, 0, 0, 0));
+    e.endDate = new Date(new Date(e.endDate).setHours(0, 0, 0, 0));
+    e.startTime = new Date(new Date(e.startTime).setDate(1));
+    e.endTime = new Date(new Date(e.endTime).setDate(1));
     if (e.id) {
       const users = store.getters.getUserById(e.id);
       const uploader = `${users.firstName} ${
@@ -254,21 +254,28 @@ export const createUnique = (data: Poster[]) => {
   store.state.uniquePosters = data.reduce((acc: any[], e: Poster) => {
     // Check if the title is not already in the accumulator
     if (!acc.some((poster) => poster.title === e.title)) {
-      const currentDate = new Date();
+      const currentDate = new Date(new Date().setHours(0, 0, 0, 0));
+      const currentTime = new Date(
+        1970,
+        0,
+        1,
+        new Date().getHours(),
+        new Date().getMinutes()
+      );
       let status = "";
       if (
-        dateFormatter(currentDate) >= dateFormatter(e.startDate) &&
-        dateFormatter(currentDate) <= dateFormatter(e.endDate)
+        currentDate.getTime() >= e.startDate.getTime() &&
+        currentDate.getTime() <= e.endDate.getTime()
       ) {
         if (
-          new Date().toTimeString() >= e.startTime.toTimeString() &&
-          new Date().toTimeString() <= e.endTime.toTimeString()
+          e.startTime.getTime() <= currentTime.getTime() &&
+          currentTime.getTime() <= e.endTime.getTime()
         ) {
           status = "Displayed";
         } else {
           status = "Awaited";
         }
-      } else if (currentDate < e.startDate) {
+      } else if (currentDate.getTime() < e.startDate.getTime()) {
         status = "Awaited";
       } else {
         status = "Expired";
@@ -299,12 +306,11 @@ export const setNorForm = (data: any) => {
   store.state.editPoster.title = data.title;
   const poster = store.state.posters.filter((e) => e.title === data.title);
   poster.sort((a: Poster, b: Poster) => {
-    if (a.startDate < b.startDate) return -1;
-    else if (a.startDate > b.startDate) return 1;
+    if (a.startDate.getTime() < b.startDate.getTime()) return -1;
+    else if (a.startDate.getTime() > b.startDate.getTime()) return 1;
     else {
-      if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
-      else if (a.startTime.toTimeString() > b.startTime.toTimeString())
-        return 1;
+      if (a.startTime.getTime() < b.startTime.getTime()) return -1;
+      else if (a.startTime.getTime() > b.startTime.getTime()) return 1;
       else return 0;
     }
   });
@@ -323,8 +329,8 @@ export const setNorForm = (data: any) => {
   poster.forEach((e: any) => {
     const index = store.state.formDisplay.findIndex(
       (disp) =>
-        dateFormatter(disp.startDate) === dateFormatter(e.startDate) &&
-        dateFormatter(disp.endDate) === dateFormatter(e.endDate)
+        disp.startDate!.getTime() === e.startDate.getTime() &&
+        disp.endDate!.getTime() === e.endDate.getTime()
     );
 
     if (index === -1) {
@@ -334,10 +340,7 @@ export const setNorForm = (data: any) => {
       store.state.formDisplay[last].endDate = e.endDate;
       store.state.formDisplay[last].duration = e.duration;
       store.state.formDisplay[last].MACaddress.push(e.MACaddress);
-      if (
-        e.startTime.toTimeString().includes("00:00") &&
-        e.endTime.toTimeString().includes("23:59")
-      ) {
+      if (e.startTime.getHours() === 0 && e.endTime.getHours() === 23) {
         store.state.formDisplay[last].allDay = true;
       } else {
         store.state.formDisplay[last].time.pop();
@@ -353,8 +356,8 @@ export const setNorForm = (data: any) => {
       if (
         store.state.formDisplay[index].time.findIndex(
           (time) =>
-            time.startTime?.toTimeString() === e.startTime.toTimeString() &&
-            time.endTime?.toTimeString() === e.endTime.toTimeString()
+            time.startTime?.getTime() === e.startTime.getTime() &&
+            time.endTime?.getTime() === e.endTime.getTime()
         ) === -1
       ) {
         store.state.formDisplay[index].time.push({
@@ -393,11 +396,18 @@ let count = 0;
 export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
   let timeoutId: NodeJS.Timeout | null = null;
   const updatePosterInterval = () => {
+    const currentTime = new Date(
+      1970,
+      0,
+      1,
+      new Date().getHours(),
+      new Date().getMinutes()
+    );
     if (currentIndexPoster === -1) return;
     const currentPoster = posters[currentIndexPoster];
     if (
-      currentPoster.startTime.toTimeString() <= new Date().toTimeString() &&
-      currentPoster.endTime.toTimeString() >= new Date().toTimeString()
+      currentPoster.startTime.getTime() <= currentTime.getTime() &&
+      currentPoster.endTime.getTime() >= currentTime.getTime()
     ) {
       if (emerPoster) return;
 
@@ -420,13 +430,19 @@ export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
   };
 
   const findNextValidPosterIndex = () => {
-    const currentTime = new Date().toTimeString();
+    const currentTime = new Date(
+      1970,
+      0,
+      1,
+      new Date().getHours(),
+      new Date().getMinutes()
+    ).getTime();
     currentIndexPoster = (currentIndexPoster + 1) % posters.length;
     const poster = posters[currentIndexPoster];
     if (count > posters.length) return -1;
     else if (
-      poster.startTime.toTimeString() <= currentTime &&
-      poster.endTime.toTimeString() >= currentTime
+      poster.startTime.getTime() <= currentTime &&
+      poster.endTime.getTime() >= currentTime
     ) {
       count = 0;
       return currentIndexPoster;

@@ -31,8 +31,8 @@ const fetchData = async () => {
   if (ok) {
     setFieldPoster(poster);
     poster.sort((a: Poster, b: Poster) => {
-      if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
-      if (a.startTime.toTimeString() > b.startTime.toTimeString()) return 1;
+      if (a.startTime.getTime() < b.startTime.getTime()) return -1;
+      if (a.startTime.getTime() > b.startTime.getTime()) return 1;
       return 0;
     });
     store.state.posters = poster;

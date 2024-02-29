@@ -125,9 +125,7 @@ const setEvent = () => {
       e.type = "Collection";
     } else e.type = "Individual";
 
-    const allDay =
-      e.startTime.toTimeString().includes("00:00") &&
-      e.endTime.toTimeString().includes("23:59");
+    const allDay = e.startTime.getHours() === 0 && e.endTime.getHours() === 23;
     const exist = postersView.value.find((p) => p.title === e.title);
     const start = e.startDate.toDateString();
     const end = e.endDate.toDateString();

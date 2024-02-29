@@ -63,7 +63,7 @@ watch(filterDevice, () => {
 
 <template>
   <div class="flex-1">
-    <div class="h-full overflow-y-auto">
+    <div class="h-full overflow-y-auto p-4">
       <DataTable v-if="loading" :value="new Array(10)">
         <Column class="w-[243px] border-r-[#CFCECE] border-r-2">
           <template #body
@@ -122,12 +122,12 @@ watch(filterDevice, () => {
             </div>
           </template>
         </Column>
-        <Column field="title" class="w-full"></Column>˝
+        <Column field="title" class="w-full"></Column>
       </DataTable>
       <div v-else-if="!searchPosters"></div>
       <div
         v-else
-        class="flex justify-center h-screen  items-center align-middle"
+        class="flex justify-center h-screen items-center align-middle"
       >
         No results found
       </div>

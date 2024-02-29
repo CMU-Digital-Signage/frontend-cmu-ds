@@ -16,15 +16,15 @@ const mac = route.params.mac as string;
 const filterDate = computed(() => store.state.filterInputPosters.date);
 const filterTime = computed(() => store.state.filterInputPosters.time);
 const posters = computed(() =>
-  store.state.posters.filter(
-    (e) =>
-      e.MACaddress == mac &&
-      filterTime.value &&
-      dateFormatter(filterDate.value) >= dateFormatter(e.startDate) &&
-      dateFormatter(filterDate.value) <= dateFormatter(e.endDate) &&
-      filterTime.value.toTimeString() >= e.startTime.toTimeString() &&
-      filterTime.value.toTimeString() <= e.endTime.toTimeString()
-  )
+  store.state.posters.filter((e) => {
+    return (
+      e.MACaddress === mac &&
+      e.startDate.getTime() <= filterDate.value.getTime() &&
+      filterDate.value.getTime() <= e.endDate.getTime() &&
+      e.startTime.getTime() <= filterTime.value.getTime() &&
+      filterTime.value.getTime() <= e.endTime.getTime()
+    );
+  })
 );
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
@@ -45,6 +45,7 @@ watch([filterDate, filterTime], () => {
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
   image.value.image = "";
+
   if (
     posters.value.length &&
     (dateFormatter(filterDate.value) !== dateFormatter(new Date()) ||
