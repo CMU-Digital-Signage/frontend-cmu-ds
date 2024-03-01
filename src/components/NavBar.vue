@@ -263,7 +263,7 @@ const toggleOverlay = (e: any) => {
           :multiple="false"
           @select="
             async (e) => {
-              if (e.files[0]) chooseFile = await onUpload(e);
+              if (e.files[0]) chooseFile = await onUpload(e.files[0]);
               else errorSelectFile();
             }
           "
@@ -495,8 +495,14 @@ const toggleOverlay = (e: any) => {
           label="Now"
           class="text-green-800 items-center rounded-lg border-green-600 max-h-fit px-3 py-1 border-2 font-semibold bg-green-300 hover:bg-green-400"
           @click="
-            filterInput.date = new Date();
-            filterInput.time = new Date();
+            filterInput.date = new Date(new Date().setHours(0, 0, 0, 0));
+            filterInput.time = new Date(
+              1970,
+              0,
+              1,
+              new Date().getHours(),
+              new Date().getMinutes()
+            );
           "
         />
       </div>
@@ -655,7 +661,7 @@ const toggleOverlay = (e: any) => {
       <div v-if="$route.path === '/'" class="inline-flex gap-3 items-center">
         <button @click="goToSearch">
           <i
-            class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2"
+            class="pi pi-search text-[#626262] text-xl hover:bg-[#e4e3e3] p-2 rounded-full mr-2"
           ></i>
         </button>
         <Dropdown
@@ -665,7 +671,6 @@ const toggleOverlay = (e: any) => {
           optionValue="MACaddress"
           class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center hover:bg-gray-200"
         />
-        
       </div>
     </ul>
   </div>

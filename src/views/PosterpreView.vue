@@ -42,6 +42,9 @@ watch(selectPoster, () => {
 });
 
 watch([filterDate, filterTime], () => {
+
+  console.log(filterDate.value, filterTime.value);
+  
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
   image.value.image = "";

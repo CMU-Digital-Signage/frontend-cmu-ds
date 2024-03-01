@@ -85,6 +85,7 @@ onUnmounted(() => {
       />
     </transition>
   </div>
+  <div class="w-5 h-5 bg-white absolute bottom-0 right-0"></div>
 </template>
 
 <style>

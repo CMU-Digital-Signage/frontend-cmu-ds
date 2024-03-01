@@ -22,13 +22,8 @@ watch(
       formDisplay.value.startDate.getTime() >
         formDisplay.value.endDate.getTime()
     ) {
-      store.state.formDisplay[index.value].endDate = undefined;
-      // store.state.formDisplay.forEach((e) => {
-      //   if (formDisplay.value.startDate!.getTime() > e.startDate!.getTime()) {
-      //     e.startDate = undefined;
-      //     e.endDate = undefined;
-      //   }
-      // });
+      store.state.formDisplay[index.value].endDate =
+        formDisplay.value.startDate;
     }
   }
 );
