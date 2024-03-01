@@ -81,20 +81,29 @@ watch(
   },
   { deep: true }
 );
+
 const handleEmergency = async () => {
   loading.value = true;
   if (selectEmer.value.status === "Active") {
-    await deactivateEmergency(selectEmer.value.incidentName);
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: `${selectEmer.value.incidentName} has been Deactivate.`,
-      life: 3000,
-    });
+    const res = await deactivateEmergency(selectEmer.value.incidentName);
+    if (res.ok) {
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: `${selectEmer.value.incidentName} has been Deactivate.`,
+        life: 3000,
+      });
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: res.message,
+        life: 3000,
+      });
+    }
   } else {
     let res;
     if (selectEmer.value.incidentName === "banner") {
-      selectEmer.value.status = true;
       res = await editEmergency("banner", selectEmer.value);
     } else {
       res = await activateEmergency(
