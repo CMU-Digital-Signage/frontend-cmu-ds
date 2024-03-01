@@ -230,23 +230,27 @@ const handleChangePassword = async () => {
       <!-- Upload Button -->
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
-          class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho hover:bg-gray-200"
+          v-if="openSidebar"
+          icon="pi pi-plus"
+          class="upload-button mt-7"
           @click="store.state.showUpload = true"
+          label="Upload"
         >
-          <div
-            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center"
-          >
-            <i class="pi pi-plus text-white"></i>
-          </div>
-          Go Upload
         </Button>
+        <Button
+              class="text-[#282828] bg-[#ffffff]  rounded-full h-10 w-10 flex items-center justify-center menu-ho-upload"
+              v-else
+              @click="store.state.showUpload = true"
+              icon="pi pi-plus"
+        
+            ></Button>
       </div>
 
       <div
         v-if="$route.path !== '/searchfile'"
         :class="{
-          'pt-3': openSidebar,
-          'pt-5 flex justify-center': !openSidebar,
+          'pt-2': openSidebar,
+          'pt-4 flex justify-center': !openSidebar,
         }"
       >
         <p
@@ -859,5 +863,36 @@ Button {
   font-weight: 700;
   font-size: 22px;
   color: black;
+}
+
+.upload-button {
+  background-color: #ffffff;
+  color: rgb(54, 54, 54);
+  width: 100%;
+  border: none;
+  border-radius: 1rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  display: flex;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+  box-shadow: 0px 0px 10px 0px #888888;
+}
+
+.upload-button:hover {
+  box-shadow: 0px 0px 10px 0px #505050;
+  background-color: #f8f8f8;
+}
+
+.menu-ho-upload {
+  box-shadow: 0px 0px 10px 0px #888888;
+  border: none
+}
+
+.menu-ho-upload:hover {
+  box-shadow: 0px 0px 10px 0px #505050;
+  background-color: #f8f8f8;
 }
 </style>
