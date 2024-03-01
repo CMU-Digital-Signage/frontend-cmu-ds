@@ -177,7 +177,7 @@ const handleChangePassword = async () => {
         :class="{ 'p-4': !openSidebar }"
       >
         <div>
-          <div class="flex items-center gap-2 fixed">
+          <div class="flex items-center gap-2 md:fixed">
             <img
               class="w-6"
               alt="cmulogo"
@@ -769,7 +769,6 @@ Button {
   border-bottom: 1px solid #f00;
 }
 .side-bar {
-  overflow: hidden;
   transition: all 300ms ease-in-out;
 }
 

@@ -60,11 +60,11 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="flex flex-row w-screen h-screen font-sf-pro fixed"
+    class="flex flex-row w-screen h-screen md:fixed font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-gradient-to-r from-[#f4feff] to-[#F6FDF7]" />
-    <div class="w-screen h-screen flex flex-col bg-[#ffffff]">
+    <div class="w-full h-full flex flex-col bg-[#ffffff]">
       <NavBar class="bg-gradient-to-r from-[#F6FDF7] to-[#F8FDF7]" />
       <router-view class="bg-[#ffffff] w-full" />
       <div
@@ -100,6 +100,10 @@ onUnmounted(() => {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+
+.rectangle {
+  overflow-y: auto;
 }
 
 router-view {
