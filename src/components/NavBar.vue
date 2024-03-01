@@ -425,6 +425,7 @@ const toggleOverlay = (e: any) => {
       <p>Device</p>
       <div class="ml-auto justify-between">
         <Button
+          v-if="user.isAdmin"
           label="Add Device"
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
           class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
@@ -664,17 +665,7 @@ const toggleOverlay = (e: any) => {
           optionValue="MACaddress"
           class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center hover:bg-gray-200"
         />
-        <Button
-          class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho hover:bg-gray-200"
-          @click="store.state.showUpload = true"
-        >
-          <div
-            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center"
-          >
-            <i class="pi pi-plus text-white"></i>
-          </div>
-          Go Upload
-        </Button>
+        
       </div>
     </ul>
   </div>

@@ -227,6 +227,21 @@ const handleChangePassword = async () => {
         </Button>
       </div>
 
+      <!-- Upload Button -->
+      <div :class="openSidebar == true ? '' : ' flex justify-center '">
+        <Button
+          class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho hover:bg-gray-200"
+          @click="store.state.showUpload = true"
+        >
+          <div
+            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center"
+          >
+            <i class="pi pi-plus text-white"></i>
+          </div>
+          Go Upload
+        </Button>
+      </div>
+
       <div
         v-if="$route.path !== '/searchfile'"
         :class="{
@@ -364,19 +379,19 @@ const handleChangePassword = async () => {
               <span>Management</span>
             </Button>
             <Button
-                class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-                :class="{
-                  'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/admin',
-                }"
-                v-else
-                icon="pi pi-user"
-                link
-                :style="{
-                  'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
-                  color: $route.path === '/admin' ? '#FFFFFF' : '',
-                }"
-              >
-              </Button>
+              class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+              :class="{
+                'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/admin',
+              }"
+              v-else
+              icon="pi pi-user"
+              link
+              :style="{
+                'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
+                color: $route.path === '/admin' ? '#FFFFFF' : '',
+              }"
+            >
+            </Button>
           </router-link>
 
           <router-link to="/emergency">
@@ -394,19 +409,20 @@ const handleChangePassword = async () => {
               <span>Emergency</span>
             </Button>
             <Button
-                class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
-                :class="{
-                  'bg-[#ff5b5b] text-[#FFFFFF]': $route.path === '/emergency',
-                }"
-                v-else
-                icon="pi pi-exclamation-triangle"
-                link
-                :style="{
-                  'background-color': $route.path === '/emergency' ? '#ff5b5b' : '',
-                  color: $route.path === '/emergency' ? '#FFFFFF' : '',
-                }"
-              >
-              </Button>
+              class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
+              :class="{
+                'bg-[#ff5b5b] text-[#FFFFFF]': $route.path === '/emergency',
+              }"
+              v-else
+              icon="pi pi-exclamation-triangle"
+              link
+              :style="{
+                'background-color':
+                  $route.path === '/emergency' ? '#ff5b5b' : '',
+                color: $route.path === '/emergency' ? '#FFFFFF' : '',
+              }"
+            >
+            </Button>
           </router-link>
         </ul>
       </div>
