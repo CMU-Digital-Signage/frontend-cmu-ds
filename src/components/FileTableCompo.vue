@@ -24,15 +24,13 @@ const isOverlayPanelVisible = ref();
 const toggleShowStatus = (e: any) => {
   isOverlayPanelVisible.value.toggle(e);
 };
-const loading = computed({
-  get: () => store.state.loading,
-  set: (val) => (store.state.loading = val),
-});
+const loading = ref(false);
 const props = defineProps({ types: String });
 const filterInput = computed(() => store.state.filterInputPosters);
 const emerPosters = computed(() =>
   store.state.emerPosters.filter((e) => {
     return (
+      e.incidentName !== "banner" &&
       (!filterInput.value.title ||
         e.incidentName
           .toLowerCase()
@@ -53,8 +51,7 @@ const uniquePosters = computed(() =>
           .toLowerCase()
           .includes(filterInput.value.uploader.toLowerCase())) &&
       (!filterInput.value.uploadDate ||
-        dateFormatter(e.createdAt) ===
-          dateFormatter(filterInput.value.uploadDate)) &&
+        e.createdAt === filterInput.value.uploadDate) &&
       (!filterInput.value.status || e.status === filterInput.value.status)
     );
   })
@@ -66,7 +63,7 @@ let delP = null as any;
 
 const del = async (poster: string) => {
   delP = poster;
-  store.state.loading = true;
+  loading.value = true;
   if (props.types == "NP") {
     const res = await deletePoster(delP);
     toast.add({
@@ -84,7 +81,7 @@ const del = async (poster: string) => {
       life: 3000,
     });
   }
-  store.state.loading = false;
+  loading.value = false;
   delP = null;
 };
 </script>

@@ -4,19 +4,13 @@ export default defineComponent({
   name: "PopupUpload",
 });
 </script>
-
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from "vue";
+import { computed, ref, watch } from "vue";
 import store from "@/store";
 import router from "@/router";
 import { addEmergency, addPoster, editEmergency, editPoster } from "@/services";
 import { Poster } from "@/types";
-import {
-  dateFormatter,
-  createUnique,
-  newInitialFormDisplay,
-  rotate,
-} from "@/utils/constant";
+import { newInitialFormDisplay, rotate } from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
@@ -60,7 +54,7 @@ const createScheduleTabs = () => {
 };
 
 watch(
-  () => store.state.formDisplay,
+  () => store.state.formDisplay.length,
   () => {
     scheduleTabs.value = [];
     createScheduleTabs();
@@ -95,6 +89,13 @@ const validateForm = () => {
     (selectedPosterType.value.code === "EP" && !formEmer.value.incidentName)
   ) {
     return "Title Invalid";
+  }
+
+  if (
+    selectedPosterType.value.code === "EP" &&
+    !formEmer.value.emergencyImage
+  ) {
+    return "Image selected not found.";
   }
 
   const invalidSchedule = formDisplay.value.find(
@@ -135,22 +136,6 @@ const handleAddEmergency = async () => {
 const handleAddPoster = async () => {
   const res = await addPoster(formPoster.value, formDisplay.value);
   if (res.ok) {
-    let newPoster = [] as Poster[];
-    formDisplay.value.forEach((e) => {
-      e.time.forEach((time) => {
-        newPoster;
-        e.MACaddress.forEach(async (mac) => {
-          newPoster.push({
-            ...formPoster.value,
-            MACaddress: mac,
-            startDate: e.startDate!,
-            endDate: e.endDate!,
-            startTime: time.startTime!,
-            endTime: time.endTime!,
-          });
-        });
-      });
-    });
     showSecondDialog.value = false;
     store.commit("resetForm");
     toast.add({
@@ -195,22 +180,6 @@ const handleEditEmergency = async () => {
 const handleEditPoster = async () => {
   const res = await editPoster(formPoster.value, formDisplay.value);
   if (res.ok) {
-    let newPoster = [] as Poster[];
-    formDisplay.value.forEach((e) => {
-      e.time.forEach((time) => {
-        newPoster;
-        e.MACaddress.forEach(async (mac) => {
-          newPoster.push({
-            ...formPoster.value,
-            MACaddress: mac,
-            startDate: e.startDate!,
-            endDate: e.endDate!,
-            startTime: time.startTime!,
-            endTime: time.endTime!,
-          });
-        });
-      });
-    });
     showSecondDialog.value = false;
     store.commit("resetForm");
     toast.add({
@@ -347,6 +316,7 @@ const nextStepUpload = () => {
     } else {
       poster = posters.value;
     }
+    const transition = 1;
     let durationTime = [] as any;
     let filterTime = [] as Poster[];
     formDisplay.value.forEach((e, i) => {
@@ -356,12 +326,14 @@ const nextStepUpload = () => {
     formDisplay.value.forEach((form) => {
       const filterDate = poster.filter((all) => {
         return (
-          (dateFormatter(form.startDate) <= dateFormatter(all.startDate) &&
-            dateFormatter(all.startDate) <= dateFormatter(form.endDate)) ||
-          (dateFormatter(form.startDate) <= dateFormatter(all.endDate) &&
-            dateFormatter(all.endDate) <= dateFormatter(form.endDate)) ||
-          (dateFormatter(all.startDate) <= dateFormatter(form.startDate) &&
-            dateFormatter(form.startDate) <= dateFormatter(all.endDate))
+          form.startDate &&
+          form.endDate &&
+          ((form.startDate.getTime() <= all.startDate.getTime() &&
+            all.startDate.getTime() <= form.endDate.getTime()) ||
+            (form.startDate.getTime() <= all.endDate.getTime() &&
+              all.endDate.getTime() <= form.endDate.getTime()) ||
+            (all.startDate.getTime() <= form.startDate.getTime() &&
+              form.startDate.getTime() <= all.endDate.getTime()))
         );
       });
 
@@ -372,7 +344,7 @@ const nextStepUpload = () => {
           form.startDate!.getDate()
         );
         let count = 0;
-        while (dateFormatter(date) <= dateFormatter(form.endDate!)) {
+        while (date <= form.endDate!) {
           form.MACaddress.forEach((e) => {
             durationTime.push({
               MACaddress: e,
@@ -392,12 +364,12 @@ const nextStepUpload = () => {
         }
         filterTime = filterDate.filter((all) => {
           return (
-            (item.startTime!.toTimeString() <= all.startTime.toTimeString() &&
-              all.startTime.toTimeString() <= item.endTime!.toTimeString()) ||
-            (item.startTime!.toTimeString() <= all.endTime.toTimeString() &&
-              all.endTime.toTimeString() <= item.endTime!.toTimeString()) ||
-            (all.startTime.toTimeString() <= item.startTime!.toTimeString() &&
-              item.startTime!.toTimeString() <= all.endTime.toTimeString())
+            (item.startTime!.getTime() <= all.startTime.getTime() &&
+              all.startTime.getTime() <= item.endTime!.getTime()) ||
+            (item.startTime!.getTime() <= all.endTime.getTime() &&
+              all.endTime.getTime() <= item.endTime!.getTime()) ||
+            (all.startTime.getTime() <= item.startTime!.getTime() &&
+              item.startTime!.getTime() <= all.endTime.getTime())
           );
         });
       });
@@ -407,10 +379,10 @@ const nextStepUpload = () => {
       filterTime.forEach((all) => {
         if (
           all.MACaddress === form.MACaddress &&
-          dateFormatter(all.startDate) <= dateFormatter(form.date) &&
-          dateFormatter(form.date) <= dateFormatter(all.endDate)
+          all.startDate.getTime() <= form.date.getTime() &&
+          form.date.getTime() <= all.endDate.getTime()
         ) {
-          form.duration += all.duration * all.image.length;
+          form.duration += (all.duration + transition) * all.image.length;
         }
       });
     });
@@ -427,10 +399,13 @@ const nextStepUpload = () => {
         e.endTime.getHours() * 3600 + e.endTime.getMinutes() * 60;
       const startTimeSec =
         e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
-      const num = (endTimeSec - startTimeSec - e.duration) / e.durationForm;
-      numImage.push(Math.floor(num - num * (1 / e.durationForm)));
+      const num =
+        (endTimeSec - startTimeSec - e.duration) /
+        (e.durationForm + transition);
+      numImage.push(num);
     });
     maxImage.value = Math.min(...numImage);
+    if (!editPosterType.value.type.length) store.state.formPoster.image = [];
     currentState.value = 1;
   }
 };
@@ -515,19 +490,21 @@ const nextStepPreview = () => {
     <Dialog
       v-model:visible="showSecondDialog"
       modal
+      :closable="!loading"
       close-on-escape
       :draggable="false"
-      class="w-[800px] header-popup"
+      class="w-[800px] header-popup z-10"
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10',
         },
         header: {
-          style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;',
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  z-index: 10',
         },
         mask: {
-          style: 'backdrop-filter: blur(2px)',
+          style: 'backdrop-filter: blur(2px); z-index: 10',
         },
       }"
     >
@@ -607,6 +584,9 @@ const nextStepPreview = () => {
         </div>
         <div v-if="currentState === 1">
           <div class="text-center text-red-500">Max Image: {{ maxImage }}</div>
+          <div class="text-center text-blue-500">
+            Current Image: {{ formPoster.image.length }}
+          </div>
           <UploadImage
             :posType="selectedPosterType.code"
             :maxImage="maxImage"
@@ -714,16 +694,19 @@ const nextStepPreview = () => {
           >
             Review
           </label>
+
           <div class="flex flex-inline gap-4 pt-3">
             <Button
               text
               label="Back"
+              :loading="loading"
               :class="'secondaryButton'"
               @click="currentState = 1"
             ></Button>
             <Button
               label="Upload"
               :class="'primaryButton'"
+              :loading="loading"
               @click="uploadPoster"
             ></Button>
           </div>

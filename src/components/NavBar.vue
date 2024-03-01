@@ -6,20 +6,11 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import {
-  computed,
-  onUpdated,
-  reactive,
-  ref,
-  watchEffect,
-  defineProps,
-} from "vue";
+import { computed, reactive, ref, watchEffect, defineProps } from "vue";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { addDevice, addAdmin, searchPoster } from "@/services";
 import {
-  fullMonth,
-  dateFormatter,
   initialFormDevice,
   onUpload,
   statusPoster,
@@ -30,13 +21,13 @@ import { filesize } from "filesize";
 const form = reactive({ ...initialFormDevice });
 const filterInput = computed(() => store.state.filterInputPosters);
 const user = computed(() => store.state.userInfo);
-
 const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
 const posters = computed(() => store.state.posters);
 const searchPosters = computed(() => store.state.searchPosters);
 const chooseFile = ref();
 const showPopup = ref(false);
+const showPopupAddDevice = ref(false);
 const currentViewDate = computed(() => store.state.currentViewDate);
 const viewType = computed(() => store.state.viewType);
 const clickSearch = ref(false);
@@ -46,10 +37,15 @@ const selectDevice = computed({
   get: () => store.state.selectDevice,
   set: (val) => (store.state.selectDevice = val),
 });
-
 const Emer = defineProps({ types: String });
-
 const email = ref<string>("");
+const devicePreview = computed(
+  () =>
+    store.state.devices.filter(
+      (e) => e.MACaddress === router.currentRoute.value.params.mac
+    )[0]
+);
+const panel = ref();
 
 watchEffect(() => {
   if (router.currentRoute.value.path === "/searchfile") {
@@ -120,7 +116,7 @@ const add = async () => {
 
   const res = await addDevice(form);
   if (res.ok) {
-    showPopup.value = false;
+    showPopupAddDevice.value = false;
     toast.add({
       severity: "success",
       summary: "Success",
@@ -164,13 +160,174 @@ const addEmailAdmin = async () => {
 const validateEmail = () => {
   return /^\S+@cmu\.ac\.th$/i.test(email.value);
 };
+
+const toggleOverlay = (e: any) => {
+  panel.value.toggle(e);
+};
 </script>
 
 <template>
   <div
-    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
+    class="min-h-14 px-4 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
   >
     <Toast />
+    <!-- Popup Add Device -->
+    <Dialog
+      v-model:visible="showPopupAddDevice"
+      class="w-[600px] h-auto"
+      modal
+      close-on-escape
+      :draggable="false"
+      @after-hide="resetForm()"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+        },
+        mask: {
+          style: 'backdrop-filter: blur(2px)',
+        },
+      }"
+    >
+      <template #header>
+        <div class="header-popup">Add Device</div>
+      </template>
+      <div class="flex flex-col gap-2">
+        <div class="inline-block">
+          <label for="deviceName" class="text-primary-50 font-medium">
+            Device Name
+          </label>
+          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+        </div>
+        <InputText
+          v-model:model-value="form.deviceName"
+          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+          placeholder="cpe01"
+        ></InputText>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="inline-block">
+          <label for="deviceName" class="text-primary-50 font-medium">
+            MAC Address
+          </label>
+          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+        </div>
+        <Dropdown
+          class="mb-3"
+          v-model:model-value="form.MACaddress"
+          :options="macNotUse"
+          :placeholder="
+            macNotUse.length
+              ? 'Select a MAC Address'
+              : 'All Device has already been added'
+          "
+          :disabled="!macNotUse.length"
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="inline-block">
+          <label for="macAddress" class="text-primary-50 font-medium">
+            Room
+          </label>
+          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+        </div>
+        <InputText
+          v-model:model-value="form.room"
+          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+          placeholder="516"
+        ></InputText>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label for="macAddress" class="text-primary-50 font-medium">
+          Location Description
+        </label>
+        <InputText
+          v-model:model-value="form.description"
+          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+          placeholder="(Optional)"
+        ></InputText>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label for="macAddress" class="text-primary-50 font-medium">
+          Location Photo (Optional)
+        </label>
+        <FileUpload
+          accept="image/*"
+          customUpload
+          :show-upload-button="false"
+          :show-cancel-button="false"
+          :multiple="false"
+          @select="
+            async (e) => {
+              if (e.files[0]) chooseFile = await onUpload(e.files[0]);
+              else errorSelectFile();
+            }
+          "
+        >
+          <template #header="{ chooseCallback, clearCallback }">
+            <div class="flex items-center">
+              <Button
+                @click="
+                  clearCallback();
+                  chooseFile = null;
+                  chooseCallback();
+                "
+                icon="pi pi-plus"
+                label="Choose File"
+                rounded
+                outlined
+              ></Button>
+            </div>
+          </template>
+          <template #content="{ files, removeFileCallback }">
+            <div
+              v-if="files[0] && chooseFile"
+              class="flex justify-between items-center w-full"
+            >
+              <img :alt="files[0].name" :src="chooseFile" class="w-2/4 h-2/4" />
+              <div class="w-fit">{{ filesize(files[0].size) }}</div>
+              <Button
+                icon="pi pi-times"
+                @click="removeFileCallback(0)"
+                outlined
+                rounded
+                severity="danger"
+              />
+            </div>
+            <div v-else></div>
+          </template>
+          <template #empty>
+            <div class="flex flex-col text-center items-center">
+              <i
+                class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
+              />
+              <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
+            </div>
+          </template>
+        </FileUpload>
+      </div>
+      <div class="flex flex-row gap-4 pt-3">
+        <Button
+          label="Cancel"
+          text
+          @click="
+            showPopupAddDevice = false;
+            resetForm();
+          "
+          :class="'secondaryButton'"
+        ></Button>
+        <Button
+          label="Add"
+          :class="'primaryButton'"
+          @click="add"
+          :disabled="!macNotUse.length"
+        ></Button>
+      </div>
+    </Dialog>
     <!-- "Management" -->
     <ul v-if="$route.path === '/admin'">
       <p>Management</p>
@@ -245,177 +402,9 @@ const validateEmail = () => {
           label="Add Device"
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
           class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white hover:bg-gray-200"
-          @click="showPopup = true"
+          @click="showPopupAddDevice = true"
         >
         </Button>
-        <Dialog
-          v-model:visible="showPopup"
-          class="w-[600px] h-auto"
-          modal
-          close-on-escape
-          :draggable="false"
-          @after-hide="resetForm()"
-          :pt="{
-            content: {
-              style:
-                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
-            },
-            header: {
-              style:
-                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
-            },
-            mask: {
-              style: 'backdrop-filter: blur(2px)',
-            },
-          }"
-        >
-          <template #header>
-            <div class="header-popup">Add Device</div>
-          </template>
-          <div class="flex flex-col gap-2">
-            <div class="inline-block">
-              <label for="deviceName" class="text-primary-50 font-medium">
-                Device Name
-              </label>
-              <label for="deviceName" class="text-[#FF0000] font-medium">
-                *
-              </label>
-            </div>
-            <InputText
-              v-model:model-value="form.deviceName"
-              class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
-              placeholder="cpe01"
-            ></InputText>
-          </div>
-          <div class="flex flex-col gap-2">
-            <div class="inline-block">
-              <label for="deviceName" class="text-primary-50 font-medium">
-                MAC Address
-              </label>
-              <label for="deviceName" class="text-[#FF0000] font-medium">
-                *
-              </label>
-            </div>
-            <Dropdown
-              class="mb-3"
-              v-model:model-value="form.MACaddress"
-              :options="macNotUse"
-              :placeholder="
-                macNotUse.length
-                  ? 'Select a MAC Address'
-                  : 'All Device has already been added'
-              "
-              :disabled="!macNotUse.length"
-            />
-          </div>
-          <div class="flex flex-col gap-2">
-            <div class="inline-block">
-              <label for="macAddress" class="text-primary-50 font-medium">
-                Room
-              </label>
-              <label for="deviceName" class="text-[#FF0000] font-medium">
-                *
-              </label>
-            </div>
-            <InputText
-              v-model:model-value="form.room"
-              class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
-              placeholder="516"
-            ></InputText>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label for="macAddress" class="text-primary-50 font-medium">
-              Location Description
-            </label>
-            <InputText
-              v-model:model-value="form.description"
-              class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
-              placeholder="(Optional)"
-            ></InputText>
-          </div>
-          <div class="flex flex-col gap-1">
-            <label for="macAddress" class="text-primary-50 font-medium">
-              Location Photo (Optional)
-            </label>
-            <FileUpload
-              accept="image/*"
-              customUpload
-              :show-upload-button="false"
-              :show-cancel-button="false"
-              :multiple="false"
-              @select="
-                async (e) => {
-                  if (e.files[0]) chooseFile = await onUpload(e);
-                  else errorSelectFile();
-                }
-              "
-            >
-              <template #header="{ chooseCallback, clearCallback }">
-                <div class="flex items-center">
-                  <Button
-                    @click="
-                      clearCallback();
-                      chooseFile = null;
-                      chooseCallback();
-                    "
-                    icon="pi pi-plus"
-                    label="Choose File"
-                    rounded
-                    outlined
-                  ></Button>
-                </div>
-              </template>
-              <template #content="{ files, removeFileCallback }">
-                <div
-                  v-if="files[0] && chooseFile"
-                  class="flex justify-between items-center w-full"
-                >
-                  <img
-                    :alt="files[0].name"
-                    :src="chooseFile"
-                    class="w-2/4 h-2/4"
-                  />
-                  <div class="w-fit">{{ filesize(files[0].size) }}</div>
-                  <Button
-                    icon="pi pi-times"
-                    @click="removeFileCallback(0)"
-                    outlined
-                    rounded
-                    severity="danger"
-                  />
-                </div>
-                <div v-else></div>
-              </template>
-              <template #empty>
-                <div class="flex flex-col text-center items-center">
-                  <i
-                    class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
-                  />
-                  <p class="mt-4 mb-0">
-                    Drag and drop files to here to upload.
-                  </p>
-                </div>
-              </template>
-            </FileUpload>
-          </div>
-          <div class="flex flex-row gap-4 pt-3">
-            <Button
-              label="Cancel"
-              text
-              @click="
-                showPopup = false;
-                resetForm();
-              "
-              :class="'secondaryButton'"
-            ></Button>
-            <Button
-              label="Add"
-              :class="'primaryButton'"
-              @click="add"
-              :disabled="!macNotUse.length"
-            ></Button>
-          </div>
-        </Dialog>
       </div>
     </ul>
 
@@ -428,22 +417,95 @@ const validateEmail = () => {
         >
         </Button>
       </router-link>
-
       <p class="text-[#FF0000]">Emergency Activation</p>
     </ul>
 
     <!-- "Device" -->
     <ul v-if="$route.path === '/deviceManage'">
       <p>Device</p>
+      <div class="ml-auto justify-between">
+        <Button
+          v-if="user.isAdmin"
+          label="Add Device"
+          icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
+          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
+          @click="showPopupAddDevice = true"
+        >
+        </Button>
+      </div>
     </ul>
+
     <!-- Preview -->
-    <ul v-if="$route.path.includes('/preview')">
-      <p>
-        {{
-          devices.filter((e) => e.MACaddress === $route.params.mac)[0]
-            .deviceName
-        }}
-      </p>
+    <ul
+      v-if="$route.path.includes('/preview') && devicePreview"
+      class="justify-between"
+    >
+      <div class="inline-flex gap-3 items-center justify-center">
+        <p>{{ devicePreview.deviceName }}</p>
+        <i
+          class="pi pi-info-circle cursor-pointer"
+          @mouseover="toggleOverlay"
+          @mouseleave="toggleOverlay"
+        />
+        <OverlayPanel ref="panel" class="w-fit h-fit max-w-md max-h-max">
+          <table>
+            <tr>
+              <td>MAC Address</td>
+              <td>{{ devicePreview.MACaddress }}</td>
+            </tr>
+            <tr>
+              <td>Room</td>
+              <td>{{ devicePreview.room }}</td>
+            </tr>
+            <tr>
+              <td>Description</td>
+              <td>{{ devicePreview.description || "-" }}</td>
+            </tr>
+          </table>
+        </OverlayPanel>
+      </div>
+      <div class="inline-flex gap-3 items-center justify-center">
+        <label class="text-[14px] lg:text-[16px]">Date</label>
+        <Calendar
+          v-model="filterInput.date"
+          :manualInput="false"
+          showIcon
+          iconDisplay="input"
+          :minDate="new Date(new Date().setHours(0, 0, 0, 0))"
+          dateFormat="dd M yy"
+          inputClass="text-[13px] lg:text-[16px]"
+          class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
+        />
+
+        <label class="text-[14px] lg:text-[16px]">Time</label>
+        <Calendar
+          v-model="filterInput.time"
+          showIcon
+          iconDisplay="input"
+          timeOnly
+          :stepMinute="30"
+          inputClass="text-[13px] lg:text-[16px]"
+          class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
+        >
+          <template #inputicon="{ clickCallback }">
+            <i class="pi pi-clock" @click="clickCallback" />
+          </template>
+        </Calendar>
+        <Button
+          label="Now"
+          class="text-green-800 items-center rounded-lg border-green-600 max-h-fit px-3 py-1 border-2 font-semibold bg-green-300 hover:bg-green-400"
+          @click="
+            filterInput.date = new Date(new Date().setHours(0, 0, 0, 0));
+            filterInput.time = new Date(
+              1970,
+              0,
+              1,
+              new Date().getHours(),
+              new Date().getMinutes()
+            );
+          "
+        />
+      </div>
     </ul>
 
     <!-- "File Manage" -->
@@ -482,7 +544,6 @@ const validateEmail = () => {
           showIcon
           iconDisplay="input"
           inputId="icondisplay"
-          :showOnFocus="false"
           dateFormat="dd M yy"
           inputClass="text-[13px] lg:text-[16px]"
           class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
@@ -567,7 +628,7 @@ const validateEmail = () => {
               xmlns="http://www.w3.org/2000/svg"
               width="32"
               height="32"
-              viewBox="0 0 30 30"
+              viewBox="2 -1 32 32"
               fill="none"
             >
               <path
@@ -600,7 +661,7 @@ const validateEmail = () => {
       <div v-if="$route.path === '/'" class="inline-flex gap-3 items-center">
         <button @click="goToSearch">
           <i
-            class="pi pi-search text-[#878787] hover:bg-[#e4e3e3] p-2 rounded-full mr-2"
+            class="pi pi-search text-[#626262] text-xl hover:bg-[#e4e3e3] p-2 rounded-full mr-2"
           ></i>
         </button>
         <Dropdown
@@ -610,17 +671,6 @@ const validateEmail = () => {
           optionValue="MACaddress"
           class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center hover:bg-gray-200"
         />
-        <Button
-          class="flex bg-while p-2 bg-white w-38 py-1.5 gap-2 items-center rounded-lg border-[#A3A3A3] text-black border-opacity-30 border-2 font-semibold bold-ho hover:bg-gray-200"
-          @click="store.state.showUpload = true"
-        >
-          <div
-            class="h-6 w-6 rounded-full bg-[#039BE5] flex items-center justify-center"
-          >
-            <i class="pi pi-plus text-white"></i>
-          </div>
-          Go Upload
-        </Button>
       </div>
     </ul>
   </div>
@@ -637,6 +687,10 @@ li {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+td:first-child {
+  padding-right: 30px;
 }
 
 .secondaryButton {

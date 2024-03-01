@@ -1,64 +1,79 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import store from "@/store";
-import { turnOffDevice, turnOnDevice } from "@/services";
-
 export default defineComponent({
   name: "DeviceBlock",
 });
 </script>
 <script setup lang="ts">
+import store from "@/store";
 import { computed, toRefs, defineProps } from "vue";
 import { Device } from "@/types";
+import { turnOffDevice, turnOnDevice } from "@/services";
 
 const props = defineProps<{ device: Device }>();
 const { device } = toRefs(props);
 const devices = computed(() => store.state.devices);
+
+const changeStatusDevice = async () => {
+  if (device.value.status) {
+    const res = await turnOffDevice(device.value.MACaddress!);
+  } else {
+    const res = await turnOnDevice(device.value.MACaddress!);
+  }
+};
 </script>
 
 <template>
-  <div style="position: relative">
-    <div>
-      <Button
-        @click="
-          $router.push(`/preview/${device.MACaddress}`);
-          store.state.openSidebar = true;
-        "
-        class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300"
-        :disabled="device.status == false"
-      >
-        <i
+  <div class="relative inline-flex">
+    <Button
+      @click="
+        $router.push(`/preview/${device.MACaddress}`);
+        store.state.openSidebar = true;
+      "
+      class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300"
+      :disabled="device.status == false"
+    >
+      <i
+        :class="[
+          device.status ? 'text-[#62ccca]' : 'text-gray-400',
+          'pi pi-desktop',
+          'text-[70px]',
+        ]"
+      ></i>
+      <div class="mr-5">
+        <p
           :class="[
-            device.status ? 'text-[#62ccca]' : 'text-gray-400',
-            'pi pi-desktop',
-            'text-[70px]',
+            device.status ? 'text-black' : 'text-gray-500',
+            'font-bold',
+            'text-[16px]',
           ]"
-        ></i>
-        <div class="mr-5">
-          <p
-            :class="[
-              device.status ? 'text-black' : 'text-gray-500',
-              'font-bold',
-              'text-[16px]',
-            ]"
-          >
-            {{ device.deviceName }}
-          </p>
-          <p :class="[device.status ? 'text-black' : 'text-gray-500']">
-            Room: {{ device.room }}
-          </p>
-          <p class="text-gray-500" v-if="device.status == false">Off</p>
-          <p class="text-[#62ccca]" v-if="device.status == true">On</p>
-        </div>
-      </Button>
+        >
+          {{ device.deviceName }}
+        </p>
+        <p :class="[device.status ? 'text-black' : 'text-gray-500']">
+          Room: {{ device.room }}
+        </p>
+        <p class="text-gray-500" v-if="device.status == false">Off</p>
+        <p class="text-[#62ccca]" v-if="device.status == true">On</p>
+      </div>
+    </Button>
+    <div
+      v-if="store.state.userInfo.isAdmin"
+      class="flex absolute bottom-1 right-1"
+    >
+      <Button
+        class="w-9 h-9 border-0"
+        :class="[device.status ? 'bg-[#62ccca]' : 'bg-[#b3b2b2]']"
+        icon="pi pi-power-off"
+        rounded
+        @click="changeStatusDevice"
+      ></Button>
     </div>
   </div>
 </template>
 
 <style scope>
 .button1 {
-  margin-top: 3px;
-  margin-bottom: 10px;
   border-radius: 8px;
   flex-wrap: wrap;
   gap: 25px;

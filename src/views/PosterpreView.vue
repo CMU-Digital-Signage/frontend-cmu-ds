@@ -13,45 +13,66 @@ import { Poster } from "@/types";
 
 const route = useRoute();
 const mac = route.params.mac as string;
-const currentDate = new Date();
+const filterDate = computed(() => store.state.filterInputPosters.date);
+const filterTime = computed(() => store.state.filterInputPosters.time);
 const posters = computed(() =>
-  store.state.posters.filter(
-    (e) =>
-      e.MACaddress == mac &&
-      dateFormatter(currentDate) >= dateFormatter(e.startDate) &&
-      dateFormatter(currentDate) <= dateFormatter(e.endDate) &&
-      new Date().toTimeString() >= e.startTime.toTimeString() &&
-      new Date().toTimeString() <= e.endTime.toTimeString()
-  )
+  store.state.posters.filter((e) => {
+    return (
+      e.MACaddress === mac &&
+      e.startDate.getTime() <= filterDate.value.getTime() &&
+      filterDate.value.getTime() <= e.endDate.getTime() &&
+      e.startTime.getTime() <= filterTime.value.getTime() &&
+      filterTime.value.getTime() <= e.endTime.getTime()
+    );
+  })
 );
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
 const selectPoster = ref<Poster>();
-const selectTitle = ref<any>([]);
 const selectImage = ref("");
 let currentindex = 0;
 
 watch(selectPoster, () => {
   if (!selectPoster.value) {
-    selectTitle.value = "";
     selectImage.value = "";
-    currentindex = 0;
+  } else {
+    selectImage.value = selectPoster.value.image[0].image;
+  }
+  currentindex = 0;
+});
+
+watch([filterDate, filterTime], () => {
+
+  console.log(filterDate.value, filterTime.value);
+  
+  if (stopLoop.value) stopLoop.value();
+  image.value.key = "";
+  image.value.image = "";
+
+  if (
+    posters.value.length &&
+    (dateFormatter(filterDate.value) !== dateFormatter(new Date()) ||
+      filterTime.value.getHours() !== new Date().getHours() ||
+      filterTime.value.getMinutes() !== new Date().getMinutes())
+  ) {
+    selectPoster.value = posters.value[0];
+    selectImage.value = selectPoster.value.image[0].image;
+  } else {
+    selectPoster.value = undefined;
+    selectImage.value = "";
   }
 });
 
 watch(
-  [selectTitle, posters],
+  posters,
   () => {
     if (
       !posters.value.find((e) => e.posterId === selectPoster.value?.posterId)
     ) {
       selectPoster.value = undefined;
-      selectTitle.value = "";
       selectImage.value = "";
-    } else {
-      selectImage.value = selectTitle.value[0].image;
+      currentindex = 0;
     }
-    currentindex = 0;
   },
   { deep: true }
 );
@@ -63,10 +84,16 @@ onUnmounted(() => {
 });
 
 const changeImage = (index: number) => {
-  if (selectTitle.value.length > 1) {
-    const newIndex = (currentindex + index) % selectTitle.value.length;
+  if (selectPoster.value && selectPoster.value.image.length > 1) {
+    const newIndex = (currentindex + index) % selectPoster.value.image.length;
     currentindex = newIndex;
-    selectImage.value = selectTitle.value[newIndex].image;
+    selectImage.value = selectPoster.value.image[newIndex].image;
+  }
+};
+
+const rowStyle = (rowData: any) => {
+  if (rowData === selectPoster.value) {
+    return { "background-color": "#caf1d8" };
   }
 };
 </script>
@@ -74,12 +101,36 @@ const changeImage = (index: number) => {
 <template>
   <div class="rectangle">
     <PopupUpload />
-    <div class="flex flex-1 flex-wrap py-[25px] gap-6">
+    <div class="flex flex-1 flex-wrap h-full gap-3">
+      <div class="flex flex-1 w-full md:w-1/2">
+        <DataTable
+          scrollDirection="vertical"
+          scrollable
+          :scrollHeight="calculateScreenHeight()"
+          class="text-[14px] lg:text-[16px] w-full"
+          v-model:selection="selectPoster"
+          :value="posters"
+          selectionMode="single"
+          :rowStyle="rowStyle"
+        >
+          <Column header="No." class="w-1/3">
+            <template #body="{ index }">
+              {{ index + 1 }}
+            </template>
+          </Column>
+          <Column field="title" header="Title" class="w-1/3"></Column>
+          <Column
+            :field="(e) => (e.duration * e.image.length).toString()"
+            header="Display duration"
+            class="w-1/3"
+          ></Column>
+        </DataTable>
+      </div>
       <div
-        class="flex flex-1 items-center justify-center w-full lg:w-1/2 rounded-xl border-[3px] border-[#eaeaea] bg-[#ffffff]"
+        class="flex flex-1 w-full md:w-1/2 h-full items-center justify-center rounded-xl border-[3px] border-[#eaeaea] bg-[#ffffff]"
       >
         <button
-          v-if="selectTitle.length > 1"
+          v-if="selectPoster && selectPoster.image.length > 1"
           class="pi pi-angle-left text-[50px] mr-5"
           @click="changeImage(-1)"
           :disabled="currentindex == 0"
@@ -90,7 +141,7 @@ const changeImage = (index: number) => {
           "
         />
         <div
-          class="flex justify-center items-center bg-black"
+          class="flex justify-center items-center"
           :style="{
             width: `${2160 / 6.5}px`,
             height: `${3840 / 6.5}px`,
@@ -124,66 +175,24 @@ const changeImage = (index: number) => {
             />
           </transition>
           <button
-            v-else
-            class="pi pi-play text-[#808080] text-5xl"
+            v-else-if="posters.length"
+            class="pi pi-play text-[#808080] text-5xl rounded-full p-2 bg-white hover:bg-gray-200"
             @click="stopLoop = loopPoster(posters)"
           />
+          <div v-else>No Content to Preview.</div>
         </div>
         <button
-          v-if="selectTitle.length > 1"
+          v-if="selectPoster && selectPoster.image.length > 1"
           class="pi pi-angle-right text-[50px] ml-5"
           @click="changeImage(1)"
-          :disabled="currentindex == selectTitle.length - 1"
+          :disabled="currentindex == selectPoster.image.length - 1"
           :class="
-            currentindex == selectTitle.length - 1
+            currentindex == selectPoster.image.length - 1
               ? 'text-gray-400 hover:bg-white'
               : 'text-black hover:bg-gray-300 rounded-xl'
           "
         />
       </div>
-      <DataTable
-        scrollDirection="vertical"
-        scrollable
-        :scrollHeight="calculateScreenHeight()"
-        class="text-[14px] lg:text-[16px]"
-        :value="posters"
-        tableStyle="min-width: 36rem"
-      >
-        <Column header="No." class="w-1/3">
-          <template #body="{ index }">
-            {{ index + 1 }}
-          </template>
-        </Column>
-        <Column
-          field="title"
-          header="Title"
-          class="w-1/3"
-          :bodyClass="'hover:bg-gray-200'"
-          ><template #body="rowData">
-            <div
-              style="cursor: pointer"
-              @click="
-                () => {
-                  selectTitle = rowData.data.image;
-                  selectPoster = rowData.data;
-                  if (stopLoop) {
-                    stopLoop();
-                    image.key = '';
-                    image.image = '';
-                  }
-                }
-              "
-            >
-              {{ rowData.data.title }}
-            </div>
-          </template>
-        </Column>
-        <Column
-          :field="(e) => (e.duration * e.image.length).toString()"
-          header="Display duration"
-          class="w-1/3"
-        ></Column>
-      </DataTable>
     </div>
   </div>
   <NavbarBelow v-model="selectPoster" />
@@ -192,8 +201,7 @@ const changeImage = (index: number) => {
 <style scoped>
 .rectangle {
   flex: 1 1;
-  padding-inline: 1.5rem;
-  overflow-y: auto;
-  overflow-x: hidden;
+  padding: 0.75rem;
+  overflow: hidden;
 }
 </style>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Emergency } from "@/types";
+import store from "@/store";
 
 const prefix = "/poster";
 
@@ -38,6 +39,11 @@ export async function addEmergency(data: Emergency) {
       }
     );
 
+    store.state.emerPosters.push({
+      ...res.data.emergency,
+      status: res.data.emergency.status ? "Active" : "Inactive",
+    });
+
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -61,6 +67,17 @@ export async function editEmergency(incidentName: string, data: Emergency) {
       }
     );
 
+    const index = store.state.emerPosters.findIndex(
+      (e) => e.incidentName === incidentName
+    );
+    if (index !== -1) {
+      store.state.emerPosters[index] = {
+        ...store.state.devices[index],
+        ...res.data.emergency,
+        status: res.data.emergency.status ? "Active" : "Inactive",
+      };
+    }
+
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -81,6 +98,10 @@ export async function deleteEmergency(incidentName: string) {
         params: { incidentName },
         withCredentials: true,
       }
+    );
+
+    store.state.emerPosters = store.state.emerPosters.filter(
+      (e) => e.incidentName !== incidentName
     );
 
     return res.data;
@@ -111,6 +132,11 @@ export async function activateEmergency(
       }
     );
 
+    const index = store.state.emerPosters.findIndex(
+      (e) => e.incidentName === incidentName
+    );
+    if (index !== -1) store.state.emerPosters[index].status = "Active";
+
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -132,6 +158,11 @@ export async function deactivateEmergency(incidentName: string) {
         withCredentials: true,
       }
     );
+
+    const index = store.state.emerPosters.findIndex(
+      (e) => e.incidentName === incidentName
+    );
+    if (index !== -1) store.state.emerPosters[index].status = "Inactive";
 
     return res.data;
   } catch (err: any) {

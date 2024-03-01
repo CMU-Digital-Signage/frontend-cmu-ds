@@ -22,6 +22,7 @@ const emerPosters = computed(() => store.state.emerPosters);
 const selectEmer = ref({ incidentName: "", emergencyImage: "" } as Emergency);
 const password = ref("");
 const toast = useToast();
+const loading = ref(false);
 
 const getTextPoster = (e: any) => {
   selectEmer.value.emergencyImage = e.target.value;
@@ -80,13 +81,29 @@ watch(
   },
   { deep: true }
 );
+
 const handleEmergency = async () => {
+  loading.value = true;
   if (selectEmer.value.status === "Active") {
-    await deactivateEmergency(selectEmer.value.incidentName);
+    const res = await deactivateEmergency(selectEmer.value.incidentName);
+    if (res.ok) {
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: `${selectEmer.value.incidentName} has been Deactivate.`,
+        life: 3000,
+      });
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: res.message,
+        life: 3000,
+      });
+    }
   } else {
     let res;
     if (selectEmer.value.incidentName === "banner") {
-      selectEmer.value.status = true;
       res = await editEmergency("banner", selectEmer.value);
     } else {
       res = await activateEmergency(
@@ -110,6 +127,7 @@ const handleEmergency = async () => {
       });
     }
   }
+  loading.value = false;
 };
 </script>
 
@@ -117,21 +135,19 @@ const handleEmergency = async () => {
   <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
     <Toast />
     <div
-      class="py-[25px] px-[30px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+      class="py-[20px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div>
         <div
-          class="flex flex-row mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center border-red-500 border-[1px]"
+          class="flex flex-row px-4 py-2 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
         >
-          <div
-            class="w-8 h-8 ml-5 flex items-center justify-center rounded-full"
-          >
+          <div class="w-8 h-8 flex items-center justify-center rounded-full">
             <i
               class="pi pi-exclamation-triangle mb-1 text-red-500 text-3xl"
             ></i>
           </div>
 
-          <div class="md:text-[16px] text-[14px]">
+          <div class="md:text-[16px] text-[13px]">
             <p class="font-bold text-red-500">
               <span>Activating the Emergency Poster</span>
             </p>
@@ -226,6 +242,7 @@ const handleEmergency = async () => {
                   e.incidentName !== selectEmer.incidentName
               )
             "
+            :loading="loading"
             :label="selectEmer.status === 'Active' ? 'Deactivate' : 'Activate'"
             @click="handleEmergency()"
           ></Button>
@@ -239,7 +256,10 @@ const handleEmergency = async () => {
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
       >
-        <div class="w-11/12 h-full flex items-center justify-center">
+        <div
+          v-if="selectEmer.incidentName"
+          class="w-11/12 h-full flex items-center justify-center"
+        >
           <img
             v-if="selectEmer.incidentName !== 'banner'"
             class="m-auto w-full transition-opacity rotated-image"
@@ -250,6 +270,7 @@ const handleEmergency = async () => {
             <TextPoster :text="selectEmer.emergencyImage" />
           </div>
         </div>
+        <div v-else>Preview Poster</div>
       </div>
     </div>
   </div>

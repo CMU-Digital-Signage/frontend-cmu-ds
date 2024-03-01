@@ -18,9 +18,12 @@ watch(
   () => {
     if (
       formDisplay.value.startDate &&
-      formDisplay.value.startDate > formDisplay.value.endDate!
+      formDisplay.value.endDate &&
+      formDisplay.value.startDate.getTime() >
+        formDisplay.value.endDate.getTime()
     ) {
-      store.state.formDisplay[index.value].endDate = undefined;
+      store.state.formDisplay[index.value].endDate =
+        formDisplay.value.startDate;
     }
   }
 );
@@ -29,8 +32,8 @@ const changeStartTime = (i: number) => {
   if (
     formDisplay.value.time[i].startTime !== undefined &&
     formDisplay.value.time[i].endTime &&
-    formDisplay.value.time[i].startTime!.toTimeString() >=
-      formDisplay.value.time[i].endTime!.toTimeString()
+    formDisplay.value.time[i].startTime!.getTime() >=
+      formDisplay.value.time[i].endTime!.getTime()
   ) {
     store.state.formDisplay[index.value].time[i].endTime = new Date(
       formDisplay.value.time[i].startTime!.getFullYear(),
@@ -48,8 +51,8 @@ const changeEndTime = (i: number) => {
   if (
     formDisplay.value.time[i].endTime !== undefined &&
     formDisplay.value.time[i + 1] &&
-    formDisplay.value.time[i].endTime!.toTimeString() >=
-      formDisplay.value.time[i + 1].startTime!.toTimeString()
+    formDisplay.value.time[i].endTime!.getTime() >=
+      formDisplay.value.time[i + 1].startTime!.getTime()
   ) {
     store.state.formDisplay[index.value].time[i + 1].startTime = new Date(
       formDisplay.value.time[i].endTime!.getFullYear(),
@@ -71,14 +74,32 @@ const addTime = () => {
   const newEndTime = new Date(newStartTime);
   newEndTime?.setHours(newEndTime.getHours() + 1);
 
-  store.state.formDisplay[index.value].time.push({
-    startTime: newStartTime,
-    endTime: newEndTime,
-  });
+  if (newStartTime.getHours() !== 0) {
+    store.state.formDisplay[index.value].time.push({
+      startTime: newStartTime,
+      endTime: newEndTime,
+    });
+  }
 };
 
 const deleteTime = (i: number) => {
   store.state.formDisplay[index.value].time.splice(i, 1);
+};
+
+const maxStartDate = () => {
+  if (store.state.formDisplay[index.value + 1]) {
+    const max = new Date(store.state.formDisplay[index.value + 1].startDate!);
+    max.setDate(max.getDate() - 1);
+    return max;
+  }
+};
+
+const maxEndDate = () => {
+  if (store.state.formDisplay[index.value + 1]) {
+    const max = new Date(store.state.formDisplay[index.value + 1].startDate!);
+    max.setDate(max.getDate() - 1);
+    return max;
+  }
 };
 
 const minStartDate = () => {
@@ -210,6 +231,7 @@ const minEndTime = (i: number) => {
                 inputId="icondisplay"
                 dateFormat="dd M yy"
                 :minDate="minStartDate()"
+                :maxDate="maxStartDate()"
                 @date-select="formDisplay.startDate?.setHours(23, 59, 59, 0)"
                 class="flex justify-start w-[200px] ml-7"
               />
@@ -222,6 +244,7 @@ const minEndTime = (i: number) => {
                 dateFormat="dd M yy"
                 :disabled="!formDisplay.startDate"
                 :minDate="formDisplay.startDate"
+                :maxDate="maxEndDate()"
                 @date-select="formDisplay.endDate?.setHours(23, 59, 59, 0)"
                 class="flex justify-start w-[200px]"
               />

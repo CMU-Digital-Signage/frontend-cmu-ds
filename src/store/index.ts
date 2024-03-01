@@ -30,6 +30,14 @@ export default createStore({
       uploader: "",
       uploadDate: undefined as Date | undefined,
       status: "" as string,
+      date: new Date(new Date().setHours(0, 0, 0, 0)) as Date,
+      time: new Date(
+        1970,
+        0,
+        1,
+        new Date().getHours(),
+        new Date().getMinutes()
+      ) as Date,
     },
     filterDevice: <(string | null)[]>[],
     formPoster: <Poster>{},
@@ -57,6 +65,14 @@ export default createStore({
         uploader: "",
         uploadDate: undefined,
         status: "",
+        date: new Date(new Date().setHours(0, 0, 0, 0)),
+        time: new Date(
+          1970,
+          0,
+          1,
+          new Date().getHours(),
+          new Date().getMinutes()
+        ),
       };
     },
     setAllTime(state, index) {

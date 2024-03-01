@@ -50,7 +50,7 @@ watch([admin, devices], () => {
 .rectangle {
   width: 100%;
   height: 100%;
-  padding-inline: 1.5rem;
+  padding-inline: 0.75rem;
   overflow: hidden;
 }
 

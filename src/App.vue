@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import store from "./store";
-import { computed, onBeforeUnmount, onMounted, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, onUnmounted, watch } from "vue";
 import SideBar from "./components/SideBar.vue";
 import NavBar from "./components/NavBar.vue";
 import router from "./router";
@@ -10,44 +10,51 @@ import { color, createUnique, setFieldPoster } from "./utils/constant";
 import { Device, Emergency } from "./types";
 
 const user = computed(() => store.state.userInfo);
+let interval: any = null;
+
+const fetchData = async () => {
+  const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
+    getAllUser(),
+    getDevice(),
+    getPoster(),
+    getEmergency(),
+  ]);
+  store.state.allUser = allUserRes.user;
+
+  store.state.macNotUse = deviceRes.data
+    .filter((e: any) => !e.deviceName)
+    .map((e: any) => e.MACaddress);
+
+  const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
+  devices.map((e, i) => (e.color = color[i]));
+  store.state.devices = devices;
+  store.state.selectDevice = devices[0].MACaddress || "";
+  store.state.filterDevice = devices.map((e) => e.MACaddress);
+
+  setFieldPoster(posterRes.poster);
+  store.state.posters = posterRes.poster;
+  createUnique(store.state.posters);
+
+  emerRes.emergency.forEach(
+    (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+  );
+  store.state.emerPosters = emerRes.emergency;
+};
 
 onMounted(() => {
   setupSocket();
+  // interval = setInterval(() => {
+  //   fetchData();
+  // }, 20000);
 });
 
 watch(user, async () => {
-  if (user.value.id) {
-    const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
-      getAllUser(),
-      getDevice(),
-      getPoster(),
-      getEmergency(),
-    ]);
-    store.state.allUser = allUserRes.user;
-
-    store.state.macNotUse = deviceRes.data
-      .filter((e: any) => !e.deviceName)
-      .map((e: any) => e.MACaddress);
-
-    const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
-    devices.map((e, i) => (e.color = color[i]));
-    store.state.devices = devices;
-    store.state.selectDevice = devices[0].MACaddress || "";
-    store.state.filterDevice = devices.map((e) => e.MACaddress);
-
-    setFieldPoster(posterRes.poster);
-    store.state.posters = posterRes.poster;
-    createUnique(store.state.posters);
-
-    emerRes.emergency.forEach(
-      (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
-    );
-    store.state.emerPosters = emerRes.emergency;
-  }
+  if (user.value.id) fetchData();
 });
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
   socket.disconnect();
+  clearInterval(interval);
 });
 </script>
 
@@ -60,10 +67,23 @@ onBeforeUnmount(() => {
     <div class="w-full h-full flex flex-col bg-[#ffffff]">
       <NavBar class="bg-gradient-to-r from-[#F6FDF7] to-[#F8FDF7]" />
       <router-view class="bg-[#ffffff] w-full" />
+      <div
+        class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none"
+      >
+        <span class="pb-3 text-[9px] font-light text-stone-400"
+          ><span class="pb-3  font-normal text-stone-600"
+            >© 2024 Department of Computer Engineering </span
+          >, Chiang Mai University by 404 Brain not Found Group
+          <span class="pb-3  font-normal text-stone-600">
+            | All Rights Reserved | Powered by
+          </span>
+          CPE #30</span
+        >
+      </div>
     </div>
   </div>
   <div v-else>
-    <div class="w-screen flex flex-col h-full bg-[#fafafa] md:fixed">
+    <div class="w-screen flex flex-col h-full bg-[#ffffff] md:fixed">
       <NavBar
         v-if="$route.path === '/emergency'"
         class="bg-white"

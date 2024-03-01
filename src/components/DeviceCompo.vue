@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Device } from "@/types";
 export default defineComponent({
   name: "DeviceCompo",
 });
@@ -14,7 +13,7 @@ import {
   turnOffDevice,
   turnOnDevice,
 } from "@/services";
-import { filesize } from "filesize";
+import { Device } from "@/types";
 import {
   initialFormDevice,
   onUpload,
@@ -24,11 +23,9 @@ import { useToast } from "primevue/usetoast";
 
 const form = reactive({ ...initialFormDevice });
 const device = computed(() => store.state.devices);
-const chooseFile = ref();
-const oldFile = ref<File>();
-const notChoose = ref(true);
 const showPopup = ref(false);
 const toast = useToast();
+const loading = ref(false);
 
 const errorSelectFile = () => {
   toast.add({
@@ -39,23 +36,12 @@ const errorSelectFile = () => {
   });
 };
 
-const setForm = (data: Device) => {
-  Object.assign(form, data);
-  if (form.location) {
-    oldFile.value = new File([form.location], "locationImage");
-  } else notChoose.value = false;
-};
-
-const resetForm = () => {
-  Object.assign(form, initialFormDevice);
-  notChoose.value = true;
-};
-
 const toggleOverlay = (e: any, panel: any) => {
   panel.toggle(e);
 };
 
 const edit = async () => {
+  loading.value = true;
   const check =
     !form.deviceName?.replace(" ", "").length ||
     !form.room?.replace(" ", "").length;
@@ -67,9 +53,6 @@ const edit = async () => {
       life: 3000,
     });
     return;
-  }
-  if (chooseFile.value) {
-    form.location = chooseFile.value;
   }
 
   const res = await editDevice(form);
@@ -89,13 +72,11 @@ const edit = async () => {
       life: 3000,
     });
   }
+  loading.value = false;
 };
 
 const del = async (MACaddress: any) => {
   const res = await deleteDevice(MACaddress);
-  store.state.devices = device.value?.filter(
-    (e) => e.MACaddress !== MACaddress
-  );
   toast.add({
     severity: "success",
     summary: "Success",
@@ -104,11 +85,11 @@ const del = async (MACaddress: any) => {
   });
 };
 
-const changeStatusDevice = async (device: Device) => {
-  if (device.status) {
-    const res = await turnOffDevice(device.MACaddress!);
+const changeStatusDevice = async (data: Device) => {
+  if (data.status) {
+    const res = await turnOffDevice(data.MACaddress!);
   } else {
-    const res = await turnOnDevice(device.MACaddress!);
+    const res = await turnOnDevice(data.MACaddress!);
   }
 };
 </script>
@@ -210,7 +191,7 @@ const changeStatusDevice = async (device: Device) => {
               severity="warning"
               @click="
                 showPopup = true;
-                setForm(rowData.data);
+                Object.assign(form, rowData.data);
               "
             />
             <Button
@@ -230,8 +211,9 @@ const changeStatusDevice = async (device: Device) => {
     header="Edit Device"
     class="w-[600px] h-auto"
     modal
+    :closable="!loading"
     close-on-escape
-    @after-hide="resetForm()"
+    @after-hide="Object.assign(form, initialFormDevice)"
     :pt="{
       content: {
         style:
@@ -248,9 +230,9 @@ const changeStatusDevice = async (device: Device) => {
   >
     <div class="flex flex-col gap-2">
       <div class="inline-block">
-        <label for="deviceName" class="text-primary-50 font-medium"
-          >Device Name</label
-        >
+        <label for="deviceName" class="text-primary-50 font-medium">
+          Device Name
+        </label>
         <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
       </div>
       <InputText
@@ -261,9 +243,9 @@ const changeStatusDevice = async (device: Device) => {
     </div>
     <div class="flex flex-col gap-2">
       <div class="inline-block">
-        <label for="deviceName" class="text-primary-50 font-medium"
-          >MAC Address</label
-        >
+        <label for="deviceName" class="text-primary-50 font-medium">
+          MAC Address
+        </label>
         <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
       </div>
       <InputText
@@ -281,9 +263,9 @@ const changeStatusDevice = async (device: Device) => {
       ></InputText>
     </div>
     <div class="flex flex-col gap-1">
-      <label for="macAddress" class="text-primary-50 font-medium"
-        >Location Description</label
-      >
+      <label for="macAddress" class="text-primary-50 font-medium">
+        Location Description
+      </label>
       <InputText
         v-model="form.description"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
@@ -291,9 +273,9 @@ const changeStatusDevice = async (device: Device) => {
       ></InputText>
     </div>
     <div class="flex flex-col gap-1">
-      <label for="macAddress" class="text-primary-50 font-medium"
-        >Location Photo</label
-      >
+      <label for="macAddress" class="text-primary-50 font-medium">
+        Location Photo
+      </label>
       <FileUpload
         accept="image/*"
         :show-upload-button="false"
@@ -301,9 +283,9 @@ const changeStatusDevice = async (device: Device) => {
         :multiple="false"
         @select="
           async (e) => {
-            if (e.files.length > 1) e.files.shift();
-            if (e.files[0]) chooseFile = await onUpload(e);
+            if (e.files[0]) form.location = await onUpload(e.files[0]);
             else errorSelectFile();
+            e.files.shift();
           }
         "
       >
@@ -312,7 +294,6 @@ const changeStatusDevice = async (device: Device) => {
             <Button
               @click="
                 clearCallback();
-                chooseFile = null;
                 chooseCallback();
               "
               icon="pi pi-plus"
@@ -322,16 +303,15 @@ const changeStatusDevice = async (device: Device) => {
             ></Button>
           </div>
         </template>
-        <template #content="{ files, removeFileCallback }">
+        <template #content>
           <div
-            v-if="files[0] && chooseFile"
+            v-if="form.location"
             class="flex justify-between items-center w-full"
           >
-            <img alt="locationImage" :src="chooseFile" class="w-2/4 h-2/4" />
-            <div class="w-fit">{{ filesize(files[0].size) }}</div>
+            <img alt="locationImage" :src="form.location" class="w-2/4 h-2/4" />
             <Button
               icon="pi pi-times"
-              @click="removeFileCallback(0)"
+              @click="form.location = ''"
               outlined
               rounded
               severity="danger"
@@ -341,19 +321,9 @@ const changeStatusDevice = async (device: Device) => {
         </template>
         <template #empty>
           <div
-            v-if="notChoose"
-            class="flex justify-between items-center w-full"
+            v-if="!form.location"
+            class="flex flex-col text-center items-center"
           >
-            <img alt="locationImage" :src="form.location" class="w-2/4 h-2/4" />
-            <Button
-              icon="pi pi-times"
-              @click="notChoose = false"
-              outlined
-              rounded
-              severity="danger"
-            />
-          </div>
-          <div v-else class="flex flex-col text-center items-center">
             <i
               class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
             />
@@ -366,10 +336,16 @@ const changeStatusDevice = async (device: Device) => {
       <Button
         label="Cancel"
         text
+        :loading="loading"
         @click="showPopup = false"
         class="secondaryButton"
       ></Button>
-      <Button label="Done" class="primaryButton" @click="edit"></Button>
+      <Button
+        label="Done"
+        :loading="loading"
+        class="primaryButton"
+        @click="edit"
+      ></Button>
     </div>
   </Dialog>
 </template>

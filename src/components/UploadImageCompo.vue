@@ -6,7 +6,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, ref, toRefs, onMounted, defineProps } from "vue";
+import { computed, ref, toRefs, onMounted, defineProps, onUpdated } from "vue";
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
@@ -16,9 +16,13 @@ const { posType, maxImage } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
 const toast = useToast();
+const fileUpload = ref();
 
-const errorSelectFile = async (e: any) => {
-  if (formPoster.value.image.length + e.files.length >= maxImage.value!) {
+const errorSelectFile = async () => {
+  if (
+    formPoster.value.image?.length + fileUpload.value.files.length >=
+    maxImage.value!
+  ) {
     toast.add({
       severity: "error",
       summary: "Invalid file limit",
@@ -26,8 +30,11 @@ const errorSelectFile = async (e: any) => {
       life: 3000,
     });
   } else {
-    const message =
-      e.originalEvent.target.__vueParentComponent.data.messages[0].split(", ");
+    const message = fileUpload.value.messages[0]
+      .split(": ")
+      .slice(1)
+      .join(" ")
+      .split(", ");
     toast.add({
       severity: "error",
       summary: message[0],
@@ -49,19 +56,24 @@ const selectImage = (e: any) => {
     });
   });
 };
+
+const removeImage = (i: number) => {
+  store.state.formPoster.image.splice(i, 1);
+  store.state.formPoster.image.forEach((e, index) => {
+    e.priority = index + 1;
+  });
+};
 </script>
 
 <template>
   <FileUpload
+    ref="fileUpload"
     class="mt-12"
     accept="image/*"
     :show-upload-button="false"
     :multiple="posType === 'NP'"
     :fileLimit="maxImage"
     :maxFileSize="5243000"
-    invalidFileTypeMessage="Invalid file type, Allowed file types: image/*."
-    invalidFileSizeMessage="Invalid file size, File size should be smaller than 5 MB."
-    :invalidFileLimitMessage="`Invalid file limit, File limit ${maxImage}`"
     :pt="{
       buttonbar: {
         class: `${
@@ -82,8 +94,8 @@ const selectImage = (e: any) => {
           formPoster.image.length + e.files.length <= maxImage
         ) {
           selectImage(e);
-        } else errorSelectFile(e);
-        e.files.splice(0, e.files.length);
+        } else errorSelectFile();
+        if (e.files.length) e.files.splice(0, e.files.length);
       }
     "
   >
@@ -135,14 +147,14 @@ const selectImage = (e: any) => {
         </div>
       </div>
     </template>
-    <template #content="{ files, removeFileCallback }">
+    <template #content="{ removeFileCallback }">
       <div
-        v-if="posType === 'EP' && files[0] && formEmer.emergencyImage"
+        v-if="posType === 'EP' && formEmer.emergencyImage"
         class="flex flex-row justify-center text-center items-center gap-3"
       >
         <i class="pi pi-power-off"></i>
         <div
-          class="flex justify-center border-2 border-black bg-black"
+          class="flex justify-center bg-black"
           :style="{
             width: `${2160 / 20}px`,
             height: `${3840 / 20}px`,
@@ -167,7 +179,7 @@ const selectImage = (e: any) => {
         @click="
           () => {
             removeFileCallback(index);
-            formPoster.image.splice(index, 1);
+            removeImage(index);
           }
         "
       >
@@ -182,30 +194,7 @@ const selectImage = (e: any) => {
     </template>
     <template #empty>
       <div
-        v-if="posType === 'EP' && formEmer.emergencyImage"
-        class="flex flex-row justify-center text-center items-center gap-3"
-      >
-        <i class="pi pi-power-off"></i>
-        <div
-          class="flex justify-center border-2 border-black bg-black"
-          :style="{
-            width: `${2160 / 20}px`,
-            height: `${3840 / 20}px`,
-          }"
-        >
-          <img
-            :alt="formEmer.incidentName || formPoster.title"
-            :src="formEmer.emergencyImage"
-            class="max-w-full max-h-full m-auto rotate-90"
-            :style="{
-              maxWidth: `${3840 / 20}px`,
-              maxHeight: `${2160 / 20}px`,
-            }"
-          />
-        </div>
-      </div>
-      <div
-        v-else-if="posType !== 'NP' || !formPoster.image.length"
+        v-if="!formEmer.emergencyImage && !formPoster.image?.length"
         class="flex flex-col text-center items-center"
       >
         <i

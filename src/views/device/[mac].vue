@@ -11,28 +11,25 @@ import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
 import { Poster } from "@/types";
 import { loopPoster, setFieldPoster } from "@/utils/constant";
+import { getActivateEmerPoster } from "@/services/pi";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
 const emerPoster = computed(() => store.state.emerPosters[0]);
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
+let interval: any = null;
 
 const fetchData = async () => {
   const { ok, poster, message } = await getPosterEachDevice(
     route.params.mac as string
   );
-  const res = await getEmergency();
-  if (res.ok) {
-    store.state.emerPosters = res.emergency.filter(
-      (e: any) => e.status === true
-    );
-  }
+  await getActivateEmerPoster();
   if (ok) {
     setFieldPoster(poster);
     poster.sort((a: Poster, b: Poster) => {
-      if (a.startTime.toTimeString() < b.startTime.toTimeString()) return -1;
-      if (a.startTime.toTimeString() > b.startTime.toTimeString()) return 1;
+      if (a.startTime.getTime() < b.startTime.getTime()) return -1;
+      if (a.startTime.getTime() > b.startTime.getTime()) return 1;
       return 0;
     });
     store.state.posters = poster;
@@ -43,6 +40,9 @@ const fetchData = async () => {
 
 onMounted(async () => {
   fetchData();
+  interval = setInterval(async () => {
+    await getActivateEmerPoster();
+  }, 1000);
 });
 
 watch(emerPoster, () => {
@@ -59,6 +59,7 @@ onUnmounted(() => {
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
   image.value.image = "";
+  clearInterval(interval);
 });
 </script>
 
@@ -84,6 +85,7 @@ onUnmounted(() => {
       />
     </transition>
   </div>
+  <div class="w-5 h-5 bg-white absolute bottom-0 right-0"></div>
 </template>
 
 <style>
