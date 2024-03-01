@@ -67,10 +67,23 @@ onUnmounted(() => {
     <div class="w-screen h-screen flex flex-col bg-[#ffffff]">
       <NavBar class="bg-gradient-to-r from-[#F6FDF7] to-[#F8FDF7]" />
       <router-view class="bg-[#ffffff] w-full" />
+      <div
+        class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none"
+      >
+        <span class="pb-3 text-[9px] font-light text-stone-400"
+          ><span class="pb-3  font-normal text-stone-600"
+            >© 2024 Department of Computer Engineering </span
+          >, Chiang Mai University by 404 Brain not Found Group
+          <span class="pb-3  font-normal text-stone-600">
+            | All Rights Reserved | Powered by
+          </span>
+          CPE #30</span
+        >
+      </div>
     </div>
   </div>
   <div v-else>
-    <div class="w-screen flex flex-col h-full bg-[#fafafa] md:fixed">
+    <div class="w-screen flex flex-col h-full bg-[#ffffff] md:fixed">
       <NavBar
         v-if="$route.path === '/emergency'"
         class="bg-white"
