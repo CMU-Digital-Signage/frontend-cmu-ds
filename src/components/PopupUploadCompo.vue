@@ -54,7 +54,7 @@ const createScheduleTabs = () => {
 };
 
 watch(
-  () => store.state.formDisplay,
+  () => store.state.formDisplay.length,
   () => {
     scheduleTabs.value = [];
     createScheduleTabs();
