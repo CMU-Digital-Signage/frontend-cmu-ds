@@ -15,6 +15,7 @@ import {
   setFieldPoster,
   dateFormatter,
   timeFormatter,
+  month,
 } from "@/utils/constant";
 import { getActivateEmerPoster } from "@/services/pi";
 import axios from "axios";
@@ -29,17 +30,74 @@ let interval: any = null;
 let intervalWeather: any = null;
 let dateTimeInterval: any = null;
 const weather: any = ref();
+const iconWeather = ref({ condition: "", image: "" });
+const updateWeather = ref(new Date());
 
 const fetchWeather = async () => {
   const res = await axios.get("http://api.airvisual.com/v2/nearest_city", {
     params: {
-      key: "57eba6d9-0fc6-4ded-96e1-a861bb8a9554",
+      key: "9288827d-21b4-4cb6-91f0-0d306ca02831",
       lat: "18.79",
       lon: "98.95",
     },
   });
+  updateWeather.value = new Date();
   console.log(res.data.data);
   weather.value = res.data.data;
+
+  const weatherValue = weather.value.current.weather.ic;
+  if (weatherValue === "01d")
+    iconWeather.value = {
+      condition: "Clear",
+      image: require("../../assets/images/clearDay.png"),
+    };
+  else if (weatherValue === "01n") {
+    iconWeather.value = {
+      condition: "Clear",
+      image: require("../../assets/images/clearNight.jpg"),
+    };
+  } else if (weatherValue === "02d") {
+    iconWeather.value = {
+      condition: "Mostly Clear",
+      image: require("../../assets/images/clearDay.png"),
+    };
+  } else if (weatherValue === "02n") {
+    iconWeather.value = {
+      condition: "Mostly Clear",
+      image: require("../../assets/images/clearNight.jpg"),
+    };
+  } else if (weatherValue === "03d") {
+    iconWeather.value = {
+      condition: "Partly Cloudy",
+      image: require("../../assets/images/partlyCloudy.png"),
+    };
+  } else if (weatherValue === "09d") {
+    iconWeather.value = {
+      condition: "Drizzle",
+      image: require("../../assets/images/drizzle.png"),
+    };
+  } else if (weatherValue === "10d" || weatherValue === "10n") {
+    iconWeather.value = {
+      condition: "Rain",
+      image: require("../../assets/images/rain.png"),
+    };
+  } else if (weatherValue === "11d" || weatherValue === "11n") {
+    iconWeather.value = {
+      condition: "Thunderstorm",
+      image: require("../../assets/images/thunderstorm.png"),
+    };
+  } else if (weatherValue === "13d") {
+    iconWeather.value = {
+      condition: "Snow",
+      image: require("../../assets/images/snow.png"),
+    };
+  } else {
+    iconWeather.value = {
+      condition: "Fog",
+      image: require("../../assets/images/fog.png"),
+    };
+  }
+  console.log(iconWeather.value);
 };
 
 const aqiStatus = () => {
@@ -47,7 +105,7 @@ const aqiStatus = () => {
     const aqiValue = weather.value.current.pollution.aqius;
     if (aqiValue <= 50) return "Good";
     else if (aqiValue <= 100) return "Moderate";
-    else if (aqiValue <= 150) return "Unhealthy for Sensitive Group";
+    else if (aqiValue <= 150) return "Moderately Polluted";
     else if (aqiValue <= 200) return "Unhealthy";
     else if (aqiValue <= 300) return "Very Unhealthy";
     else return "Harzardous";
@@ -128,26 +186,60 @@ onUnmounted(() => {
       />
     </transition>
   </div>
-  <div class="containerDateTime">
-    <p>{{ dateFormatter(dateTime) }}</p>
-    <p>{{ timeFormatter(dateTime) }}</p>
-    <div v-if="weather">
-      <p>{{ weather?.current?.weather.tp }} °C</p>
-      <p
+  <div class="containerDateTime flex flex-row">
+    <div
+      class="items-center flex flex-col flex-1 w-full justify-center border-r-2"
+    >
+      <p>{{ dateFormatter(dateTime) }}</p>
+      <p>{{ timeFormatter(dateTime) }}</p>
+    </div>
+    <div
+      v-if="weather"
+      class="items-center flex flex-col flex-1 w-full justify-center"
+    >
+      <div
         :class="{
           'text-[#2a8953]': aqiStatus() === 'Good',
           'text-[#95a22f]': aqiStatus() === 'Moderate',
-          'text-[#F48D31]': aqiStatus() === 'Unhealthy for Sensitive Group',
+          'text-[#F48D31]': aqiStatus() === 'Moderately Polluted',
           'text-[#CA142D]': aqiStatus() === 'Unhealthy',
           'text-[#62008F]': aqiStatus() === 'Very Unhealthy',
           'text-[#730B22]': aqiStatus() === 'Harzardous',
         }"
       >
-        AQI: {{ weather?.current?.pollution.aqius }}
-        {{ aqiStatus() }}
-      </p>
-      
+        <div class="flex-col">
+          AQI: {{ weather?.current?.pollution.aqius }} <br />
+          {{ aqiStatus() }}
+        </div>
+        <div class=" text-[12px] text-black" >
+      Last Update: {{ updateWeather.getDate() }}
+      {{ month[updateWeather.getMonth()] }}
+      {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
+        updateWeather.getMinutes().toString().padStart(2, "0")
+      }}
     </div>
+    <div class=" text-[12px] text-black">Source: IQAir</div>
+      </div>
+    </div>
+    <div
+      v-if="weather"
+      class="items-center flex flex-col flex-1 w-full justify-center border-l-2"
+    >
+      <p>{{ weather?.current?.weather.tp }} °C</p>
+      <div class="inline-flex gap-3">
+        <p>{{ iconWeather.condition }}</p>
+        <img class="w-10 h-10" :src="iconWeather.image" />
+      </div>
+      <div class=" text-[12px]" >
+      Last Update: {{ updateWeather.getDate() }}
+      {{ month[updateWeather.getMonth()] }}
+      {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
+        updateWeather.getMinutes().toString().padStart(2, "0")
+      }}
+    </div>
+    <div class=" text-[12px]">Source: IQAir</div>
+    </div>
+
   </div>
   <!-- <iframe src="https://main--darling-frangipane-e360a0.netlify.app/" class="absolute bottom-0 right-0 -rotate-90"></iframe> -->
 </template>
@@ -162,9 +254,10 @@ onUnmounted(() => {
   right: 0;
   bottom: 0;
   width: 100vh;
-  font-size: 30px;
+  font-size: 28px;
   color: rgb(0, 0, 0);
   padding: 5px;
+  border-radius: 8px;
   background-color: #fff;
   transform: rotate(-90deg) translate(100%, 0);
   transform-origin: right bottom;
