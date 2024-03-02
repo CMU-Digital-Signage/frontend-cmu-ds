@@ -72,7 +72,7 @@ onUnmounted(() => {
       <router-view class="bg-[#ffffff] w-full" />
       <div
         class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none absolute right-0 bottom-0"
-        v-if="!$route.path.includes('/preview')"
+        v-if="!$route.path.includes('/preview') && !$route.path.includes('/device')"
       >
         <span class="pb-3 text-[9px] font-light text-stone-400"
           ><span class="pb-3 font-normal text-stone-600"
@@ -95,7 +95,7 @@ onUnmounted(() => {
       />
       <div
         class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none absolute right-0 bottom-0"
-        v-if="!$route.path.includes('/preview')"
+        v-if="!$route.path.includes('/preview') && !$route.path.includes('/device')"
       >
         <span class="pb-3 text-[9px] font-light text-stone-400"
           ><span class="pb-3 font-normal text-stone-600"
