@@ -124,7 +124,7 @@ const handleEmergency = async () => {
   <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
     <Toast />
     <div
-      class="py-[20px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+      class="pt-[12px] pb-[32px] px-[20px]  flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div v-if="!emerPosters.find((e) => e.status === 'Active')">
         <div
@@ -241,7 +241,7 @@ const handleEmergency = async () => {
     </div>
 
     <div
-      class="flex-1 border-l-[2px]; border-[#eaeaea] py-[25px] px-[30px] flex flex-col"
+      class="flex-1 border-l-[2px]; border-[#eaeaea] pt-[12px] pb-[32px] px-[20px] flex flex-col"
     >
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"

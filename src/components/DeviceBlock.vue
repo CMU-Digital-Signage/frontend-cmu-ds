@@ -40,7 +40,7 @@ const changeStatusDevice = async () => {
           'text-[70px]',
         ]"
       ></i>
-      <div class="mr-5">
+      <div class="mr-7">
         <p
           :class="[
             device.status ? 'text-black' : 'text-gray-500',
@@ -53,16 +53,16 @@ const changeStatusDevice = async () => {
         <p :class="[device.status ? 'text-black' : 'text-gray-500']">
           Room: {{ device.room }}
         </p>
-        <p class="text-gray-500" v-if="device.status == false">Off</p>
-        <p class="text-[#62ccca]" v-if="device.status == true">On</p>
+        <p class="text-gray-500 font-bold" v-if="device.status == false">Off</p>
+        <p class="text-[#62ccca] font-bold" v-if="device.status == true">On</p>
       </div>
     </Button>
     <div
       v-if="store.state.userInfo.isAdmin"
-      class="flex absolute bottom-1 right-1"
+      class="flex absolute bottom-2 right-2"
     >
       <Button
-        class="w-9 h-9 border-0"
+        class="w-7 h-7 border-0 mr-1 mb-1"
         :class="[device.status ? 'bg-[#62ccca]' : 'bg-[#b3b2b2]']"
         icon="pi pi-power-off"
         rounded

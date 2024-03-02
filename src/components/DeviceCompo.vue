@@ -178,13 +178,6 @@ const changeStatusDevice = async (data: Device) => {
         <template #body="rowData">
           <div class="inline-flex gap-3">
             <Button
-              class="w-9 h-9 border-0"
-              :class="[rowData.data.status ? 'bg-[#62ccca]' : 'bg-[#b3b2b2]']"
-              icon="pi pi-power-off"
-              rounded
-              @click="changeStatusDevice(rowData.data)"
-            ></Button>
-            <Button
               icon="pi pi-pencil"
               rounded
               class="w-9 h-9"

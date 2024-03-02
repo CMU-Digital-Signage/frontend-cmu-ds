@@ -234,16 +234,22 @@ const handleChangePassword = async () => {
           icon="pi pi-plus"
           class="upload-button mt-7"
           @click="store.state.showUpload = true"
-          label="Upload"
+   
         >
+          <div
+            class="h-6 w-6 mr-2 rounded-full bg-[#039BE5] flex items-center justify-center border-none"
+          >
+            <i class="pi pi-plus text-white"></i>
+          </div>
+          <span>Upload</span>
         </Button>
         <Button
-              class="text-[#282828] bg-[#ffffff]  rounded-full h-10 w-10 flex items-center justify-center menu-ho-upload"
-              v-else
-              @click="store.state.showUpload = true"
-              icon="pi pi-plus"
-        
-            ></Button>
+          class="text-[#282828] bg-[#039BE5] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
+          v-else
+          @click="store.state.showUpload = true"
+          icon="pi pi-plus"
+          ><i class="pi pi-plus text-white"></i
+        ></Button>
       </div>
 
       <div
@@ -865,19 +871,19 @@ Button {
 }
 
 .upload-button {
-  background-color: #ffffff;
+  background-color: #ffffffc2;
   color: rgb(54, 54, 54);
-  width: 100%;
+  width: 70%;
   border: none;
-  border-radius: 1rem;
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
+  border-radius: 0.8rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   display: flex;
   font-weight: 900;
   font-size: 14px;
   cursor: pointer;
   transition: box-shadow 0.3s;
-  box-shadow: 0px 0px 10px 0px #888888;
+  box-shadow: 0px 0px 7px 0px #888888;
 }
 
 .upload-button:hover {
@@ -886,12 +892,12 @@ Button {
 }
 
 .menu-ho-upload {
-  box-shadow: 0px 0px 10px 0px #888888;
+  box-shadow: 0px 0px 7px 0px #888888;
   border: none
 }
 
 .menu-ho-upload:hover {
   box-shadow: 0px 0px 10px 0px #505050;
-  background-color: #f8f8f8;
+  background-color: rgb(9, 120, 247);
 }
 </style>

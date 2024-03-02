@@ -66,12 +66,13 @@ onUnmounted(() => {
     class="flex flex-row w-screen h-screen md:fixed font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar class="bg-gradient-to-r from-[#f4feff] to-[#F6FDF7]" />
+    <SideBar class="bg-gradient-to-r from-[#d0fbffbe] to-[#e4fce7c8]" />
     <div class="w-full h-full flex flex-col bg-[#ffffff]">
-      <NavBar class="bg-gradient-to-r from-[#F6FDF7] to-[#F8FDF7]" />
+      <NavBar class="bg-[#f8f8f8]" />
       <router-view class="bg-[#ffffff] w-full" />
       <div
-        class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none"
+        class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none absolute right-0 bottom-0"
+        v-if="!$route.path.includes('/preview')"
       >
         <span class="pb-3 text-[9px] font-light text-stone-400"
           ><span class="pb-3 font-normal text-stone-600"
@@ -92,6 +93,20 @@ onUnmounted(() => {
         class="bg-white"
         :types="'Outside'"
       />
+      <div
+        class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none absolute right-0 bottom-0"
+        v-if="!$route.path.includes('/preview')"
+      >
+        <span class="pb-3 text-[9px] font-light text-stone-400"
+          ><span class="pb-3 font-normal text-stone-600"
+            >© 2024 Department of Computer Engineering </span
+          >, Chiang Mai University by 404 Brain not Found Group
+          <span class="pb-3 font-normal text-stone-600">
+            | All Rights Reserved | Powered by
+          </span>
+          CPE #30</span
+        >
+      </div>
       <router-view />
     </div>
   </div>

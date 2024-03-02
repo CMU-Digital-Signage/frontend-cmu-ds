@@ -164,11 +164,20 @@ const validateEmail = () => {
 const toggleOverlay = (e: any) => {
   panel.value.toggle(e);
 };
+
+const checkValidRoomNumber = () => {
+  const value = form.room;
+  if (!Number.isInteger(Number(value))) {
+    form.room = "";
+    return false;
+  }
+};
+
 </script>
 
 <template>
   <div
-    class="min-h-14 px-4 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
+    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
   >
     <Toast />
     <!-- Popup Add Device -->
@@ -182,11 +191,11 @@ const toggleOverlay = (e: any) => {
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
         },
         mask: {
           style: 'backdrop-filter: blur(2px)',
@@ -207,6 +216,7 @@ const toggleOverlay = (e: any) => {
           v-model:model-value="form.deviceName"
           class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
           placeholder="cpe01"
+          id="deviceName"
         ></InputText>
       </div>
       <div class="flex flex-col gap-2">
@@ -238,7 +248,9 @@ const toggleOverlay = (e: any) => {
         <InputText
           v-model:model-value="form.room"
           class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
-          placeholder="516"
+          placeholder="Number only Ex.516"
+          :required="checkValidRoomNumber()"
+          id="room"
         ></InputText>
       </div>
       <div class="flex flex-col gap-1">
@@ -324,7 +336,7 @@ const toggleOverlay = (e: any) => {
           label="Add"
           :class="'primaryButton'"
           @click="add"
-          :disabled="!macNotUse.length"
+          :disabled="!macNotUse.length || !form.deviceName || !form.room"
         ></Button>
       </div>
     </Dialog>
@@ -519,7 +531,7 @@ const toggleOverlay = (e: any) => {
           id="title"
           v-model="filterInput.title"
           class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 w-28 lg:w-40 rounded-lg"
-          placeholder="Search Title"
+          placeholder="Ex.CPE Music"
         ></InputText>
       </li>
       <li v-if="store.state.selectTabview !== 1">
@@ -528,13 +540,13 @@ const toggleOverlay = (e: any) => {
           id="uploader"
           v-model="filterInput.uploader"
           class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 w-28 lg:w-40 rounded-lg"
-          placeholder="Search Name"
+          placeholder="Ex.Navadon"
           v-if="user?.isAdmin"
         ></InputText>
       </li>
 
       <li v-if="store.state.selectTabview !== 1">
-        <label class="text-[14px] ml-[-17px] mr-1 lg:text-[16px]"
+        <label class="text-[14px] ml-[10px] mr-1 lg:text-[16px]"
           >Upload Date
         </label>
         <Calendar
@@ -563,9 +575,9 @@ const toggleOverlay = (e: any) => {
       </li>
       <li>
         <Button
-          label="Clear"
+          label="Clear Fillter"
           @click="store.commit('resetFilter')"
-          class="rounded-[10px] h-8 border-0 bg-blue-500 text-right float-end justify-self-end"
+          class="rounded-[10px] h-8 border-0 bg-red-500 text-right float-end justify-self-end"
         />
       </li>
     </ul>
