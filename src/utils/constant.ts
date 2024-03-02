@@ -109,6 +109,8 @@ export const dateFormatter = (
       return `${day}/${monthNum}/${year}`; // 22/11/2023
     case 2:
       return `${day} ${monthFullStr} ${year}`; //22 November 2023
+    case 3:
+      return `${day} ${monthStr} ${year + 543}`; //22 Nov 2023;
     default:
       return `${day} ${monthStr} ${year}`; //22 Nov 2023;
   }

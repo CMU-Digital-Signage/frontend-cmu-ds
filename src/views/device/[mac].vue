@@ -97,7 +97,7 @@ onUnmounted(() => {
     </transition>
   </div>
   <div class="containerDateTime">
-    <p>{{ dateFormatter(dateTime) }}</p>
+    <p>{{ dateFormatter(dateTime, 3) }}</p>
     <p>{{ timeFormatter(dateTime) }}</p>
   </div>
   <!-- <iframe src="https://main--darling-frangipane-e360a0.netlify.app/" class="absolute bottom-0 right-0 -rotate-90"></iframe> -->
