@@ -34,17 +34,23 @@ watch(devices, () => {
       v-if="loading"
       class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
     ></Skeleton>
-    <div v-else v-for="(floor, index) in floors" :key="index" class="text-left last:pb-7">
-      <p
-        class="font-semibold text-[16px] px-4 py-3 border-b-2 border-[#dee2e6]"
-      >
-        {{ floor }}th Floor
-      </p>
-      <p class="text-[#3671BF] text-[16px] p-4">
+    <div
+      v-else
+      v-for="(floor, index) in floors"
+      :key="index"
+      class="text-left pb-7 first:border-none border-t-2 border-[#dee2e6]"
+    >
+      <p class="font-semibold text-[16px] px-4 pt-4">{{ floor }}th Floor</p>
+      <p class="text-[#3671BF] text-[16px] px-4 pb-4">
         {{ devices.filter((e) => e.room?.startsWith(floor || "")).length }}
-        Devices
+        {{
+          devices.filter((e) => e.room?.startsWith(floor || "")).length > 1
+            ? "Devices"
+            : "Device"
+        }}
       </p>
-      <div class="inline-flex flex-wrap gap-4 mx-4">
+      <p></p>
+      <div class="inline-flex flex-wrap gap-4 mx-5">
         <DeviceBlock
           v-for="(device, innerIndex) in devices"
           :key="innerIndex"
@@ -60,9 +66,10 @@ watch(devices, () => {
 .rectangle {
   width: 100%;
   height: 100%;
-  padding-inline: 0.75rem;
-  gap: 1rem;
-  overflow-y: auto;
+  padding-inline: 1rem;
+  overflow: hidden;
+  padding-top: 0.25rem;
+  padding-bottom: 0.15rem;
 }
 .column {
   margin-top: 1%;

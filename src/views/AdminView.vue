@@ -50,8 +50,10 @@ watch([admin, devices], () => {
 .rectangle {
   width: 100%;
   height: 100%;
-  padding-inline: 0.75rem;
+  padding-inline: 1rem;
   overflow: hidden;
+  padding-top: 0.25rem;
+  padding-bottom: 0.15rem;
 }
 
 .bold-ho:hover {

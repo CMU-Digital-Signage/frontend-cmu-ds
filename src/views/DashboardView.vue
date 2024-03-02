@@ -388,8 +388,10 @@ const del = async (posterId: string) => {
 .rectangle {
   width: 100%;
   height: 100%;
-  padding: 0.75rem;
+  padding-inline: 1rem;
   overflow: hidden;
+  padding-top: 0.75rem;
+  padding-bottom: 2rem;
 }
 </style>
 <style>
