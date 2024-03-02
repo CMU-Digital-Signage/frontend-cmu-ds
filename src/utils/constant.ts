@@ -109,9 +109,20 @@ export const dateFormatter = (
       return `${day}/${monthNum}/${year}`; // 22/11/2023
     case 2:
       return `${day} ${monthFullStr} ${year}`; //22 November 2023
+    case 3:
+      return `${day} ${monthStr} ${year + 543}`; //22 Nov 2023;
     default:
       return `${day} ${monthStr} ${year}`; //22 Nov 2023;
   }
+};
+
+export const timeFormatter = (date: Date | null | undefined) => {
+  if (!date) return "";
+
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const secounds = date.getSeconds().toString().padStart(2, "0");
+  return `${hours}:${minutes}:${secounds}`;
 };
 
 export const initialFormDevice = {
@@ -422,7 +433,7 @@ export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
           currentIndexPoster = (currentIndexPoster + 1) % posters.length;
         }
         updatePosterInterval();
-      }, currentPoster.duration * 1000);
+      }, currentPoster.duration * 1000 + 500);
     } else {
       currentIndexPoster = findNextValidPosterIndex();
       updatePosterInterval();
@@ -457,9 +468,6 @@ export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
 
   const stopLoop = () => {
     if (timeoutId !== null) clearTimeout(timeoutId);
-    currentIndexImage = 0;
-    currentIndexPoster = 0;
-    count = 0;
     return;
   };
 
