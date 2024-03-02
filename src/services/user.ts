@@ -15,7 +15,9 @@ export async function getUserInfo() {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -36,7 +38,9 @@ export async function getAllUser() {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -59,7 +63,9 @@ export async function setPassword(password: string) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -71,7 +77,7 @@ export async function changePassword(oldPassword: string, newPassword: string) {
       `${process.env.VUE_APP_API_BASE_URL}/user`,
       {
         oldPassword,
-        newPassword
+        newPassword,
       },
       {
         headers: {
@@ -83,7 +89,9 @@ export async function changePassword(oldPassword: string, newPassword: string) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }

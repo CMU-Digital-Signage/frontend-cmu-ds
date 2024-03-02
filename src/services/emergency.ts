@@ -19,7 +19,9 @@ export async function getEmergency() {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -47,17 +49,26 @@ export async function addEmergency(data: Emergency) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
 }
 
-export async function editEmergency(incidentName: string, data: Emergency) {
+export async function editEmergency(
+  incidentName: string,
+  data: Emergency,
+  password?: string
+) {
   try {
     const res = await axios.put(
       `${process.env.VUE_APP_API_BASE_URL}${prefix}/emergency`,
-      data,
+      {
+        ...data,
+        password: password,
+      },
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -81,7 +92,9 @@ export async function editEmergency(incidentName: string, data: Emergency) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -107,7 +120,9 @@ export async function deleteEmergency(incidentName: string) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -140,16 +155,24 @@ export async function activateEmergency(
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
 }
 
-export async function deactivateEmergency(incidentName: string) {
+export async function deactivateEmergency(
+  incidentName: string,
+  password: string
+) {
   try {
-    const res = await axios.delete(
-      `${process.env.VUE_APP_API_BASE_URL}/poster/emergency/activate`,
+    const res = await axios.post(
+      `${process.env.VUE_APP_API_BASE_URL}/poster/emergency/deactivate`,
+      {
+        password,
+      },
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -162,12 +185,18 @@ export async function deactivateEmergency(incidentName: string) {
     const index = store.state.emerPosters.findIndex(
       (e) => e.incidentName === incidentName
     );
-    if (index !== -1) store.state.emerPosters[index].status = "Inactive";
+    if (index !== -1) {
+      store.state.emerPosters[index].emergencyImage =
+        res.data.emergency.emergencyImage;
+      store.state.emerPosters[index].status = "Inactive";
+    }
 
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }

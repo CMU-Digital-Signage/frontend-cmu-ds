@@ -14,7 +14,9 @@ export async function getPosterEachDevice(mac: string) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -34,7 +36,9 @@ export async function getActivateEmerPoster() {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -56,7 +60,9 @@ export async function turnOnDevice(mac: string) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -78,7 +84,9 @@ export async function turnOffDevice(mac: string) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }

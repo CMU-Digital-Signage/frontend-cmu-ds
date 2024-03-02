@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import store from "./store";
 import { computed, onBeforeUnmount, onMounted, onUnmounted, watch } from "vue";
-import SideBar from "./components/SideBar.vue";
-import NavBar from "./components/NavBar.vue";
+import SideBar from "@/components/SideBar.vue";
+import NavBar from "@/components/NavBar.vue";
+import PopupUpload from "@/components/PopupUploadCompo.vue";
 import router from "./router";
 import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
@@ -59,6 +60,8 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <PopupUpload />
+
   <div
     class="flex flex-row w-screen h-screen md:fixed font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.id"
@@ -71,10 +74,10 @@ onUnmounted(() => {
         class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none"
       >
         <span class="pb-3 text-[9px] font-light text-stone-400"
-          ><span class="pb-3  font-normal text-stone-600"
+          ><span class="pb-3 font-normal text-stone-600"
             >© 2024 Department of Computer Engineering </span
           >, Chiang Mai University by 404 Brain not Found Group
-          <span class="pb-3  font-normal text-stone-600">
+          <span class="pb-3 font-normal text-stone-600">
             | All Rights Reserved | Powered by
           </span>
           CPE #30</span

@@ -116,7 +116,10 @@ export default function setupSocket() {
       const index = store.state.emerPosters.findIndex(
         (e) => e.incidentName === data.incidentName
       );
-      if (index !== -1) store.state.emerPosters[index].status = "Inactive";
+      if (index !== -1) {
+        store.state.emerPosters[index].emergencyImage = data.emergencyImage;
+        store.state.emerPosters[index].status = "Inactive";
+      }
     }
   });
 

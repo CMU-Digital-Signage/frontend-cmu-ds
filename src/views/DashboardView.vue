@@ -21,7 +21,6 @@ import { Calendar, CalendarOptions } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import PopupUpload from "@/components/PopupUploadCompo.vue";
 import { useToast } from "primevue/usetoast";
 
 const toast = useToast();
@@ -282,7 +281,6 @@ const del = async (posterId: string) => {
       class="bg-gray-200 rounded-xl flex-1"
     ></Skeleton>
     <div v-show="!loadPoster" ref="fullCalendar"></div>
-    <PopupUpload />
     <Dialog
       v-model:visible="showInfo"
       modal

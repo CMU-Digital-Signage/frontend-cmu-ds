@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FileTable from "@/components/FileTableCompo.vue";
-import PopupUpload from "@/components/PopupUploadCompo.vue";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import store from "../store";
 
@@ -34,7 +33,6 @@ onUnmounted(() => {
 
 <template>
   <div class="rectangle flex flex-col">
-    <PopupUpload />
     <Skeleton
       v-if="loading"
       class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
