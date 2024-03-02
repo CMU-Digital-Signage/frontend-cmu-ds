@@ -139,7 +139,7 @@ onMounted(async () => {
   }, 1000);
   intervalWeather = setInterval(async () => {
     await fetchWeather();
-  }, 3600000);
+  }, 1800000);
 });
 
 watch(emerPoster, () => {
@@ -226,7 +226,7 @@ onUnmounted(() => {
       <p>{{ weather?.current?.weather.tp }} °C</p>
       <div class="inline-flex gap-3">
         <p>{{ iconWeather.condition }}</p>
-        <img class="w-10 h-10" :src="iconWeather.image" />
+        <img class="w-8 h-8" :src="iconWeather.image" />
       </div>
       <div class=" text-[12px]" >
       Last Update: {{ updateWeather.getDate() }}
