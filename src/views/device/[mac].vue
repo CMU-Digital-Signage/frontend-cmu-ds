@@ -17,6 +17,7 @@ import {
   timeFormatter,
 } from "@/utils/constant";
 import { getActivateEmerPoster } from "@/services/pi";
+import axios from "axios";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
@@ -25,7 +26,33 @@ const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
 const dateTime = ref(new Date());
 let interval: any = null;
+let intervalWeather: any = null;
 let dateTimeInterval: any = null;
+const weather: any = ref();
+
+const fetchWeather = async () => {
+  const res = await axios.get("http://api.airvisual.com/v2/nearest_city", {
+    params: {
+      key: "57eba6d9-0fc6-4ded-96e1-a861bb8a9554",
+      lat: "18.79",
+      lon: "98.95",
+    },
+  });
+  console.log(res.data.data);
+  weather.value = res.data.data;
+};
+
+const aqiStatus = () => {
+  if (weather.value.current) {
+    const aqiValue = weather.value.current.pollution.aqius;
+    if (aqiValue <= 50) return "Good";
+    else if (aqiValue <= 100) return "Moderate";
+    else if (aqiValue <= 150) return "Unhealthy for Sensitive Group";
+    else if (aqiValue <= 200) return "Unhealthy";
+    else if (aqiValue <= 300) return "Very Unhealthy";
+    else return "Harzardous";
+  }
+};
 
 const fetchData = async () => {
   const { ok, poster, message } = await getPosterEachDevice(
@@ -46,6 +73,7 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
+  fetchWeather();
   fetchData();
   dateTimeInterval = setInterval(async () => {
     dateTime.value = new Date();
@@ -53,6 +81,9 @@ onMounted(async () => {
   interval = setInterval(async () => {
     await getActivateEmerPoster();
   }, 1000);
+  intervalWeather = setInterval(async () => {
+    await fetchWeather();
+  }, 3600000);
 });
 
 watch(emerPoster, () => {
@@ -71,6 +102,7 @@ onUnmounted(() => {
   image.value.image = "";
   clearInterval(interval);
   clearInterval(dateTimeInterval);
+  clearInterval(intervalWeather);
 });
 </script>
 
@@ -97,8 +129,25 @@ onUnmounted(() => {
     </transition>
   </div>
   <div class="containerDateTime">
-    <p>{{ dateFormatter(dateTime, 3) }}</p>
+    <p>{{ dateFormatter(dateTime) }}</p>
     <p>{{ timeFormatter(dateTime) }}</p>
+    <div v-if="weather">
+      <p>{{ weather?.current?.weather.tp }} °C</p>
+      <p
+        :class="{
+          'text-[#2a8953]': aqiStatus() === 'Good',
+          'text-[#95a22f]': aqiStatus() === 'Moderate',
+          'text-[#F48D31]': aqiStatus() === 'Unhealthy for Sensitive Group',
+          'text-[#CA142D]': aqiStatus() === 'Unhealthy',
+          'text-[#62008F]': aqiStatus() === 'Very Unhealthy',
+          'text-[#730B22]': aqiStatus() === 'Harzardous',
+        }"
+      >
+        AQI: {{ weather?.current?.pollution.aqius }}
+        {{ aqiStatus() }}
+      </p>
+      
+    </div>
   </div>
   <!-- <iframe src="https://main--darling-frangipane-e360a0.netlify.app/" class="absolute bottom-0 right-0 -rotate-90"></iframe> -->
 </template>
@@ -112,6 +161,9 @@ onUnmounted(() => {
   position: absolute;
   right: 0;
   bottom: 0;
+  width: 100vh;
+  font-size: 30px;
+  color: rgb(0, 0, 0);
   padding: 5px;
   background-color: #fff;
   transform: rotate(-90deg) translate(100%, 0);
