@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import NavbarBelow from "@/components/NavbarBelow.vue";
-import PopupUpload from "@/components/PopupUploadCompo.vue";
 import { computed, ref, onMounted, watch, onUnmounted } from "vue";
 import store from "@/store";
 import { useRoute } from "vue-router";
@@ -42,9 +41,6 @@ watch(selectPoster, () => {
 });
 
 watch([filterDate, filterTime], () => {
-
-  console.log(filterDate.value, filterTime.value);
-  
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
   image.value.image = "";
@@ -100,7 +96,6 @@ const rowStyle = (rowData: any) => {
 
 <template>
   <div class="rectangle">
-    <PopupUpload />
     <div class="flex flex-1 flex-wrap h-full gap-3">
       <div class="flex flex-1 w-full md:w-1/2">
         <DataTable

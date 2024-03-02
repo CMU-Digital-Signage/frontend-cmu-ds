@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUpdated, ref, watch } from "vue";
+import { computed, onMounted, onUpdated, ref, watch, watchEffect } from "vue";
 import store from "@/store";
 import {
   activateEmergency,
@@ -10,15 +10,8 @@ import {
 import TextPoster from "@/components/TextPoster.vue";
 import { Emergency } from "@/types";
 import { useToast } from "primevue/usetoast";
-import { Key } from "@fullcalendar/core/preact";
-
-const click = computed({
-  get: () => store.state.selectTabview,
-  set: (val) => (store.state.selectTabview = val),
-});
 
 const emerPosters = computed(() => store.state.emerPosters);
-
 const selectEmer = ref({ incidentName: "", emergencyImage: "" } as Emergency);
 const password = ref("");
 const toast = useToast();
@@ -62,30 +55,26 @@ onMounted(async () => {
       res.emergency.forEach(
         (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
       );
-      store.state.emerPosters = res.emergency;
     }
   }
 });
 
-watch(
-  emerPosters,
-  () => {
-    if (
-      emerPosters.value.filter((e) => e.incidentName === "banner")[0].status ===
-      "Active"
-    ) {
-      selectEmer.value = emerPosters.value.filter(
-        (e) => e.incidentName === "banner"
-      )[0];
-    }
-  },
-  { deep: true }
-);
+watchEffect(() => {
+  const activeEmer = emerPosters.value.filter(
+    (e: Emergency) => e.status === "Active"
+  );
+  if (activeEmer.length) {
+    selectEmer.value = activeEmer[0];
+  }
+});
 
 const handleEmergency = async () => {
   loading.value = true;
   if (selectEmer.value.status === "Active") {
-    const res = await deactivateEmergency(selectEmer.value.incidentName);
+    const res = await deactivateEmergency(
+      selectEmer.value.incidentName,
+      password.value
+    );
     if (res.ok) {
       toast.add({
         severity: "success",
@@ -104,7 +93,7 @@ const handleEmergency = async () => {
   } else {
     let res;
     if (selectEmer.value.incidentName === "banner") {
-      res = await editEmergency("banner", selectEmer.value);
+      res = await editEmergency("banner", selectEmer.value, password.value);
     } else {
       res = await activateEmergency(
         selectEmer.value.incidentName,
@@ -137,7 +126,7 @@ const handleEmergency = async () => {
     <div
       class="py-[20px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
-      <div>
+      <div v-if="!emerPosters.find((e) => e.status === 'Active')">
         <div
           class="flex flex-row px-4 py-2 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
         >
@@ -215,6 +204,9 @@ const handleEmergency = async () => {
           </div>
         </div>
       </div>
+      <div v-else class="flex flex-1 justify-center items-center">
+        {{ selectEmer.incidentName }} has been Activate.
+      </div>
       <div v-if="selectEmer">
         <p class="md:text-[17px] text-[14px] font-semibold mb-2">
           Type your Emergency Password in the box below
@@ -226,6 +218,11 @@ const handleEmergency = async () => {
             input-class="w-full rounded-[12px] border-2"
             :feedback="false"
             toggle-mask
+            @keypress="
+              (e) => {
+                if (e.key === 'Enter') handleEmergency();
+              }
+            "
           ></Password>
 
           <Button
@@ -234,14 +231,7 @@ const handleEmergency = async () => {
               'bg-red-500': selectEmer.status !== 'Active',
               'bg-black opacity-80': selectEmer.status === 'Active',
             }"
-            :disabled="
-              !password.length ||
-              emerPosters.some(
-                (e) =>
-                  e.status === 'Active' &&
-                  e.incidentName !== selectEmer.incidentName
-              )
-            "
+            :disabled="!password.length || !selectEmer.emergencyImage.length"
             :loading="loading"
             :label="selectEmer.status === 'Active' ? 'Deactivate' : 'Activate'"
             @click="handleEmergency()"

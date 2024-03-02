@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 export async function sendEmail() {
@@ -18,7 +17,9 @@ export async function sendEmail() {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }

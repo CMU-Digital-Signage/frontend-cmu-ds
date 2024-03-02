@@ -20,7 +20,9 @@ export async function addAdmin(email: string) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }
@@ -47,7 +49,9 @@ export async function deleteAdmin(id: number) {
     return res.data;
   } catch (err: any) {
     if (!err.response) {
-      return "Cannot connect to API Server. Please try again later.";
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
     }
     return err.response.data;
   }

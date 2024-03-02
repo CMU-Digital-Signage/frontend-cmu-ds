@@ -8,11 +8,7 @@ export default defineComponent({
 <script setup lang="ts">
 import { defineProps, toRefs, onUpdated, computed } from "vue";
 import store from "@/store";
-const textBanner = computed(
-  () =>
-    store.state.emerPosters.filter((e) => e.incidentName === "banner")[0]
-      ?.emergencyImage
-);
+
 const props = defineProps({ text: String });
 </script>
 
@@ -34,7 +30,7 @@ const props = defineProps({ text: String });
       <p class="text-2xl mb-10">ฉุกเฉิน!</p>
       <div class="flex justify-center">
         <p class="whitespace-pre-line text-center text-white">
-          {{ props.text?.length ? props.text : textBanner }}
+          {{ props.text }}
         </p>
       </div>
     </div>
