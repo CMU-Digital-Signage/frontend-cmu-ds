@@ -10,7 +10,12 @@ import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
 import { Poster } from "@/types";
-import { loopPoster, setFieldPoster } from "@/utils/constant";
+import {
+  loopPoster,
+  setFieldPoster,
+  dateFormatter,
+  timeFormatter,
+} from "@/utils/constant";
 import { getActivateEmerPoster } from "@/services/pi";
 
 const route = useRoute();
@@ -18,7 +23,9 @@ const posters = computed(() => store.state.posters);
 const emerPoster = computed(() => store.state.emerPosters[0]);
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
+const dateTime = ref(new Date());
 let interval: any = null;
+let dateTimeInterval: any = null;
 
 const fetchData = async () => {
   const { ok, poster, message } = await getPosterEachDevice(
@@ -40,6 +47,9 @@ const fetchData = async () => {
 
 onMounted(async () => {
   fetchData();
+  dateTimeInterval = setInterval(async () => {
+    dateTime.value = new Date();
+  }, 1000);
   interval = setInterval(async () => {
     await getActivateEmerPoster();
   }, 1000);
@@ -47,7 +57,7 @@ onMounted(async () => {
 
 watch(emerPoster, () => {
   if (emerPoster.value) {
-    stopLoop.value();
+    if (stopLoop.value) stopLoop.value();
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
   } else {
@@ -60,13 +70,14 @@ onUnmounted(() => {
   image.value.key = "";
   image.value.image = "";
   clearInterval(interval);
+  clearInterval(dateTimeInterval);
 });
 </script>
 
 <template>
   <div v-if="emerPoster?.incidentName === 'banner'" class="bg-[#FF5252]">
     <div class="rotateText flex justify-center items-center h-screen w-screen">
-      <TextPoster />
+      <TextPoster :text="emerPoster.emergencyImage" />
     </div>
   </div>
   <div v-else class="w-screen h-screen bg-black overflow-hidden">
@@ -85,11 +96,25 @@ onUnmounted(() => {
       />
     </transition>
   </div>
-  <div class="w-5 h-5 bg-white absolute bottom-0 right-0"></div>
+  <div class="containerDateTime">
+    <p>{{ dateFormatter(dateTime) }}</p>
+    <p>{{ timeFormatter(dateTime) }}</p>
+  </div>
+  <!-- <iframe src="https://main--darling-frangipane-e360a0.netlify.app/" class="absolute bottom-0 right-0 -rotate-90"></iframe> -->
 </template>
 
 <style>
 .rotateText {
   transform: rotate(-90deg);
+}
+
+.containerDateTime {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 5px;
+  background-color: #fff;
+  transform: rotate(-90deg) translate(100%, 0);
+  transform-origin: right bottom;
 }
 </style>

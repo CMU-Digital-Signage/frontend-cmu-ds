@@ -114,6 +114,15 @@ export const dateFormatter = (
   }
 };
 
+export const timeFormatter = (date: Date | null | undefined) => {
+  if (!date) return "";
+
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const secounds = date.getSeconds().toString().padStart(2, "0");
+  return `${hours}:${minutes}:${secounds}`;
+};
+
 export const initialFormDevice = {
   MACaddress: null,
   deviceName: null,
@@ -422,7 +431,7 @@ export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
           currentIndexPoster = (currentIndexPoster + 1) % posters.length;
         }
         updatePosterInterval();
-      }, currentPoster.duration * 1000);
+      }, currentPoster.duration * 1000 + 500);
     } else {
       currentIndexPoster = findNextValidPosterIndex();
       updatePosterInterval();
@@ -457,9 +466,6 @@ export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
 
   const stopLoop = () => {
     if (timeoutId !== null) clearTimeout(timeoutId);
-    currentIndexImage = 0;
-    currentIndexPoster = 0;
-    count = 0;
     return;
   };
 
