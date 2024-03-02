@@ -42,7 +42,6 @@ const fetchWeather = async () => {
     },
   });
   updateWeather.value = new Date();
-  console.log(res.data.data);
   weather.value = res.data.data;
 
   const weatherValue = weather.value.current.weather.ic;
@@ -97,7 +96,6 @@ const fetchWeather = async () => {
       image: require("../../assets/images/fog.png"),
     };
   }
-  console.log(iconWeather.value);
 };
 
 const aqiStatus = () => {
