@@ -163,7 +163,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="emerPoster?.incidentName === 'banner'" class="bg-[#FF5252]">
+  <div v-if="emerPoster?.incidentName === 'banner'" class="bg-[#ff0000]">
     <div class="rotateText flex justify-center items-center h-screen w-screen">
       <TextPoster :text="emerPoster.emergencyImage" />
     </div>
