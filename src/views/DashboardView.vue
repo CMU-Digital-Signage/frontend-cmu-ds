@@ -124,21 +124,29 @@ const setEvent = () => {
       e.type = "Collection";
     } else e.type = "Individual";
 
-    const allDay = e.startTime.getHours() === 0 && e.endTime.getHours() === 23;
+    const allDay =
+      e.startTime.getHours() === 0 &&
+      e.endTime.getHours() === 23 &&
+      e.endTime.getMinutes() === 59;
     const exist = postersView.value.find((p) => p.title === e.title);
-    const start = e.startDate.toDateString();
-    const end = e.endDate.toDateString();
+    const startPlus1 = new Date(
+      e.startDate.getFullYear(),
+      e.startDate.getMonth(),
+      e.startDate.getDate() + 1,
+      e.startDate.getHours(),
+      e.startDate.getMinutes()
+    ).getTime();
     const endPlus1 = new Date(
       e.endDate.getFullYear(),
       e.endDate.getMonth(),
       e.endDate.getDate() + 1,
       e.endDate.getHours(),
       e.endDate.getMinutes()
-    );
+    ).getTime();
 
     let schedule = null;
     // oneDay allTime
-    if (allDay && start === end) {
+    if (allDay && e.startDate.getTime() === e.endDate.getTime()) {
       schedule = {
         start: e.startDate,
         end: e.endDate,
@@ -146,7 +154,7 @@ const setEvent = () => {
       };
     }
     // allTime manyDay
-    else if (allDay && start !== end) {
+    else if (allDay && e.startDate.getTime() !== e.endDate.getTime()) {
       schedule = {
         start: e.startDate,
         end: endPlus1,
@@ -155,7 +163,7 @@ const setEvent = () => {
     // manyDay
     else {
       schedule = {
-        startRecur: e.startDate,
+        startRecur: startPlus1,
         endRecur: endPlus1,
         startTime: e.startTime.toTimeString(),
         endTime: e.endTime.toTimeString(),
@@ -221,7 +229,7 @@ const monthView = () => {
 };
 
 onMounted(async () => {
-  if (!posters.value.length) loadPoster.value = true;
+  if (!posters.value) loadPoster.value = true;
   setEvent();
   if (fullCalendar.value) {
     calendar.value = new Calendar(fullCalendar.value, calOptions);
@@ -246,7 +254,7 @@ onUpdated(() => {
 watch(
   [selectedDevice, posters],
   () => {
-    if (posters.value.length) loadPoster.value = false;
+    if (posters.value) loadPoster.value = false;
     setEvent();
   },
   { deep: true }

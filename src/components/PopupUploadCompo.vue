@@ -404,9 +404,9 @@ const nextStepUpload = () => {
         e.endTime.getHours() * 3600 + e.endTime.getMinutes() * 60;
       const startTimeSec =
         e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
-      const num =
-        (endTimeSec - startTimeSec - e.duration) /
-        (e.durationForm + transition);
+      const num = Math.floor(
+        (endTimeSec - startTimeSec - e.duration) / (e.durationForm + transition)
+      );
       numImage.push(num);
     });
     maxImage.value = Math.min(...numImage);
