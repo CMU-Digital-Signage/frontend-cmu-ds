@@ -14,33 +14,41 @@ const user = computed(() => store.state.userInfo);
 let interval: any = null;
 
 const fetchData = async () => {
-  const [allUserRes, deviceRes, posterRes, emerRes] = await Promise.all([
-    getAllUser(),
-    getDevice(),
-    getPoster(),
-    getEmergency(),
-  ]);
-  store.state.allUser = allUserRes.user;
-
-  store.state.macNotUse = deviceRes.data
-    .filter((e: any) => !e.deviceName)
-    .map((e: any) => e.MACaddress);
-
-  const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
-  devices.map((e, i) => (e.color = color[i]));
-  store.state.devices = devices;
-  store.state.selectDevice = devices[0].MACaddress || "";
-  store.state.filterDevice = devices.map((e) => e.MACaddress);
-
-  setFieldPoster(posterRes.poster);
-  store.state.posters = posterRes.poster;
-  if(store.state.posters)
-  createUnique(store.state.posters);
-
-  emerRes.emergency.forEach(
-    (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+  const allUserPromise = getAllUser().then(
+    (allUserRes) => (store.state.allUser = allUserRes.user)
   );
-  store.state.emerPosters = emerRes.emergency;
+
+  const devicePromise = getDevice().then((deviceRes) => {
+    store.state.macNotUse = deviceRes.data
+      .filter((e: any) => !e.deviceName)
+      .map((e: any) => e.MACaddress);
+
+    const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
+    devices.map((e, i) => (e.color = color[i]));
+    store.state.devices = devices;
+    store.state.selectDevice = devices[0].MACaddress || "";
+    store.state.filterDevice = devices.map((e) => e.MACaddress);
+  });
+
+  const emerPromise = getEmergency().then((emerRes) => {
+    emerRes.emergency.forEach(
+      (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
+    );
+    store.state.emerPosters = emerRes.emergency;
+  });
+
+  const posterPromise = getPoster().then((posterRes) => {
+    setFieldPoster(posterRes.poster);
+    store.state.posters = posterRes.poster;
+    if (store.state.posters) createUnique(store.state.posters);
+  });
+
+  await Promise.race([
+    allUserPromise,
+    devicePromise,
+    posterPromise,
+    emerPromise,
+  ]);
 };
 
 onMounted(() => {
@@ -205,6 +213,4 @@ Button:focus {
     display: none;
   }
 }
-
-
 </style>
