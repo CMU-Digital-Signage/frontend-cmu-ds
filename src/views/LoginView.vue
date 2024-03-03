@@ -17,7 +17,7 @@
         <span
           class="font-sf-pro-rounded mt-48 text-2xl lg:mt-12 md:text-xl lg:text-3xl lg:mb-8 mb-7 font-medium text-[#2a2a2a]"
         >
-        CPE pixel Parade
+        CPE pixelParade
         </span>
         <span class="md:text-lg text-sm mb-1 mt-2 font-notoThai hide-on-mobile">
           ลงชื่อเข้าสู่ระบบ
