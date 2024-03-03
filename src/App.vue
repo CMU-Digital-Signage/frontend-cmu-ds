@@ -85,7 +85,7 @@ onUnmounted(() => {
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "
   >
-    <span class="pb-3 text-[9px] font-light text-stone-400">
+    <span class="pb-3 text-[9px] font-light text-stone-400 hide-on-mobile">
       <span class="pb-3 font-normal text-stone-600">
         © 2024 Department of Computer Engineering
       </span>
@@ -198,4 +198,12 @@ Button:focus {
   background-color: #f1f5f9;
   color: #475569;
 }
+
+@media (max-width: 790px) or (max-height: 600px) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
+
+
 </style>
