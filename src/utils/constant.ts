@@ -187,7 +187,7 @@ export const onUpload = (e: any): Promise<string | undefined> => {
             resolve(reader.result as string);
           };
         } else {
-          quality = quality * 0.6;
+          quality = quality * 0.4;
           if (quality > 0.1) {
             attemptCompression();
           } else {
@@ -329,7 +329,7 @@ export const setNorForm = (data: any) => {
     posterId: data.posterId,
     title: data.title,
     description: poster[0].description,
-    image: [...poster[0].image],
+    image: JSON.parse(JSON.stringify(poster[0].image)),
   } as Poster;
   store.state.formPoster = { ...form };
 
