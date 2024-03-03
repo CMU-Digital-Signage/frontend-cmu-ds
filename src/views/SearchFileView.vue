@@ -11,7 +11,7 @@ const filterData = ref([]);
 const loading = computed(() => store.state.loading);
 
 onMounted(() => {
-  store.state.searchPosters = null;
+  store.state.searchPosters = undefined;
 });
 
 watch(searchPosters, () => {
@@ -26,7 +26,7 @@ watch(searchPosters, () => {
     ) {
       temp.push({
         MACaddress: e.MACaddress,
-        color: devices.value.find((d) => d.MACaddress === e.MACaddress)!.color,
+        color: devices.value?.find((d) => d.MACaddress === e.MACaddress)!.color,
         date: currentDate.getDate(),
         month: currentDate.getMonth(),
         year: currentDate.getFullYear(),

@@ -312,7 +312,7 @@ const nextStepUpload = () => {
       detail: validateForm(),
       life: 3000,
     });
-  } else {
+  } else if (posters.value) {
     let poster = [] as Poster[];
     if (editPosterType.value.type === "NP") {
       poster = posters.value.filter(
@@ -744,7 +744,7 @@ const nextStepPreview = () => {
                   >
                     <td>
                       {{
-                        store.state.devices.find((e) => e.MACaddress === mac)
+                        store.state.devices?.find((e) => e.MACaddress === mac)
                           ?.deviceName
                       }}
                     </td>

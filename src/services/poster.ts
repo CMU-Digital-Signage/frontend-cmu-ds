@@ -64,8 +64,10 @@ export async function addPoster(poster: Poster, display: Display[]) {
     );
 
     setFieldPoster(res.data.newPoster);
-    store.state.posters.push(...res.data.newPoster);
-    createUnique(store.state.posters);
+    if (store.state.posters) {
+      store.state.posters.push(...res.data.newPoster);
+      createUnique(store.state.posters);
+    }
 
     return res.data;
   } catch (err: any) {
@@ -96,11 +98,13 @@ export async function editPoster(poster: Poster, display: Display[]) {
     );
 
     setFieldPoster(res.data.updatePoster);
-    store.state.posters = store.state.posters.filter(
-      (e) => e.posterId !== res.data.updatePoster[0].posterId
-    );
-    store.state.posters.push(...res.data.updatePoster);
-    createUnique(store.state.posters);
+    if (store.state.posters) {
+      store.state.posters = store.state.posters.filter(
+        (e) => e.posterId !== res.data.updatePoster[0].posterId
+      );
+      store.state.posters.push(...res.data.updatePoster);
+      createUnique(store.state.posters);
+    }
 
     return res.data;
   } catch (err: any) {
@@ -126,9 +130,10 @@ export async function deletePoster(posterId: string) {
       }
     );
 
-    store.state.posters = store.state.posters.filter(
-      (e) => e.posterId !== posterId
-    );
+    if (store.state.posters)
+      store.state.posters = store.state.posters.filter(
+        (e) => e.posterId !== posterId
+      );
     store.state.uniquePosters = store.state.uniquePosters?.filter(
       (e) => e.posterId !== posterId
     );

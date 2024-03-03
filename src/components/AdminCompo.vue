@@ -15,7 +15,7 @@ import { calculateScreenHeight } from "@/utils/constant";
 const toast = useToast();
 const user = ref<User>(store.state.userInfo);
 const admin = computed(() =>
-  store.state.allUser.filter(
+  store.state.allUser?.filter(
     (e) =>
       e.isAdmin &&
       (e.firstName?.toLowerCase().includes(search.value?.toLowerCase()) ||

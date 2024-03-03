@@ -312,80 +312,82 @@ export const createUnique = (data: Poster[]) => {
 };
 
 export const setNorForm = (data: any) => {
-  store.state.editPoster.title = data.title;
-  const poster = store.state.posters.filter((e) => e.title === data.title);
-  poster.sort((a: Poster, b: Poster) => {
-    if (a.startDate.getTime() < b.startDate.getTime()) return -1;
-    else if (a.startDate.getTime() > b.startDate.getTime()) return 1;
-    else {
-      if (a.startTime.getTime() < b.startTime.getTime()) return -1;
-      else if (a.startTime.getTime() > b.startTime.getTime()) return 1;
-      else return 0;
-    }
-  });
+  if (store.state.posters?.length) {
+    store.state.editPoster.title = data.title;
+    const poster = store.state.posters.filter((e) => e.title === data.title);
+    poster.sort((a: Poster, b: Poster) => {
+      if (a.startDate.getTime() < b.startDate.getTime()) return -1;
+      else if (a.startDate.getTime() > b.startDate.getTime()) return 1;
+      else {
+        if (a.startTime.getTime() < b.startTime.getTime()) return -1;
+        else if (a.startTime.getTime() > b.startTime.getTime()) return 1;
+        else return 0;
+      }
+    });
 
-  // poster form
-  const form = {
-    posterId: data.posterId,
-    title: data.title,
-    description: poster[0].description,
-    image: JSON.parse(JSON.stringify(poster[0].image)),
-  } as Poster;
-  store.state.formPoster = { ...form };
+    // poster form
+    const form = {
+      posterId: data.posterId,
+      title: data.title,
+      description: poster[0].description,
+      image: JSON.parse(JSON.stringify(poster[0].image)),
+    } as Poster;
+    store.state.formPoster = { ...form };
 
-  // display form
-  store.state.formDisplay.pop();
-  poster.forEach((e: any) => {
-    const index = store.state.formDisplay.findIndex(
-      (disp) =>
-        disp.startDate!.getTime() === e.startDate.getTime() &&
-        disp.endDate!.getTime() === e.endDate.getTime()
-    );
+    // display form
+    store.state.formDisplay.pop();
+    poster.forEach((e: any) => {
+      const index = store.state.formDisplay.findIndex(
+        (disp) =>
+          disp.startDate!.getTime() === e.startDate.getTime() &&
+          disp.endDate!.getTime() === e.endDate.getTime()
+      );
 
-    if (index === -1) {
-      const last = store.state.formDisplay.length;
-      store.state.formDisplay.push(newInitialFormDisplay());
-      store.state.formDisplay[last].startDate = e.startDate;
-      store.state.formDisplay[last].endDate = e.endDate;
-      store.state.formDisplay[last].duration = e.duration;
-      store.state.formDisplay[last].MACaddress.push(e.MACaddress);
-      if (e.startTime.getHours() === 0 && e.endTime.getHours() === 23) {
-        store.state.formDisplay[last].allDay = true;
+      if (index === -1) {
+        const last = store.state.formDisplay.length;
+        store.state.formDisplay.push(newInitialFormDisplay());
+        store.state.formDisplay[last].startDate = e.startDate;
+        store.state.formDisplay[last].endDate = e.endDate;
+        store.state.formDisplay[last].duration = e.duration;
+        store.state.formDisplay[last].MACaddress.push(e.MACaddress);
+        if (e.startTime.getHours() === 0 && e.endTime.getHours() === 23) {
+          store.state.formDisplay[last].allDay = true;
+        } else {
+          store.state.formDisplay[last].time.pop();
+          store.state.formDisplay[last].time.push({
+            startTime: e.startTime,
+            endTime: e.endTime,
+          });
+        }
       } else {
-        store.state.formDisplay[last].time.pop();
-        store.state.formDisplay[last].time.push({
-          startTime: e.startTime,
-          endTime: e.endTime,
-        });
+        if (!store.state.formDisplay[index].MACaddress.includes(e.MACaddress)) {
+          store.state.formDisplay[index].MACaddress.push(e.MACaddress);
+        }
+        if (
+          store.state.formDisplay[index].time.findIndex(
+            (time) =>
+              time.startTime?.getTime() === e.startTime.getTime() &&
+              time.endTime?.getTime() === e.endTime.getTime()
+          ) === -1
+        ) {
+          store.state.formDisplay[index].time.push({
+            startTime: e.startTime,
+            endTime: e.endTime,
+          });
+        }
       }
-    } else {
-      if (!store.state.formDisplay[index].MACaddress.includes(e.MACaddress)) {
-        store.state.formDisplay[index].MACaddress.push(e.MACaddress);
-      }
-      if (
-        store.state.formDisplay[index].time.findIndex(
-          (time) =>
-            time.startTime?.getTime() === e.startTime.getTime() &&
-            time.endTime?.getTime() === e.endTime.getTime()
-        ) === -1
-      ) {
-        store.state.formDisplay[index].time.push({
-          startTime: e.startTime,
-          endTime: e.endTime,
-        });
-      }
-    }
-  });
+    });
 
-  store.state.formDisplay.forEach((e) => {
-    if (e.MACaddress.length === store.state.devices.length) {
-      e.MACaddress = [];
-      e.allDevice = true;
-    }
-  });
+    store.state.formDisplay.forEach((e) => {
+      if (e.MACaddress.length === store.state.devices?.length) {
+        e.MACaddress = [];
+        e.allDevice = true;
+      }
+    });
 
-  store.state.editPoster.type = "NP";
-  store.state.showUpload = true;
+    store.state.editPoster.type = "NP";
+    store.state.showUpload = true;
+  }
 };
 
 export const setEmerForm = (data: any) => {
