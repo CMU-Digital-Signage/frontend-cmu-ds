@@ -17,13 +17,13 @@
         <span
           class="font-sf-pro-rounded mt-48 text-2xl lg:mt-12 md:text-xl lg:text-3xl lg:mb-8 mb-7 font-medium text-[#2a2a2a]"
         >
-          CPE Digital Signage
+          CPE Pixel
         </span>
         <span class="md:text-lg text-sm mb-1 mt-2 font-notoThai hide-on-mobile">
           ลงชื่อเข้าสู่ระบบ
         </span>
         <span class="show-on-mobile text-[#484848]">
-          To login, go to CPE Digital Signage <br/>on your tablet or desktop
+          To login, go to CPE Pixel <br/>on your tablet or desktop
         </span>
         <button
           class="flex items-center hide-on-mobile md:mb-4 mb-3 justify-center w-auto md:p-6 md:h-11 h-fit p-2 relative rounded-[10px] bg-[#696CA3] text-white text-2xl button-container drop-shadow-xl"
