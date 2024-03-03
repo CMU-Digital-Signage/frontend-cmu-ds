@@ -191,7 +191,7 @@ const checkValidRoomNumber = () => {
       modal
       close-on-escape
       :draggable="false"
-      :closable="loading"
+      :closable="!loading"
       @after-hide="resetForm()"
       :pt="{
         content: {
@@ -397,14 +397,14 @@ const checkValidRoomNumber = () => {
 
               <div class="flex flex-row gap-4 pt-3">
                 <Button
-                :loading="loading"
+               
                   label="Cancel"
                   text
                   @click="showPopup = false"
                   :class="'secondaryButton'"
                 ></Button>
                 <Button
-                :loading="loading"
+               
                   label="Add"
                   :class="'primaryButton'"
                   type="submit"
