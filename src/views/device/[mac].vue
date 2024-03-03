@@ -34,7 +34,7 @@ const iconWeather = ref({ condition: "", image: "" });
 const updateWeather = ref(new Date());
 
 const fetchWeather = async () => {
-  const res = await axios.get("http://api.airvisual.com/v2/nearest_city", {
+  const res = await axios.get("https://api.airvisual.com/v2/nearest_city", {
     params: {
       key: "9288827d-21b4-4cb6-91f0-0d306ca02831",
       lat: "18.79",
@@ -45,12 +45,12 @@ const fetchWeather = async () => {
   weather.value = res.data.data;
 
   const weatherValue = weather.value.current.weather.ic;
-  if (weatherValue === "01d")
+  if (weatherValue === "01d") {
     iconWeather.value = {
       condition: "Clear",
       image: require("../../assets/images/clearDay.png"),
     };
-  else if (weatherValue === "01n") {
+  } else if (weatherValue === "01n") {
     iconWeather.value = {
       condition: "Clear",
       image: require("../../assets/images/clearNight.jpg"),
@@ -209,14 +209,14 @@ onUnmounted(() => {
           AQI: {{ weather?.current?.pollution.aqius }} <br />
           {{ aqiStatus() }}
         </div>
-        <div class=" text-[12px] text-black" >
-      Last Update: {{ updateWeather.getDate() }}
-      {{ month[updateWeather.getMonth()] }}
-      {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
-        updateWeather.getMinutes().toString().padStart(2, "0")
-      }}
-    </div>
-    <div class=" text-[12px] text-black">Source: IQAir</div>
+        <div class="text-[12px] text-black">
+          Last Update: {{ updateWeather.getDate() }}
+          {{ month[updateWeather.getMonth()] }}
+          {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
+            updateWeather.getMinutes().toString().padStart(2, "0")
+          }}
+        </div>
+        <div class="text-[12px] text-black">Source: IQAir</div>
       </div>
     </div>
     <div
@@ -228,16 +228,15 @@ onUnmounted(() => {
         <p>{{ iconWeather.condition }}</p>
         <img class="w-8 h-8" :src="iconWeather.image" />
       </div>
-      <div class=" text-[12px]" >
-      Last Update: {{ updateWeather.getDate() }}
-      {{ month[updateWeather.getMonth()] }}
-      {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
-        updateWeather.getMinutes().toString().padStart(2, "0")
-      }}
+      <div class="text-[12px]">
+        Last Update: {{ updateWeather.getDate() }}
+        {{ month[updateWeather.getMonth()] }}
+        {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
+          updateWeather.getMinutes().toString().padStart(2, "0")
+        }}
+      </div>
+      <div class="text-[12px]">Source: IQAir</div>
     </div>
-    <div class=" text-[12px]">Source: IQAir</div>
-    </div>
-
   </div>
   <!-- <iframe src="https://main--darling-frangipane-e360a0.netlify.app/" class="absolute bottom-0 right-0 -rotate-90"></iframe> -->
 </template>
