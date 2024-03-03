@@ -29,7 +29,6 @@ const loading = ref(false);
 const deletePopup = ref(false);
 const selectDelDevice = ref<Device>();
 
-
 const errorSelectFile = () => {
   toast.add({
     severity: "error",
@@ -59,6 +58,7 @@ const edit = async () => {
   }
 
   const res = await editDevice(form);
+  loading.value = true;
   if (res.ok) {
     showPopup.value = false;
     toast.add({
@@ -79,6 +79,7 @@ const edit = async () => {
 };
 
 const del = async () => {
+  loading.value = true;
   const res = await deleteDevice(selectDelDevice.value?.MACaddress || "");
   toast.add({
     severity: "success",
@@ -86,6 +87,7 @@ const del = async () => {
     detail: res.message,
     life: 3000,
   });
+  loading.value = false;
   deletePopup.value = false;
   selectDelDevice.value = undefined;
 };
@@ -109,7 +111,58 @@ const checkValidRoomNumber = () => {
 
 <template>
   <Toast />
-
+  <Dialog
+  :closable="!loading"
+    v-model:visible="deletePopup"
+    modal
+    close-on-escape
+    :draggable="false"
+    class="w-[425px]"
+    :pt="{
+      content: {
+        style:
+          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+      },
+      header: {
+        style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+      },
+      mask: {
+        style:
+          'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
+      },
+    }"
+  >
+    <template #header>
+      <div class="header-popup">
+        Delete "{{ selectDelDevice?.deviceName }}" device?
+      </div>
+    </template>
+    <div class="flex flex-col gap-2">
+      <div>
+        Deleting this device will also remove all posters associated with it,
+        but this device's MAC address can be re-added if Raspberry Pi restart
+        again.
+      </div>
+      <div class="inline-block">
+        <div class="flex flex-row gap-4 pt-3">
+          <Button
+            text
+            :loading="loading"
+            label="Cancel"
+            @click="deletePopup = false"
+            :class="'secondaryButton'"
+          ></Button>
+          <Button
+            :loading="loading"
+            label="Delete device"
+            :class="'primaryButtonDel'"
+            type="submit"
+            @click="del()"
+          ></Button>
+        </div>
+      </div>
+    </div>
+  </Dialog>
   <div class="rectangle2">
     <DataTable
       :value="device"
@@ -136,7 +189,6 @@ const checkValidRoomNumber = () => {
         </template>
         <template #body="rowData">
           <div class="flex items-center gap-3">
-           
             <p class="font-light">{{ rowData.data.deviceName }}</p>
             <i
               class="pi pi-info-circle cursor-pointer"
@@ -207,59 +259,12 @@ const checkValidRoomNumber = () => {
               rounded
               class="w-9 h-9"
               severity="danger"
-              @click="deletePopup = true; selectDelDevice = rowData.data"
+              @click="
+                deletePopup = true;
+                selectDelDevice = rowData.data;
+              "
             />
-            
           </div>
-          <Dialog
-              v-model:visible="deletePopup"
-              modal
-              close-on-escape
-              :draggable="false"
-              class="w-[425px]"
-              :pt="{
-                content: {
-                  style:
-                    'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
-                },
-                header: {
-                  style:
-                    'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
-                },
-                mask: {
-                  style: 'backdrop-filter: blur(2px)',
-                },
-              }"
-            >
-              <template #header>
-                <div class="header-popup">
-                  Delete "{{ selectDelDevice?.deviceName }}" device?
-                </div>
-              </template>
-              <div class="flex flex-col gap-2">
-                <div>
-                  Deleting this device will also remove all posters associated
-                  with it, but this device's MAC address can be re-added if
-                  Raspberry pi restart again.
-                </div>
-                <div class="inline-block">
-                  <div class="flex flex-row gap-4 pt-3">
-                    <Button
-                      text
-                      label="Cancel"
-                      @click="deletePopup = false"
-                      :class="'secondaryButton'"
-                    ></Button>
-                    <Button
-                      label="Delete device"
-                      :class="'primaryButtonDel'"
-                      type="submit"
-                      @click="del()"
-                    ></Button>
-                  </div>
-                </div>
-              </div>
-            </Dialog>
         </template>
       </Column>
     </DataTable>

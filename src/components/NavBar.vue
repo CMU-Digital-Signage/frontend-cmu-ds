@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { faSadCry } from "@fortawesome/free-regular-svg-icons";
 export default defineComponent({
   name: "NavBar",
 });
@@ -32,6 +33,7 @@ const currentViewDate = computed(() => store.state.currentViewDate);
 const viewType = computed(() => store.state.viewType);
 const clickSearch = ref(false);
 const searchP = ref<string>("");
+const loading = ref(false);
 const toast = useToast();
 const selectDevice = computed({
   get: () => store.state.selectDevice,
@@ -40,7 +42,7 @@ const selectDevice = computed({
 const Emer = defineProps({ types: String });
 const email = ref<string>("");
 const devicePreview = computed(() =>
-  store.state.devices.find(
+  store.state.devices?.find(
     (e) => e.MACaddress === router.currentRoute.value.params.mac
   )
 );
@@ -114,6 +116,7 @@ const add = async () => {
   }
 
   const res = await addDevice(form);
+  loading.value = true
   if (res.ok) {
     showPopupAddDevice.value = false;
     toast.add({
@@ -131,10 +134,12 @@ const add = async () => {
       life: 3000,
     });
   }
+  loading.value = false
 };
 
 const addEmailAdmin = async () => {
-  if (store.state.allUser.find((e) => e.email === email.value)?.isAdmin) {
+  loading.value = true
+  if (store.state.allUser?.find((e) => e.email === email.value)?.isAdmin) {
     toast.add({
       severity: "error",
       summary: "Invalid",
@@ -154,6 +159,7 @@ const addEmailAdmin = async () => {
       life: 3000,
     });
   }
+  loading.value = false
 };
 
 const validateEmail = () => {
@@ -185,6 +191,7 @@ const checkValidRoomNumber = () => {
       modal
       close-on-escape
       :draggable="false"
+      :closable="loading"
       @after-hide="resetForm()"
       :pt="{
         content: {
@@ -322,6 +329,7 @@ const checkValidRoomNumber = () => {
       </div>
       <div class="flex flex-row gap-4 pt-3">
         <Button
+        :loading="loading"
           label="Cancel"
           text
           @click="
@@ -331,6 +339,7 @@ const checkValidRoomNumber = () => {
           :class="'secondaryButton'"
         ></Button>
         <Button
+        :loading="loading"
           label="Add"
           :class="'primaryButton'"
           @click="add"
@@ -388,12 +397,14 @@ const checkValidRoomNumber = () => {
 
               <div class="flex flex-row gap-4 pt-3">
                 <Button
+                :loading="loading"
                   label="Cancel"
                   text
                   @click="showPopup = false"
                   :class="'secondaryButton'"
                 ></Button>
                 <Button
+                :loading="loading"
                   label="Add"
                   :class="'primaryButton'"
                   type="submit"

@@ -16,8 +16,11 @@ const poster = defineModel<Poster | undefined>({ default: undefined });
 const toast = useToast();
 const user = computed(() => store.state.userInfo);
 const showInfo = ref(false);
+const deletePopup = ref(false);
+const loading = ref(false);
 
 const del = async () => {
+  loading.value = true;
   const res = await deletePoster(poster.value!.posterId);
   toast.add({
     severity: "success",
@@ -25,11 +28,65 @@ const del = async () => {
     detail: "Delete Poster successful.",
     life: 3000,
   });
+  loading.value = false;
+  deletePopup.value = false
 };
 </script>
 
 <template>
   <Toast />
+  <Dialog
+    v-model:visible="deletePopup"
+    modal
+    :closable="!loading"
+    close-on-escape
+    :draggable="false"
+    class="w-[425px]"
+    :pt="{
+      content: {
+        style:
+          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+      },
+      header: {
+        style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+      },
+      mask: {
+        style:
+          'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
+      },
+    }"
+  >
+    <template #header>
+      <div class="header-popup">
+        Delete
+        {{ `"${poster?.title}" Poster` }}?
+      </div>
+    </template>
+    <div class="flex flex-col gap-2">
+      <div>
+        Deleting this poster or collection will be permenently deleted from all
+        devices.
+      </div>
+      <div class="inline-block">
+        <div class="flex flex-row gap-4 pt-3">
+          <Button
+            text
+            :loading="loading"
+            label="Cancel"
+            @click="deletePopup = false"
+            :class="'secondaryButton'"
+          ></Button>
+          <Button
+          :loading="loading"
+            label="Delete Poster"
+            :class="'primaryButtonDel'"
+            type="submit"
+            @click="del()"
+          ></Button>
+        </div>
+      </div>
+    </div>
+  </Dialog>
   <div
     class="bg-[#ffffff] border-t border-[#c7bbbb] h-14 px-6 flex items-center"
   >
@@ -39,7 +96,7 @@ const del = async () => {
     >
       <Button
         label="Clear"
-        class="border-none bg-red-500 rounded-[10px]  font-semibold min-w-fit h-10  px-5"
+        class="border-none bg-red-500 rounded-[10px] font-semibold min-w-fit h-10 px-5"
         @click="
           poster = undefined;
           store.state.filterInputPosters.date = new Date();
@@ -67,7 +124,7 @@ const del = async () => {
           label="Delete"
           icon="pi pi-trash bg-[#ff5e5e] rounded-full text-white p-[4px] shadow-md"
           class="border-[#adadad] bg-white text-[#ff5e5e] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-gray-200"
-          @click="del()"
+          @click="deletePopup = true"
         />
       </div>
     </ul>
@@ -138,4 +195,50 @@ const del = async () => {
   </Dialog>
 </template>
 
-<style></style>
+<style scoped>
+
+.header-popup {
+  font-weight: 700;
+  font-size: 22px;
+  color: rgb(255, 0, 0);
+}
+
+.primaryButtonDel {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 10px;
+  margin-top: 20px;
+  background-color: rgb(255, 0, 0);
+  color: rgb(255, 255, 255);
+  font-weight: 800;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.primaryButtonDel:hover {
+  background-color: rgb(193, 0, 0);
+  text-decoration-line: underline;
+}
+
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: none;
+  color: black;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+}
+
+</style>
