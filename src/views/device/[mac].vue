@@ -22,7 +22,7 @@ import axios from "axios";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
-const emerPoster = computed(() => store.state.emerPosters[0]);
+const emerPoster = computed(() => store.state.emerPosters ? store.state.emerPosters[0] : undefined);
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
 const dateTime = ref(new Date());
@@ -124,7 +124,7 @@ const fetchData = async () => {
     });
     store.state.posters = poster;
 
-    stopLoop.value = loopPoster(posters.value, emerPoster.value);
+    stopLoop.value = loopPoster(posters.value!, emerPoster.value);
   }
 };
 
@@ -148,7 +148,7 @@ watch(emerPoster, () => {
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
   } else {
-    stopLoop.value = loopPoster(posters.value, emerPoster.value);
+    stopLoop.value = loopPoster(posters.value!, emerPoster.value);
   }
 });
 

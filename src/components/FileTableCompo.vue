@@ -15,7 +15,7 @@ import {
   setNorForm,
   setEmerForm,
 } from "@/utils/constant";
-import { Display, Poster, User } from "@/types";
+import { Display, Emergency, Poster, User } from "@/types";
 import { statusPoster, calculateScreenHeight } from "@/utils/constant";
 import { deletePoster, deleteEmergency } from "@/services";
 import { useToast } from "primevue/usetoast";
@@ -26,9 +26,12 @@ const toggleShowStatus = (e: any) => {
 };
 const loading = ref(false);
 const props = defineProps({ types: String });
+const deletePopup = ref(false);
+const selectDelPoster = ref<any>();
+
 const filterInput = computed(() => store.state.filterInputPosters);
 const emerPosters = computed(() =>
-  store.state.emerPosters.filter((e) => {
+  store.state.emerPosters?.filter((e) => {
     return (
       e.incidentName !== "banner" &&
       (!filterInput.value.title ||
@@ -61,11 +64,10 @@ const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
 let delP = null as any;
 
-const del = async (poster: string) => {
-  delP = poster;
+const del = async () => {
   loading.value = true;
   if (props.types == "NP") {
-    const res = await deletePoster(delP);
+    const res = await deletePoster(selectDelPoster.value.posterId || "");
     toast.add({
       severity: "success",
       summary: "Success",
@@ -73,7 +75,7 @@ const del = async (poster: string) => {
       life: 3000,
     });
   } else {
-    const res = await deleteEmergency(delP);
+    const res = await deleteEmergency(selectDelPoster.value.incidentName || "");
     toast.add({
       severity: "success",
       summary: "Success",
@@ -83,10 +85,67 @@ const del = async (poster: string) => {
   }
   loading.value = false;
   delP = null;
+  selectDelPoster.value = undefined;
+  deletePopup.value = false;
 };
 </script>
 
 <template>
+  <Dialog
+  :closable="!loading"
+      v-model:visible="deletePopup"
+      modal
+      close-on-escape
+      :draggable="false"
+      class="w-[425px]"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+        },
+        mask: {
+          style: 'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
+        },
+      }"
+    >
+      <template #header>
+        <div class="header-popup">
+          Delete
+          {{
+            selectDelPoster?.posterId
+              ? `"${selectDelPoster.title}" Poster`
+              : `"${selectDelPoster?.incidentName}" Emergency Poster`
+          }}?
+        </div>
+      </template>
+      <div class="flex flex-col gap-2">
+        <div>
+          Deleting this poster or collection will be permenently deleted from all devices.
+        </div>
+        <div class="inline-block">
+          <div class="flex flex-row gap-4 pt-3">
+            <Button
+              text
+              label="Cancel"
+              :loading="loading"
+              @click="deletePopup = false"
+              :class="'secondaryButton'"
+            ></Button>
+            <Button
+            :loading="loading"
+              label="Delete Poster"
+              :class="'primaryButtonDel'"
+              type="submit"
+              @click="del()"
+            ></Button>
+          </div>
+        </div>
+      </div>
+    </Dialog>
   <DataTable
     :value="props.types === 'NP' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
@@ -226,11 +285,59 @@ const del = async (poster: string) => {
             (rowData.data.posterId === delP ||
               rowData.data.incidentName === delP)
           "
-          @click="del(rowData.data.posterId || rowData.data.incidentName)"
+          @click="
+            deletePopup = true;
+            selectDelPoster = rowData.data;
+          "
         />
       </template>
     </Column>
+
   </DataTable>
 </template>
 
-<style scoped></style>
+<style scoped>
+.header-popup {
+  font-weight: 700;
+  font-size: 22px;
+  color: rgb(255, 0, 0);
+}
+
+.primaryButtonDel {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 10px;
+  margin-top: 20px;
+  background-color: rgb(255, 0, 0);
+  color: rgb(255, 255, 255);
+  font-weight: 800;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.primaryButtonDel:hover {
+  background-color: rgb(193, 0, 0);
+  text-decoration-line: underline;
+}
+
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: none;
+  color: black;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+}
+</style>

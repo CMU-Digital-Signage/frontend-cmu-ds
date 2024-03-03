@@ -34,6 +34,7 @@ const fetchData = async () => {
 
   setFieldPoster(posterRes.poster);
   store.state.posters = posterRes.poster;
+  if(store.state.posters)
   createUnique(store.state.posters);
 
   emerRes.emergency.forEach(
