@@ -27,6 +27,8 @@ const showPopup = ref(false);
 const toast = useToast();
 const loading = ref(false);
 const deletePopup = ref(false);
+const selectDelDevice = ref<Device>();
+
 
 const errorSelectFile = () => {
   toast.add({
@@ -76,8 +78,8 @@ const edit = async () => {
   loading.value = false;
 };
 
-const del = async (MACaddress: any) => {
-  const res = await deleteDevice(MACaddress);
+const del = async () => {
+  const res = await deleteDevice(selectDelDevice.value?.MACaddress || "");
   toast.add({
     severity: "success",
     summary: "Success",
@@ -85,6 +87,7 @@ const del = async (MACaddress: any) => {
     life: 3000,
   });
   deletePopup.value = false;
+  selectDelDevice.value = undefined;
 };
 
 const changeStatusDevice = async (data: Device) => {
@@ -102,7 +105,6 @@ const checkValidRoomNumber = () => {
     return false;
   }
 };
-
 </script>
 
 <template>
@@ -134,6 +136,7 @@ const checkValidRoomNumber = () => {
         </template>
         <template #body="rowData">
           <div class="flex items-center gap-3">
+           
             <p class="font-light">{{ rowData.data.deviceName }}</p>
             <i
               class="pi pi-info-circle cursor-pointer"
@@ -204,9 +207,11 @@ const checkValidRoomNumber = () => {
               rounded
               class="w-9 h-9"
               severity="danger"
-              @click="deletePopup = true"
+              @click="deletePopup = true; selectDelDevice = rowData.data"
             />
-            <Dialog
+            
+          </div>
+          <Dialog
               v-model:visible="deletePopup"
               modal
               close-on-escape
@@ -228,7 +233,7 @@ const checkValidRoomNumber = () => {
             >
               <template #header>
                 <div class="header-popup">
-                  Delete "{{ rowData.data.deviceName }}" device?
+                  Delete "{{ selectDelDevice?.deviceName }}" device?
                 </div>
               </template>
               <div class="flex flex-col gap-2">
@@ -249,13 +254,12 @@ const checkValidRoomNumber = () => {
                       label="Delete device"
                       :class="'primaryButtonDel'"
                       type="submit"
-                      @click="del(rowData.data.MACaddress)"
+                      @click="del()"
                     ></Button>
                   </div>
                 </div>
               </div>
             </Dialog>
-          </div>
         </template>
       </Column>
     </DataTable>
@@ -275,8 +279,7 @@ const checkValidRoomNumber = () => {
           'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
       },
       header: {
-        style:
-          'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
+        style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
       },
       mask: {
         style: 'backdrop-filter: blur(2px)',
@@ -312,11 +315,11 @@ const checkValidRoomNumber = () => {
     </div>
     <div class="flex flex-col gap-2">
       <div class="inline-block">
-          <label for="macAddress" class="text-primary-50 font-medium">
-            Room
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
-        </div>
+        <label for="macAddress" class="text-primary-50 font-medium">
+          Room
+        </label>
+        <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+      </div>
       <InputText
         v-model="form.room"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
@@ -408,7 +411,7 @@ const checkValidRoomNumber = () => {
         :loading="loading"
         class="primaryButton"
         @click="edit"
-        :disabled=" !form.deviceName || !form.room"
+        :disabled="!form.deviceName || !form.room"
       ></Button>
     </div>
   </Dialog>
