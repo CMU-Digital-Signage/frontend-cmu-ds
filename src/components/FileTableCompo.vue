@@ -40,7 +40,7 @@ const emerPosters = computed(() =>
   })
 );
 const uniquePosters = computed(() =>
-  store.state.uniquePosters.filter((e) => {
+  store.state.uniquePosters?.filter((e) => {
     return (
       (!filterInput.value.title ||
         e.title
