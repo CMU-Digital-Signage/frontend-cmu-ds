@@ -55,6 +55,7 @@ onMounted(async () => {
       res.emergency.forEach(
         (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
       );
+      store.state.emerPosters = res.emergency;
     }
   }
 });
@@ -124,7 +125,7 @@ const handleEmergency = async () => {
   <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
     <Toast />
     <div
-      class="pt-[12px] pb-[32px] px-[20px]  flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+      class="pt-[12px] pb-[32px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div v-if="!emerPosters.find((e) => e.status === 'Active')">
         <div
@@ -270,7 +271,6 @@ const handleEmergency = async () => {
 .rectangleOut {
   overscroll-behavior-y: contain;
   overflow: hidden;
-  background: #ffffff;
   flex: 1 1;
 }
 
