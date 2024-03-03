@@ -39,7 +39,7 @@ const del = async () => {
     >
       <Button
         label="Clear"
-        class="border-[#adadad] bg-white text-[#9a9a9a] font-semibold min-w-fit h-10 rounded-lg px-5"
+        class="border-none bg-red-500 rounded-[10px]  font-semibold min-w-fit h-10  px-5"
         @click="
           poster = undefined;
           store.state.filterInputPosters.date = new Date();
