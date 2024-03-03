@@ -40,11 +40,11 @@ export async function addEmergency(data: Emergency) {
         withCredentials: true,
       }
     );
-
-    store.state.emerPosters.push({
-      ...res.data.emergency,
-      status: res.data.emergency.status ? "Active" : "Inactive",
-    });
+    if (store.state.emerPosters)
+      store.state.emerPosters.push({
+        ...res.data.emergency,
+        status: res.data.emergency.status ? "Active" : "Inactive",
+      });
 
     return res.data;
   } catch (err: any) {
@@ -77,16 +77,16 @@ export async function editEmergency(
         withCredentials: true,
       }
     );
-
-    const index = store.state.emerPosters.findIndex(
-      (e) => e.incidentName === incidentName
-    );
-    if (index !== -1) {
-      store.state.emerPosters[index] = {
-        ...store.state.devices[index],
-        ...res.data.emergency,
-        status: res.data.emergency.status ? "Active" : "Inactive",
-      };
+    if (store.state.emerPosters && store.state.devices) {
+      const index = store.state.emerPosters.findIndex(
+        (e) => e.incidentName === incidentName
+      );
+      if (index !== -1) {
+        store.state.emerPosters[index] = {
+          ...res.data.emergency,
+          status: res.data.emergency.status ? "Active" : "Inactive",
+        };
+      }
     }
 
     return res.data;
@@ -112,10 +112,10 @@ export async function deleteEmergency(incidentName: string) {
         withCredentials: true,
       }
     );
-
-    store.state.emerPosters = store.state.emerPosters.filter(
-      (e) => e.incidentName !== incidentName
-    );
+    if (store.state.emerPosters)
+      store.state.emerPosters = store.state.emerPosters.filter(
+        (e) => e.incidentName !== incidentName
+      );
 
     return res.data;
   } catch (err: any) {
@@ -147,11 +147,12 @@ export async function activateEmergency(
       }
     );
 
-    const index = store.state.emerPosters.findIndex(
-      (e) => e.incidentName === incidentName
-    );
-    if (index !== -1) store.state.emerPosters[index].status = "Active";
-
+    if (store.state.emerPosters) {
+      const index = store.state.emerPosters.findIndex(
+        (e) => e.incidentName === incidentName
+      );
+      if (index !== -1) store.state.emerPosters[index].status = "Active";
+    }
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -182,13 +183,15 @@ export async function deactivateEmergency(
       }
     );
 
-    const index = store.state.emerPosters.findIndex(
-      (e) => e.incidentName === incidentName
-    );
-    if (index !== -1) {
-      store.state.emerPosters[index].emergencyImage =
-        res.data.emergency.emergencyImage;
-      store.state.emerPosters[index].status = "Inactive";
+    if (store.state.emerPosters) {
+      const index = store.state.emerPosters.findIndex(
+        (e) => e.incidentName === incidentName
+      );
+      if (index !== -1) {
+        store.state.emerPosters[index].emergencyImage =
+          res.data.emergency.emergencyImage;
+        store.state.emerPosters[index].status = "Inactive";
+      }
     }
 
     return res.data;

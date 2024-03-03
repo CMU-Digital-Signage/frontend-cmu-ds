@@ -15,7 +15,7 @@ const mac = route.params.mac as string;
 const filterDate = computed(() => store.state.filterInputPosters.date);
 const filterTime = computed(() => store.state.filterInputPosters.time);
 const posters = computed(() =>
-  store.state.posters.filter((e) => {
+  store.state.posters?.filter((e) => {
     return (
       e.MACaddress === mac &&
       e.startDate.getTime() <= filterDate.value.getTime() &&
@@ -46,7 +46,7 @@ watch([filterDate, filterTime], () => {
   image.value.image = "";
 
   if (
-    posters.value.length &&
+    posters.value &&
     (dateFormatter(filterDate.value) !== dateFormatter(new Date()) ||
       filterTime.value.getHours() !== new Date().getHours() ||
       filterTime.value.getMinutes() !== new Date().getMinutes())
@@ -63,7 +63,7 @@ watch(
   posters,
   () => {
     if (
-      !posters.value.find((e) => e.posterId === selectPoster.value?.posterId)
+      !posters.value?.find((e) => e.posterId === selectPoster.value?.posterId)
     ) {
       selectPoster.value = undefined;
       selectImage.value = "";
@@ -170,7 +170,7 @@ const rowStyle = (rowData: any) => {
             />
           </transition>
           <button
-            v-else-if="posters.length"
+            v-else-if="posters"
             class="pi pi-play text-[#808080] text-5xl rounded-full p-2 bg-white hover:bg-gray-200"
             @click="stopLoop = loopPoster(posters)"
           />

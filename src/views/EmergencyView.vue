@@ -49,7 +49,7 @@ const checkNumOfRowsandCols = (e: any) => {
 };
 
 onMounted(async () => {
-  if (!emerPosters.value.length) {
+  if (!emerPosters.value) {
     const res = await getEmergency();
     if (res.ok) {
       res.emergency.forEach(
@@ -61,7 +61,7 @@ onMounted(async () => {
 });
 
 watchEffect(() => {
-  const activeEmer = emerPosters.value.find(
+  const activeEmer = emerPosters.value?.find(
     (e: Emergency) => e.status === "Active"
   );
   if (activeEmer) {
@@ -127,7 +127,7 @@ const handleEmergency = async () => {
     <div
       class="pt-[12px] pb-[32px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
-      <div v-if="!emerPosters.find((e) => e.status === 'Active')">
+      <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
           class="flex flex-row px-4 py-2 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
         >
@@ -157,7 +157,7 @@ const handleEmergency = async () => {
             >
               <div class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9">
                 <div
-                  v-for="category in emerPosters.filter(
+                  v-for="category in emerPosters?.filter(
                     (e) => e.incidentName !== 'banner'
                   )"
                   :inputId="category.incidentName"
@@ -184,7 +184,7 @@ const handleEmergency = async () => {
                 <div class="flex gap-2 items-center">
                   <RadioButton
                     :value="
-                      emerPosters.find((e) => e.incidentName === 'banner')
+                      emerPosters?.find((e) => e.incidentName === 'banner')
                     "
                     v-model="selectEmer"
                   />

@@ -12,18 +12,18 @@ export default createStore({
     showUpload: false,
     viewType: true,
     userInfo: <User>{},
-    allUser: <User[]>[],
+    allUser: <User[] | undefined>undefined,
     selectTabview: <number>0,
     selectDevice: <string>"",
     currentViewDate: <string>(
       `${fullMonth[date.getMonth()]} ${date.getFullYear()}`
     ),
     macNotUse: <any>[],
-    devices: <Device[]>[],
-    posters: <Poster[]>[],
-    emerPosters: <Emergency[]>[],
+    devices: <Device[] | undefined>undefined,
+    posters: <Poster[] | undefined>undefined,
+    emerPosters: <Emergency[] | undefined>undefined,
     uniquePosters: <Poster[] | undefined>undefined,
-    searchPosters: <Poster[] | null>null,
+    searchPosters: <Poster[] | undefined>undefined,
     editPoster: { title: "", type: "" },
     filterInputPosters: {
       title: "",
@@ -46,18 +46,18 @@ export default createStore({
   },
   getters: {
     getUserById: (state) => (id: string) => {
-      return state.allUser.find((user) => user.id === id) || {};
+      return state.allUser?.find((user) => user.id === id) || undefined;
     },
     getDeviceByMac: (state) => (mac: string) => {
       return (
-        state.devices.find((device) => device.MACaddress === mac)?.deviceName ||
-        {}
+        state.devices?.find((device) => device.MACaddress === mac)
+          ?.deviceName || undefined
       );
     },
   },
   mutations: {
     setAdmin(state, { id, isAdmin }) {
-      state.allUser.find((e) => (e.id === id ? (e.isAdmin = isAdmin) : ""));
+      state.allUser?.find((e) => (e.id === id ? (e.isAdmin = isAdmin) : ""));
     },
     resetFilter(state) {
       state.filterInputPosters = {
@@ -84,7 +84,7 @@ export default createStore({
       ];
     },
     setAllDevice(state, index) {
-      state.devices.map((e) => {
+      state.devices?.map((e) => {
         if (!state.formDisplay[index].MACaddress.includes(e.MACaddress!))
           state.formDisplay[index].MACaddress.push(e.MACaddress!);
       });

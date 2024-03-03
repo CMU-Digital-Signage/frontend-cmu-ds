@@ -7,7 +7,7 @@ const devices = computed(() => store.state.devices);
 const loading = ref(false);
 const floors = ref<string[] | any>([]);
 onMounted(() => {
-  if (!devices.value.length) loading.value = true;
+  if (!devices.value) loading.value = true;
   else {
     devices.value.forEach((e) => {
       if (!floors.value?.includes(e.room?.charAt(0))) {
@@ -17,7 +17,7 @@ onMounted(() => {
   }
 });
 watch(devices, () => {
-  if (devices.value.length) {
+  if (devices.value) {
     devices.value.forEach((e) => {
       if (!floors.value?.includes(e.room?.charAt(0))) {
         floors.value.push(e.room?.charAt(0));
@@ -35,7 +35,7 @@ watch(devices, () => {
       class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
     ></Skeleton>
     <div
-      v-else
+      v-else-if="devices"
       v-for="(floor, index) in floors"
       :key="index"
       class="text-left pb-7 first:border-none border-t-2 border-[#dee2e6]"

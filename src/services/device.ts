@@ -36,11 +36,12 @@ export async function addDevice(data: Device) {
       }
     );
 
-    store.state.devices.push({
-      ...data,
-      status: false,
-      color: color[store.state.devices.length],
-    });
+    if (store.state.devices)
+      store.state.devices.push({
+        ...data,
+        status: false,
+        color: color[store.state.devices.length],
+      });
     store.state.macNotUse = store.state.macNotUse.filter(
       (e: any) => e !== data.MACaddress
     );
@@ -70,11 +71,13 @@ export async function editDevice(data: Device) {
       }
     );
 
-    const index = store.state.devices.findIndex(
-      (e) => e.MACaddress === data.MACaddress
-    );
-    if (index !== -1) {
-      store.state.devices[index] = { ...store.state.devices[index], ...data };
+    if (store.state.devices) {
+      const index = store.state.devices.findIndex(
+        (e) => e.MACaddress === data.MACaddress
+      );
+      if (index !== -1) {
+        store.state.devices[index] = { ...store.state.devices[index], ...data };
+      }
     }
 
     return res.data;
@@ -101,9 +104,10 @@ export async function deleteDevice(MACaddress: string) {
       }
     );
 
-    store.state.devices = store.state.devices.filter(
-      (e) => e.MACaddress !== MACaddress
-    );
+    if (store.state.devices)
+      store.state.devices = store.state.devices.filter(
+        (e) => e.MACaddress !== MACaddress
+      );
 
     return res.data;
   } catch (err: any) {

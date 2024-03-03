@@ -14,13 +14,13 @@ const loadAdmin = ref(false);
 const loadDevice = ref(false);
 
 onMounted(() => {
-  if (!admin.value.length) loadAdmin.value = true;
-  if (!devices.value.length) loadDevice.value = true;
+  if (!admin.value) loadAdmin.value = true;
+  if (!devices.value) loadDevice.value = true;
 });
 
 watch([admin, devices], () => {
-  if (admin.value.length) loadAdmin.value = false;
-  if (devices.value.length) loadDevice.value = false;
+  if (admin.value) loadAdmin.value = false;
+  if (devices.value) loadDevice.value = false;
 });
 </script>
 

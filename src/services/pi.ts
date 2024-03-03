@@ -55,7 +55,8 @@ export async function turnOnDevice(mac: string) {
       }
     );
 
-    store.state.devices.find((e) => e.MACaddress === mac)!.status = true;
+    if (store.state.devices)
+      store.state.devices.find((e) => e.MACaddress === mac)!.status = true;
 
     return res.data;
   } catch (err: any) {
@@ -79,7 +80,8 @@ export async function turnOffDevice(mac: string) {
       }
     );
 
-    store.state.devices.find((e) => e.MACaddress === mac)!.status = false;
+    if (store.state.devices)
+      store.state.devices.find((e) => e.MACaddress === mac)!.status = false;
 
     return res.data;
   } catch (err: any) {

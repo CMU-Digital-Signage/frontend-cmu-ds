@@ -14,8 +14,8 @@ export async function addAdmin(email: string) {
         withCredentials: true,
       }
     );
-
-    store.state.allUser.push(res.data.admin);
+    
+    if (store.state.allUser) store.state.allUser.push(res.data.admin);
 
     return res.data;
   } catch (err: any) {
@@ -43,8 +43,10 @@ export async function deleteAdmin(id: number) {
       }
     );
 
-    store.state.allUser.find((e) => e.email === res.data.user.email)!.isAdmin =
-      false;
+    if (store.state.allUser)
+      store.state.allUser.find(
+        (e) => e.email === res.data.user.email
+      )!.isAdmin = false;
 
     return res.data;
   } catch (err: any) {

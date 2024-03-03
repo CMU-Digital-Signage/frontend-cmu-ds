@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import FileTable from "@/components/FileTableCompo.vue";
-import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+} from "vue";
 import store from "../store";
 
 const click = computed({
@@ -13,7 +20,7 @@ const emerPosters = computed(() => store.state.emerPosters);
 const loading = ref(false);
 
 onBeforeMount(() => {
-  if (!uniquePosters.value || !emerPosters.value.length) loading.value = true;
+  if (!uniquePosters.value || !emerPosters.value) loading.value = true;
 });
 
 watch([uniquePosters, emerPosters], () => {
@@ -40,7 +47,13 @@ onUnmounted(() => {
       v-model:activeIndex="click"
     >
       <TabPanel header="Normal File">
-        <FileTable :types="'NP'" />
+        <FileTable v-if="uniquePosters?.length" :types="'NP'" />
+        <div
+          v-else
+          class="my-[0.75rem] flex h-full justify-center items-center align-middle"
+        >
+          Content not found
+        </div>
       </TabPanel>
       <TabPanel
         header="Emergency File"

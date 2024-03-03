@@ -61,6 +61,15 @@ const calOptions = reactive<CalendarOptions>({
   eventClick: function (info) {
     const start = info.event._def.recurringDef?.typeData.startRecur;
     const end = info.event._def.recurringDef?.typeData.endRecur || null;
+    const startMinus1 = start
+      ? new Date(
+          start.getFullYear(),
+          start.getMonth(),
+          start.getDate() - 1,
+          start.getHours(),
+          start.getMinutes()
+        )
+      : null;
     const endMinus1 = end
       ? new Date(
           end.getFullYear(),
@@ -86,7 +95,7 @@ const calOptions = reactive<CalendarOptions>({
       type: info.event._def.extendedProps.type,
       posterId: info.event._def.extendedProps.posterId,
       title: info.event.title,
-      start: dateFormatter(start || info.event.start),
+      start: dateFormatter(startMinus1 || info.event.start),
       end: dateFormatter(endMinus1 || info.event.start),
       allDay: info.event.allDay,
       startTime: info.event._instance?.range.start.toUTCString().slice(17, 22),
@@ -114,90 +123,117 @@ const calOptions = reactive<CalendarOptions>({
 });
 
 const setEvent = () => {
-  postersView.value = [];
-  const currentDevice = posters.value.filter(
-    (e) => e.MACaddress === selectedDevice.value
-  );
-  currentDevice.forEach((e) => {
-    const displayDuration = e.image.length * e.duration;
-    if (e.image.length > 1) {
-      e.type = "Collection";
-    } else e.type = "Individual";
+  if (posters.value && posters.value.length) {
+    postersView.value = [];
+    const currentDevice = posters.value.filter(
+      (e) => e.MACaddress === selectedDevice.value
+    );
+    currentDevice.forEach((e) => {
+      const displayDuration = e.image.length * e.duration;
+      if (e.image.length > 1) {
+        e.type = "Collection";
+      } else e.type = "Individual";
 
-    const allDay =
-      e.startTime.getHours() === 0 &&
-      e.endTime.getHours() === 23 &&
-      e.endTime.getMinutes() === 59;
-    const exist = postersView.value.find((p) => p.title === e.title);
-    const startPlus1 = new Date(
-      e.startDate.getFullYear(),
-      e.startDate.getMonth(),
-      e.startDate.getDate() + 1,
-      e.startDate.getHours(),
-      e.startDate.getMinutes()
-    ).getTime();
-    const endPlus1 = new Date(
-      e.endDate.getFullYear(),
-      e.endDate.getMonth(),
-      e.endDate.getDate() + 1,
-      e.endDate.getHours(),
-      e.endDate.getMinutes()
-    ).getTime();
+      const allDay =
+        e.startTime.getHours() === 0 &&
+        e.endTime.getHours() === 23 &&
+        e.endTime.getMinutes() === 59;
+      const exist = postersView.value.find((p) => p.title === e.title);
 
-    let schedule = null;
-    // oneDay allTime
-    if (allDay && e.startDate.getTime() === e.endDate.getTime()) {
-      schedule = {
-        start: e.startDate,
-        end: e.endDate,
-        oneDay: true,
-      };
-    }
-    // allTime manyDay
-    else if (allDay && e.startDate.getTime() !== e.endDate.getTime()) {
-      schedule = {
-        start: e.startDate,
-        end: endPlus1,
-      };
-    }
-    // manyDay
-    else {
-      schedule = {
-        startRecur: startPlus1,
-        endRecur: endPlus1,
-        startTime: e.startTime.toTimeString(),
-        endTime: e.endTime.toTimeString(),
-      };
-    }
+      const startPlus1 = new Date(
+        e.startDate.getFullYear(),
+        e.startDate.getMonth(),
+        e.startDate.getDate() + 1,
+        e.startDate.getHours(),
+        e.startDate.getMinutes()
+      );
+      const endPlus1 = new Date(
+        e.endDate.getFullYear(),
+        e.endDate.getMonth(),
+        e.endDate.getDate() + 1,
+        e.endDate.getHours(),
+        e.endDate.getMinutes()
+      );
 
-    const posterOnDevice = posters.value
-      .filter((p) => p.title === e.title)
-      .reduce((arr: any[], cur: any) => {
-        const curDevice = store.getters.getDeviceByMac(cur.MACaddress);
-        if (!arr.includes(curDevice)) arr.push(curDevice);
-        return arr;
-      }, []);
+      let schedule = null;
+      // oneDay allTime
+      if (allDay && e.startDate.getTime() === e.endDate.getTime()) {
+        schedule = {
+          start: startPlus1,
+          end: endPlus1,
+          oneDay: true,
+        };
+      }
+      // oneDay oneTime
+      else if (e.startDate.getTime() === e.endDate.getTime()) {
+        schedule = {
+          start: new Date(
+            e.startDate.getFullYear(),
+            e.startDate.getMonth(),
+            e.startDate.getDate(),
+            e.startTime.getHours() + 7,
+            e.startTime.getMinutes()
+          ),
+          end: new Date(
+            e.endDate.getFullYear(),
+            e.endDate.getMonth(),
+            e.endDate.getDate(),
+            e.endTime.getHours() + 7,
+            e.endTime.getMinutes()
+          ),
+        };
+      }
+      // allTime manyDay
+      else if (allDay && e.startDate.getTime() !== e.endDate.getTime()) {
+        schedule = {
+          start: startPlus1,
+          end: new Date(
+            endPlus1.getFullYear(),
+            endPlus1.getMonth(),
+            endPlus1.getDate() + 1
+          ),
+          allDay: true,
+        };
+      }
+      // manyDay
+      else {
+        schedule = {
+          startRecur: startPlus1,
+          endRecur: endPlus1,
+          startTime: e.startTime.toTimeString(),
+          endTime: e.endTime.toTimeString(),
+        };
+      }
 
-    postersView.value.push({
-      allDay: allDay,
-      type: e.type,
-      posterId: e.posterId,
-      title: e.title,
-      description: e.description,
-      displayDuration: displayDuration,
-      uploader: e.uploader,
-      userId: e.id,
-      amount: e.image.length,
-      onDevice: posterOnDevice,
-      backgroundColor: exist
-        ? exist.backgroundColor
-        : color.at(postersView.value.length),
-      ...schedule,
+      const posterOnDevice = posters
+        .value!.filter((p) => p.title === e.title)
+        .reduce((arr: any[], cur: any) => {
+          const curDevice = store.getters.getDeviceByMac(cur.MACaddress);
+          if (!arr.includes(curDevice)) arr.push(curDevice);
+          return arr;
+        }, []);
+
+      postersView.value.push({
+        allDay: allDay,
+        type: e.type,
+        posterId: e.posterId,
+        title: e.title,
+        description: e.description,
+        displayDuration: displayDuration,
+        uploader: e.uploader,
+        userId: e.id,
+        amount: e.image.length,
+        onDevice: posterOnDevice,
+        backgroundColor: exist
+          ? exist.backgroundColor
+          : color.at(postersView.value.length),
+        ...schedule,
+      });
     });
-  });
-  calOptions.events = postersView.value;
-  calendar.value?.removeAllEvents();
-  calendar.value?.addEventSource(postersView.value);
+    calOptions.events = postersView.value;
+    calendar.value?.removeAllEvents();
+    calendar.value?.addEventSource(postersView.value);
+  }
 };
 
 const resizeCalendar = () => {
@@ -230,7 +266,7 @@ const monthView = () => {
 
 onMounted(async () => {
   if (!posters.value) loadPoster.value = true;
-  setEvent();
+  else setEvent();
   if (fullCalendar.value) {
     calendar.value = new Calendar(fullCalendar.value, calOptions);
     calendar.value.render();
@@ -370,7 +406,7 @@ const del = async (posterId: string) => {
               <span>{{ item }}</span>
               <span>
                 ({{
-                  store.state.devices.find((e) => e.deviceName === item)?.room
+                  store.state.devices?.find((e) => e.deviceName === item)?.room
                 }})
               </span>
             </p>
