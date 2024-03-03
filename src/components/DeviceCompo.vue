@@ -26,6 +26,7 @@ const device = computed(() => store.state.devices);
 const showPopup = ref(false);
 const toast = useToast();
 const loading = ref(false);
+const deletePopup = ref(false);
 
 const errorSelectFile = () => {
   toast.add({
@@ -83,6 +84,7 @@ const del = async (MACaddress: any) => {
     detail: res.message,
     life: 3000,
   });
+  deletePopup.value = false;
 };
 
 const changeStatusDevice = async (data: Device) => {
@@ -92,10 +94,20 @@ const changeStatusDevice = async (data: Device) => {
     const res = await turnOnDevice(data.MACaddress!);
   }
 };
+
+const checkValidRoomNumber = () => {
+  const value = form.room;
+  if (!Number.isInteger(Number(value))) {
+    form.room = "";
+    return false;
+  }
+};
+
 </script>
 
 <template>
   <Toast />
+
   <div class="rectangle2">
     <DataTable
       :value="device"
@@ -192,8 +204,57 @@ const changeStatusDevice = async (data: Device) => {
               rounded
               class="w-9 h-9"
               severity="danger"
-              @click="del(rowData.data.MACaddress)"
+              @click="deletePopup = true"
             />
+            <Dialog
+              v-model:visible="deletePopup"
+              modal
+              close-on-escape
+              :draggable="false"
+              class="w-[425px]"
+              :pt="{
+                content: {
+                  style:
+                    'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+                },
+                header: {
+                  style:
+                    'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+                },
+                mask: {
+                  style: 'backdrop-filter: blur(2px)',
+                },
+              }"
+            >
+              <template #header>
+                <div class="header-popup">
+                  Delete "{{ rowData.data.deviceName }}" device?
+                </div>
+              </template>
+              <div class="flex flex-col gap-2">
+                <div>
+                  Deleting this device will also remove all posters associated
+                  with it, but this device's MAC address can be re-added if
+                  Raspberry pi restart again.
+                </div>
+                <div class="inline-block">
+                  <div class="flex flex-row gap-4 pt-3">
+                    <Button
+                      text
+                      label="Cancel"
+                      @click="deletePopup = false"
+                      :class="'secondaryButton'"
+                    ></Button>
+                    <Button
+                      label="Delete device"
+                      :class="'primaryButtonDel'"
+                      type="submit"
+                      @click="del(rowData.data.MACaddress)"
+                    ></Button>
+                  </div>
+                </div>
+              </div>
+            </Dialog>
           </div>
         </template>
       </Column>
@@ -204,17 +265,18 @@ const changeStatusDevice = async (data: Device) => {
     header="Edit Device"
     class="w-[600px] h-auto"
     modal
+    :draggable="false"
     :closable="!loading"
     close-on-escape
     @after-hide="Object.assign(form, initialFormDevice)"
     :pt="{
       content: {
         style:
-          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
       },
       header: {
         style:
-          'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+          'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
       },
       mask: {
         style: 'backdrop-filter: blur(2px)',
@@ -232,6 +294,7 @@ const changeStatusDevice = async (data: Device) => {
         v-model="form.deviceName"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
         placeholder="cpe01"
+        id="deviceName"
       ></InputText>
     </div>
     <div class="flex flex-col gap-2">
@@ -248,11 +311,18 @@ const changeStatusDevice = async (data: Device) => {
       ></InputText>
     </div>
     <div class="flex flex-col gap-2">
-      <label for="macAddress" class="text-primary-50 font-medium">Room</label>
+      <div class="inline-block">
+          <label for="macAddress" class="text-primary-50 font-medium">
+            Room
+          </label>
+          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+        </div>
       <InputText
         v-model="form.room"
         class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
-        placeholder="(Optional)"
+        placeholder="Number only Ex.516"
+        id="room"
+        :required="checkValidRoomNumber()"
       ></InputText>
     </div>
     <div class="flex flex-col gap-1">
@@ -338,6 +408,7 @@ const changeStatusDevice = async (data: Device) => {
         :loading="loading"
         class="primaryButton"
         @click="edit"
+        :disabled=" !form.deviceName || !form.room"
       ></Button>
     </div>
   </Dialog>
@@ -393,9 +464,34 @@ const changeStatusDevice = async (data: Device) => {
   margin-left: 10px;
 }
 
-.primaryButton:hover {
+.primaryButtonDel {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 10px;
+  margin-top: 20px;
+  background-color: rgb(255, 0, 0);
+  color: rgb(255, 255, 255);
+  font-weight: 800;
   cursor: pointer;
+  margin-left: 10px;
+}
+
+.primaryButtonDel:hover {
+  background-color: rgb(193, 0, 0);
+  text-decoration-line: underline;
+}
+
+.primaryButton:hover {
   background-color: rgb(37, 135, 240);
   text-decoration-line: underline;
+}
+
+.header-popup {
+  font-weight: 700;
+  font-size: 22px;
+  color: rgb(255, 0, 0);
 }
 </style>
