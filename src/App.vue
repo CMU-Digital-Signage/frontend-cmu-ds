@@ -61,54 +61,40 @@ onUnmounted(() => {
 
 <template>
   <PopupUpload />
-
   <div
-    class="flex flex-row w-screen h-screen md:fixed font-sf-pro"
+    class="flex flex-row w-screen h-screen md:fixed"
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-gradient-to-r from-[#d0fbffbe] to-[#e4fce7c8]" />
     <div class="w-full h-full flex flex-col bg-[#ffffff]">
       <NavBar class="bg-[#f8f8f8]" />
       <router-view class="bg-[#ffffff] w-full" />
-      <div
-        class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none absolute right-0 bottom-0"
-        v-if="!$route.path.includes('/preview') && !$route.path.includes('/device')"
-      >
-        <span class="pb-3 text-[9px] font-light text-stone-400"
-          ><span class="pb-3 font-normal text-stone-600"
-            >© 2024 Department of Computer Engineering </span
-          >, Chiang Mai University by 404 Brain not Found Group
-          <span class="pb-3 font-normal text-stone-600">
-            | All Rights Reserved | Powered by
-          </span>
-          CPE #30</span
-        >
-      </div>
     </div>
   </div>
-  <div v-else>
-    <div class="w-screen flex flex-col h-full bg-[#ffffff] md:fixed">
-      <NavBar
-        v-if="$route.path === '/emergency'"
-        class="bg-white"
-        :types="'Outside'"
-      />
-      <div
-        class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 bg-none absolute right-0 bottom-0"
-        v-if="!$route.path.includes('/preview') && !$route.path.includes('/device')"
-      >
-        <span class="pb-3 text-[9px] font-light text-stone-400"
-          ><span class="pb-3 font-normal text-stone-600"
-            >© 2024 Department of Computer Engineering </span
-          >, Chiang Mai University by 404 Brain not Found Group
-          <span class="pb-3 font-normal text-stone-600">
-            | All Rights Reserved | Powered by
-          </span>
-          CPE #30</span
-        >
-      </div>
-      <router-view />
-    </div>
+  <div v-else class="flex flex-col w-screen h-full bg-[#ffffff] md:fixed">
+    <NavBar
+      v-if="$route.path === '/emergency'"
+      class="bg-white"
+      :types="'Outside'"
+    />
+    <router-view />
+  </div>
+  <div
+    class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 absolute right-0 bottom-0"
+    v-if="
+      !$route.path.includes('/preview') && !$route.path.includes('/device/')
+    "
+  >
+    <span class="pb-3 text-[9px] font-light text-stone-400">
+      <span class="pb-3 font-normal text-stone-600">
+        © 2024 Department of Computer Engineering
+      </span>
+      , Chiang Mai University by 404 Brain not Found Group
+      <span class="pb-3 font-normal text-stone-600">
+        | All Rights Reserved | Powered by
+      </span>
+      CPE #30
+    </span>
   </div>
 </template>
 
