@@ -129,7 +129,7 @@ export async function deletePoster(posterId: string) {
     store.state.posters = store.state.posters.filter(
       (e) => e.posterId !== posterId
     );
-    store.state.uniquePosters = store.state.uniquePosters.filter(
+    store.state.uniquePosters = store.state.uniquePosters?.filter(
       (e) => e.posterId !== posterId
     );
 

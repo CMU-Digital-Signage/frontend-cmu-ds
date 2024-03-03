@@ -10,7 +10,12 @@ import store from "@/store";
 import router from "@/router";
 import { addEmergency, addPoster, editEmergency, editPoster } from "@/services";
 import { Poster } from "@/types";
-import { newInitialFormDisplay, rotate } from "@/utils/constant";
+import {
+  dateFormatter,
+  newInitialFormDisplay,
+  rotate,
+  timeFormatter,
+} from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
@@ -636,7 +641,7 @@ const nextStepPreview = () => {
                 @click="
                   async () => {
                     formPoster.image[selectRotate.priority - 1].image =
-                      await rotate(selectRotate.image, -90);
+                      await rotate(selectRotate.image, 90);
                     selectRotate.image =
                       formPoster.image[selectRotate.priority - 1].image;
                   }
@@ -694,6 +699,60 @@ const nextStepPreview = () => {
           >
             Review
           </label>
+          <p>Title : {{ formPoster.title }}</p>
+          <p>Description : {{ formPoster.description || "-" }}</p>
+          <table class="border-spacing-3 border-separate text-center">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Display Duration</th>
+                <th>Devices</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(schedule, index) in formDisplay" :key="index">
+                <td>
+                  {{ dateFormatter(schedule.startDate) }}
+                  {{
+                    dateFormatter(schedule.startDate) ===
+                    dateFormatter(schedule.endDate)
+                      ? ""
+                      : ` - ${dateFormatter(schedule.endDate)}`
+                  }}
+                </td>
+                <td v-if="schedule.allDay">All Day</td>
+                <td v-else>
+                  <tr
+                    v-for="(time, iTime) in schedule.time"
+                    :key="iTime"
+                    class="border-b- border-collapse"
+                  >
+                    <td>
+                      {{ timeFormatter(time.startTime) }} -
+                      {{ timeFormatter(time.endTime) }}
+                    </td>
+                  </tr>
+                </td>
+                <td>{{ schedule.duration }}</td>
+                <td v-if="schedule.allDevice">All</td>
+                <td v-else>
+                  <tr
+                    v-for="mac in schedule.MACaddress"
+                    :key="mac"
+                    class="border-b- border-collapse"
+                  >
+                    <td>
+                      {{
+                        store.state.devices.find((e) => e.MACaddress === mac)
+                          ?.deviceName
+                      }}
+                    </td>
+                  </tr>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <div class="flex flex-inline gap-4 pt-3">
             <Button

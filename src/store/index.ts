@@ -22,7 +22,7 @@ export default createStore({
     devices: <Device[]>[],
     posters: <Poster[]>[],
     emerPosters: <Emergency[]>[],
-    uniquePosters: <Poster[]>[],
+    uniquePosters: <Poster[] | undefined>undefined,
     searchPosters: <Poster[] | null>null,
     editPoster: { title: "", type: "" },
     filterInputPosters: {

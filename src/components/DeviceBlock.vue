@@ -6,20 +6,22 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { computed, toRefs, defineProps } from "vue";
+import { ref, toRefs, defineProps } from "vue";
 import { Device } from "@/types";
 import { turnOffDevice, turnOnDevice } from "@/services";
 
 const props = defineProps<{ device: Device }>();
 const { device } = toRefs(props);
-const devices = computed(() => store.state.devices);
+const loading = ref(false);
 
 const changeStatusDevice = async () => {
+  loading.value = true;
   if (device.value.status) {
     const res = await turnOffDevice(device.value.MACaddress!);
   } else {
     const res = await turnOnDevice(device.value.MACaddress!);
   }
+  loading.value = false;
 };
 </script>
 
@@ -66,6 +68,7 @@ const changeStatusDevice = async () => {
         :class="[device.status ? 'bg-[#62ccca]' : 'bg-[#b3b2b2]']"
         icon="pi pi-power-off"
         rounded
+        :loading="loading"
         @click="changeStatusDevice"
       ></Button>
     </div>

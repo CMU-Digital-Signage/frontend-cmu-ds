@@ -61,11 +61,11 @@ onMounted(async () => {
 });
 
 watchEffect(() => {
-  const activeEmer = emerPosters.value.filter(
+  const activeEmer = emerPosters.value.find(
     (e: Emergency) => e.status === "Active"
   );
-  if (activeEmer.length) {
-    selectEmer.value = activeEmer[0];
+  if (activeEmer) {
+    selectEmer.value = activeEmer;
   }
 });
 
@@ -184,7 +184,7 @@ const handleEmergency = async () => {
                 <div class="flex gap-2 items-center">
                   <RadioButton
                     :value="
-                      emerPosters.filter((e) => e.incidentName === 'banner')[0]
+                      emerPosters.find((e) => e.incidentName === 'banner')
                     "
                     v-model="selectEmer"
                   />
