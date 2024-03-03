@@ -103,7 +103,7 @@ const aqiStatus = () => {
     const aqiValue = weather.value.current.pollution.aqius;
     if (aqiValue <= 50) return "Good";
     else if (aqiValue <= 100) return "Moderate";
-    else if (aqiValue <= 150) return "Moderately Polluted";
+    else if (aqiValue <= 150) return "Unhealthy (Sensitive Group)";
     else if (aqiValue <= 200) return "Unhealthy";
     else if (aqiValue <= 300) return "Very Unhealthy";
     else return "Harzardous";
@@ -199,7 +199,7 @@ onUnmounted(() => {
         :class="{
           'text-[#2a8953]': aqiStatus() === 'Good',
           'text-[#95a22f]': aqiStatus() === 'Moderate',
-          'text-[#F48D31]': aqiStatus() === 'Moderately Polluted',
+          'text-[#F48D31]': aqiStatus() === 'Unhealthy (Sensitive Group)',
           'text-[#CA142D]': aqiStatus() === 'Unhealthy',
           'text-[#62008F]': aqiStatus() === 'Very Unhealthy',
           'text-[#730B22]': aqiStatus() === 'Harzardous',
