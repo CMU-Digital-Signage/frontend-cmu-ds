@@ -39,11 +39,10 @@ const selectDevice = computed({
 });
 const Emer = defineProps({ types: String });
 const email = ref<string>("");
-const devicePreview = computed(
-  () =>
-    store.state.devices.filter(
-      (e) => e.MACaddress === router.currentRoute.value.params.mac
-    )[0]
+const devicePreview = computed(() =>
+  store.state.devices.find(
+    (e) => e.MACaddress === router.currentRoute.value.params.mac
+  )
 );
 const panel = ref();
 
@@ -172,7 +171,6 @@ const checkValidRoomNumber = () => {
     return false;
   }
 };
-
 </script>
 
 <template>

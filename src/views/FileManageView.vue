@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FileTable from "@/components/FileTableCompo.vue";
-import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
 import store from "../store";
 
 const click = computed({
@@ -11,15 +11,13 @@ const click = computed({
 const uniquePosters = computed(() => store.state.uniquePosters);
 const emerPosters = computed(() => store.state.emerPosters);
 const loading = ref(false);
-const noData = computed(() => !store.state.uniquePosters.length);
 
-onMounted(() => {
-  if (!uniquePosters.value.length || !emerPosters.value.length)
-    loading.value = true;
+onBeforeMount(() => {
+  if (!uniquePosters.value || !emerPosters.value.length) loading.value = true;
 });
 
 watch([uniquePosters, emerPosters], () => {
-  if (emerPosters.value.length) loading.value = false;
+  if (uniquePosters.value && emerPosters.value) loading.value = false;
 });
 
 watch(click, () => {
@@ -57,7 +55,7 @@ onUnmounted(() => {
     </TabView>
 
     <FileTable
-      v-else-if="!noData"
+      v-else-if="uniquePosters?.length"
       :types="'NP'"
       class="rectangle flex flex-col"
     />

@@ -142,7 +142,7 @@ export default function setupSocket() {
     store.state.posters = store.state.posters.filter(
       (e) => e.title !== data.posterId
     );
-    store.state.uniquePosters = store.state.uniquePosters.filter(
+    store.state.uniquePosters = store.state.uniquePosters?.filter(
       (e) => e.title !== data.posterId
     );
   });
