@@ -21,29 +21,43 @@ const getTextPoster = (e: any) => {
   selectEmer.value.emergencyImage = e.target.value;
 };
 
-const checkNumOfRowsandCols = (e: any) => {
-  const text = e.target.value;
-  const lines = text.split("\n");
-  const currentLineIndex =
-    text.substr(0, e.target.selectionStart).split("\n").length - 1;
-  const currentLine = lines[currentLineIndex];
-  const numberOfLines = lines.length;
-  const numberOfCols = currentLine.length;
-
-  if (
-    numberOfCols >= 30 &&
-    e.key !== "Enter" &&
-    e.key !== "Backspace" &&
-    e.key !== "Spacebar " &&
-    e.key !== "ArrowLeft" &&
-    e.key !== "ArrowRight" &&
-    e.key !== "ArrowUp" &&
-    e.key !== "ArrowDown"
-  ) {
-    e.preventDefault();
+const processText = (text: any) => {
+  if (!text) {
+    return "";
   }
 
-  if (numberOfLines === 8 && e.key === "Enter") {
+  let processedText = "";
+  let charCount = 0;
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === "\n") {
+      processedText += text[i];
+      charCount = 0;
+    } else {
+      processedText += text[i];
+      charCount++;
+    }
+    if (charCount === 32) {
+      processedText += "\n";
+      charCount = 0;
+    }
+  }
+
+  return processedText;
+};
+const checkNumOfRows = (e: any) => {
+  const text = e.target.value;
+  const processedText = processText(text);
+
+  const lines = processedText.split("\n");
+  const numberOfLines = lines.length;
+
+  if (numberOfLines >= 13) {
+    e.target.maxLength = 0;
+  } else {
+    e.target.maxLength = 312;
+  }
+
+  if (numberOfLines === 12 && e.key === "Enter") {
     e.preventDefault();
   }
 };
@@ -192,10 +206,10 @@ const handleEmergency = async () => {
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                   <Textarea
-                    @keydown="checkNumOfRowsandCols"
+                    @keydown="checkNumOfRows"
                     :disabled="selectEmer.incidentName !== 'banner'"
                     @input="getTextPoster"
-                    :maxlength="215"
+                    :maxlength="312"
                     placeholder="Ex: There's a fire, do not use the elevator"
                     class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
                   ></Textarea>
