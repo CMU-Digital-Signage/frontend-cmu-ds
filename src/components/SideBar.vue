@@ -168,7 +168,7 @@ const handleChangePassword = async () => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-screen side-bar z-10 sticky border-gray-100 border-r-[2px]"
+    class="flex flex-col justify-between h-screen side-bar z-10 sticky border-gray-100 border-r-[2px] font-sf-pro"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
     <div class="space-y-5" :class="{ 'p-4': openSidebar }">
@@ -231,16 +231,17 @@ const handleChangePassword = async () => {
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
           v-if="openSidebar"
-          icon="pi pi-plus"
-          class="upload-button mt-7"
+          class="upload-button mt-7 flex items-center justify-center gap-4"
           @click="store.state.showUpload = true"
         >
           <div
-            class="h-6 w-6 mr-2 rounded-full bg-[#039BE5] flex items-center justify-center border-none"
+            class="h-4 w-5 rounded-full flex items-center justify-center border-none"
           >
-            <i class="pi pi-plus text-white"></i>
+            <i class="font-extrabold pi pi-plus text-[#417f98]"></i>
           </div>
-          <span>Upload</span>
+          <span class="text-[#417f98] font-extrabold text-[15px]"
+            >Upload File</span
+          >
         </Button>
         <Button
           class="text-[#282828] bg-[#039BE5] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
@@ -682,9 +683,8 @@ const handleChangePassword = async () => {
               </p>
             </div>
             <p class="ml-9">
-              pixelParade provides an Emergency Activation feature, as
-              shown on the login page, to display emergency posters on all
-              screens.
+              pixelParade provides an Emergency Activation feature, as shown on
+              the login page, to display emergency posters on all screens.
               <span class="font-bold text-black">
                 Before using this website, please set your Emergency Password.
                 This password is used to activate the emergency poster during an
@@ -870,33 +870,34 @@ Button {
 }
 
 .upload-button {
-  background-color: #ffffffc2;
+  background-color: #ffffffdc;
   color: rgb(54, 54, 54);
-  width: 70%;
+  width: 100%;
   border: none;
-  border-radius: 0.8rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  border-radius: 1.2rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
   display: flex;
+  align-items: center;
   font-weight: 900;
   font-size: 14px;
   cursor: pointer;
   transition: box-shadow 0.3s;
-  box-shadow: 0px 0px 7px 0px #888888;
+  box-shadow: 0px 0px 4px 1px rgba(50, 147, 105, 0.5);
 }
 
 .upload-button:hover {
-  box-shadow: 0px 0px 10px 0px #505050;
-  background-color: #f8f8f8;
+  box-shadow: 0px 0px 10px 2px rgba(41, 128, 92, 0.5);
+  background-color: #ffffff;
 }
 
 .menu-ho-upload {
-  box-shadow: 0px 0px 7px 0px #888888;
+  box-shadow: 0px 0px 4px 1px rgba(51, 131, 171, 0.5);
   border: none;
 }
 
 .menu-ho-upload:hover {
-  box-shadow: 0px 0px 10px 0px #505050;
+  box-shadow: 0px 0px 10px 2px rgba(75, 154, 194, 0.5);
   background-color: rgb(9, 120, 247);
 }
 </style>
