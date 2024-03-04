@@ -75,7 +75,7 @@ const resetPassword = async () => {
         <p
           class="font-sf-pro-rounded mt-48 text-2xl lg:mt-12 md:text-4xl font-medium text-[#000000]"
         >
-          CPE Digital Signage
+          CPE pixelParade
         </p>
         <span
           class="font-sf-pro-rounded text-xl lg:mt-4 md:text-xl lg:mb-6 font-medium text-[#000000]"

@@ -184,10 +184,10 @@ const handleChangePassword = async () => {
               src="../assets/images/cpe-mini-logo.png"
             />
             <p
-              :class="{ 'font-bold text-[18px] lg:text-[20px]': openSidebar }"
+              :class="{ 'font-medium text-[18px] lg:text-[20px]': openSidebar }"
               v-show="openSidebar"
             >
-              CPE Signage
+              pixelParade
             </p>
           </div>
         </div>
@@ -628,7 +628,7 @@ const handleChangePassword = async () => {
             <div class="header-popup">Forget Emergency Password</div>
           </template>
           <p v-if="user" class="mb-6">
-            {{ user.firstName }} {{ user.lastName }} · CPE Digital Signage
+            {{ user.firstName }} {{ user.lastName }} · CPE pixelParade
           </p>
           <p v-if="user">
             We'll send a password reset confirmation to
@@ -682,7 +682,7 @@ const handleChangePassword = async () => {
               </p>
             </div>
             <p class="ml-9">
-              CPE Digital Signage provides an Emergency Activation feature, as
+              CPE pixelParade provides an Emergency Activation feature, as
               shown on the login page, to display emergency posters on all
               screens.
               <span class="font-bold text-black">

@@ -191,7 +191,7 @@ const checkValidRoomNumber = () => {
       modal
       close-on-escape
       :draggable="false"
-      :closable="loading"
+      :closable="!loading"
       @after-hide="resetForm()"
       :pt="{
         content: {
