@@ -90,17 +90,6 @@ createApp(App)
     //         ],
     //       }),
     //     },
-    //     Column: {
-    //       sorticon: (slotProps: any) => ({
-    //         class: [
-    //           "m-3 pi",
-    //           {
-    //             "pi-sort-alt": slotProps.props.sortOrder == 0,
-    //             "pi-sort-alpha-down": slotProps.props.sortOrder == 1,
-    //             "pi-sort-alpha-up": slotProps.props.sortOrder == -1,
-    //           },
-    //         ],
-    //       }),
   })
   .use(ToastService)
   .component("font-awesome-icon", FontAwesomeIcon)
