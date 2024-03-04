@@ -226,10 +226,10 @@ const handleEmergency = async () => {
         <div
           class="flex flex-1 justify-center items-center text-2xl gap-2 text-[#23C6A0] bg-[#D1FFEC] rounded-lg p-4"
         >
-          <!-- <div class="text-semibold text-4xl">
+          <div class="text-semibold text-4xl">
             {{ selectEmer.incidentName }}
           </div>
-          has been Activate. -->
+          has been Activate.
         </div>
         <img
           class="w-[400px] h-[400px]"
