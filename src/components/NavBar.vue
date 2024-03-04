@@ -181,7 +181,7 @@ const checkValidRoomNumber = () => {
 
 <template>
   <div
-    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold text-gray-800 text-[18px]"
+    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white border-gray-100 border-b-[2px] font-semibold font-sf-pro text-gray-800 text-[18px]"
   >
     <Toast />
     <!-- Popup Add Device -->
@@ -191,7 +191,7 @@ const checkValidRoomNumber = () => {
       modal
       close-on-escape
       :draggable="false"
-      :closable="loading"
+      :closable="!loading"
       @after-hide="resetForm()"
       :pt="{
         content: {
@@ -371,11 +371,11 @@ const checkValidRoomNumber = () => {
           :pt="{
             content: {
               style:
-                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
             },
             header: {
               style:
-                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+                'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
             },
             mask: {
               style: 'backdrop-filter: blur(2px)',

@@ -16,6 +16,8 @@ const selectEmer = ref({ incidentName: "", emergencyImage: "" } as Emergency);
 const password = ref("");
 const toast = useToast();
 const loading = ref(false);
+const loading1st = ref(false);
+const checkTextRow = ref(false);
 
 const getTextPoster = (e: any) => {
   selectEmer.value.emergencyImage = e.target.value;
@@ -55,15 +57,18 @@ const checkNumOfRows = (e: any) => {
     e.target.maxLength = 0;
   } else {
     e.target.maxLength = 312;
+    checkTextRow.value = false;
   }
 
   if (numberOfLines === 12 && e.key === "Enter") {
+    checkTextRow.value = true;
     e.preventDefault();
   }
 };
 
 onMounted(async () => {
   if (!emerPosters.value) {
+    loading1st.value = true;
     const res = await getEmergency();
     if (res.ok) {
       res.emergency.forEach(
@@ -71,6 +76,7 @@ onMounted(async () => {
       );
       store.state.emerPosters = res.emergency;
     }
+    loading1st.value = false;
   }
 });
 
@@ -136,22 +142,30 @@ const handleEmergency = async () => {
 </script>
 
 <template>
-  <div class="rectangleOut flex md:flex-row flex-col md:gap-0">
+  <div class="rectangleOut flex md:flex-row flex-col md:gap-0 font-sf-pro">
     <Toast />
+    <Skeleton
+      v-if="loading1st"
+      height="100"
+      class="bg-gray-200 rounded-xl flex-1 mt-[0.75rem] mx-[20px] mb-[32px]"
+    ></Skeleton>
     <div
+      v-else
       class="pt-[12px] pb-[32px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
-          class="flex flex-row px-4 py-2 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
+          class="flex flex-row px-4 py-2 my-5 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
         >
-          <div class="w-8 h-8 flex items-center justify-center rounded-full">
+          <div
+            class="w-8 h-8 ml-3 flex items-center justify-center rounded-full"
+          >
             <i
               class="pi pi-exclamation-triangle mb-1 text-red-500 text-3xl"
             ></i>
           </div>
 
-          <div class="md:text-[16px] text-[13px]">
+          <div class="ml-1 md:text-[16px] text-[13px]">
             <p class="font-bold text-red-500">
               <span>Activating the Emergency Poster</span>
             </p>
@@ -161,7 +175,7 @@ const handleEmergency = async () => {
             </p>
           </div>
         </div>
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-5 -mt-2">
           <div>
             <p class="md:text-[16px] text-[14px] font-semibold mb-2">
               Choose Poster to displayed
@@ -187,12 +201,12 @@ const handleEmergency = async () => {
             </div>
           </div>
 
-          <div>
+          <div class="-mt-2">
             <p class="md:text-[16px] text-[14px] font-semibold mb-2">
               Type text to display banner
             </p>
             <div
-              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-48"
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-52"
             >
               <div class="flex flex-col gap-3 md:mx-8 my-5 mx-5">
                 <div class="flex gap-2 items-center">
@@ -212,7 +226,26 @@ const handleEmergency = async () => {
                     :maxlength="312"
                     placeholder="Ex: There's a fire, do not use the elevator"
                     class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
+                    :class="{
+                      'border-red-500':
+                        selectEmer.incidentName === 'banner' &&
+                        (selectEmer.emergencyImage.length >= 312 ||
+                          checkTextRow),
+                    }"
                   ></Textarea>
+                  <div
+                    v-if="
+                      selectEmer.incidentName === 'banner' &&
+                      (selectEmer.emergencyImage.length >= 312 || checkTextRow)
+                    "
+                    class="text-red-500 -mt-2"
+                  >
+                    {{
+                      selectEmer.emergencyImage.length >= 312
+                        ? "You have reached the character limit."
+                        : "You have reached the row limit."
+                    }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -221,20 +254,27 @@ const handleEmergency = async () => {
       </div>
       <div
         v-else
-        class="flex flex-col justify-center items-center gap-10 mt-20"
+        class="flex flex-col justify-center items-center h-[1200px] gap-10"
       >
         <div
-          class="flex flex-1 justify-center items-center text-2xl gap-2 text-[#23C6A0] bg-[#D1FFEC] rounded-lg p-4"
+          class="flex flex-col justify-center items-center text-2xl bg-[#e9f8f2] border-[1px] border-[#b9ffe3] shadow-md rounded-xl w-80 h-96 gap-10 p-4"
         >
-          <div class="text-semibold text-4xl">
-            {{ selectEmer.incidentName }}
+          <img
+            class="w-[150px] h-[150px]"
+            src="../assets/images/emerActive.png"
+          />
+          <div class="flex flex-col gap-5">
+            <div
+              class="text-bold font-notoThai text-4xl text-center font-medium text-[#23C6A0] rounded-full"
+            >
+              {{
+                selectEmer.incidentName.charAt(0).toUpperCase() +
+                selectEmer.incidentName.slice(1)
+              }}
+            </div>
+            <div class="flex text-[#3fbda0] text-bold">has been activated</div>
           </div>
-          has been Activate.
         </div>
-        <img
-          class="w-[400px] h-[400px]"
-          src="../assets/images/PostActive.png"
-        />
       </div>
 
       <div v-if="selectEmer">
@@ -258,8 +298,8 @@ const handleEmergency = async () => {
           <Button
             class="w-full rounded-lg border-0"
             :class="{
-              'bg-red-500': selectEmer.status !== 'Active',
-              'bg-black opacity-80': selectEmer.status === 'Active',
+              'bg-red-500 hover:bg-red-600': selectEmer.status !== 'Active',
+              'bg-[#3fbda0] hover:bg-[#36a78d]': selectEmer.status === 'Active',
             }"
             :disabled="!password.length || !selectEmer.emergencyImage.length"
             :loading="loading"
@@ -290,7 +330,19 @@ const handleEmergency = async () => {
             <TextPoster :text="selectEmer.emergencyImage" />
           </div>
         </div>
-        <div v-else>Preview Poster</div>
+        <div v-else>
+          <div class="flex flex-col items-center justify-center -mt-10">
+            <img
+              class="w-[0p48x] h-[540px] opacity-20 -ml-[60px]"
+              src="../assets/images/TVDS.jpg"
+            />
+            <div
+              class="font-semibold text-xl text-center opacity-20 rounded-full"
+            >
+              <p class="text-[#3a3737] opacity-100">Preview Poster</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -300,7 +352,8 @@ const handleEmergency = async () => {
 .rectangleOut {
   overscroll-behavior-y: contain;
   overflow: hidden;
-  flex: 1 1;
+  width: 100%;
+  height: 100%;
 }
 
 .rotated-image {

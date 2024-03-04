@@ -92,7 +92,7 @@ const validateForm = () => {
     (selectedPosterType.value.code === "NP" && !formPoster.value.title) ||
     (selectedPosterType.value.code === "EP" && !formEmer.value.incidentName)
   ) {
-    return "Title Invalid";
+    return "Title is empty";
   }
 
   if (
@@ -102,17 +102,40 @@ const validateForm = () => {
     return "Image selected not found.";
   }
 
-  const invalidSchedule = formDisplay.value.find(
-    (e) =>
-      (!e.MACaddress.length && !e.allDevice) ||
-      !e.duration ||
-      !e.startDate ||
-      !e.endDate
-  );
+  // const invalidSchedule = formDisplay.value.find(
+  //   (e) =>
+  //     (!e.MACaddress.length && !e.allDevice) ||
+  //     !e.duration ||
+  //     !e.startDate ||
+  //     !e.endDate
+  // );
 
-  if (invalidSchedule) {
-    return "Schedule Invalid.";
-  }
+  // const invalidSchedule = formDisplay.value.find((e) => {
+  //   if (!e.MACaddress.length && !e.allDevice) {
+  //     return "Device is empty.";
+  //   } else if (!e.duration) {
+  //     return "Duration is empty.";
+  //   } else if (!e.startDate) {
+  //     return "startDate is empty.";
+  //   } else if (!e.endDate) {
+  //     return "endDate is empty.";
+  //   }
+  // });
+
+  const invalidSchedule = formDisplay.value.reduce((errors: any, e) => {
+    if (!e.startDate) {
+      errors.push("Start Date is empty.");
+    } else if (!e.endDate) {
+      errors.push("End Date is empty.");
+    } else if (!e.duration) {
+      errors.push("Display Duration is empty.");
+    } else if (!e.MACaddress.length && !e.allDevice) {
+      errors.push("Device is empty.");
+    }
+    return errors;
+  }, []);
+
+  return invalidSchedule.join("\n");
 };
 
 const handleAddEmergency = async () => {
