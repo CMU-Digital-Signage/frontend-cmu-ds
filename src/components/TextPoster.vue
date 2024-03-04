@@ -68,8 +68,8 @@ const processText = (text: string | undefined) => {
         <p
           :class="
             $route.path === '/emergency'
-              ? 'text-4xl mb-5 -mt-2'
-              : 'text-7xl mb-10'
+              ? 'text-4xl mb-10 -mt-2'
+              : 'text-7xl mb-24'
           "
         >
           ฉุกเฉิน !
