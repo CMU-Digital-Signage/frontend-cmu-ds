@@ -4,7 +4,7 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { computed, onMounted, ref, watch, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { setPassword } from "@/services/user";

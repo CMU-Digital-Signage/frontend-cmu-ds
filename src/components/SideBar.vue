@@ -1,11 +1,11 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 export default defineComponent({
   name: "SideBar",
 });
 </script>
 <script setup lang="ts">
-import { computed, watch, watchEffect, onMounted } from "vue";
+import { ref, computed, watchEffect, onMounted } from "vue";
 import store from "@/store";
 import { signOut, setPassword, changePassword, sendEmail } from "@/services";
 import { useToast } from "primevue/usetoast";
@@ -234,7 +234,6 @@ const handleChangePassword = async () => {
           icon="pi pi-plus"
           class="upload-button mt-7"
           @click="store.state.showUpload = true"
-   
         >
           <div
             class="h-6 w-6 mr-2 rounded-full bg-[#039BE5] flex items-center justify-center border-none"
@@ -893,7 +892,7 @@ Button {
 
 .menu-ho-upload {
   box-shadow: 0px 0px 7px 0px #888888;
-  border: none
+  border: none;
 }
 
 .menu-ho-upload:hover {

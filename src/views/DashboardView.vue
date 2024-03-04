@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Poster } from "@/types";
 export default defineComponent({
   name: "DashboardView",
 });
@@ -16,7 +17,7 @@ import {
 } from "vue";
 import { color, dateFormatter, setNorForm } from "@/utils/constant";
 import store from "@/store";
-import { deletePoster, getPoster } from "@/services";
+import { deletePoster } from "@/services";
 import { Calendar, CalendarOptions } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -205,13 +206,15 @@ const setEvent = () => {
         };
       }
 
-      const posterOnDevice = posters
-        .value!.filter((p) => p.title === e.title)
-        .reduce((arr: any[], cur: any) => {
-          const curDevice = store.getters.getDeviceByMac(cur.MACaddress);
-          if (!arr.includes(curDevice)) arr.push(curDevice);
-          return arr;
-        }, []);
+      const posterOnDevice = posters.value
+        ? posters.value
+            .filter((p: Poster) => p.title === e.title)
+            .reduce((arr: any[], cur: any) => {
+              const curDevice = store.getters.getDeviceByMac(cur.MACaddress);
+              if (!arr.includes(curDevice)) arr.push(curDevice);
+              return arr;
+            }, [])
+        : [];
 
       postersView.value.push({
         allDay: allDay,

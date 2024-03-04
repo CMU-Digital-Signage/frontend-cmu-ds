@@ -204,7 +204,7 @@ export const onUpload = (e: any): Promise<string | undefined> => {
 };
 
 export const rotate = (base64Image: string, deg: number) => {
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<string>((resolve) => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
     const img = new Image();

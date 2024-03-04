@@ -4,8 +4,8 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { getEmergency, getPosterEachDevice } from "@/services";
-import { computed, onMounted, ref, watch, onUpdated, onUnmounted } from "vue";
+import { getPosterEachDevice } from "@/services";
+import { computed, onMounted, ref, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
@@ -22,7 +22,9 @@ import axios from "axios";
 
 const route = useRoute();
 const posters = computed(() => store.state.posters);
-const emerPoster = computed(() => store.state.emerPosters ? store.state.emerPosters[0] : undefined);
+const emerPoster = computed(() =>
+  store.state.emerPosters ? store.state.emerPosters[0] : undefined
+);
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
 const dateTime = ref(new Date());
@@ -123,8 +125,8 @@ const fetchData = async () => {
       return 0;
     });
     store.state.posters = poster;
-
-    stopLoop.value = loopPoster(posters.value!, emerPoster.value);
+    if (posters.value)
+      stopLoop.value = loopPoster(posters.value, emerPoster.value);
   }
 };
 
@@ -147,8 +149,8 @@ watch(emerPoster, () => {
     if (stopLoop.value) stopLoop.value();
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
-  } else {
-    stopLoop.value = loopPoster(posters.value!, emerPoster.value);
+  } else if (posters.value) {
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
   }
 });
 

@@ -23,7 +23,7 @@
           ลงชื่อเข้าสู่ระบบ
         </span>
         <span class="show-on-mobile text-[#484848]">
-          To login, go to CPE Digital Signage <br/>on your tablet or desktop
+          To login, go to CPE Digital Signage <br />on your tablet or desktop
         </span>
         <button
           class="flex items-center hide-on-mobile md:mb-4 mb-3 justify-center w-auto md:p-6 md:h-11 h-fit p-2 relative rounded-[10px] bg-[#696CA3] text-white text-2xl button-container drop-shadow-xl"
@@ -41,7 +41,6 @@
         <router-link to="/emergency">
           <Button
             class="w-auto md:p-5 md:h-11 h-fit p-2 bg-[#ff4747] relative rounded-[10px] text-sm md:text-lg border-0 button-containerEmer"
-           
           >
             <i class="pi pi-exclamation-triangle"></i>
             <p class="font-sf-pro-rounded ml-2 font-medium">
@@ -67,7 +66,8 @@ import { getUserInfo } from "@/services";
 export default defineComponent({
   methods: {
     redirectToOAuth() {
-      window.location.href = process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL!;
+      window.location.href =
+        process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL || "";
     },
   },
   async beforeRouteEnter(to, from, next) {

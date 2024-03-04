@@ -7,7 +7,6 @@ export default defineComponent({
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import store from "@/store";
-import router from "@/router";
 import { addEmergency, addPoster, editEmergency, editPoster } from "@/services";
 import { Poster } from "@/types";
 import {

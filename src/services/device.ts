@@ -43,7 +43,7 @@ export async function addDevice(data: Device) {
         color: color[store.state.devices.length],
       });
     store.state.macNotUse = store.state.macNotUse.filter(
-      (e: any) => e !== data.MACaddress
+      (e: string) => e !== data.MACaddress
     );
     store.state.filterDevice.push(data.MACaddress);
 

@@ -55,9 +55,9 @@ export async function turnOnDevice(mac: string) {
       }
     );
 
-    if (store.state.devices)
+    if (store.state.devices) {
       store.state.devices.find((e) => e.MACaddress === mac)!.status = true;
-
+    }
     return res.data;
   } catch (err: any) {
     if (!err.response) {

@@ -6,7 +6,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, ref, toRefs, onMounted, defineProps, onUpdated } from "vue";
+import { computed, ref, toRefs, defineProps } from "vue";
 import { onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
@@ -20,8 +20,9 @@ const fileUpload = ref();
 
 const errorSelectFile = async () => {
   if (
+    maxImage.value &&
     formPoster.value.image?.length + fileUpload.value.files.length >=
-    maxImage.value!
+      maxImage.value
   ) {
     toast.add({
       severity: "error",

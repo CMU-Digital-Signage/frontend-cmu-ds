@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { faSadCry } from "@fortawesome/free-regular-svg-icons";
 export default defineComponent({
   name: "NavBar",
 });
@@ -17,6 +16,7 @@ import {
   statusPoster,
   statusEmer,
 } from "@/utils/constant";
+import { Poster } from "@/types";
 import { filesize } from "filesize";
 
 const form = reactive({ ...initialFormDevice });
@@ -24,8 +24,6 @@ const filterInput = computed(() => store.state.filterInputPosters);
 const user = computed(() => store.state.userInfo);
 const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
-const posters = computed(() => store.state.posters);
-const searchPosters = computed(() => store.state.searchPosters);
 const chooseFile = ref();
 const showPopup = ref(false);
 const showPopupAddDevice = ref(false);
@@ -84,7 +82,7 @@ const search = async () => {
   store.state.loading = true;
   const res = await searchPoster(searchP.value);
   if (res.ok) {
-    res.poster.forEach((e: any) => {
+    res.poster.forEach((e: Poster) => {
       e.createdAt = new Date(e.createdAt);
       e.updatedAt = new Date(e.updatedAt);
       e.startDate = new Date(e.startDate);
@@ -92,7 +90,9 @@ const search = async () => {
       e.startTime = new Date(e.startTime);
       e.endTime = new Date(e.endTime);
     });
-    res.poster.sort((a: any, b: any) => a.startDate - b.startDate);
+    res.poster.sort(
+      (a: Poster, b: Poster) => a.startDate.getTime() - b.startDate.getTime()
+    );
     store.state.searchPosters = res.poster;
   }
   store.state.loading = false;
@@ -116,7 +116,7 @@ const add = async () => {
   }
 
   const res = await addDevice(form);
-  loading.value = true
+  loading.value = true;
   if (res.ok) {
     showPopupAddDevice.value = false;
     toast.add({
@@ -134,11 +134,11 @@ const add = async () => {
       life: 3000,
     });
   }
-  loading.value = false
+  loading.value = false;
 };
 
 const addEmailAdmin = async () => {
-  loading.value = true
+  loading.value = true;
   if (store.state.allUser?.find((e) => e.email === email.value)?.isAdmin) {
     toast.add({
       severity: "error",
@@ -159,7 +159,7 @@ const addEmailAdmin = async () => {
       life: 3000,
     });
   }
-  loading.value = false
+  loading.value = false;
 };
 
 const validateEmail = () => {
@@ -329,7 +329,7 @@ const checkValidRoomNumber = () => {
       </div>
       <div class="flex flex-row gap-4 pt-3">
         <Button
-        :loading="loading"
+          :loading="loading"
           label="Cancel"
           text
           @click="
@@ -339,7 +339,7 @@ const checkValidRoomNumber = () => {
           :class="'secondaryButton'"
         ></Button>
         <Button
-        :loading="loading"
+          :loading="loading"
           label="Add"
           :class="'primaryButton'"
           @click="add"
@@ -397,14 +397,14 @@ const checkValidRoomNumber = () => {
 
               <div class="flex flex-row gap-4 pt-3">
                 <Button
-                :loading="loading"
+                  :loading="loading"
                   label="Cancel"
                   text
                   @click="showPopup = false"
                   :class="'secondaryButton'"
                 ></Button>
                 <Button
-                :loading="loading"
+                  :loading="loading"
                   label="Add"
                   :class="'primaryButton'"
                   type="submit"

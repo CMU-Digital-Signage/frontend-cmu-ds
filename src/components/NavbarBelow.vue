@@ -7,7 +7,7 @@ export default defineComponent({
 <script setup lang="ts">
 import store from "@/store";
 import { Poster } from "@/types";
-import { computed, ref, defineModel, toRefs } from "vue";
+import { computed, ref, defineModel } from "vue";
 import { useToast } from "primevue/usetoast";
 import { dateFormatter, setNorForm } from "@/utils/constant";
 import { deletePoster } from "@/services";
@@ -21,7 +21,7 @@ const loading = ref(false);
 
 const del = async () => {
   loading.value = true;
-  const res = await deletePoster(poster.value!.posterId);
+  await deletePoster(poster.value!.posterId);
   toast.add({
     severity: "success",
     summary: "Success",
@@ -29,7 +29,7 @@ const del = async () => {
     life: 3000,
   });
   loading.value = false;
-  deletePopup.value = false
+  deletePopup.value = false;
 };
 </script>
 
@@ -77,7 +77,7 @@ const del = async () => {
             :class="'secondaryButton'"
           ></Button>
           <Button
-          :loading="loading"
+            :loading="loading"
             label="Delete Poster"
             :class="'primaryButtonDel'"
             type="submit"
@@ -196,7 +196,6 @@ const del = async () => {
 </template>
 
 <style scoped>
-
 .header-popup {
   font-weight: 700;
   font-size: 22px;
@@ -240,5 +239,4 @@ const del = async () => {
   cursor: pointer;
   background-color: rgb(230, 230, 230);
 }
-
 </style>
