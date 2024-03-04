@@ -219,9 +219,24 @@ const handleEmergency = async () => {
           </div>
         </div>
       </div>
-      <div v-else class="flex flex-1 justify-center items-center">
-        {{ selectEmer.incidentName }} has been Activate.
+      <div
+        v-else
+        class="flex flex-col justify-center items-center gap-10 mt-20"
+      >
+        <div
+          class="flex flex-1 justify-center items-center text-2xl gap-2 text-[#23C6A0] bg-[#D1FFEC] rounded-lg p-4"
+        >
+          <!-- <div class="text-semibold text-4xl">
+            {{ selectEmer.incidentName }}
+          </div>
+          has been Activate. -->
+        </div>
+        <img
+          class="w-[400px] h-[400px]"
+          src="../assets/images/PostActive.png"
+        />
       </div>
+
       <div v-if="selectEmer">
         <p class="md:text-[17px] text-[14px] font-semibold mb-2">
           Type your Emergency Password in the box below
