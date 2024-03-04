@@ -5,17 +5,15 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { defineProps } from "vue";
-import { ref, watch, computed, onMounted } from "vue";
+import { ref, computed, defineProps } from "vue";
 import store from "@/store";
-import router from "@/router";
 import {
   dateFormatter,
   statusEmer,
   setNorForm,
   setEmerForm,
 } from "@/utils/constant";
-import { Display, Emergency, Poster, User } from "@/types";
+import { User } from "@/types";
 import { statusPoster, calculateScreenHeight } from "@/utils/constant";
 import { deletePoster, deleteEmergency } from "@/services";
 import { useToast } from "primevue/usetoast";
@@ -59,10 +57,10 @@ const uniquePosters = computed(() =>
     );
   })
 );
-const formDisplay = computed(() => store.state.formDisplay);
+
 const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
-let delP = null as any;
+let delP = "";
 
 const del = async () => {
   loading.value = true;
@@ -84,7 +82,7 @@ const del = async () => {
     });
   }
   loading.value = false;
-  delP = null;
+  delP = "";
   selectDelPoster.value = undefined;
   deletePopup.value = false;
 };
@@ -92,60 +90,61 @@ const del = async () => {
 
 <template>
   <Dialog
-  :closable="!loading"
-      v-model:visible="deletePopup"
-      modal
-      close-on-escape
-      :draggable="false"
-      class="w-[425px]"
-      :pt="{
-        content: {
-          style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
-        },
-        header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
-        },
-        mask: {
-          style: 'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
-        },
-      }"
-    >
-      <template #header>
-        <div class="header-popup">
-          Delete
-          {{
-            selectDelPoster?.posterId
-              ? `"${selectDelPoster.title}" Poster`
-              : `"${selectDelPoster?.incidentName}" Emergency Poster`
-          }}?
-        </div>
-      </template>
-      <div class="flex flex-col gap-2">
-        <div>
-          Deleting this poster or collection will be permenently deleted from all devices.
-        </div>
-        <div class="inline-block">
-          <div class="flex flex-row gap-4 pt-3">
-            <Button
-              text
-              label="Cancel"
-              :loading="loading"
-              @click="deletePopup = false"
-              :class="'secondaryButton'"
-            ></Button>
-            <Button
+    :closable="!loading"
+    v-model:visible="deletePopup"
+    modal
+    close-on-escape
+    :draggable="false"
+    class="w-[425px]"
+    :pt="{
+      content: {
+        style:
+          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+      },
+      header: {
+        style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+      },
+      mask: {
+        style:
+          'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
+      },
+    }"
+  >
+    <template #header>
+      <div class="header-popup">
+        Delete
+        {{
+          selectDelPoster?.posterId
+            ? `"${selectDelPoster.title}" Poster`
+            : `"${selectDelPoster?.incidentName}" Emergency Poster`
+        }}?
+      </div>
+    </template>
+    <div class="flex flex-col gap-2">
+      <div>
+        Deleting this poster or collection will be permenently deleted from all
+        devices.
+      </div>
+      <div class="inline-block">
+        <div class="flex flex-row gap-4 pt-3">
+          <Button
+            text
+            label="Cancel"
             :loading="loading"
-              label="Delete Poster"
-              :class="'primaryButtonDel'"
-              type="submit"
-              @click="del()"
-            ></Button>
-          </div>
+            @click="deletePopup = false"
+            :class="'secondaryButton'"
+          ></Button>
+          <Button
+            :loading="loading"
+            label="Delete Poster"
+            :class="'primaryButtonDel'"
+            type="submit"
+            @click="del()"
+          ></Button>
         </div>
       </div>
-    </Dialog>
+    </div>
+  </Dialog>
   <DataTable
     :value="props.types === 'NP' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
@@ -292,7 +291,6 @@ const del = async () => {
         />
       </template>
     </Column>
-
   </DataTable>
 </template>
 

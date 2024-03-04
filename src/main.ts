@@ -16,15 +16,13 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-import FloatLabel from 'primevue/floatlabel';
+import FloatLabel from "primevue/floatlabel";
 import ColumnGroup from "primevue/columngroup"; // optional
 import Row from "primevue/row"; // optional
 import FileUpload from "primevue/fileupload";
 import ToastService from "primevue/toastservice";
 import OverlayPanel from "primevue/overlaypanel";
-import { icon, library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faBell } from "@fortawesome/free-regular-svg-icons";
 import RadioButton from "primevue/radiobutton";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
@@ -35,9 +33,6 @@ import Tag from "primevue/tag";
 import TieredMenu from "primevue/tieredmenu";
 import Menu from "primevue/menu";
 import Password from "primevue/password";
-
-
-library.add(faBell);
 
 createApp(App)
   .use(store)
@@ -54,58 +49,58 @@ createApp(App)
     //           "border-orange-500": slotProps.props.message.severity == "warn",
     //           "border-red-500": slotProps.props.message.severity == "error",
     //         },
-  //           {
-  //             "bg-blue-300": slotProps.props.message.severity == "info",
-  //             "bg-green-300": slotProps.props.message.severity == "success",
-  //             "bg-orange-300": slotProps.props.message.severity == "warn",
-  //             "bg-red-300": slotProps.props.message.severity == "error",
-  //           },
-  //           {
-  //             "text-blue-500": slotProps.props.message.severity == "info",
-  //             "text-green-500": slotProps.props.message.severity == "success",
-  //             "text-orange-500": slotProps.props.message.severity == "warn",
-  //             "text-red-500": slotProps.props.message.severity == "error",
-  //           },
-  //         ],
-  //       }),
-  //       content: (slotProps: any) => ({
-  //         class: ["border-none rounded-lg"],
-  //       }),
-  //       detail: () => ({
-  //         class: ["m-0"],
-  //       }),
-  //       icon: (slotProps: any) => ({
-  //         class: [
-  //           {
-  //             "text-blue-500": slotProps.props.message.severity == "info",
-  //             "text-green-500": slotProps.props.message.severity == "success",
-  //             "text-orange-500": slotProps.props.message.severity == "warn",
-  //             "text-red-500": slotProps.props.message.severity == "error",
-  //           },
-  //         ],
-  //       }),
-  //       closeIcon: (slotProps: any) => ({
-  //         class: [
-  //           {
-  //             "text-blue-500 ": slotProps.props.message.severity == "info",
-  //             "text-green-500": slotProps.props.message.severity == "success",
-  //             "text-orange-500": slotProps.props.message.severity == "warn",
-  //             "text-red-500": slotProps.props.message.severity == "error",
-  //           },
-  //         ],
-  //       }),
-  //     },
-  //     Column: {
-  //       sorticon: (slotProps: any) => ({
-  //         class: [
-  //           "m-3 pi",
-  //           {
-  //             "pi-sort-alt": slotProps.props.sortOrder == 0,
-  //             "pi-sort-alpha-down": slotProps.props.sortOrder == 1,
-  //             "pi-sort-alpha-up": slotProps.props.sortOrder == -1,
-  //           },
-  //         ],
-  //       }),
+    //           {
+    //             "bg-blue-300": slotProps.props.message.severity == "info",
+    //             "bg-green-300": slotProps.props.message.severity == "success",
+    //             "bg-orange-300": slotProps.props.message.severity == "warn",
+    //             "bg-red-300": slotProps.props.message.severity == "error",
+    //           },
+    //           {
+    //             "text-blue-500": slotProps.props.message.severity == "info",
+    //             "text-green-500": slotProps.props.message.severity == "success",
+    //             "text-orange-500": slotProps.props.message.severity == "warn",
+    //             "text-red-500": slotProps.props.message.severity == "error",
+    //           },
+    //         ],
+    //       }),
+    //       content: (slotProps: any) => ({
+    //         class: ["border-none rounded-lg"],
+    //       }),
+    //       detail: () => ({
+    //         class: ["m-0"],
+    //       }),
+    //       icon: (slotProps: any) => ({
+    //         class: [
+    //           {
+    //             "text-blue-500": slotProps.props.message.severity == "info",
+    //             "text-green-500": slotProps.props.message.severity == "success",
+    //             "text-orange-500": slotProps.props.message.severity == "warn",
+    //             "text-red-500": slotProps.props.message.severity == "error",
+    //           },
+    //         ],
+    //       }),
+    //       closeIcon: (slotProps: any) => ({
+    //         class: [
+    //           {
+    //             "text-blue-500 ": slotProps.props.message.severity == "info",
+    //             "text-green-500": slotProps.props.message.severity == "success",
+    //             "text-orange-500": slotProps.props.message.severity == "warn",
+    //             "text-red-500": slotProps.props.message.severity == "error",
+    //           },
+    //         ],
+    //       }),
+    //     },
+    //     Column: {
+    //       sorticon: (slotProps: any) => ({
+    //         class: [
+    //           "m-3 pi",
+    //           {
+    //             "pi-sort-alt": slotProps.props.sortOrder == 0,
+    //             "pi-sort-alpha-down": slotProps.props.sortOrder == 1,
+    //             "pi-sort-alpha-up": slotProps.props.sortOrder == -1,
+    //           },
+    //         ],
+    //       }),
   })
   .use(ToastService)
   .component("font-awesome-icon", FontAwesomeIcon)

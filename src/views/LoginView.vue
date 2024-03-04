@@ -41,7 +41,6 @@
         <router-link to="/emergency">
           <Button
             class="w-auto md:p-5 md:h-11 h-fit p-2 bg-[#ff4747] relative rounded-[10px] text-sm md:text-lg border-0 button-containerEmer"
-           
           >
             <i class="pi pi-exclamation-triangle"></i>
             <p class="font-sf-pro-rounded ml-2 font-medium">
@@ -67,7 +66,8 @@ import { getUserInfo } from "@/services";
 export default defineComponent({
   methods: {
     redirectToOAuth() {
-      window.location.href = process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL!;
+      window.location.href =
+        process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL || "";
     },
   },
   async beforeRouteEnter(to, from, next) {

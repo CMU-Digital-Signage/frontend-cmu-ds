@@ -6,12 +6,11 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { defineProps, toRefs, onUpdated, computed } from "vue";
-import store from "@/store";
+import { defineProps } from "vue";
 
 const props = defineProps({ text: String });
 
-const processText = (text: any) => {
+const processText = (text: string | undefined) => {
   if (!text) {
     return "";
   }

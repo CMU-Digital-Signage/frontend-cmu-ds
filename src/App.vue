@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import store from "./store";
-import { computed, onBeforeUnmount, onMounted, onUnmounted, watch } from "vue";
+import { computed, onMounted, onUnmounted, watch } from "vue";
 import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import PopupUpload from "@/components/PopupUploadCompo.vue";
-import router from "./router";
 import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
@@ -20,10 +19,12 @@ const fetchData = async () => {
 
   const devicePromise = getDevice().then((deviceRes) => {
     store.state.macNotUse = deviceRes.data
-      .filter((e: any) => !e.deviceName)
-      .map((e: any) => e.MACaddress);
+      .filter((e: Device) => !e.deviceName)
+      .map((e: Device) => e.MACaddress);
 
-    const devices: Device[] = deviceRes.data.filter((e: any) => e.deviceName);
+    const devices: Device[] = deviceRes.data.filter(
+      (e: Device) => e.deviceName
+    );
     devices.map((e, i) => (e.color = color[i]));
     store.state.devices = devices;
     store.state.selectDevice = devices[0].MACaddress || "";

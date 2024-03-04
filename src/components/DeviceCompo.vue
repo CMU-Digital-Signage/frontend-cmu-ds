@@ -7,12 +7,7 @@ export default defineComponent({
 <script setup lang="ts">
 import { ref, reactive, computed } from "vue";
 import store from "@/store";
-import {
-  editDevice,
-  deleteDevice,
-  turnOffDevice,
-  turnOnDevice,
-} from "@/services";
+import { editDevice, deleteDevice } from "@/services";
 import { Device } from "@/types";
 import {
   initialFormDevice,
@@ -92,14 +87,6 @@ const del = async () => {
   selectDelDevice.value = undefined;
 };
 
-const changeStatusDevice = async (data: Device) => {
-  if (data.status) {
-    const res = await turnOffDevice(data.MACaddress!);
-  } else {
-    const res = await turnOnDevice(data.MACaddress!);
-  }
-};
-
 const checkValidRoomNumber = () => {
   const value = form.room;
   if (!Number.isInteger(Number(value))) {
@@ -112,7 +99,7 @@ const checkValidRoomNumber = () => {
 <template>
   <Toast />
   <Dialog
-  :closable="!loading"
+    :closable="!loading"
     v-model:visible="deletePopup"
     modal
     close-on-escape

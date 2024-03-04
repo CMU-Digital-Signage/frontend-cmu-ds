@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUpdated, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import store from "@/store";
 import Admin from "@/components/AdminCompo.vue";
 import Device from "@/components/DeviceCompo.vue";

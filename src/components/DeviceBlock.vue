@@ -16,10 +16,12 @@ const loading = ref(false);
 
 const changeStatusDevice = async () => {
   loading.value = true;
-  if (device.value.status) {
-    const res = await turnOffDevice(device.value.MACaddress!);
-  } else {
-    const res = await turnOnDevice(device.value.MACaddress!);
+  if (device.value.MACaddress) {
+    if (device.value.status) {
+      await turnOffDevice(device.value.MACaddress);
+    } else {
+      await turnOnDevice(device.value.MACaddress);
+    }
   }
   loading.value = false;
 };

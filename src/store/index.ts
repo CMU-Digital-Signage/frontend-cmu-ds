@@ -85,8 +85,11 @@ export default createStore({
     },
     setAllDevice(state, index) {
       state.devices?.map((e) => {
-        if (!state.formDisplay[index].MACaddress.includes(e.MACaddress!))
-          state.formDisplay[index].MACaddress.push(e.MACaddress!);
+        if (
+          e.MACaddress &&
+          !state.formDisplay[index].MACaddress.includes(e.MACaddress)
+        )
+          state.formDisplay[index].MACaddress.push(e.MACaddress);
       });
     },
     resetForm(state) {

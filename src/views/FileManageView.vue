@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import FileTable from "@/components/FileTableCompo.vue";
-import {
-  computed,
-  onBeforeMount,
-  onMounted,
-  onUnmounted,
-  ref,
-  watch,
-} from "vue";
+import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import store from "../store";
 
 const click = computed({

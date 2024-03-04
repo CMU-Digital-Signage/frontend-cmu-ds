@@ -4,7 +4,7 @@ import { Device, Emergency, Poster, User } from "@/types";
 import router from "@/router";
 import { color, createUnique, setFieldPoster } from "./constant";
 
-export const socket = io(process.env.VUE_APP_API_BASE_URL!, {
+export const socket = io(process.env.VUE_APP_API_BASE_URL || "", {
   transports: ["websocket"],
 });
 
@@ -53,7 +53,7 @@ export default function setupSocket() {
       store.state.filterDevice.push(data.MACaddress);
     }
     store.state.macNotUse = store.state.macNotUse.filter(
-      (e: any) => e !== data.MACaddress
+      (e: string) => e !== data.MACaddress
     );
   });
   socket.on("updateDevice", (data: Device) => {

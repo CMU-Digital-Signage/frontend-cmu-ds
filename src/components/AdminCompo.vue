@@ -5,7 +5,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, computed, reactive } from "vue";
+import { ref, computed } from "vue";
 import { deleteAdmin } from "@/services";
 import { User } from "@/types";
 import store from "@/store";

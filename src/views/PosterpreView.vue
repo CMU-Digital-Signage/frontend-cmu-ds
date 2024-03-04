@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import NavbarBelow from "@/components/NavbarBelow.vue";
-import { computed, ref, onMounted, watch, onUnmounted } from "vue";
+import { computed, ref, watch, onUnmounted } from "vue";
 import store from "@/store";
 import { useRoute } from "vue-router";
 import {
