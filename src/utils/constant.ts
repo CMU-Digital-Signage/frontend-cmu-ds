@@ -246,7 +246,9 @@ export const setFieldPoster = (data: Poster[]) => {
       e.type = "Collection";
     } else e.type = "Individual";
   });
-  data.sort((a: any, b: any) => a.createdAt - b.createdAt);
+  data.sort(
+    (a: Poster, b: Poster) => a.createdAt.getTime() - b.createdAt.getTime()
+  );
 };
 
 export const statusPoster = [
@@ -316,11 +318,11 @@ export const setNorForm = (data: any) => {
     store.state.editPoster.title = data.title;
     const poster = store.state.posters.filter((e) => e.title === data.title);
     poster.sort((a: Poster, b: Poster) => {
-      if (a.startDate.getTime() < b.startDate.getTime()) return -1;
-      else if (a.startDate.getTime() > b.startDate.getTime()) return 1;
+      if (a.startDate < b.startDate) return -1;
+      else if (a.startDate > b.startDate) return 1;
       else {
-        if (a.startTime.getTime() < b.startTime.getTime()) return -1;
-        else if (a.startTime.getTime() > b.startTime.getTime()) return 1;
+        if (a.startTime < b.startTime) return -1;
+        else if (a.startTime > b.startTime) return 1;
         else return 0;
       }
     });
