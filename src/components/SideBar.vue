@@ -628,7 +628,7 @@ const handleChangePassword = async () => {
             <div class="header-popup">Forget Emergency Password</div>
           </template>
           <p v-if="user" class="mb-6">
-            {{ user.firstName }} {{ user.lastName }} · CPE pixelParade
+            {{ user.firstName }} {{ user.lastName }} · pixelParade
           </p>
           <p v-if="user">
             We'll send a password reset confirmation to
@@ -682,7 +682,7 @@ const handleChangePassword = async () => {
               </p>
             </div>
             <p class="ml-9">
-              CPE pixelParade provides an Emergency Activation feature, as
+              pixelParade provides an Emergency Activation feature, as
               shown on the login page, to display emergency posters on all
               screens.
               <span class="font-bold text-black">

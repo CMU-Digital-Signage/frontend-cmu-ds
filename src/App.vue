@@ -90,7 +90,7 @@ onUnmounted(() => {
     <router-view />
   </div>
   <div
-    class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 absolute right-0 bottom-0"
+    class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10  right-0 bottom-0 fixed"
     v-if="
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "
