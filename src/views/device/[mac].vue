@@ -202,22 +202,21 @@ onUnmounted(() => {
       </transition>
     </div>
     <div
-      class="flex flex-col w-[10vw] p-[10px] border-2 rounded-lg bg-white text-black text-[32px]"
+      class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black "
     >
-      <div v-if="weather" class="bottomBlock border-t-2">
-        <p>{{ weather?.current?.weather.tp }} °C</p>
+      <div v-if="weather" class="bottomBlock border-t-2 ">
+        <p class="text-[32px]">{{ weather?.current?.weather.tp }} °C</p>
         <div class="inline-flex gap-3">
-          <p>{{ iconWeather.condition }}</p>
+          <p class="text-[22px] ml-2 -mr-1 font-medium">{{ iconWeather.condition }}</p>
           <img class="w-8 h-8" :src="iconWeather.image" />
         </div>
-        <div class="text-[12px]">
-          Last Update: {{ updateWeather.getDate() }}
-          {{ month[updateWeather.getMonth()] }}
-          {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
-            updateWeather.getMinutes().toString().padStart(2, "0")
-          }}
-        </div>
-        <div class="text-[12px]">Source: IQAir</div>
+        <div class="text-[12px] text-black">
+            Last Update: 
+            {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
+              updateWeather.getMinutes().toString().padStart(2, "0")
+            }} IQAir
+          </div>
+
       </div>
       <div v-if="weather" class="bottomBlock">
         <div
@@ -230,21 +229,20 @@ onUnmounted(() => {
             'text-[#730B22]': aqiStatus() === 'Harzardous',
           }"
         >
-          <div class="flex-col">
-            AQI: {{ weather?.current?.pollution.aqius }} <br />
-            {{ aqiStatus() }}
+          <div class="flex-col justify-center items-center">
+            <div class="text-[32px]">AQI: {{ weather?.current?.pollution.aqius }} <br /></div>
+            <div class="text-[16px] ml-4 -mr-1 font-medium"> {{ aqiStatus() }}</div>
           </div>
           <div class="text-[12px] text-black">
-            Last Update: {{ updateWeather.getDate() }}
-            {{ month[updateWeather.getMonth()] }}
+            Last Update: 
             {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
               updateWeather.getMinutes().toString().padStart(2, "0")
-            }}
+            }} IQAir
           </div>
-          <div class="text-[12px] text-black">Source: IQAir</div>
+
         </div>
       </div>
-      <div class="bottomBlock border-b-2">
+      <div class="bottomBlock border-b-2 text-[28px]">
         <p>{{ dateFormatter(dateTime) }}</p>
         <p>{{ timeFormatter(dateTime) }}</p>
       </div>
