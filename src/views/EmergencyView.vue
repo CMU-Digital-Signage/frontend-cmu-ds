@@ -155,7 +155,7 @@ const handleEmergency = async () => {
     >
       <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
-          class="flex flex-row px-4 py-2 my-5 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
+          class="flex flex-row px-4 py-2 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
         >
           <div
             class="w-8 h-8 ml-3 flex items-center justify-center rounded-full"

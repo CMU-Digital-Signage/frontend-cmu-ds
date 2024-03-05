@@ -18,6 +18,8 @@ import {
 import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
 
 const toast = useToast();
 const user = computed(() => store.state.userInfo);
@@ -555,9 +557,18 @@ const nextStepPreview = () => {
             v-model="formPoster.title"
             type="text"
             placeholder="Ex.CPE Music Box"
+            maxlength="28"
             class="title-input w-full mb-3 rounded-[12px]"
+            :class="{
+              'border-red-500 shadow-none': formPoster?.title?.length >= 28,
+            }"
           />
-
+          <div
+            v-if="formPoster?.title?.length >= 28"
+            class="text-red-500 -mt-2"
+          >
+            You have reached the character limit.
+          </div>
           <label
             class="text-[#4e93f3] font-semibold text-[18px] flex justify-start mb-1"
           >
@@ -565,7 +576,7 @@ const nextStepPreview = () => {
           </label>
           <InputText
             v-model="formPoster.description"
-            class="description-input h-full w-full mb-5 rounded-[12px]"
+            class="description-input h-full w-full mb-5 rounded-[12px] font-notoThai"
             placeholder="(Optional)"
           />
 
@@ -642,7 +653,7 @@ const nextStepPreview = () => {
               </label>
             </div>
           </div>
-          <div class="orientOut border-2 border-black">
+          <div class="orientOut border-2 border-black rounded-lg">
             <div class="inline-flex gap-2">
               <Button
                 @click="
@@ -713,17 +724,94 @@ const nextStepPreview = () => {
                 width="100%"
                 height="100%"
               />
-              <div class="text-image bg-[#8fff98]">Choose</div>
+              <div class="text-image bg-[#9e9e9e]">Choose</div>
             </div>
           </div>
-          <label
-            class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1 mt-3"
-          >
-            Review
-          </label>
-          <p>Title : {{ formPoster.title }}</p>
-          <p>Description : {{ formPoster.description || "-" }}</p>
-          <table class="border-spacing-3 border-separate text-center">
+
+          <div class="flex flex-col gap-5">
+            <label
+              class="text-[#282828] font-semibold text-[18px] flex justify-start mt-5 -mb-2"
+            >
+              Review
+            </label>
+            <div class="bg-[#e9f2fd] rounded-lg px-9 py-5">
+              <div class="text-black-500 flex flex-col gap-1">
+                <p class="font-semibold text-[#282828]">Title</p>
+                <p class="font-notoThai">{{ formPoster.title }}</p>
+              </div>
+              <div class="text-black-500 flex flex-col gap-1 mt-3">
+                <p class="font-semibold text-[#282828]">Description</p>
+                <p class="font-notoThai">{{ formPoster.description || "-" }}</p>
+              </div>
+            </div>
+
+            <DataTable
+              :value="formDisplay"
+              tableStyle="b rounded-lg"
+              class="overflow-hidden border-[1px] border-black-500 rounded-lg"
+            >
+              <Column header="Date" class="w-[160px]">
+                <template #body="{ data }">
+                  <span class="flex items-start justify-start">
+                    {{ dateFormatter(data.startDate) }}
+                    {{
+                      dateFormatter(data.startDate) ===
+                      dateFormatter(data.endDate)
+                        ? ""
+                        : ` - ${dateFormatter(data.endDate)}`
+                    }}
+                  </span>
+                </template>
+              </Column>
+
+              <Column header="Time" class="w-[100px]">
+                <template #body="{ data }">
+                  <div v-if="data.allDay">
+                    <td>All Day</td>
+                  </div>
+                  <div v-else>
+                    <tr
+                      v-for="(time, iTime) in data.time"
+                      :key="iTime"
+                      class="border-b- border-collapse"
+                    >
+                      <td>
+                        {{ timeFormatter(time.startTime, false) }} -
+                        {{ timeFormatter(time.endTime, false) }}
+                      </td>
+                    </tr>
+                  </div>
+                </template>
+              </Column>
+
+              <Column header="Display Duration" class="w-[40px]">
+                <template #body="{ data }">
+                  <td>{{ data.duration }}</td>
+                </template>
+              </Column>
+
+              <Column header="Devices" class="w-[40px]">
+                <template #body="{ data }">
+                  <div v-if="data.allDevice">All</div>
+                  <div v-else>
+                    <tr
+                      v-for="mac in data.MACaddress"
+                      :key="mac"
+                      class="border-b- border-collapse"
+                    >
+                      <td>
+                        {{
+                          store.state.devices?.find((e) => e.MACaddress === mac)
+                            ?.deviceName
+                        }}
+                      </td>
+                    </tr>
+                  </div>
+                </template>
+              </Column>
+            </DataTable>
+          </div>
+          <!-- <table class="border-spacing-3 border-separate text-center">
             <thead>
               <tr>
                 <th>Date</th>
@@ -751,8 +839,8 @@ const nextStepPreview = () => {
                     class="border-b- border-collapse"
                   >
                     <td>
-                      {{ timeFormatter(time.startTime) }} -
-                      {{ timeFormatter(time.endTime) }}
+                      {{ timeFormatter(time.startTime, false) }} -
+                      {{ timeFormatter(time.endTime, false) }}
                     </td>
                   </tr>
                 </td>
@@ -774,7 +862,7 @@ const nextStepPreview = () => {
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
 
           <div class="flex flex-inline gap-4 pt-3">
             <Button
