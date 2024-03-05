@@ -231,20 +231,22 @@ const handleChangePassword = async () => {
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
           v-if="openSidebar"
-          class="upload-button mt-7 flex items-center justify-center gap-4"
+          class="upload-button mt-7 items-center justify-center"
           @click="store.state.showUpload = true"
         >
-          <div
-            class="h-4 w-5 rounded-full flex items-center justify-center border-none"
-          >
-            <i class="font-extrabold pi pi-plus text-[#417f98]"></i>
+          <div class="flex flex-row items-center justify-center gap-3 -ml-2">
+            <div
+              class="h-6 w-6 font-semibold bg-[#4a9299] opacity-80 rounded-full flex items-center justify-center border-none"
+            >
+              <i class="font-extrabold pi pi-plus text-[#ffffff]"></i>
+            </div>
+            <span class="text-[#417f98] font-extrabold text-[16px]"
+              >Upload File</span
+            >
           </div>
-          <span class="text-[#417f98] font-extrabold text-[15px]"
-            >Upload File</span
-          >
         </Button>
         <Button
-          class="text-[#282828] bg-[#039BE5] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
+          class="text-[#282828] bg-[#4a9299] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
           v-else
           @click="store.state.showUpload = true"
           icon="pi pi-plus"
@@ -464,7 +466,10 @@ const handleChangePassword = async () => {
                 },
               }"
             />
-            <label :for="item.deviceName">{{ item.deviceName }}</label>
+            <label :for="item.deviceName"
+              >{{ item.deviceName }}
+              <span class="text-[#636262]">({{ item.room }})</span></label
+            >
           </div>
         </div>
       </div>
@@ -892,12 +897,12 @@ Button {
 }
 
 .menu-ho-upload {
-  box-shadow: 0px 0px 4px 1px rgba(51, 131, 171, 0.5);
+  box-shadow: 0px 0px 4px 1px rgba(51, 131, 171, 0.3);
   border: none;
 }
 
 .menu-ho-upload:hover {
-  box-shadow: 0px 0px 10px 2px rgba(75, 154, 194, 0.5);
-  background-color: rgb(9, 120, 247);
+  box-shadow: 0px 0px 10px 2px rgba(62, 136, 172, 0.5);
+  background-color: #4a9299;
 }
 </style>
