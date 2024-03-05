@@ -274,14 +274,17 @@ export const createUnique = (data: Poster[]) => {
         new Date().getHours(),
         new Date().getMinutes()
       );
+      console.log(e.title, e.startDate);
+      
       let status = "";
       if (
         currentDate.getTime() >= e.startDate.getTime() &&
         currentDate.getTime() <= e.endDate.getTime()
       ) {
         if (
-          e.startTime.getTime() <= currentTime.getTime() &&
-          currentTime.getTime() <= e.endTime.getTime()
+          (e.startTime.getTime() <= currentTime.getTime() &&
+            currentTime.getTime() <= e.endTime.getTime()) ||
+          (e.startDate.getDate() <= currentDate.getDate() )
         ) {
           status = "Displayed";
         } else {
