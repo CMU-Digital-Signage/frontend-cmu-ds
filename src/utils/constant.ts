@@ -420,7 +420,7 @@ export const loopPoster = (
 
   const updatePosterInterval = () => {
     const currentMinutes = new Date().getMinutes();
-    const isOnTheHalfHour = currentMinutes === 0 || currentMinutes%2 === 0;
+    const isOnTheHalfHour = currentMinutes === 0 || currentMinutes%30 === 0;
     if (!isOnTheHalfHour) hasShownBotMapsThisRound = false;
     if (showBotMaps && isOnTheHalfHour && !hasShownBotMapsThisRound) {
       showBotMaps.value = true;
