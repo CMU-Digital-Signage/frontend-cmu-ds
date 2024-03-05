@@ -5,7 +5,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, computed, defineProps } from "vue";
+import { ref, computed, defineProps, watch } from "vue";
 import store from "@/store";
 import {
   dateFormatter,
@@ -52,7 +52,8 @@ const uniquePosters = computed(() =>
           .toLowerCase()
           .includes(filterInput.value.uploader.toLowerCase())) &&
       (!filterInput.value.uploadDate ||
-        e.createdAt === filterInput.value.uploadDate) &&
+        dateFormatter(e.createdAt) ===
+          dateFormatter(filterInput.value.uploadDate)) &&
       (!filterInput.value.status || e.status === filterInput.value.status)
     );
   })
