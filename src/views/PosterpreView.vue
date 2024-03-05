@@ -52,7 +52,7 @@ watch([filterDate, filterTime], () => {
       filterTime.value.getMinutes() !== new Date().getMinutes())
   ) {
     selectPoster.value = posters.value[0];
-    selectImage.value = selectPoster.value.image[0].image;
+    selectImage.value = selectPoster.value?.image[0].image;
   } else {
     selectPoster.value = undefined;
     selectImage.value = "";
@@ -170,7 +170,7 @@ const rowStyle = (rowData: any) => {
             />
           </transition>
           <button
-            v-else-if="posters"
+            v-else-if="posters && dateFormatter(filterDate) === dateFormatter(new Date())"
             class="pi pi-play text-[#808080] text-5xl rounded-full p-2 bg-white hover:bg-gray-200"
             @click="stopLoop = loopPoster(posters)"
           />
