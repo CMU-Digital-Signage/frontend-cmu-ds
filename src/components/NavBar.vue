@@ -503,15 +503,12 @@ const checkValidRoomNumber = () => {
           v-model="filterInput.time"
           showIcon
           iconDisplay="input"
+          icon="pi pi-clock"
           timeOnly
           :stepMinute="30"
           inputClass="text-[13px] lg:text-[16px]"
           class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
-        >
-          <template #inputicon="{ clickCallback }">
-            <i class="pi pi-clock" @click="clickCallback" />
-          </template>
-        </Calendar>
+        />
         <Button
           label="Now"
           class="text-green-800 items-center rounded-lg border-green-600 max-h-fit px-3 py-1 border-2 font-semibold bg-green-300 hover:bg-green-400"

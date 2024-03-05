@@ -23,6 +23,7 @@
     "compressorjs": "^1.2.1",
     "core-js": "^3.8.3",
     "filesize": "^10.1.0",
+    "moment-timezone": "^0.5.45",
     "primeicons": "^6.0.1",
     "primevue": "^3.45.0",
     "socket.io-client": "^4.7.4",
