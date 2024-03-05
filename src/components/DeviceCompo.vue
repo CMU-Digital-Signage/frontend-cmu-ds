@@ -23,6 +23,9 @@ const toast = useToast();
 const loading = ref(false);
 const deletePopup = ref(false);
 const selectDelDevice = ref<Device>();
+const limitCharRoom = ref(false);
+const limitCharDevice = ref(false);
+const isNumber = ref(true);
 
 const errorSelectFile = () => {
   toast.add({
@@ -278,21 +281,36 @@ const checkValidRoomNumber = () => {
       },
     }"
   >
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-[90px]">
       <div class="inline-block">
         <label for="deviceName" class="text-primary-50 font-medium">
           Device Name
         </label>
-        <label for="deviceName" class="text-[#FF0000] font-medium">*</label>
+        <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
       </div>
       <InputText
-        v-model="form.deviceName"
+        v-model:model-value="form.deviceName"
+        @keydown="
+          (e) => {
+            limitCharDevice = form.deviceName?.length === 8;
+          }
+        "
         class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
-        placeholder="cpe01"
+        placeholder="Max 8 Character Ex.CPE01 "
+        maxlength="8"
+        :class="{
+          'border-red-500 shadow-none':
+            form.deviceName?.length === 8 && limitCharDevice,
+        }"
         id="deviceName"
       ></InputText>
+      <div class="text-red-500 -mt-5 text-[12px]" tyle="min-height: 1rem;">
+        <div v-if="form.deviceName?.length === 8 && limitCharDevice">
+          You have reached the character limit.
+        </div>
+      </div>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-[90px]">
       <div class="inline-block">
         <label for="deviceName" class="text-primary-50 font-medium">
           MAC Address
@@ -305,7 +323,7 @@ const checkValidRoomNumber = () => {
         disabled
       ></InputText>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-[90px]">
       <div class="inline-block">
         <label for="macAddress" class="text-primary-50 font-medium">
           Room
@@ -313,14 +331,37 @@ const checkValidRoomNumber = () => {
         <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
       </div>
       <InputText
-        v-model="form.room"
+        v-model:model-value="form.room"
+        @keydown="
+          (e) => {
+            limitCharRoom = form?.room?.length === 3;
+            if (e.key !== 'Backspace' && !/^\d$/.test(e.key)) {
+              isNumber = false;
+              e.preventDefault();
+            } else {
+              isNumber = true;
+            }
+          }
+        "
         class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
         placeholder="Number only Ex.516"
-        id="room"
-        :required="checkValidRoomNumber()"
+        maxlength="3"
+        :class="{
+          'border-red-500 shadow-none':
+            (form?.room?.length && form.room.length >= 3 && limitCharRoom) ||
+            !isNumber,
+        }"
       ></InputText>
+      <div class="text-red-500 -mt-5 text-[12px]" tyle="min-height: 1rem;">
+        <div
+          v-if="form?.room?.length && form.room.length >= 3 && limitCharRoom"
+        >
+          You have reached the character limit.
+        </div>
+        <div v-else-if="!isNumber">Type the number using digits 0-9 only.</div>
+      </div>
     </div>
-    <div class="flex flex-col gap-1">
+    <div class="flex flex-col gap-1 h-[90px]">
       <label for="macAddress" class="text-primary-50 font-medium">
         Location Description
       </label>
