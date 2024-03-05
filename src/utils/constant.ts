@@ -114,12 +114,16 @@ export const dateFormatter = (
   }
 };
 
-export const timeFormatter = (date: Date | null | undefined) => {
+export const timeFormatter = (
+  date: Date | null | undefined,
+  includesSec: boolean
+) => {
   if (!date) return "";
 
   const hours = date.getHours().toString().padStart(2, "0");
   const minutes = date.getMinutes().toString().padStart(2, "0");
   const secounds = date.getSeconds().toString().padStart(2, "0");
+  if (!includesSec) return `${hours}:${minutes}`;
   return `${hours}:${minutes}:${secounds}`;
 };
 

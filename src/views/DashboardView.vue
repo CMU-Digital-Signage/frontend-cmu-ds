@@ -332,17 +332,21 @@ const del = async (posterId: string) => {
       v-model:visible="showInfo"
       modal
       :draggable="false"
-      class="w-[500px] z-[100]"
+      class="w-[550px] z-[100]"
     >
       <template #header>
         <div class="inline-flex justify-between items-center w-full">
-          <div class="inline-flex font-bold text-2xl gap-3 items-center">
+          <div class="inline-flex font-bold text-2xl gap-3 items-start">
             <i
-              class="pi pi-circle-fill"
+              class="pi pi-circle-fill mt-2"
               :style="{ color: selectedEvent.color }"
             ></i>
-            <p>{{ selectedEvent.title }}</p>
-            <p>({{ selectedEvent.type }})</p>
+            <div class="flex flex-col">
+              <p>{{ selectedEvent.title }}</p>
+              <p class="text-[16px] text-[#8d8d8d] -mt-1">
+                {{ selectedEvent.type }}
+              </p>
+            </div>
           </div>
           <div
             v-if="user.isAdmin || user.id === selectedEvent.userId"
@@ -415,16 +419,19 @@ const del = async (posterId: string) => {
             </p>
           </div>
         </div>
-        <!-- Description -->
-        <div class="posterDetail">
-          <p>Description</p>
-          <p>{{ selectedEvent.description }}</p>
-          <p v-if="!selectedEvent.description">-</p>
-        </div>
         <!-- Uploader -->
         <div class="posterDetail">
           <p>Uploader</p>
           <p>{{ selectedEvent.uploader }}</p>
+        </div>
+
+        <!-- Description -->
+        <div class="posterDetail flex-col gap-1">
+          <p class="font-[800px] text-[#535353]">Description</p>
+          <div class="bg-[#e9f2fd] rounded-lg p-3 px-5">
+            <p class="font-notoThai">{{ selectedEvent.description }}</p>
+            <p v-if="!selectedEvent.description">-</p>
+          </div>
         </div>
       </div>
     </Dialog>
