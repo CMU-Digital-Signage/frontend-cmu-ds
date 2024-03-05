@@ -205,9 +205,9 @@ onUnmounted(() => {
       class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black "
     >
       <div v-if="weather" class="bottomBlock border-t-2 ">
-        <p class="text-[32px]">{{ weather?.current?.weather.tp }} °C</p>
+        <p class="text-[36px]">{{ weather?.current?.weather.tp }} °C</p>
         <div class="inline-flex gap-3">
-          <p class="text-[22px] ml-2 -mr-1 font-medium">{{ iconWeather.condition }}</p>
+          <p class="text-[24px] ml-2 -mr-1 font-medium">{{ iconWeather.condition }}</p>
           <img class="w-8 h-8" :src="iconWeather.image" />
         </div>
         <div class="text-[12px] text-black">
@@ -242,7 +242,7 @@ onUnmounted(() => {
 
         </div>
       </div>
-      <div class="bottomBlock border-b-2 text-[28px]">
+      <div class="bottomBlock border-b-2 text-[32px]">
         <p>{{ dateFormatter(dateTime) }}</p>
         <p>{{ timeFormatter(dateTime) }}</p>
       </div>
