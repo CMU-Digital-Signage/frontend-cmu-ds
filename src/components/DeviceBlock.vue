@@ -35,7 +35,6 @@ const changeStatusDevice = async () => {
         store.state.openSidebar = true;
       "
       class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300"
-      :disabled="device.status == false"
     >
       <i
         :class="[
