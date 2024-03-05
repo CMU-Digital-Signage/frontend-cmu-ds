@@ -157,22 +157,20 @@ const minEndTime = (i: number) => {
                     v-model="time.startTime"
                     showIcon
                     iconDisplay="input"
+                    icon="pi pi-clock"
                     timeOnly
                     :manualInput="false"
                     :stepMinute="30"
                     class="w-[200px] ml-7"
                     :minDate="minStartTime(i)"
                     @update:model-value="changeStartTime(i)"
-                  >
-                    <template #inputicon="{ clickCallback }">
-                      <i class="pi pi-clock" @click="clickCallback" />
-                    </template>
-                  </Calendar>
+                  />
                   <p class="text-gray-600">to</p>
                   <Calendar
                     v-model="time.endTime"
                     showIcon
                     iconDisplay="input"
+                    icon="pi pi-clock"
                     timeOnly
                     :manualInput="false"
                     :stepMinute="30"
@@ -180,11 +178,7 @@ const minEndTime = (i: number) => {
                     :minDate="minEndTime(i)"
                     @update:model-value="changeEndTime(i)"
                     :disabled="!time.startTime || formDisplay.allDay"
-                  >
-                    <template #inputicon="{ clickCallback }">
-                      <i class="pi pi-clock" @click="clickCallback"></i>
-                    </template>
-                  </Calendar>
+                  />
                 </div>
                 <Button
                   v-if="i === 0"

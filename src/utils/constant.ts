@@ -1,6 +1,7 @@
 import store from "@/store";
 import { Device, Display, Emergency, Poster } from "@/types";
 import Compressor from "compressorjs";
+import { Ref } from "vue";
 
 export const calculateScreenHeight = () => {
   const screenHeight = window.innerHeight;
@@ -406,9 +407,24 @@ let currentIndexPoster = 0;
 let currentIndexImage = 0;
 let count = 0;
 
-export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
+export const loopPoster = (
+  posters: Poster[],
+  emerPoster?: Emergency,
+  showBotMaps?: Ref<boolean>
+) => {
   let timeoutId: NodeJS.Timeout | null = null;
+  let hasShownBotMapsThisRound = false;
+
   const updatePosterInterval = () => {
+    const currentMinutes = new Date().getMinutes();
+    const isOnTheHalfHour = currentMinutes === 0 || currentMinutes === 30;
+    if (showBotMaps && isOnTheHalfHour && !hasShownBotMapsThisRound) {
+      showBotMaps.value = true;
+      hasShownBotMapsThisRound = true;
+      timeoutId = setTimeout(() => {
+        showBotMaps.value = false;
+      }, 15000);
+    }
     const currentTime = new Date(
       1970,
       0,

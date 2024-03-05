@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { getPosterEachDevice } from "@/services";
-import { computed, onMounted, ref, watch, onUnmounted } from "vue";
+import { computed, onMounted, ref, watch, onUnmounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
@@ -21,6 +21,8 @@ import { getActivateEmerPoster } from "@/services/pi";
 import axios from "axios";
 
 const route = useRoute();
+const floorCpe = ref("");
+const showBotMaps = ref(false);
 const posters = computed(() => store.state.posters);
 const emerPoster = computed(() =>
   store.state.emerPosters ? store.state.emerPosters[0] : undefined
@@ -45,7 +47,6 @@ const fetchWeather = async () => {
   });
   updateWeather.value = new Date();
   weather.value = res.data.data;
-
   const weatherValue = weather.value.current.weather.ic;
   if (weatherValue === "01d") {
     iconWeather.value = {
@@ -113,11 +114,13 @@ const aqiStatus = () => {
 };
 
 const fetchData = async () => {
-  const { ok, poster, message } = await getPosterEachDevice(
+  const { ok, floor, poster, message } = await getPosterEachDevice(
     route.params.mac as string
   );
   await getActivateEmerPoster();
   if (ok) {
+    floorCpe.value = floor;
+
     setFieldPoster(poster);
     poster.sort((a: Poster, b: Poster) => {
       if (a.startTime < b.startTime) return -1;
@@ -126,7 +129,7 @@ const fetchData = async () => {
     });
     store.state.posters = poster;
     if (posters.value)
-      stopLoop.value = loopPoster(posters.value, emerPoster.value);
+      stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
   }
 };
 
@@ -150,7 +153,7 @@ watch(emerPoster, () => {
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
   } else if (posters.value) {
-    stopLoop.value = loopPoster(posters.value, emerPoster.value);
+    stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
   }
 });
 
@@ -165,102 +168,117 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="emerPoster?.incidentName === 'banner'" class="bg-[#ff0000]">
-    <div
-      class="rotateText flex justify-center items-center h-screen w-screen -ml-[40px]"
-    >
-      <TextPoster :text="emerPoster.emergencyImage" />
-    </div>
-  </div>
-  <div v-else class="w-screen h-screen bg-black overflow-hidden">
-    <transition
-      v-if="image.key.length"
-      enter-active-class="transition duration-500"
-      enter-from-class="opacity-0"
-      leave-active-class="transition duration-500"
-      leave-to-class="opacity-0"
-    >
-      <img
-        class="max-w-screen h-screen m-auto transition-opacity"
-        alt="poster"
-        :key="image.key"
-        :src="image.image"
-      />
-    </transition>
-  </div>
-  <div class="containerDateTime flex flex-row">
-    <div
-      class="items-center flex flex-col flex-1 w-full justify-center border-r-2"
-    >
-      <p>{{ dateFormatter(dateTime) }}</p>
-      <p>{{ timeFormatter(dateTime) }}</p>
-    </div>
-    <div
-      v-if="weather"
-      class="items-center flex flex-col flex-1 w-full justify-center"
-    >
+  <div
+    class="flex flex-row justify-between h-screen w-screen overflow-hidden"
+    :class="{
+      'bg-[#ff0000]': emerPoster?.incidentName === 'banner',
+      'bg-black': emerPoster?.incidentName !== 'banner',
+    }"
+  >
+    <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
       <div
-        :class="{
-          'text-[#2a8953]': aqiStatus() === 'Good',
-          'text-[#95a22f]': aqiStatus() === 'Moderate',
-          'text-[#F48D31]': aqiStatus() === 'Unhealthy (Sensitive Group)',
-          'text-[#CA142D]': aqiStatus() === 'Unhealthy',
-          'text-[#62008F]': aqiStatus() === 'Very Unhealthy',
-          'text-[#730B22]': aqiStatus() === 'Harzardous',
-        }"
+        class="rotateText flex justify-center items-center h-screen w-screen -ml-[40px]"
       >
-        <div class="flex-col">
-          AQI: {{ weather?.current?.pollution.aqius }} <br />
-          {{ aqiStatus() }}
+        <TextPoster :text="emerPoster.emergencyImage" />
+      </div>
+    </div>
+    <div
+      v-else-if="showBotMaps && floorCpe"
+      class="flex flex-1 justify-center items-center"
+    >
+      <iframe
+        title="BOTMATS"
+        :src="`https://main--darling-frangipane-e360a0.netlify.app/${floorCpe}`"
+      ></iframe>
+    </div>
+    <div v-else class="flex flex-1">
+      <transition v-if="image.key.length" name="fade" mode="out-in">
+        <img
+          class="max-w-screen h-screen m-auto duration-500 transition-opacity"
+          alt="poster"
+          :key="image.key"
+          :src="image.image"
+        />
+      </transition>
+    </div>
+    <div
+      class="flex flex-col w-[10vw] p-[10px] border-2 rounded-lg bg-white text-black text-[32px]"
+    >
+      <div v-if="weather" class="bottomBlock border-t-2">
+        <p>{{ weather?.current?.weather.tp }} °C</p>
+        <div class="inline-flex gap-3">
+          <p>{{ iconWeather.condition }}</p>
+          <img class="w-8 h-8" :src="iconWeather.image" />
         </div>
-        <div class="text-[12px] text-black">
+        <div class="text-[12px]">
           Last Update: {{ updateWeather.getDate() }}
           {{ month[updateWeather.getMonth()] }}
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
           }}
         </div>
-        <div class="text-[12px] text-black">Source: IQAir</div>
+        <div class="text-[12px]">Source: IQAir</div>
       </div>
-    </div>
-    <div
-      v-if="weather"
-      class="items-center flex flex-col flex-1 w-full justify-center border-l-2"
-    >
-      <p>{{ weather?.current?.weather.tp }} °C</p>
-      <div class="inline-flex gap-3">
-        <p>{{ iconWeather.condition }}</p>
-        <img class="w-8 h-8" :src="iconWeather.image" />
+      <div v-if="weather" class="bottomBlock">
+        <div
+          :class="{
+            'text-[#2a8953]': aqiStatus() === 'Good',
+            'text-[#95a22f]': aqiStatus() === 'Moderate',
+            'text-[#F48D31]': aqiStatus() === 'Unhealthy (Sensitive Group)',
+            'text-[#CA142D]': aqiStatus() === 'Unhealthy',
+            'text-[#62008F]': aqiStatus() === 'Very Unhealthy',
+            'text-[#730B22]': aqiStatus() === 'Harzardous',
+          }"
+        >
+          <div class="flex-col">
+            AQI: {{ weather?.current?.pollution.aqius }} <br />
+            {{ aqiStatus() }}
+          </div>
+          <div class="text-[12px] text-black">
+            Last Update: {{ updateWeather.getDate() }}
+            {{ month[updateWeather.getMonth()] }}
+            {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
+              updateWeather.getMinutes().toString().padStart(2, "0")
+            }}
+          </div>
+          <div class="text-[12px] text-black">Source: IQAir</div>
+        </div>
       </div>
-      <div class="text-[12px]">
-        Last Update: {{ updateWeather.getDate() }}
-        {{ month[updateWeather.getMonth()] }}
-        {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
-          updateWeather.getMinutes().toString().padStart(2, "0")
-        }}
+      <div class="bottomBlock border-b-2">
+        <p>{{ dateFormatter(dateTime) }}</p>
+        <p>{{ timeFormatter(dateTime) }}</p>
       </div>
-      <div class="text-[12px]">Source: IQAir</div>
     </div>
   </div>
-  <!-- <iframe src="https://main--darling-frangipane-e360a0.netlify.app/" class="absolute bottom-0 right-0 -rotate-90"></iframe> -->
 </template>
 
-<style>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .rotateText {
   transform: rotate(-90deg);
 }
 
-.containerDateTime {
-  position: absolute;
-  right: 0;
-  bottom: 0;
+iframe {
   width: 100vh;
-  font-size: 28px;
-  color: rgb(0, 0, 0);
-  padding: 5px;
-  border-radius: 8px;
-  background-color: #fff;
-  transform: rotate(-90deg) translate(100%, 0);
-  transform-origin: right bottom;
+  height: 90vw;
+  transform: rotate(-90deg);
+}
+
+.bottomBlock {
+  writing-mode: vertical-rl;
+  transform: scale(-1, -1);
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 </style>
