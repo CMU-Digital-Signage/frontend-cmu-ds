@@ -31,13 +31,11 @@ export default function setupSocket() {
   socket.on("addPi", (data: Device) => {
     store.state.macNotUse.push(data.MACaddress);
   });
-  socket.on("turnOnDevice", (mac: string) => {
-    if (store.state.devices)
-      store.state.devices.find((e) => e.MACaddress === mac)!.status = true;
-  });
-  socket.on("turnOffDevice", (mac: string) => {
-    if (store.state.devices)
-      store.state.devices.find((e) => e.MACaddress === mac)!.status = false;
+  socket.on("turnOnOffDevice", (device: Device) => {
+    if (store.state.devices) {
+      store.state.devices.filter((e) => e.MACaddress !== device.MACaddress);
+      store.state.devices.push(device);
+    }
   });
 
   // device

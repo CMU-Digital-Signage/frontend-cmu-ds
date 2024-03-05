@@ -44,44 +44,16 @@ export async function getActivateEmerPoster() {
   }
 }
 
-export async function turnOnDevice(mac: string) {
+export async function turnOnOffDevice(mac: string) {
   try {
     const res = await axios.post(
-      `${process.env.VUE_APP_API_BASE_URL}/pi/on`,
+      `${process.env.VUE_APP_API_BASE_URL}/pi/on_off`,
       {},
       {
         params: { mac },
         withCredentials: true,
       }
     );
-
-    if (store.state.devices) {
-      store.state.devices.find((e) => e.MACaddress === mac)!.status = true;
-    }
-    return res.data;
-  } catch (err: any) {
-    if (!err.response) {
-      return {
-        message: "Cannot connect to API Server. Please try again later.",
-      };
-    }
-    return err.response.data;
-  }
-}
-
-export async function turnOffDevice(mac: string) {
-  try {
-    const res = await axios.post(
-      `${process.env.VUE_APP_API_BASE_URL}/pi/off`,
-      {},
-      {
-        params: { mac },
-        withCredentials: true,
-      }
-    );
-
-    if (store.state.devices)
-      store.state.devices.find((e) => e.MACaddress === mac)!.status = false;
 
     return res.data;
   } catch (err: any) {
