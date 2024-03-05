@@ -99,9 +99,7 @@ const del = async () => {
         class="border-none bg-red-500 rounded-[10px] font-semibold min-w-fit h-10 px-5"
         @click="
           poster = undefined;
-          store.state.filterInputPosters.date = new Date();
-          store.state.filterInputPosters.time = new Date();
-        "
+          store.commit('resetFilter')"
       />
 
       <div class="flex items-center justify-end w-full gap-3">

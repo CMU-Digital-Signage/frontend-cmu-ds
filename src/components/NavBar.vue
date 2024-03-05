@@ -513,14 +513,7 @@ const checkValidRoomNumber = () => {
           label="Now"
           class="text-green-800 items-center rounded-lg border-green-600 max-h-fit px-3 py-1 border-2 font-semibold bg-green-300 hover:bg-green-400"
           @click="
-            filterInput.date = new Date(new Date().setHours(0, 0, 0, 0));
-            filterInput.time = new Date(
-              1970,
-              0,
-              1,
-              new Date().getHours(),
-              new Date().getMinutes()
-            );
+            store.commit('resetFilter')
           "
         />
       </div>
