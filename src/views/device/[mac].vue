@@ -205,12 +205,12 @@ onUnmounted(() => {
       class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black "
     >
       <div v-if="weather" class="bottomBlock border-t-2 ">
-        <p class="text-[36px]">{{ weather?.current?.weather.tp }} °C</p>
+        <p class="text-[40px]">{{ weather?.current?.weather.tp }} °C</p>
         <div class="inline-flex gap-3">
-          <p class="text-[24px] ml-2 -mr-1 font-medium">{{ iconWeather.condition }}</p>
+          <p class="text-[28px] ml-2 -mr-1 font-medium">{{ iconWeather.condition }}</p>
           <img class="w-8 h-8" :src="iconWeather.image" />
         </div>
-        <div class="text-[12px] text-black">
+        <div class="text-[14px] text-black">
             Last Update: 
             {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
               updateWeather.getMinutes().toString().padStart(2, "0")
@@ -242,9 +242,9 @@ onUnmounted(() => {
 
         </div>
       </div>
-      <div class="bottomBlock border-b-2 text-[32px]">
+      <div class="bottomBlock border-b-2 text-[36px]">
         <p>{{ dateFormatter(dateTime) }}</p>
-        <p>{{ timeFormatter(dateTime) }}</p>
+        <p>{{ timeFormatter(dateTime, true) }}</p>
       </div>
     </div>
   </div>
