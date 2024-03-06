@@ -282,7 +282,7 @@ const addSchedule = () => {
     toast.add({
       severity: "error",
       summary: "Invalid Input",
-      detail: "Invalid Input.",
+      detail: "complete the current schedule before adding new ones.",
       life: 3000,
     });
     return;
