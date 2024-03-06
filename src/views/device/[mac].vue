@@ -161,6 +161,17 @@ watch(emerPoster, () => {
   }
 });
 
+watch(
+  posters,
+  () => {
+    if (posters.value) {
+      if (stopLoop.value) stopLoop.value();
+      stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
+    }
+  },
+  { deep: true }
+);
+
 onUnmounted(() => {
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";

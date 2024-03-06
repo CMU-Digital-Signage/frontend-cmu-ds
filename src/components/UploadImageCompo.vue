@@ -45,17 +45,21 @@ const errorSelectFile = async () => {
   }
 };
 
-const selectImage = (e: any) => {
+const selectImage = (event: any) => {
   store.state.formPoster.image.forEach((e, index) => {
     e.priority = index + 1;
+    e.image.name = `${formPoster.value.title}-${index + 1}.${
+      e.image.type?.split("/")[1]
+    }`;
   });
-  e.files.forEach(async (image: any, i: number) => {
-    const file = await onUpload(image);
+  event.files.forEach(async (e: any, i: number) => {
+    const priority = formPoster.value.image.length + 1;
+    const file = await onUpload(e);
     const fileExtension = file.type.split("/")[1];
-    file.name = `${formPoster.value.title}-${i + 1}.${fileExtension}`;
+    file.name = `${formPoster.value.title}-${priority}.${fileExtension}`;
     store.state.formPoster.image.push({
-      image: file,
-      priority: formPoster.value.image.length + 1,
+      image: { ...file },
+      priority,
     });
   });
 };

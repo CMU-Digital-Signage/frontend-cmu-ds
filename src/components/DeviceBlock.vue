@@ -24,14 +24,15 @@ const changeStatusDevice = async () => {
 };
 
 watch(
-  () => store.state.devices,
+  () =>
+    store.state.devices?.find((e) => e.MACaddress === device.value.MACaddress)
+      ?.status,
   () => {
     if (device.value.status !== onOff.value) {
       onOff.value = device.value.status;
       loading.value = false;
     }
-  },
-  { deep: true }
+  }
 );
 </script>
 

@@ -1,3 +1,4 @@
+import router from "@/router";
 import store from "@/store";
 import { Device, Display, Emergency, ImageCollection, Poster } from "@/types";
 import Compressor from "compressorjs";
@@ -208,23 +209,25 @@ export const convertUrlToFile = (data: any) => {
 
 export const convertImageToBase64 = (url: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        resolve(reader.result as string);
+    if (url) {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          resolve(reader.result as string);
+        };
+        reader.onerror = function (error) {
+          reject(error);
+        };
+        reader.readAsDataURL(xhr.response);
       };
-      reader.onerror = function (error) {
+      xhr.onerror = function (error) {
         reject(error);
       };
-      reader.readAsDataURL(xhr.response);
-    };
-    xhr.onerror = function (error) {
-      reject(error);
-    };
-    xhr.open("GET", url);
-    xhr.responseType = "blob";
-    xhr.send();
+      xhr.open("GET", url);
+      xhr.responseType = "blob";
+      xhr.send();
+    }
   });
 };
 
@@ -306,38 +309,41 @@ export const setFieldPoster = (data: Poster[]) => {
     e.endDate = new Date(new Date(e.endDate).setHours(0, 0, 0, 0));
     e.startTime = new Date(new Date(e.startTime).setDate(1));
     e.endTime = new Date(new Date(e.endTime).setDate(1));
-    if (e.id) {
-      const users = store.getters.getUserById(e.id);
-      const uploader = `${users.firstName} ${
-        users?.lastName?.charAt(0) || ""
-      }.`;
-      e.uploader = uploader;
+
+    if (!router.currentRoute.value.path.includes("/device/")) {
+      if (e.id) {
+        const users = store.getters.getUserById(e.id);
+        const uploader = `${users.firstName} ${
+          users?.lastName?.charAt(0) || ""
+        }.`;
+        e.uploader = uploader;
+      }
+
+      if (e.image.length > 1) {
+        e.type = "Collection";
+      } else e.type = "Individual";
+
+      e.image.forEach(async (e: ImageCollection) => {
+        const url = e.image;
+        const response = await convertImageToBase64(url);
+        const base64Data = response.split(",")[1];
+        const name = url.substring(
+          url.lastIndexOf("/") + 1,
+          url.lastIndexOf("?")
+        );
+        const type = name.substring(name.lastIndexOf("."));
+        const size = (base64Data.length * 3) / 4;
+
+        e.image = {
+          dataURL: `data:image/${type};base64,${base64Data}`,
+          lastModified: new Date().getTime(),
+          lastModifiedDate: new Date(),
+          name,
+          size,
+          type,
+        };
+      });
     }
-
-    if (e.image.length > 1) {
-      e.type = "Collection";
-    } else e.type = "Individual";
-
-    e.image.forEach(async (e: ImageCollection) => {
-      const url = e.image;
-      const response = await convertImageToBase64(url);
-      const base64Data = response.split(",")[1];
-      const name = url.substring(
-        url.lastIndexOf("/") + 1,
-        url.lastIndexOf("?")
-      );
-      const type = name.substring(name.lastIndexOf("."));
-      const size = (base64Data.length * 3) / 4;
-
-      e.image = {
-        dataURL: `data:image/${type};base64,${base64Data}`,
-        lastModified: new Date().getTime(),
-        lastModifiedDate: new Date(),
-        name,
-        size,
-        type,
-      };
-    });
   });
   data.sort(
     (a: Poster, b: Poster) => a.createdAt.getTime() - b.createdAt.getTime()
@@ -518,7 +524,7 @@ export const loopPoster = (
       hasShownBotMapsThisRound = true;
       timeoutId = setTimeout(() => {
         showBotMaps.value = false;
-      }, 15 * 1000);
+      }, 45 * 1000);
     }
     const currentTime = new Date(
       1970,
@@ -527,7 +533,10 @@ export const loopPoster = (
       new Date().getHours(),
       new Date().getMinutes()
     );
-    if (currentIndexPoster === -1) return;
+    if (currentIndexPoster === -1 && showBotMaps) {
+      showBotMaps.value = true;
+      return;
+    }
     const currentPoster = posters[currentIndexPoster];
     if (
       currentPoster.startTime.getTime() <= currentTime.getTime() &&
