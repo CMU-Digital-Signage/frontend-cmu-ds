@@ -87,7 +87,7 @@ export async function editEmergency(
         (e) => e.incidentName === incidentName
       );
       if (index !== -1) {
-        convertUrlToFile(res.data.emergency);
+        if (incidentName !== "banner") convertUrlToFile(res.data.emergency);
         store.state.emerPosters[index] = {
           ...res.data.emergency,
           status: res.data.emergency.status ? "Active" : "Inactive",
@@ -195,8 +195,7 @@ export async function deactivateEmergency(
       );
       if (index !== -1) {
         if (incidentName === "banner") {
-          store.state.emerPosters[index].emergencyImage =
-            res.data.emergency.emergencyImage;
+          store.state.emerPosters[index].emergencyImage = "";
         }
         store.state.emerPosters[index].status = "Inactive";
       }
@@ -204,6 +203,8 @@ export async function deactivateEmergency(
 
     return res.data;
   } catch (err: any) {
+    console.log(err);
+
     if (!err.response) {
       return {
         message: "Cannot connect to API Server. Please try again later.",

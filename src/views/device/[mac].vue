@@ -21,6 +21,7 @@ import { getActivateEmerPoster } from "@/services/pi";
 import axios from "axios";
 
 const route = useRoute();
+const mac = route.params.mac as string;
 const floorCpe = ref("");
 const showBotMaps = ref(false);
 const posters = computed(() => store.state.posters);
@@ -30,7 +31,8 @@ const emerPoster = computed(() =>
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
 const dateTime = ref(new Date());
-let interval: any = null;
+let intervalPoster: any = null;
+let intervalEmer: any = null;
 let intervalWeather: any = null;
 let dateTimeInterval: any = null;
 const weather: any = ref();
@@ -114,10 +116,7 @@ const aqiStatus = () => {
 };
 
 const fetchData = async () => {
-  const { ok, floor, poster, message } = await getPosterEachDevice(
-    route.params.mac as string
-  );
-  await getActivateEmerPoster();
+  const { ok, floor, poster, message } = await getPosterEachDevice(mac);
   if (ok) {
     floorCpe.value = floor;
 
@@ -128,28 +127,31 @@ const fetchData = async () => {
       return 0;
     });
     store.state.posters = poster;
-    if (posters.value)
-      stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
   }
 };
 
 onMounted(async () => {
   fetchWeather();
+  await getActivateEmerPoster();
   fetchData();
+  if (posters.value) {
+    stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
+  }
   dateTimeInterval = setInterval(async () => {
     dateTime.value = new Date();
   }, 1000);
-  interval = setInterval(async () => {
+  intervalEmer = setInterval(async () => {
     await getActivateEmerPoster();
   }, 1000);
   intervalWeather = setInterval(async () => {
     await fetchWeather();
-  }, 1800000);
+  }, 1000 * 60 * 30); // fetch every 30 minutes
+  intervalPoster = setInterval(async () => {
+    await fetchData();
+  }, 1000 * 60); // fetch every 1 minute
 });
 
 watch(emerPoster, () => {
-  console.log(emerPoster.value?.emergencyImage);
-
   if (emerPoster.value) {
     if (stopLoop.value) stopLoop.value();
     store.state.currentImage.image = emerPoster.value.emergencyImage;
@@ -163,7 +165,8 @@ onUnmounted(() => {
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
   image.value.image = null;
-  clearInterval(interval);
+  clearInterval(intervalPoster);
+  clearInterval(intervalEmer);
   clearInterval(dateTimeInterval);
   clearInterval(intervalWeather);
 });

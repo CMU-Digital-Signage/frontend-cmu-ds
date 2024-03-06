@@ -7,16 +7,7 @@ import PopupUpload from "@/components/PopupUploadCompo.vue";
 import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
-import { Device, Emergency } from "./types";
-import mqtt from "mqtt";
-import axios from "axios";
-
-// const mqttClient = mqtt.connect({
-//   host: "d887ebbbf00045b6b1405a5f76f66686.s1.eu.hivemq.cloud",
-//   port: 8883,
-//   username: "cpe_ds",
-//   password: "CPEds261361",
-// });
+import { Device } from "./types";
 
 const user = computed(() => store.state.userInfo);
 let interval: any = null;
@@ -61,13 +52,11 @@ const fetchData = async () => {
 onMounted(() => {
   setupSocket();
 
-  // mqttClient.on("connect", () => {
-  //   console.log("connected.");
-  // });
-
-  // interval = setInterval(() => {
-  //   fetchData();
-  // }, 20000);
+  if (user.value.id) {
+    interval = setInterval(() => {
+      fetchData();
+    }, 1000 * 60); // fetch every 1 minute
+  }
 });
 
 watch(user, async () => {

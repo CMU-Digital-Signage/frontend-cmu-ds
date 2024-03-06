@@ -112,6 +112,7 @@ const handleEmergency = async () => {
   } else {
     let res;
     if (selectEmer.value.incidentName === "banner") {
+      selectEmer.value.status = true;
       res = await editEmergency("banner", selectEmer.value, password.value);
     } else {
       res = await activateEmergency(
@@ -299,7 +300,12 @@ const handleEmergency = async () => {
               'bg-red-500 hover:bg-red-600': selectEmer.status !== 'Active',
               'bg-[#3fbda0] hover:bg-[#36a78d]': selectEmer.status === 'Active',
             }"
-            :disabled="!password.length || !selectEmer.emergencyImage.length"
+            :disabled="
+              !password.length ||
+              !selectEmer.emergencyImage ||
+              (selectEmer.incidentName === 'banner' &&
+                !selectEmer.emergencyImage.length)
+            "
             :loading="loading"
             :label="selectEmer.status === 'Active' ? 'Deactivate' : 'Activate'"
             @click="handleEmergency()"
