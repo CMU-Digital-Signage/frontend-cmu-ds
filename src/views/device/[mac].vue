@@ -149,7 +149,7 @@ onMounted(async () => {
 
 watch(emerPoster, () => {
   console.log(emerPoster.value?.emergencyImage);
-  
+
   if (emerPoster.value) {
     if (stopLoop.value) stopLoop.value();
     store.state.currentImage.image = emerPoster.value.emergencyImage;
@@ -204,6 +204,7 @@ onUnmounted(() => {
       </transition>
     </div>
     <div
+      v-if="emerPoster?.incidentName !== 'banner'"
       class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black"
     >
       <div v-if="weather" class="bottomBlock border-t-2">
@@ -237,7 +238,7 @@ onUnmounted(() => {
             <div class="text-[32px]">
               AQI: {{ weather?.current?.pollution.aqius }} <br />
             </div>
-            <div class="text-[16px] ml-4 -mr-1 font-medium">
+            <div class="text-[22px] ml-4 -mr-1 font-medium">
               {{ aqiStatus() }}
             </div>
           </div>
