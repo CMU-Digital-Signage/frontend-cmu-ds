@@ -555,14 +555,14 @@ const checkValidRoomNumber = () => {
     <!-- "File Manage" -->
     <ul
       v-if="$route.path === '/file'"
-      class="flex-wrap gap-2 lg:gap-5 text-[14px] lg:text-[16px]"
+      class="flex-wrap xl:gap-2 md:gap-2 text-[14px] lg:text-[16px]"
     >
       <li>
         <label>Title</label>
         <InputText
           id="title"
           v-model="filterInput.title"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 w-28 lg:w-40 rounded-lg"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-32 xl:w-40 rounded-lg"
           placeholder="Ex.CPE Music"
         ></InputText>
       </li>
@@ -571,7 +571,7 @@ const checkValidRoomNumber = () => {
         <InputText
           id="uploader"
           v-model="filterInput.uploader"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 w-28 lg:w-40 rounded-lg"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-32 xl:w-40 rounded-lg"
           placeholder="Ex.Navadon"
           v-if="user?.isAdmin"
         ></InputText>
@@ -590,7 +590,7 @@ const checkValidRoomNumber = () => {
           inputId="icondisplay"
           dateFormat="dd M yy"
           inputClass="text-[13px] lg:text-[16px]"
-          class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
+          class="w-[120px] md:w-[140px] xl:w-[150px] h-8 rounded-lg align-middle"
         />
       </li>
       <li>
@@ -602,15 +602,29 @@ const checkValidRoomNumber = () => {
           optionValue="status"
           inputClass="text-[13px] lg:text-[16px] text-left"
           :showClear="filterInput.status !== ''"
-          class="rounded-lg items-center h-8 w-28 lg:w-36 ml-1"
+          class="rounded-lg items-center h-8 w-28 md:w-32 xl:w-36"
         ></Dropdown>
       </li>
       <li>
-        <Button
-          label="Clear Fillter"
-          @click="store.commit('resetFilter')"
-          class="rounded-[10px] h-8 border-0 bg-red-500 text-right float-end justify-self-end"
-        />
+        <div>
+          <!-- Button for md screens -->
+          <li>
+            <div class="md:block xl:hidden">
+              <Button
+                label="Clear"
+                @click="store.commit('resetFilter')"
+                class="rounded-[10px] h-8 border-0 bg-red-500 text-right"
+              />
+            </div>
+            <div class="md:hidden xl:block">
+              <Button
+                label="Clear Filter"
+                @click="store.commit('resetFilter')"
+                class="flex justify-end right-0 rounded-[10px] h-8 border-0 bg-red-500 text-right"
+              />
+            </div>
+          </li>
+        </div>
       </li>
     </ul>
 

@@ -150,7 +150,7 @@ const handleEmergency = async () => {
     ></Skeleton>
     <div
       v-else
-      class="pt-[12px] pb-[32px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
+      class="pt-[12px] pb-[32px] md:pb-[68px] xl:pb-[32px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5 md:mb-[10px]"
     >
       <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
@@ -180,7 +180,7 @@ const handleEmergency = async () => {
               Choose Poster to displayed
             </p>
             <div
-              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-40 overflow-y-scroll"
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-40 md:h-28 xl:h-40 overflow-y-scroll"
             >
               <div class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9">
                 <div
@@ -205,10 +205,10 @@ const handleEmergency = async () => {
               Type text to display banner
             </p>
             <div
-              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-52"
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-52 md:h-44 xl:h-52"
             >
               <div class="flex flex-col gap-3 md:mx-8 my-5 mx-5">
-                <div class="flex gap-2 items-center">
+                <div class="flex gap-2 items-center md:-mt-2">
                   <RadioButton
                     :value="
                       emerPosters?.find((e) => e.incidentName === 'banner')
@@ -224,7 +224,7 @@ const handleEmergency = async () => {
                     @input="getTextPoster"
                     :maxlength="312"
                     placeholder="Ex: There's a fire, do not use the elevator"
-                    class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
+                    class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] md:h-[85px] xl:h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
                     :class="{
                       'border-red-500':
                         selectEmer.incidentName === 'banner' &&
@@ -277,7 +277,9 @@ const handleEmergency = async () => {
       </div>
 
       <div v-if="selectEmer">
-        <p class="md:text-[17px] text-[14px] font-semibold mb-2">
+        <p
+          class="md:text-[17px] text-[14px] font-semibold mb-2 md:-mt-6 xl:mb-2"
+        >
           Type your Emergency Password in the box below
         </p>
         <div class="flex flex-col">
@@ -316,7 +318,7 @@ const handleEmergency = async () => {
     </div>
 
     <div
-      class="flex-1 border-l-[2px]; border-[#eaeaea] pt-[12px] pb-[32px] px-[20px] flex flex-col"
+      class="flex-1 border-l-[2px]; border-[#eaeaea] pt-[12px] md:pb-[68px] xl:pb-[40px] px-[20px] flex flex-col"
     >
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
