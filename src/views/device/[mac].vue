@@ -148,6 +148,8 @@ onMounted(async () => {
 });
 
 watch(emerPoster, () => {
+  console.log(emerPoster.value?.emergencyImage);
+  
   if (emerPoster.value) {
     if (stopLoop.value) stopLoop.value();
     store.state.currentImage.image = emerPoster.value.emergencyImage;
@@ -160,7 +162,7 @@ watch(emerPoster, () => {
 onUnmounted(() => {
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
-  image.value.image = "";
+  image.value.image = null;
   clearInterval(interval);
   clearInterval(dateTimeInterval);
   clearInterval(intervalWeather);
@@ -192,7 +194,7 @@ onUnmounted(() => {
       ></iframe>
     </div>
     <div v-else class="flex flex-1">
-      <transition v-if="image.key.length" name="fade" mode="out-in">
+      <transition v-if="image.image" name="fade" mode="out-in">
         <img
           class="max-w-screen h-screen m-auto duration-500 transition-opacity"
           alt="poster"
@@ -202,21 +204,23 @@ onUnmounted(() => {
       </transition>
     </div>
     <div
-      class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black "
+      class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black"
     >
-      <div v-if="weather" class="bottomBlock border-t-2 ">
+      <div v-if="weather" class="bottomBlock border-t-2">
         <p class="text-[40px]">{{ weather?.current?.weather.tp }} °C</p>
         <div class="inline-flex gap-3">
-          <p class="text-[28px] ml-2 -mr-1 font-medium">{{ iconWeather.condition }}</p>
+          <p class="text-[28px] ml-2 -mr-1 font-medium">
+            {{ iconWeather.condition }}
+          </p>
           <img class="w-8 h-8" :src="iconWeather.image" />
         </div>
         <div class="text-[14px] text-black">
-            Last Update: 
-            {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
-              updateWeather.getMinutes().toString().padStart(2, "0")
-            }} IQAir
-          </div>
-
+          Last Update:
+          {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
+            updateWeather.getMinutes().toString().padStart(2, "0")
+          }}
+          IQAir
+        </div>
       </div>
       <div v-if="weather" class="bottomBlock">
         <div
@@ -230,16 +234,20 @@ onUnmounted(() => {
           }"
         >
           <div class="flex-col justify-center items-center">
-            <div class="text-[32px]">AQI: {{ weather?.current?.pollution.aqius }} <br /></div>
-            <div class="text-[16px] ml-4 -mr-1 font-medium"> {{ aqiStatus() }}</div>
+            <div class="text-[32px]">
+              AQI: {{ weather?.current?.pollution.aqius }} <br />
+            </div>
+            <div class="text-[16px] ml-4 -mr-1 font-medium">
+              {{ aqiStatus() }}
+            </div>
           </div>
           <div class="text-[12px] text-black">
-            Last Update: 
+            Last Update:
             {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
               updateWeather.getMinutes().toString().padStart(2, "0")
-            }} IQAir
+            }}
+            IQAir
           </div>
-
         </div>
       </div>
       <div class="bottomBlock border-b-2 text-[36px]">

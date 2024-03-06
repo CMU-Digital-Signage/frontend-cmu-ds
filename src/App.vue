@@ -8,6 +8,15 @@ import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
 import { Device, Emergency } from "./types";
+import mqtt from "mqtt";
+import axios from "axios";
+
+// const mqttClient = mqtt.connect({
+//   host: "d887ebbbf00045b6b1405a5f76f66686.s1.eu.hivemq.cloud",
+//   port: 8883,
+//   username: "cpe_ds",
+//   password: "CPEds261361",
+// });
 
 const user = computed(() => store.state.userInfo);
 let interval: any = null;
@@ -32,9 +41,6 @@ const fetchData = async () => {
   });
 
   const emerPromise = getEmergency().then((emerRes) => {
-    emerRes.emergency.forEach(
-      (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
-    );
     store.state.emerPosters = emerRes.emergency;
   });
 
@@ -54,6 +60,11 @@ const fetchData = async () => {
 
 onMounted(() => {
   setupSocket();
+
+  // mqttClient.on("connect", () => {
+  //   console.log("connected.");
+  // });
+
   // interval = setInterval(() => {
   //   fetchData();
   // }, 20000);
@@ -90,7 +101,7 @@ onUnmounted(() => {
     <router-view />
   </div>
   <div
-    class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10  right-0 bottom-0 fixed"
+    class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed"
     v-if="
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "

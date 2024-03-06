@@ -60,7 +60,7 @@ export default function setupSocket() {
         (e) => e.MACaddress === data.MACaddress
       );
       if (index !== -1) {
-        store.state.devices[index] = { ...store.state.devices[index], ...data };
+        store.state.devices[index] = { ...data };
       }
     }
   });
@@ -130,7 +130,9 @@ export default function setupSocket() {
         (e) => e.incidentName === data.incidentName
       );
       if (index !== -1) {
-        store.state.emerPosters[index].emergencyImage = data.emergencyImage;
+        if (data.incidentName === "banner") {
+          store.state.emerPosters[index].emergencyImage = data.emergencyImage;
+        }
         store.state.emerPosters[index].status = "Inactive";
       }
     }

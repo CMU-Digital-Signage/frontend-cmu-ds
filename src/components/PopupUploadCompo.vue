@@ -441,7 +441,10 @@ const nextStepUpload = () => {
 
 const nextStepPreview = () => {
   if (formPoster.value.image.length) {
-    selectRotate.value = { ...formPoster.value.image[0] };
+    selectRotate.value = {
+      image: formPoster.value.image[0].image.dataURL,
+      priority: formPoster.value.image[0].priority,
+    };
     currentState.value = 2;
   } else {
     toast.add({
@@ -658,10 +661,10 @@ const nextStepPreview = () => {
               <Button
                 @click="
                   async () => {
-                    formPoster.image[selectRotate.priority - 1].image =
+                    formPoster.image[selectRotate.priority - 1].image.dataURL =
                       await rotate(selectRotate.image, -90);
                     selectRotate.image =
-                      formPoster.image[selectRotate.priority - 1].image;
+                      formPoster.image[selectRotate.priority - 1].image.dataURL;
                   }
                 "
                 :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
@@ -673,10 +676,10 @@ const nextStepPreview = () => {
               <Button
                 @click="
                   async () => {
-                    formPoster.image[selectRotate.priority - 1].image =
+                    formPoster.image[selectRotate.priority - 1].image.dataURL =
                       await rotate(selectRotate.image, 90);
                     selectRotate.image =
-                      formPoster.image[selectRotate.priority - 1].image;
+                      formPoster.image[selectRotate.priority - 1].image.dataURL;
                   }
                 "
                 :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
@@ -699,7 +702,9 @@ const nextStepPreview = () => {
               >
                 <img
                   :alt="formPoster.title"
-                  :src="formPoster.image[selectRotate.priority - 1].image"
+                  :src="
+                    formPoster.image[selectRotate.priority - 1].image.dataURL
+                  "
                   class="max-w-full max-h-full m-auto rotate-90"
                   :style="{
                     maxWidth: `${3840 / 20}px`,
@@ -714,13 +719,16 @@ const nextStepPreview = () => {
               class="content-image"
               @click="
                 () => {
-                  selectRotate = { ...formPoster.image[index] };
+                  selectRotate = {
+                    image: formPoster.image[index].image.dataURL,
+                    priority: formPoster.image[index].priority,
+                  };
                 }
               "
             >
               <img
                 :alt="formPoster.title"
-                :src="image.image"
+                :src="image.image.dataURL"
                 width="100%"
                 height="100%"
               />
@@ -747,7 +755,7 @@ const nextStepPreview = () => {
 
             <DataTable
               :value="formDisplay"
-              tableStyle="b rounded-lg"
+              tableClass="b rounded-lg"
               class="overflow-hidden border-[1px] border-black-500 rounded-lg"
             >
               <Column header="Date" class="w-[160px]">
@@ -811,59 +819,6 @@ const nextStepPreview = () => {
               </Column>
             </DataTable>
           </div>
-          <!-- <table class="border-spacing-3 border-separate text-center">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Display Duration</th>
-                <th>Devices</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(schedule, index) in formDisplay" :key="index">
-                <td>
-                  {{ dateFormatter(schedule.startDate) }}
-                  {{
-                    dateFormatter(schedule.startDate) ===
-                    dateFormatter(schedule.endDate)
-                      ? ""
-                      : ` - ${dateFormatter(schedule.endDate)}`
-                  }}
-                </td>
-                <td v-if="schedule.allDay">All Day</td>
-                <td v-else>
-                  <tr
-                    v-for="(time, iTime) in schedule.time"
-                    :key="iTime"
-                    class="border-b- border-collapse"
-                  >
-                    <td>
-                      {{ timeFormatter(time.startTime, false) }} -
-                      {{ timeFormatter(time.endTime, false) }}
-                    </td>
-                  </tr>
-                </td>
-                <td>{{ schedule.duration }}</td>
-                <td v-if="schedule.allDevice">All</td>
-                <td v-else>
-                  <tr
-                    v-for="mac in schedule.MACaddress"
-                    :key="mac"
-                    class="border-b- border-collapse"
-                  >
-                    <td>
-                      {{
-                        store.state.devices?.find((e) => e.MACaddress === mac)
-                          ?.deviceName
-                      }}
-                    </td>
-                  </tr>
-                </td>
-              </tr>
-            </tbody>
-          </table> -->
-
           <div class="flex flex-inline gap-4 pt-3">
             <Button
               text

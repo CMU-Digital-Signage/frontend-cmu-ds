@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Emergency } from "@/types";
 import store from "@/store";
+import { convertUrlToFile } from "@/utils/constant";
 
 const prefix = "/poster";
 
@@ -15,6 +16,8 @@ export async function getEmergency() {
         withCredentials: true,
       }
     );
+
+    convertUrlToFile(res.data.emergency);
 
     return res.data;
   } catch (err: any) {
@@ -40,11 +43,13 @@ export async function addEmergency(data: Emergency) {
         withCredentials: true,
       }
     );
-    if (store.state.emerPosters)
+    if (store.state.emerPosters) {
+      convertUrlToFile(res.data.emergency);
       store.state.emerPosters.push({
         ...res.data.emergency,
         status: res.data.emergency.status ? "Active" : "Inactive",
       });
+    }
 
     return res.data;
   } catch (err: any) {
@@ -82,6 +87,7 @@ export async function editEmergency(
         (e) => e.incidentName === incidentName
       );
       if (index !== -1) {
+        convertUrlToFile(res.data.emergency);
         store.state.emerPosters[index] = {
           ...res.data.emergency,
           status: res.data.emergency.status ? "Active" : "Inactive",
@@ -188,8 +194,10 @@ export async function deactivateEmergency(
         (e) => e.incidentName === incidentName
       );
       if (index !== -1) {
-        store.state.emerPosters[index].emergencyImage =
-          res.data.emergency.emergencyImage;
+        if (incidentName === "banner") {
+          store.state.emerPosters[index].emergencyImage =
+            res.data.emergency.emergencyImage;
+        }
         store.state.emerPosters[index].status = "Inactive";
       }
     }

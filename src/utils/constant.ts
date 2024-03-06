@@ -1,5 +1,5 @@
 import store from "@/store";
-import { Device, Display, Emergency, Poster } from "@/types";
+import { Device, Display, Emergency, ImageCollection, Poster } from "@/types";
 import Compressor from "compressorjs";
 import { Ref } from "vue";
 
@@ -117,7 +117,7 @@ export const dateFormatter = (
 
 export const timeFormatter = (
   date: Date | null | undefined,
-  includesSec: boolean
+  includesSec?: boolean
 ) => {
   if (!date) return "";
 
@@ -159,21 +159,89 @@ export const newInitialFormDisplay = () => {
   };
 };
 
-export const onUpload = (e: any): Promise<string | undefined> => {
-  return new Promise((resolve, reject) => {
-    const file = e;
-    if (!file) reject("No file selected");
+export const convertUrlToFile = (data: any) => {
+  data.forEach(async (e: any) => {
+    if (e.incidentName) {
+      e.status = e.status ? "Active" : "Inactive";
+      const url = e.emergencyImage;
+      const response = await convertImageToBase64(url);
+      const base64Data = response.split(",")[1];
+      const name = url.substring(
+        url.lastIndexOf("/") + 1,
+        url.lastIndexOf("?")
+      );
+      const type = name.substring(name.lastIndexOf("."));
+      const size = (base64Data.length * 3) / 4;
 
-    const targetSize = 500 * 1024; // 500 kb
+      e.emergencyImage = {
+        dataURL: `data:image/${type};base64,${base64Data}`,
+        lastModified: new Date().getTime(),
+        lastModifiedDate: new Date(),
+        name,
+        size,
+        type,
+      };
+    } else {
+      e.image.forEach(async (p: ImageCollection) => {
+        const url = p.image;
+        const response = await convertImageToBase64(url);
+        const base64Data = response.split(",")[1];
+        const name = url.substring(
+          url.lastIndexOf("/") + 1,
+          url.lastIndexOf("?")
+        );
+        const type = name.substring(name.lastIndexOf("."));
+        const size = (base64Data.length * 3) / 4;
+
+        p.image = {
+          dataURL: `data:image/${type};base64,${base64Data}`,
+          lastModified: new Date().getTime(),
+          lastModifiedDate: new Date(),
+          name,
+          size,
+          type,
+        };
+      });
+    }
+  });
+};
+
+export const convertImageToBase64 = (url: string): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        resolve(reader.result as string);
+      };
+      reader.onerror = function (error) {
+        reject(error);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.onerror = function (error) {
+      reject(error);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  });
+};
+
+export const onUpload = (e: any): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    if (!e) reject("No file selected");
+
+    const type = e.type;
+    // const targetSize = 500 * 1024; // 500 kb
     let quality = 1;
 
     const compressFile = async (compressionQuality: number) => {
-      return new Promise<void>((resolve, reject) => {
-        new Compressor(file, {
+      return new Promise<any>((resolve, reject) => {
+        new Compressor(e, {
           quality: compressionQuality,
           async success(result) {
-            e = new File([result], e.name);
-            resolve();
+            resolve(result);
           },
           error(error) {
             reject(error);
@@ -182,38 +250,37 @@ export const onUpload = (e: any): Promise<string | undefined> => {
       });
     };
 
-    const attemptCompression = async () => {
+    const compressLoop = async () => {
+      // while (e.size > targetSize && quality > 0.01) {
+      quality *= 0.4;
       try {
-        await compressFile(quality);
-        if (e.size < targetSize) {
-          const reader = new FileReader();
-          reader.readAsDataURL(e);
-          reader.onloadend = function () {
-            resolve(reader.result as string);
-          };
-        } else {
-          quality = quality * 0.4;
-          if (quality > 0.1) {
-            attemptCompression();
-          } else {
-            reject("Unable to compress below the target size");
-          }
-        }
+        e = await compressFile(quality);
       } catch (error) {
         reject(error);
+        return;
       }
+      // }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataURL = reader.result;
+        resolve({ ...e, size: e.size, type, dataURL });
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsDataURL(e);
     };
 
-    attemptCompression();
+    compressLoop();
   });
 };
 
-export const rotate = (base64Image: string, deg: number) => {
+export const rotate = (dataURL: string, deg: number) => {
   return new Promise<string>((resolve) => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d")!;
     const img = new Image();
-    img.src = base64Image;
+    img.src = dataURL;
     img.onload = function () {
       // Rotate the image
       canvas.width = img.height;
@@ -222,7 +289,7 @@ export const rotate = (base64Image: string, deg: number) => {
       ctx.rotate((deg * Math.PI) / 180);
       ctx.drawImage(img, -img.width / 2, -img.height / 2);
 
-      const fileType = base64Image.substring(5, base64Image.indexOf(";"));
+      const fileType = dataURL.substring(5, dataURL.indexOf(";"));
 
       // Convert the rotated image to base64
       const imageDataUrl = canvas.toDataURL(fileType, 1.0);
@@ -250,6 +317,27 @@ export const setFieldPoster = (data: Poster[]) => {
     if (e.image.length > 1) {
       e.type = "Collection";
     } else e.type = "Individual";
+
+    e.image.forEach(async (e: ImageCollection) => {
+      const url = e.image;
+      const response = await convertImageToBase64(url);
+      const base64Data = response.split(",")[1];
+      const name = url.substring(
+        url.lastIndexOf("/") + 1,
+        url.lastIndexOf("?")
+      );
+      const type = name.substring(name.lastIndexOf("."));
+      const size = (base64Data.length * 3) / 4;
+
+      e.image = {
+        dataURL: `data:image/${type};base64,${base64Data}`,
+        lastModified: new Date().getTime(),
+        lastModifiedDate: new Date(),
+        name,
+        size,
+        type,
+      };
+    });
   });
   data.sort(
     (a: Poster, b: Poster) => a.createdAt.getTime() - b.createdAt.getTime()
@@ -278,23 +366,21 @@ export const createUnique = (data: Poster[]) => {
         new Date().getHours(),
         new Date().getMinutes()
       );
-      console.log(e.title, e.startDate);
-      
+
       let status = "";
       if (
         currentDate.getTime() >= e.startDate.getTime() &&
         currentDate.getTime() <= e.endDate.getTime()
       ) {
         if (
-          (e.startTime.getTime() <= currentTime.getTime() &&
-            currentTime.getTime() <= e.endTime.getTime()) ||
-          (e.startDate.getDate() <= currentDate.getDate() )
+          e.startTime.getTime() <= currentTime.getTime() &&
+          currentTime.getTime() <= e.endTime.getTime()
         ) {
           status = "Displayed";
         } else {
           status = "Awaited";
         }
-      } else if (currentDate.getTime() < e.startDate.getTime()) {
+      } else if (currentDate.getTime() <= e.startDate.getTime()) {
         status = "Awaited";
       } else {
         status = "Expired";
@@ -404,6 +490,7 @@ export const setEmerForm = (data: any) => {
   store.state.editPoster.title = data.incidentName;
   store.state.formEmer = {
     ...data,
+    emergencyImage: { ...data.emergencyImage },
     status: data.status === "Active" ? true : false,
   };
   store.state.editPoster.type = "EP";
@@ -424,14 +511,14 @@ export const loopPoster = (
 
   const updatePosterInterval = () => {
     const currentMinutes = new Date().getMinutes();
-    const isOnTheHalfHour = currentMinutes === 0 || currentMinutes%30 === 0;
+    const isOnTheHalfHour = currentMinutes === 0 || currentMinutes === 30;
     if (!isOnTheHalfHour) hasShownBotMapsThisRound = false;
     if (showBotMaps && isOnTheHalfHour && !hasShownBotMapsThisRound) {
       showBotMaps.value = true;
       hasShownBotMapsThisRound = true;
       timeoutId = setTimeout(() => {
         showBotMaps.value = false;
-      }, 15000);
+      }, 15 * 1000);
     }
     const currentTime = new Date(
       1970,
@@ -448,8 +535,9 @@ export const loopPoster = (
     ) {
       if (emerPoster) return;
 
-      store.state.currentImage.image = currentPoster.image[currentIndexImage]
-        .image as any;
+      store.state.currentImage.image =
+        currentPoster.image[currentIndexImage].image.dataURL ||
+        (currentPoster.image[currentIndexImage].image as any);
       store.state.currentImage.key =
         currentPoster.title + currentPoster.image[currentIndexImage].priority;
       timeoutId = setTimeout(() => {
