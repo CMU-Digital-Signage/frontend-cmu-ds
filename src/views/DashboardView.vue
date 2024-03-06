@@ -34,6 +34,8 @@ const calendar = ref<Calendar>();
 const selectedDevice = computed(() => store.state.selectDevice);
 const posters = computed(() => store.state.posters);
 const postersView = ref<any[]>([]);
+const deletePopup = ref(false);
+const loading = ref(false);
 const calOptions = reactive<CalendarOptions>({
   timeZone: "Asia/Bangkok",
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -311,12 +313,16 @@ onUnmounted(() => {
 
 const del = async (posterId: string) => {
   const res = await deletePoster(posterId);
+  loading.value = true;
   toast.add({
     severity: "success",
     summary: "Success",
     detail: "Delete Poster successful.",
     life: 3000,
   });
+  loading.value = false;
+  showInfo.value = false;
+  deletePopup.value = false;
 };
 </script>
 
@@ -327,6 +333,63 @@ const del = async (posterId: string) => {
       v-if="loadPoster"
       class="bg-gray-200 rounded-xl flex-1"
     ></Skeleton>
+    <Dialog
+      :closable="!loading"
+      v-model:visible="deletePopup"
+      modal
+      close-on-escape
+      :draggable="false"
+      class="w-[425px]"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+        },
+        mask: {
+          style:
+            'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
+        },
+      }"
+    >
+      <template #header>
+        <div class="header-popup">
+          Delete
+          {{
+            selectedEvent?.posterId
+              ? `"${selectedEvent.title}" Poster`
+              : `"${selectedEvent?.incidentName}" Emergency Poster`
+          }}?
+        </div>
+      </template>
+      <div class="flex flex-col gap-2">
+        <div>
+          Deleting this poster or collection will be permenently deleted from
+          all devices.
+        </div>
+        <div class="inline-block">
+          <div class="flex flex-row gap-4 pt-3">
+            <Button
+              text
+              label="Cancel"
+              :loading="loading"
+              @click="deletePopup = false"
+              :class="'secondaryButton'"
+            ></Button>
+            <Button
+              :loading="loading"
+              label="Delete Poster"
+              :class="'primaryButtonDel'"
+              type="submit"
+              @click="del(selectedEvent.posterId)"
+            ></Button>
+          </div>
+        </div>
+      </div>
+    </Dialog>
     <div v-show="!loadPoster" ref="fullCalendar"></div>
     <Dialog
       v-model:visible="showInfo"
@@ -353,18 +416,15 @@ const del = async (posterId: string) => {
             class="inline-flex gap-5 mr-5"
           >
             <i
-              class="pi pi-trash cursor-pointer rounded-full p-2 hover:bg-gray-200"
-              @click="
-                del(selectedEvent.posterId);
-                showInfo = false;
-              "
-            ></i>
-            <i
               class="pi pi-pencil cursor-pointer rounded-full p-2 hover:bg-gray-200"
               @click="
                 setNorForm(selectedEvent);
                 showInfo = false;
               "
+            ></i>
+            <i
+              class="pi pi-trash cursor-pointer rounded-full p-2 hover:bg-gray-200"
+              @click="deletePopup = true"
             ></i>
           </div>
         </div>
@@ -446,6 +506,50 @@ const del = async (posterId: string) => {
   overflow: hidden;
   padding-top: 0.75rem;
   padding-bottom: 2rem;
+}
+
+.header-popup {
+  font-weight: 700;
+  font-size: 22px;
+  color: rgb(255, 0, 0);
+}
+
+.primaryButtonDel {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 10px;
+  margin-top: 20px;
+  background-color: rgb(255, 0, 0);
+  color: rgb(255, 255, 255);
+  font-weight: 800;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.primaryButtonDel:hover {
+  background-color: rgb(193, 0, 0);
+  text-decoration-line: underline;
+}
+
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: none;
+  color: black;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
 }
 </style>
 <style>
