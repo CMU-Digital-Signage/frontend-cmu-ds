@@ -304,6 +304,7 @@ const handleEmergency = async () => {
               !password.length ||
               !selectEmer.emergencyImage ||
               (selectEmer.incidentName === 'banner' &&
+                selectEmer.status === 'Deactive' &&
                 !selectEmer.emergencyImage.length)
             "
             :loading="loading"
