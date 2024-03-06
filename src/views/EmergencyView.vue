@@ -71,9 +71,7 @@ onMounted(async () => {
     loading1st.value = true;
     const res = await getEmergency();
     if (res.ok) {
-      res.emergency.forEach(
-        (e: Emergency) => (e.status = e.status ? "Active" : "Inactive")
-      );
+      res.emergency.forEach((e: Emergency) => e.status === "Active");
       store.state.emerPosters = res.emergency;
     }
     loading1st.value = false;

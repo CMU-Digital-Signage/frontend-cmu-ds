@@ -252,7 +252,7 @@ export const onUpload = (e: any): Promise<any> => {
 
     const compressLoop = async () => {
       // while (e.size > targetSize && quality > 0.01) {
-      quality *= 0.4;
+      quality *= 0.1;
       try {
         e = await compressFile(quality);
       } catch (error) {
