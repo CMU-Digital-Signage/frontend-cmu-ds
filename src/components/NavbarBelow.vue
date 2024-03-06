@@ -99,7 +99,8 @@ const del = async () => {
         class="border-none bg-red-500 rounded-[10px] font-semibold min-w-fit h-10 px-5"
         @click="
           poster = undefined;
-          store.commit('resetFilter')"
+          store.commit('resetFilter');
+        "
       />
 
       <div class="flex items-center justify-end w-full gap-3">
@@ -135,9 +136,13 @@ const del = async () => {
     class="w-[500px] z-[100]"
   >
     <template #header>
-      <div class="inline-flex font-bold text-2xl gap-3 items-center">
-        <p>{{ poster.title }}</p>
-        <p>({{ poster.type }})</p>
+      <div class="inline-flex font-bold text-2xl gap-3 items-start">
+        <div class="flex flex-col">
+          <p>{{ poster.title }}</p>
+          <p class="text-[16px] text-[#8d8d8d] -mt-1">
+            {{ poster.type }}
+          </p>
+        </div>
       </div>
     </template>
     <div class="flex flex-col gap-2">
@@ -178,16 +183,20 @@ const del = async () => {
         <p>Display Duration</p>
         <p>{{ poster.duration * poster.image.length }} sec</p>
       </div>
-      <!-- Description -->
-      <div class="posterDetail">
-        <p>Description</p>
-        <p>{{ poster.description }}</p>
-        <p v-if="!poster.description">-</p>
-      </div>
+
       <!-- Uploader -->
       <div class="posterDetail">
         <p>Uploader</p>
         <p>{{ poster.uploader }}</p>
+      </div>
+
+      <!-- Description -->
+      <div class="posterDetail flex-col gap-1">
+        <p class="font-[800px] text-[#535353]">Description</p>
+        <div class="bg-[#e9f2fd] rounded-lg p-3 px-5">
+          <p class="font-notoThai">{{ poster.description }}</p>
+          <p v-if="!poster.description">-</p>
+        </div>
       </div>
     </div>
   </Dialog>

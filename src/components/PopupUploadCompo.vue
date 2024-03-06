@@ -22,6 +22,7 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 
 const toast = useToast();
+const limitCharTitle = ref(false);
 const user = computed(() => store.state.userInfo);
 const showUpload = computed({
   get: () => store.state.showUpload,
@@ -558,16 +559,18 @@ const nextStepPreview = () => {
           </div>
           <InputText
             v-model="formPoster.title"
+            @keydown="limitCharTitle = formPoster?.title?.length >= 28"
             type="text"
-            placeholder="Ex.CPE Music Box"
+            placeholder="Max 28 Character Ex.CPE Music Box"
             maxlength="28"
             class="title-input w-full mb-3 rounded-[12px]"
             :class="{
-              'border-red-500 shadow-none': formPoster?.title?.length >= 28,
+              'border-red-500 shadow-none':
+                formPoster?.title?.length >= 28 && limitCharTitle,
             }"
           />
           <div
-            v-if="formPoster?.title?.length >= 28"
+            v-if="formPoster?.title?.length >= 28 && limitCharTitle"
             class="text-red-500 -mt-2"
           >
             You have reached the character limit.
@@ -579,7 +582,7 @@ const nextStepPreview = () => {
           </label>
           <InputText
             v-model="formPoster.description"
-            class="description-input h-full w-full mb-5 rounded-[12px] font-notoThai"
+            class="description-input h-full w-full mb-5 rounded-[12px]"
             placeholder="(Optional)"
           />
 
@@ -871,7 +874,7 @@ const nextStepPreview = () => {
                 v-model="formEmer.description"
                 type="text"
                 placeholder="(optional)"
-                class="description-input h-full"
+                class="description-input h-full font-notoThai"
               ></InputText>
             </div>
             <Button

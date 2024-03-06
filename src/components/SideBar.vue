@@ -234,17 +234,23 @@ const handleChangePassword = async () => {
           class="upload-button mt-7 items-center justify-center"
           @click="store.state.showUpload = true"
         >
-          <div class="flex flex-row items-center justify-center gap-3 -ml-2">
-            <div
-              class="h-6 w-6 font-semibold bg-[#4a9299] opacity-80 rounded-full flex items-center justify-center border-none"
-            >
-              <i class="font-extrabold pi pi-plus text-[#ffffff]"></i>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="mr-[100px]">
+                <div
+                  class="h-6 w-6 font-semibold bg-[#4a9299] opacity-80 rounded-full flex items-center justify-center border-none"
+                >
+                  <i class="font-extrabold pi pi-plus text-[#ffffff]"></i>
+                </div>
+              </div>
+              <span
+                class="text-[#417f98] font-extrabold text-[16px] fixed ml-[40px]"
+                >Upload File</span
+              >
             </div>
-            <span class="text-[#417f98] font-extrabold text-[16px]"
-              >Upload File</span
-            >
           </div>
         </Button>
+
         <Button
           class="text-[#282828] bg-[#4a9299] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
           v-else
