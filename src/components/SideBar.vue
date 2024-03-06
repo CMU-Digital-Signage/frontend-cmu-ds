@@ -179,16 +179,22 @@ const handleChangePassword = async () => {
         <div>
           <div class="flex items-center gap-2 md:fixed">
             <img
-              class="w-6"
+              class="w-7 -mt-2"
               alt="cmulogo"
-              src="../assets/images/cpe-mini-logo.png"
+              src="../assets/images/logo close.png"
             />
-            <p
-              :class="{ 'font-medium text-[18px] lg:text-[20px]': openSidebar }"
+            <div
+              :class="{
+                'font-medium text-[18px] lg:text-[20px] -mt-2': openSidebar,
+              }"
               v-show="openSidebar"
             >
-              pixelParade
-            </p>
+              <img
+                class="w-32"
+                alt="textlogo"
+                src="../assets/images/text_logo_v2.png"
+              />
+            </div>
           </div>
         </div>
         <!-- Button collapsed -->
