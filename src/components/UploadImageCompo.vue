@@ -46,22 +46,25 @@ const errorSelectFile = async () => {
 };
 
 const selectImage = (event: any) => {
-  store.state.formPoster.image.forEach((e, index) => {
-    e.priority = index + 1;
-    e.image.name = `${formPoster.value.title}-${index + 1}.${
-      e.image.type?.split("/")[1]
-    }`;
-  });
+  if (store.state.formPoster.image) {
+    store.state.formPoster.image.forEach((e, index) => {
+      e.priority = index + 1;
+      e.image.name = `${formPoster.value.title}-${index + 1}.${
+        e.image.type?.split("/")[1]
+      }`;
+    });
+  } else store.state.formPoster.image = [];
   event.files.forEach(async (e: any, i: number) => {
-    const priority = formPoster.value.image.length + 1;
+    const priority = formPoster.value.image.length + i + 1;
     const file = await onUpload(e);
     const fileExtension = file.type.split("/")[1];
     file.name = `${formPoster.value.title}-${priority}.${fileExtension}`;
     store.state.formPoster.image.push({
       image: { ...file },
-      priority,
+      priority: priority,
     });
   });
+  console.log(store.state.formPoster.image);
 };
 
 const removeImage = (i: number) => {
