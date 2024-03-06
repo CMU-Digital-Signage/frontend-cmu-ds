@@ -6,21 +6,34 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { ref, toRefs, defineProps } from "vue";
+import { ref, toRefs, defineProps, watch } from "vue";
 import { Device } from "@/types";
 import { turnOnOffDevice } from "@/services";
 
 const props = defineProps<{ device: Device }>();
 const { device } = toRefs(props);
+const onOff = ref(false);
 const loading = ref(false);
 
 const changeStatusDevice = async () => {
   loading.value = true;
   if (device.value.MACaddress) {
+    onOff.value = device.value.status;
     await turnOnOffDevice(device.value.MACaddress);
   }
-  loading.value = false;
 };
+
+watch(
+  () =>
+    store.state.devices?.find((e) => e.MACaddress === device.value.MACaddress)
+      ?.status,
+  () => {
+    if (device.value.status !== onOff.value) {
+      onOff.value = device.value.status;
+      loading.value = false;
+    }
+  }
+);
 </script>
 
 <template>
