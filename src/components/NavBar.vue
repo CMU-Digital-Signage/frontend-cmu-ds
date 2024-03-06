@@ -555,7 +555,7 @@ const checkValidRoomNumber = () => {
     <!-- "File Manage" -->
     <ul
       v-if="$route.path === '/file'"
-      class="flex-wrap xl:gap-2 md:gap-2 text-[14px] lg:text-[16px]"
+      class="flex-wrap xl:gap-2 md:gap-2 text-[14px] xl:text-[16px] md:text-[15px]"
     >
       <li>
         <label>Title</label>
@@ -578,7 +578,7 @@ const checkValidRoomNumber = () => {
       </li>
 
       <li v-if="store.state.selectTabview !== 1">
-        <label class="text-[14px] ml-[10px] mr-1 lg:text-[16px]"
+        <label class="text-[14px] ml-[10px] mr-1 xl:text-[16px] md:text-[15px]"
           >Upload Date
         </label>
         <Calendar
@@ -594,7 +594,7 @@ const checkValidRoomNumber = () => {
         />
       </li>
       <li>
-        <label>Status</label>
+        <label class="xl:text-[16px] md:text-[15px]">Status</label>
         <Dropdown
           v-model="filterInput.status"
           :options="store.state.selectTabview === 0 ? statusPoster : statusEmer"

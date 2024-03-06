@@ -253,7 +253,7 @@ const handleEmergency = async () => {
       </div>
       <div
         v-else
-        class="flex flex-col justify-center items-center h-[1200px] gap-10"
+        class="flex flex-col justify-center items-center md:h-[500px] xl:h-[1200px] xl:gap-10"
       >
         <div
           class="flex flex-col justify-center items-center text-2xl bg-[#e9f8f2] border-[1px] border-[#b9ffe3] shadow-md rounded-xl w-80 h-96 gap-10 p-4"
@@ -279,6 +279,7 @@ const handleEmergency = async () => {
       <div v-if="selectEmer">
         <p
           class="md:text-[17px] text-[14px] font-semibold mb-2 md:-mt-6 xl:mb-2"
+          :class="{ 'md:-mt-[100px]  xl:mb-2': selectEmer.status === 'Active' }"
         >
           Type your Emergency Password in the box below
         </p>
