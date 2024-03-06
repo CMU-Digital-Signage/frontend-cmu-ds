@@ -76,7 +76,6 @@ const removeImage = (i: number) => {
     :show-upload-button="false"
     :multiple="posType === 'NP'"
     :fileLimit="maxImage"
-    :maxFileSize="5243000"
     :pt="{
       buttonbar: {
         class: `${
