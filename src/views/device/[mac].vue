@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { getPosterEachDevice } from "@/services";
-import { computed, onMounted, ref, watch, onUnmounted, reactive } from "vue";
+import { computed, onMounted, ref, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
@@ -119,7 +119,6 @@ const fetchData = async () => {
   const { ok, floor, poster, message } = await getPosterEachDevice(mac);
   if (ok) {
     floorCpe.value = floor;
-
     setFieldPoster(poster);
     poster.sort((a: Poster, b: Poster) => {
       if (a.startTime < b.startTime) return -1;
@@ -148,7 +147,7 @@ onMounted(async () => {
   }, 1000 * 60 * 30); // fetch every 30 minutes
   intervalPoster = setInterval(async () => {
     await fetchData();
-  }, 1000 * 60); // fetch every 1 minute
+  }, 1000 * 16); // fetch every 16 sec
 });
 
 watch(emerPoster, () => {
@@ -210,6 +209,7 @@ onUnmounted(() => {
     <div v-else class="flex flex-1">
       <transition v-if="image.image" name="fade" mode="out-in">
         <img
+          v-if="image.image"
           class="max-w-screen h-screen m-auto duration-500 transition-opacity"
           alt="poster"
           :key="image.key"
@@ -222,14 +222,14 @@ onUnmounted(() => {
       class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black"
     >
       <div v-if="weather" class="bottomBlock border-t-2">
-        <p class="text-[40px]">{{ weather?.current?.weather.tp }} °C</p>
+        <p class="text-4xl">{{ weather?.current?.weather.tp }} °C</p>
         <div class="inline-flex gap-3">
-          <p class="text-[28px] ml-2 -mr-1 font-medium">
+          <p class="text-2xl ml-2 -mr-1 font-medium">
             {{ iconWeather.condition }}
           </p>
           <img class="w-8 h-8" :src="iconWeather.image" />
         </div>
-        <div class="text-[14px] text-black">
+        <div class="text-sm text-black">
           Last Update:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
@@ -249,14 +249,14 @@ onUnmounted(() => {
           }"
         >
           <div class="flex-col justify-center items-center">
-            <div class="text-[32px]">
+            <div class="text-4xl">
               AQI: {{ weather?.current?.pollution.aqius }} <br />
             </div>
-            <div class="text-[22px] ml-4 -mr-1 font-medium">
+            <div class="text-2xl ml-4 -mr-1 font-medium">
               {{ aqiStatus() }}
             </div>
           </div>
-          <div class="text-[12px] text-black">
+          <div class="text-sm text-black">
             Last Update:
             {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
               updateWeather.getMinutes().toString().padStart(2, "0")
@@ -265,7 +265,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <div class="bottomBlock border-b-2 text-[36px]">
+      <div class="bottomBlock border-b-2 text-4xl">
         <p>{{ dateFormatter(dateTime) }}</p>
         <p>{{ timeFormatter(dateTime, true) }}</p>
       </div>

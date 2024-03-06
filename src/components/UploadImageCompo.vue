@@ -57,20 +57,22 @@ const selectImage = (event: any) => {
   event.files.forEach(async (e: any, i: number) => {
     const priority = formPoster.value.image.length + i + 1;
     const file = await onUpload(e);
-    const fileExtension = file.type.split("/")[1];
+    const fileExtension = file.type.split("/")[1]
+      ? file.type.split("/")[1]
+      : file.type;
     file.name = `${formPoster.value.title}-${priority}.${fileExtension}`;
     store.state.formPoster.image.push({
       image: { ...file },
       priority: priority,
     });
   });
-  console.log(store.state.formPoster.image);
 };
 
 const removeImage = (i: number) => {
   store.state.formPoster.image.splice(i, 1);
   store.state.formPoster.image.forEach((e, index) => {
     e.priority = index + 1;
+    e.image.name = `${formPoster.value.title}-${index + 1}${e.image.type}`;
   });
 };
 </script>

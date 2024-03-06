@@ -539,6 +539,7 @@ export const loopPoster = (
     }
     const currentPoster = posters[currentIndexPoster];
     if (
+      currentPoster &&
       currentPoster.startTime.getTime() <= currentTime.getTime() &&
       currentPoster.endTime.getTime() >= currentTime.getTime()
     ) {
@@ -546,7 +547,7 @@ export const loopPoster = (
 
       store.state.currentImage.image =
         currentPoster.image[currentIndexImage].image.dataURL ||
-        (currentPoster.image[currentIndexImage].image as any);
+        currentPoster.image[currentIndexImage].image;
       store.state.currentImage.key =
         currentPoster.title + currentPoster.image[currentIndexImage].priority;
       timeoutId = setTimeout(() => {
@@ -558,6 +559,11 @@ export const loopPoster = (
         updatePosterInterval();
       }, currentPoster.duration * 1000 + 500);
     } else {
+      if (!currentPoster) {
+        currentIndexImage = 0;
+        currentIndexPoster = (currentIndexPoster + 1) % posters.length;
+        posters[currentIndexPoster + 1];
+      }
       currentIndexPoster = findNextValidPosterIndex();
       updatePosterInterval();
     }
