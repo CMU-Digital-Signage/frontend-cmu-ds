@@ -55,6 +55,11 @@ const edit = async () => {
     return;
   }
 
+  if (form.location.dataURL) {
+    const fileExtension = form.location.type.split("/")[1];
+    form.location.name = `${form.MACaddress}.${fileExtension}`;
+  }
+
   const res = await editDevice(form);
   loading.value = true;
   if (res.ok) {
@@ -193,11 +198,11 @@ const checkValidRoomNumber = () => {
             />
             <OverlayPanel
               :ref="`overlay_${rowData.data.MACaddress}`"
-              class="w-fit h-fit max-w-md max-h-max"
+              class="w-fit h-fit max-w-sm max-h-max"
             >
               <img
                 v-if="rowData.data.location"
-                :src="rowData.data.location"
+                :src="rowData.data.location.dataURL"
                 alt="location"
                 class="object-cover"
               />
@@ -384,7 +389,6 @@ const checkValidRoomNumber = () => {
           async (e) => {
             if (e.files[0]) form.location = await onUpload(e.files[0]);
             else errorSelectFile();
-            e.files.shift();
           }
         "
       >
@@ -402,15 +406,22 @@ const checkValidRoomNumber = () => {
             ></Button>
           </div>
         </template>
-        <template #content>
+        <template #content="{ removeFileCallback }">
           <div
             v-if="form.location"
             class="flex justify-between items-center w-full"
           >
-            <img alt="locationImage" :src="form.location" class="w-2/4 h-2/4" />
+            <img
+              alt="locationImage"
+              :src="form.location.dataURL"
+              class="w-2/4 h-2/4"
+            />
             <Button
               icon="pi pi-times"
-              @click="form.location = ''"
+              @click="
+                removeFileCallback(0);
+                form.location = null;
+              "
               outlined
               rounded
               severity="danger"

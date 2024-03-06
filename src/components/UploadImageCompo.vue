@@ -50,9 +50,11 @@ const selectImage = (e: any) => {
     e.priority = index + 1;
   });
   e.files.forEach(async (image: any, i: number) => {
-    const imageDataUrl = await onUpload(image);
+    const file = await onUpload(image);
+    const fileExtension = file.type.split("/")[1];
+    file.name = `${formPoster.value.title}-${i + 1}.${fileExtension}`;
     store.state.formPoster.image.push({
-      image: imageDataUrl,
+      image: file,
       priority: formPoster.value.image.length + 1,
     });
   });
@@ -89,6 +91,9 @@ const removeImage = (i: number) => {
       async (e) => {
         if (posType === 'EP' && e.files[0]) {
           formEmer.emergencyImage = await onUpload(e.files[0]);
+          formEmer.emergencyImage.name = `${formEmer.incidentName}.${
+            formEmer.emergencyImage.type.split('/')[1]
+          }`;
         } else if (
           e.files[0] &&
           maxImage &&
@@ -118,8 +123,8 @@ const removeImage = (i: number) => {
           <Button
             @click="
               async () => {
-                formEmer.emergencyImage = await rotate(
-                  formEmer.emergencyImage,
+                formEmer.emergencyImage.dataURL = await rotate(
+                  formEmer.emergencyImage.dataURL,
                   -90
                 );
               }
@@ -133,8 +138,8 @@ const removeImage = (i: number) => {
           <Button
             @click="
               async () => {
-                formEmer.emergencyImage = await rotate(
-                  formEmer.emergencyImage,
+                formEmer.emergencyImage.dataURL = await rotate(
+                  formEmer.emergencyImage.dataURL,
                   90
                 );
               }
@@ -163,7 +168,7 @@ const removeImage = (i: number) => {
         >
           <img
             :alt="formEmer.incidentName"
-            :src="formEmer.emergencyImage"
+            :src="formEmer.emergencyImage.dataURL"
             class="max-w-full max-h-full m-auto rotate-90"
             :style="{
               maxWidth: `${3840 / 20}px`,
@@ -186,7 +191,7 @@ const removeImage = (i: number) => {
       >
         <img
           :alt="formPoster.title"
-          :src="image.image"
+          :src="image.image.dataURL"
           width="100%"
           height="100%"
         />

@@ -24,7 +24,6 @@ const filterInput = computed(() => store.state.filterInputPosters);
 const user = computed(() => store.state.userInfo);
 const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
-const chooseFile = ref();
 const showPopup = ref(false);
 const showPopupAddDevice = ref(false);
 const currentViewDate = computed(() => store.state.currentViewDate);
@@ -102,24 +101,13 @@ const search = async () => {
 };
 
 const add = async () => {
-  const check =
-    !form.deviceName?.replace(" ", "").length ||
-    !form.room?.replace(" ", "").length;
-  if (!form.MACaddress || check) {
-    toast.add({
-      severity: "error",
-      summary: "Invalid",
-      detail: "MAC Address or Device Name or Room Invalid",
-      life: 3000,
-    });
-    return;
-  }
-  if (chooseFile.value) {
-    form.location = chooseFile.value;
+  if (form.location.dataURL) {
+    const fileExtension = form.location.type.split("/")[1];
+    form.location.name = `${form.MACaddress}.${fileExtension}`;
   }
 
-  const res = await addDevice(form);
   loading.value = true;
+  const res = await addDevice(form);
   if (res.ok) {
     showPopupAddDevice.value = false;
     toast.add({
@@ -324,7 +312,7 @@ const checkValidRoomNumber = () => {
           :multiple="false"
           @select="
             async (e) => {
-              if (e.files[0]) chooseFile = await onUpload(e.files[0]);
+              if (e.files[0]) form.location = await onUpload(e.files[0]);
               else errorSelectFile();
             }
           "
@@ -334,7 +322,6 @@ const checkValidRoomNumber = () => {
               <Button
                 @click="
                   clearCallback();
-                  chooseFile = null;
                   chooseCallback();
                 "
                 icon="pi pi-plus"
@@ -344,13 +331,17 @@ const checkValidRoomNumber = () => {
               ></Button>
             </div>
           </template>
-          <template #content="{ files, removeFileCallback }">
+          <template #content="{ removeFileCallback }">
             <div
-              v-if="files[0] && chooseFile"
+              v-if="form.location"
               class="flex justify-between items-center w-full"
             >
-              <img :alt="files[0].name" :src="chooseFile" class="w-2/4 h-2/4" />
-              <div class="w-fit">{{ filesize(files[0].size) }}</div>
+              <img
+                alt="locationImage"
+                :src="form.location.dataURL"
+                class="w-2/4 h-2/4"
+              />
+              <div class="w-fit">{{ filesize(form.location.size) }}</div>
               <Button
                 icon="pi pi-times"
                 @click="removeFileCallback(0)"
@@ -387,7 +378,9 @@ const checkValidRoomNumber = () => {
           label="Add"
           :class="'primaryButton'"
           @click="add"
-          :disabled="!macNotUse.length || !form.deviceName || !form.room"
+          :disabled="
+            !form.MACaddress || !form.deviceName || !form.room || !isNumber
+          "
         ></Button>
       </div>
     </Dialog>
@@ -554,9 +547,7 @@ const checkValidRoomNumber = () => {
         <Button
           label="Now"
           class="text-green-800 items-center rounded-lg border-green-600 max-h-fit px-3 py-1 border-2 font-semibold bg-green-300 hover:bg-green-400"
-          @click="
-            store.commit('resetFilter')
-          "
+          @click="store.commit('resetFilter')"
         />
       </div>
     </ul>

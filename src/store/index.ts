@@ -6,7 +6,7 @@ const date = new Date();
 
 export default createStore({
   state: {
-    currentImage: { key: "", image: "" },
+    currentImage: { key: "", image: null },
     openSidebar: true,
     loading: false,
     showUpload: false,

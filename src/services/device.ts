@@ -1,6 +1,6 @@
 import store from "@/store";
 import { Device } from "@/types";
-import { color } from "@/utils/constant";
+import { color, convertImageToBase64 } from "@/utils/constant";
 import axios from "axios";
 
 export async function getDevice() {
@@ -10,6 +10,27 @@ export async function getDevice() {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
       withCredentials: true,
+    });
+
+    res.data.data.forEach(async (e: Device) => {
+      const url = e.location;
+      const response = await convertImageToBase64(url);
+      const base64Data = response.split(",")[1];
+      const name = url.substring(
+        url.lastIndexOf("/") + 1,
+        url.lastIndexOf("?")
+      );
+      const type = name.substring(name.lastIndexOf("."));
+      const size = (base64Data.length * 3) / 4;
+
+      e.location = {
+        dataURL: `data:image/${type};base64,${base64Data}`,
+        lastModified: new Date().getTime(),
+        lastModifiedDate: new Date(),
+        name,
+        size,
+        type,
+      };
     });
 
     return res.data;
@@ -25,7 +46,7 @@ export async function getDevice() {
 
 export async function addDevice(data: Device) {
   try {
-    const res = await axios.post(
+    const res = await axios.put(
       `${process.env.VUE_APP_API_BASE_URL}/device`,
       data,
       {
@@ -38,8 +59,7 @@ export async function addDevice(data: Device) {
 
     if (store.state.devices)
       store.state.devices.push({
-        ...data,
-        status: false,
+        ...res.data.device,
         color: color[store.state.devices.length],
       });
     store.state.macNotUse = store.state.macNotUse.filter(
@@ -73,10 +93,12 @@ export async function editDevice(data: Device) {
 
     if (store.state.devices) {
       const index = store.state.devices.findIndex(
-        (e) => e.MACaddress === data.MACaddress
+        (e) => e.MACaddress === res.data.device.MACaddress
       );
       if (index !== -1) {
-        store.state.devices[index] = { ...store.state.devices[index], ...data };
+        store.state.devices[index] = {
+          ...res.data.device,
+        };
       }
     }
 

@@ -1,6 +1,10 @@
 import store from "@/store";
 import { Poster, Display } from "@/types";
-import { createUnique, setFieldPoster } from "@/utils/constant";
+import {
+  convertUrlToFile,
+  createUnique,
+  setFieldPoster,
+} from "@/utils/constant";
 import axios from "axios";
 
 export async function searchPoster(title: string) {
@@ -36,6 +40,8 @@ export async function getPoster() {
       withCredentials: true,
     });
 
+    convertUrlToFile(res.data.poster);
+
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -65,6 +71,7 @@ export async function addPoster(poster: Poster, display: Display[]) {
 
     setFieldPoster(res.data.newPoster);
     if (store.state.posters) {
+      convertUrlToFile(res.data.newPoster);
       store.state.posters.push(...res.data.newPoster);
       createUnique(store.state.posters);
     }
@@ -102,6 +109,7 @@ export async function editPoster(poster: Poster, display: Display[]) {
       store.state.posters = store.state.posters.filter(
         (e) => e.posterId !== res.data.updatePoster[0].posterId
       );
+      convertUrlToFile(res.data.updatePoster);
       store.state.posters.push(...res.data.updatePoster);
       createUnique(store.state.posters);
     }

@@ -100,7 +100,7 @@ const handleEmergency = async () => {
       toast.add({
         severity: "success",
         summary: "Success",
-        detail: `${selectEmer.value.incidentName} has been Deactivate.`,
+        detail: res.message,
         life: 3000,
       });
     } else {
@@ -125,7 +125,7 @@ const handleEmergency = async () => {
       toast.add({
         severity: "success",
         summary: "Success",
-        detail: `${selectEmer.value.incidentName} has been activate.`,
+        detail: res.message,
         life: 3000,
       });
     } else {
@@ -323,7 +323,7 @@ const handleEmergency = async () => {
           <img
             v-if="selectEmer.incidentName !== 'banner'"
             class="m-auto w-full transition-opacity rotated-image"
-            :src="selectEmer.emergencyImage"
+            :src="selectEmer.emergencyImage.dataURL"
             alt="poster-image"
           />
           <div v-else>
