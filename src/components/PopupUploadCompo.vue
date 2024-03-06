@@ -418,9 +418,7 @@ const nextStepUpload = () => {
     });
 
     let numImage = [] as number[];
-    if (editPosterType.value.type == "NP") {
-      numImage.push(formPoster.value.image.length);
-    } else if (!formPoster.value.image) {
+    if (!formPoster.value.image) {
       store.state.formPoster.image = [];
     }
 
@@ -429,8 +427,10 @@ const nextStepUpload = () => {
         e.endTime.getHours() * 3600 + e.endTime.getMinutes() * 60;
       const startTimeSec =
         e.startTime.getHours() * 3600 + e.startTime.getMinutes() * 60;
+      const range = endTimeSec - startTimeSec;
       const num = Math.floor(
-        (endTimeSec - startTimeSec - e.duration) / (e.durationForm + transition)
+        (range - (range / 1800) * 45 - e.duration) /
+          (e.durationForm + transition)
       );
       numImage.push(num);
     });

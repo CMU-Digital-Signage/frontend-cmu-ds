@@ -11,9 +11,12 @@ import { Device } from "./types";
 
 const user = computed(() => store.state.userInfo);
 let interval: any = null;
-let intervalDevice: any = null;
 
-const fetchDevice = async () => {
+const fetchData = async () => {
+  const allUserPromise = getAllUser().then(
+    (allUserRes) => (store.state.allUser = allUserRes.user)
+  );
+
   const devicePromise = getDevice().then((deviceRes) => {
     store.state.macNotUse = deviceRes.data
       .filter((e: Device) => !e.deviceName)
@@ -27,13 +30,6 @@ const fetchDevice = async () => {
     store.state.selectDevice = devices[0].MACaddress || "";
     store.state.filterDevice = devices.map((e) => e.MACaddress);
   });
-  await Promise.race([devicePromise]);
-};
-
-const fetchData = async () => {
-  const allUserPromise = getAllUser().then(
-    (allUserRes) => (store.state.allUser = allUserRes.user)
-  );
 
   const emerPromise = getEmergency().then((emerRes) => {
     store.state.emerPosters = emerRes.emergency;
@@ -45,35 +41,32 @@ const fetchData = async () => {
     if (store.state.posters) createUnique(store.state.posters);
   });
 
-  await Promise.race([allUserPromise, posterPromise, emerPromise]);
+  await Promise.race([
+    allUserPromise,
+    devicePromise,
+    posterPromise,
+    emerPromise,
+  ]);
 };
 
 onMounted(() => {
   setupSocket();
 
-  intervalDevice = setInterval(async () => {
-    if (user.value.id) {
-      fetchDevice();
-    }
-  }, 1000 * 5); // fetch every 5 sec
-
   interval = setInterval(() => {
     if (user.value.id) {
       fetchData();
     }
-  }, 1000 * 60); // fetch every 1 minute
+  }, 1000 * 5); // fetch every 5 sec
 });
 
 watch(user, async () => {
   if (user.value.id) {
-    fetchDevice();
     fetchData();
   }
 });
 
 onUnmounted(() => {
   socket.disconnect();
-  clearInterval(intervalDevice);
   clearInterval(interval);
 });
 </script>
