@@ -30,7 +30,7 @@ export default createStore({
       uploader: "",
       uploadDate: undefined as Date | undefined,
       status: "" as string,
-      date: new Date(new Date().setHours(0, 0, 0, 0)) as Date,
+      date: new Date(new Date().setHours(23, 59, 59, 0)) as Date,
       time: new Date(
         1970,
         0,
@@ -65,7 +65,7 @@ export default createStore({
         uploader: "",
         uploadDate: undefined,
         status: "",
-        date: new Date(new Date().setHours(0, 0, 0, 0)),
+        date: new Date(new Date().setHours(23, 59, 59, 0)),
         time: new Date(
           1970,
           0,

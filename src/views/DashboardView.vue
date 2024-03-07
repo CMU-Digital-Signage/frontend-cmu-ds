@@ -63,25 +63,11 @@ const calOptions = reactive<CalendarOptions>({
   ],
   eventClick: function (info) {
     const start = info.event._def.recurringDef?.typeData.startRecur;
-    const end = info.event._def.recurringDef?.typeData.endRecur || null;
-    const startMinus1 = start
-      ? new Date(
-          start.getFullYear(),
-          start.getMonth(),
-          start.getDate() - 1,
-          start.getHours(),
-          start.getMinutes()
-        )
-      : null;
+    const end = info.event._def.recurringDef?.typeData.endRecur;
+    const startMinus1 = start ? start : null;
     const endMinus1 = end
-      ? new Date(
-          end.getFullYear(),
-          end.getMonth(),
-          end.getDate() - 1,
-          end.getHours(),
-          end.getMinutes()
-        )
-      : info.event.end
+      ? end
+      : info.event.end && info.event.allDay
       ? new Date(
           info.event.end.getFullYear(),
           info.event.end.getMonth(),
@@ -143,13 +129,6 @@ const setEvent = () => {
         e.endTime.getMinutes() === 59;
       const exist = postersView.value.find((p) => p.title === e.title);
 
-      const startPlus1 = new Date(
-        e.startDate.getFullYear(),
-        e.startDate.getMonth(),
-        e.startDate.getDate() + 1,
-        e.startDate.getHours(),
-        e.startDate.getMinutes()
-      );
       const endPlus1 = new Date(
         e.endDate.getFullYear(),
         e.endDate.getMonth(),
@@ -162,8 +141,8 @@ const setEvent = () => {
       // oneDay allTime
       if (allDay && e.startDate.getTime() === e.endDate.getTime()) {
         schedule = {
-          start: startPlus1,
-          end: endPlus1,
+          start: e.startDate,
+          end: e.endDate,
           oneDay: true,
         };
       }
@@ -189,20 +168,16 @@ const setEvent = () => {
       // allTime manyDay
       else if (allDay && e.startDate.getTime() !== e.endDate.getTime()) {
         schedule = {
-          start: startPlus1,
-          end: new Date(
-            endPlus1.getFullYear(),
-            endPlus1.getMonth(),
-            endPlus1.getDate() + 1
-          ),
+          start: e.startDate,
+          end: endPlus1,
           allDay: true,
         };
       }
       // manyDay
       else {
         schedule = {
-          startRecur: startPlus1,
-          endRecur: endPlus1,
+          startRecur: e.startDate,
+          endRecur: e.endDate,
           startTime: e.startTime.toTimeString(),
           endTime: e.endTime.toTimeString(),
         };
