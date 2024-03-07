@@ -13,6 +13,7 @@ import {
   initialFormDevice,
   onUpload,
   calculateScreenHeight,
+  convertImageToBase64,
 } from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 
@@ -55,10 +56,26 @@ const edit = async () => {
     return;
   }
 
-  if (form.location.dataURL) {
-    const fileExtension = form.location.type.split("/")[1];
-    form.location.name = `${form.MACaddress}.${fileExtension}`;
-  }
+  // if (form.location?.dataURL) {
+  //   const fileExtension = form.location.type.split("/")[1]
+  //     ? form.location.type.split("/")[1]
+  //     : form.location.type.replace(".", "");
+  //   form.location.name = `${form.MACaddress}.${fileExtension}`;
+  // } else if (form.location.includes("https://")) {
+  //   const url = form.location;
+  //   const response = await convertImageToBase64(url);
+  //   const base64Data = response.split(",")[1];
+  //   const name = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("?"));
+  //   const type = name.substring(name.lastIndexOf("."));
+  //   const size = (base64Data.length * 3) / 4;
+
+  //   form.location = {
+  //     dataURL: `data:image/${type};base64,${base64Data}`,
+  //     name,
+  //     size,
+  //     type,
+  //   };
+  // }
 
   const res = await editDevice(form);
   loading.value = true;
@@ -200,12 +217,12 @@ const checkValidRoomNumber = () => {
               :ref="`overlay_${rowData.data.MACaddress}`"
               class="w-fit h-fit max-w-sm max-h-max"
             >
-              <img
+              <!-- <img
                 v-if="rowData.data.location"
                 :src="rowData.data.location.dataURL"
                 alt="location"
                 class="object-cover"
-              />
+              /> -->
               <p>{{ rowData.data.description }}</p>
             </OverlayPanel>
           </div>
@@ -376,7 +393,7 @@ const checkValidRoomNumber = () => {
         placeholder="(Optional)"
       ></InputText>
     </div>
-    <div class="flex flex-col gap-1">
+    <!-- <div class="flex flex-col gap-1">
       <label for="macAddress" class="text-primary-50 font-medium">
         Location Photo
       </label>
@@ -441,7 +458,7 @@ const checkValidRoomNumber = () => {
           </div>
         </template>
       </FileUpload>
-    </div>
+    </div> -->
     <div class="flex flex-row gap-4 pt-3">
       <Button
         label="Cancel"
