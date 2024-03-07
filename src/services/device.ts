@@ -1,6 +1,10 @@
 import store from "@/store";
 import { Device } from "@/types";
-import { color, convertImageToBase64 } from "@/utils/constant";
+import {
+  color,
+  convertImageToBase64,
+  convertUrlToFile,
+} from "@/utils/constant";
 import axios from "axios";
 
 export async function getDevice() {
@@ -12,26 +16,24 @@ export async function getDevice() {
       withCredentials: true,
     });
 
-    res.data.data.forEach(async (e: Device) => {
-      const url = e.location;
-      const response = await convertImageToBase64(url);
-      const base64Data = response.split(",")[1];
-      const name = url.substring(
-        url.lastIndexOf("/") + 1,
-        url.lastIndexOf("?")
-      );
-      const type = name.substring(name.lastIndexOf("."));
-      const size = (base64Data.length * 3) / 4;
+    // res.data.data.forEach(async (e: Device) => {
+    //   const url = e.location;
+    //   const response = await convertImageToBase64(url);
+    //   const base64Data = response.split(",")[1];
+    //   const name = url.substring(
+    //     url.lastIndexOf("/") + 1,
+    //     url.lastIndexOf("?")
+    //   );
+    //   const type = name.substring(name.lastIndexOf("."));
+    //   const size = (base64Data.length * 3) / 4;
 
-      e.location = {
-        dataURL: `data:image/${type};base64,${base64Data}`,
-        lastModified: new Date().getTime(),
-        lastModifiedDate: new Date(),
-        name,
-        size,
-        type,
-      };
-    });
+    //   e.location = {
+    //     dataURL: `data:image/${type};base64,${base64Data}`,
+    //     name,
+    //     size,
+    //     type,
+    //   };
+    // });
 
     return res.data;
   } catch (err: any) {
