@@ -491,6 +491,10 @@ export const loopPoster = (
   let hasShownBotMapsThisRound = false;
 
   const updatePosterInterval = () => {
+    if (!posters.length && showBotMaps) {
+      showBotMaps.value = true;
+      return;
+    }
     const currentMinutes = new Date().getMinutes();
     const isOnTheHalfHour = currentMinutes === 0 || currentMinutes === 30;
     if (!isOnTheHalfHour) hasShownBotMapsThisRound = false;
@@ -554,7 +558,7 @@ export const loopPoster = (
     ).getTime();
     currentIndexPoster = (currentIndexPoster + 1) % posters.length;
     const poster = posters[currentIndexPoster];
-    if (count > posters.length || !posters.length) return -1;
+    if (count > posters.length) return -1;
     else if (
       poster.startTime &&
       poster.startTime.getTime() <= currentTime &&

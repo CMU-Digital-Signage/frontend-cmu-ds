@@ -153,6 +153,7 @@ onMounted(async () => {
 watch(emerPoster, () => {
   if (emerPoster.value) {
     if (stopLoop.value) stopLoop.value();
+    showBotMaps.value = false;
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
   } else if (posters.value) {
@@ -161,10 +162,11 @@ watch(emerPoster, () => {
 });
 
 watch(
-  posters,
+  () => store.state.posters,
   () => {
     if (posters.value) {
       if (stopLoop.value) stopLoop.value();
+      showBotMaps.value = false;
       stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
     }
   },
