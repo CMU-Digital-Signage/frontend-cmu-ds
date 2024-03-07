@@ -43,7 +43,7 @@ watch(
         $router.push(`/preview/${device.MACaddress}`);
         store.state.openSidebar = true;
       "
-      class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-300"
+      class="button1 size-fit bg-[#f3f3f3] hover:bg-gray-200"
     >
       <i
         :class="[
