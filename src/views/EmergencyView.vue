@@ -154,7 +154,7 @@ const handleEmergency = async () => {
     >
       <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
-          class="flex flex-row px-4 py-2 lg:px-5 mb-6 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
+          class="flex flex-row px-3 py-2 lg:px-5 lg:py-1 mb-4 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
         >
           <div
             class="w-8 h-8 ml-3 flex items-center justify-center rounded-full"
@@ -164,7 +164,7 @@ const handleEmergency = async () => {
             ></i>
           </div>
 
-          <div class="ml-1 md:text-[16px] text-[13px]">
+          <div class="ml-1 md:text-[15px] text-[12px]">
             <p class="font-bold text-red-500">
               <span>Activating the Emergency Poster</span>
             </p>
@@ -180,7 +180,7 @@ const handleEmergency = async () => {
               Choose Poster to displayed
             </p>
             <div
-              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-40 md:h-28 xl:h-40 overflow-y-scroll"
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-30 md:h-28 xl:h-40  overflow-y-scroll"
             >
               <div class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9">
                 <div
@@ -202,10 +202,10 @@ const handleEmergency = async () => {
 
           <div class="-mt-2">
             <p class="md:text-[16px] text-[14px] font-semibold mb-2">
-              Type text to display banner
+              Or type text to display banner
             </p>
             <div
-              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-52 md:h-44 xl:h-52"
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-52 md:h-44 xl:h-22"
             >
               <div class="flex flex-col gap-3 md:mx-8 my-5 mx-5">
                 <div class="flex gap-2 items-center md:-mt-2">
