@@ -70,6 +70,14 @@ watch(
 );
 
 watch([showUpload, showSecondDialog, editPosterType.value], () => {
+  uploadState.value = editPosterType.value.title.length
+    ? [{ label: "Set Schedule" }, { label: "Review" }]
+    : [
+        { label: "Set Schedule" },
+        { label: "Upload Content" },
+        { label: "Orientation & Review" },
+      ];
+
   if (editPosterType.value.type && showUpload.value) {
     posterType.value.map((e) => {
       if (e.code === editPosterType.value.type) {
@@ -435,7 +443,7 @@ const nextStepUpload = () => {
       numImage.push(num);
     });
     maxImage.value = Math.min(...numImage);
-    if (!editPosterType.value.type.length) store.state.formPoster.image = [];
+    if (!editPosterType.value.title.length) store.state.formPoster.image = [];
     currentState.value = 1;
   }
 };
@@ -626,7 +634,7 @@ const nextStepPreview = () => {
             ></Button>
           </div>
         </div>
-        <div v-if="currentState === 1">
+        <div v-if="currentState === 1 && !editPosterType.title.length">
           <div class="text-center text-red-500">Max Image: {{ maxImage }}</div>
           <div class="text-center text-blue-500">
             Current Image: {{ formPoster.image.length }}
@@ -649,96 +657,108 @@ const nextStepPreview = () => {
             ></Button>
           </div>
         </div>
-        <div v-if="currentState === 2">
-          <div class="flex justify-between">
-            <div>
-              <label
-                class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
-              >
-                Orientation
-              </label>
-            </div>
-          </div>
-          <div class="orientOut border-2 border-black rounded-lg">
-            <div class="inline-flex gap-2">
-              <Button
-                @click="
-                  async () => {
-                    formPoster.image[selectRotate.priority - 1].image.dataURL =
-                      await rotate(selectRotate.image, -90);
-                    selectRotate.image =
-                      formPoster.image[selectRotate.priority - 1].image.dataURL;
-                  }
-                "
-                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                icon="pi pi-replay"
-                rounded
-                outlined
-                :disabled="!formPoster.image"
-              />
-              <Button
-                @click="
-                  async () => {
-                    formPoster.image[selectRotate.priority - 1].image.dataURL =
-                      await rotate(selectRotate.image, 90);
-                    selectRotate.image =
-                      formPoster.image[selectRotate.priority - 1].image.dataURL;
-                  }
-                "
-                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                icon="pi pi-refresh"
-                rounded
-                outlined
-                :disabled="!formPoster.image"
-              />
-            </div>
-            <div
-              class="flex flex-row justify-center text-center items-center gap-3 mb-3"
-            >
-              <p>Logo TV</p>
-              <div
-                class="flex justify-center border-2 border-black bg-black"
-                :style="{
-                  width: `${2160 / 20}px`,
-                  height: `${3840 / 20}px`,
-                }"
-              >
-                <img
-                  :alt="formPoster.title"
-                  :src="
-                    formPoster.image[selectRotate.priority - 1].image.dataURL
-                  "
-                  class="max-w-full max-h-full m-auto rotate-90"
-                  :style="{
-                    maxWidth: `${3840 / 20}px`,
-                    maxHeight: `${2160 / 20}px`,
-                  }"
-                />
+        <div
+          v-if="
+            currentState === 2 ||
+            (currentState === 1 && editPosterType.title.length)
+          "
+        >
+          <div v-if="!editPosterType.title.length">
+            <div class="flex justify-between">
+              <div>
+                <label
+                  class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
+                >
+                  Orientation
+                </label>
               </div>
             </div>
-            <div
-              v-for="(image, index) in formPoster.image"
-              :key="index"
-              class="content-image"
-              @click="
-                () => {
-                  selectRotate = {
-                    image: formPoster.image[index].image.dataURL,
-                    priority: formPoster.image[index].priority,
-                  };
-                }
-              "
-            >
-              <img
-                :alt="formPoster.title"
-                :src="image.image.dataURL"
-                width="100%"
-                height="100%"
-              />
-              <div class="text-image bg-[#9e9e9e]">Choose</div>
+            <div class="orientOut border-2 border-black rounded-lg">
+              <div class="inline-flex gap-2">
+                <Button
+                  @click="
+                    async () => {
+                      formPoster.image[
+                        selectRotate.priority - 1
+                      ].image.dataURL = await rotate(selectRotate.image, -90);
+                      selectRotate.image =
+                        formPoster.image[
+                          selectRotate.priority - 1
+                        ].image.dataURL;
+                    }
+                  "
+                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                  icon="pi pi-replay"
+                  rounded
+                  outlined
+                  :disabled="!formPoster.image"
+                />
+                <Button
+                  @click="
+                    async () => {
+                      formPoster.image[
+                        selectRotate.priority - 1
+                      ].image.dataURL = await rotate(selectRotate.image, 90);
+                      selectRotate.image =
+                        formPoster.image[
+                          selectRotate.priority - 1
+                        ].image.dataURL;
+                    }
+                  "
+                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                  icon="pi pi-refresh"
+                  rounded
+                  outlined
+                  :disabled="!formPoster.image"
+                />
+              </div>
+              <div
+                class="flex flex-row justify-center text-center items-center gap-3 mb-3"
+              >
+                <p>Logo TV</p>
+                <div
+                  class="flex justify-center border-2 border-black bg-black"
+                  :style="{
+                    width: `${2160 / 20}px`,
+                    height: `${3840 / 20}px`,
+                  }"
+                >
+                  <img
+                    :alt="formPoster.title"
+                    :src="
+                      formPoster.image[selectRotate.priority - 1].image.dataURL
+                    "
+                    class="max-w-full max-h-full m-auto rotate-90"
+                    :style="{
+                      maxWidth: `${3840 / 20}px`,
+                      maxHeight: `${2160 / 20}px`,
+                    }"
+                  />
+                </div>
+              </div>
+              <div
+                v-for="(image, index) in formPoster.image"
+                :key="image.image.name"
+                class="content-image"
+                @click="
+                  () => {
+                    selectRotate = {
+                      image: formPoster.image[index].image.dataURL,
+                      priority: formPoster.image[index].priority,
+                    };
+                  }
+                "
+              >
+                <img
+                  :alt="image.image.name"
+                  :src="image.image.dataURL"
+                  width="100%"
+                  height="100%"
+                />
+                <div class="text-image bg-[#9e9e9e]">Choose</div>
+              </div>
             </div>
           </div>
-
           <div class="flex flex-col gap-5">
             <label
               class="text-[#282828] font-semibold text-[18px] flex justify-start mt-5 -mb-2"

@@ -198,7 +198,7 @@ const removeImage = (i: number) => {
       <div
         v-else
         v-for="(image, index) in formPoster.image"
-        :key="index"
+        :key="image.image.name"
         class="content-image"
         @click="
           () => {
@@ -208,7 +208,8 @@ const removeImage = (i: number) => {
         "
       >
         <img
-          :alt="formPoster.title"
+          loading="eager"
+          :alt="image.image.name"
           :src="image.image.dataURL"
           width="100%"
           height="100%"

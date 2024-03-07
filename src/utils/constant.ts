@@ -160,11 +160,27 @@ export const newInitialFormDisplay = () => {
   };
 };
 
-export const convertUrlToFile = (data: any) => {
-  data.forEach(async (e: any) => {
-    if (e.incidentName) {
-      e.status = e.status ? "Active" : "Inactive";
-      const url = e.emergencyImage;
+export const convertUrlToFile = async (data: any) => {
+  if (data.incidentName) {
+    data.status = data.status ? "Active" : "Inactive";
+    const url = data.emergencyImage;
+    const response = await convertImageToBase64(url);
+    const base64Data = response.split(",")[1];
+    const name = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("?"));
+    const type = name.substring(name.lastIndexOf("."));
+    const size = (base64Data.length * 3) / 4;
+
+    data.emergencyImage = {
+      dataURL: `data:image/${type};base64,${base64Data}`,
+      lastModified: new Date().getTime(),
+      lastModifiedDate: new Date(),
+      name,
+      size,
+      type,
+    };
+  } else {
+    data.forEach(async (p: ImageCollection) => {
+      const url = p.image;
       const response = await convertImageToBase64(url);
       const base64Data = response.split(",")[1];
       const name = url.substring(
@@ -174,7 +190,7 @@ export const convertUrlToFile = (data: any) => {
       const type = name.substring(name.lastIndexOf("."));
       const size = (base64Data.length * 3) / 4;
 
-      e.emergencyImage = {
+      p.image = {
         dataURL: `data:image/${type};base64,${base64Data}`,
         lastModified: new Date().getTime(),
         lastModifiedDate: new Date(),
@@ -182,29 +198,8 @@ export const convertUrlToFile = (data: any) => {
         size,
         type,
       };
-    } else {
-      e.image.forEach(async (p: ImageCollection) => {
-        const url = p.image;
-        const response = await convertImageToBase64(url);
-        const base64Data = response.split(",")[1];
-        const name = url.substring(
-          url.lastIndexOf("/") + 1,
-          url.lastIndexOf("?")
-        );
-        const type = name.substring(name.lastIndexOf("."));
-        const size = (base64Data.length * 3) / 4;
-
-        p.image = {
-          dataURL: `data:image/${type};base64,${base64Data}`,
-          lastModified: new Date().getTime(),
-          lastModifiedDate: new Date(),
-          name,
-          size,
-          type,
-        };
-      });
-    }
-  });
+    });
+  }
 };
 
 export const convertImageToBase64 = (url: string): Promise<any> => {
@@ -255,7 +250,7 @@ export const onUpload = (e: any): Promise<any> => {
 
     const compressLoop = async () => {
       // while (e.size > targetSize && quality > 0.01) {
-      quality *= 0.1;
+      quality *= 0.4;
       try {
         e = await compressFile(quality);
       } catch (error) {
@@ -311,38 +306,20 @@ export const setFieldPoster = (data: Poster[]) => {
     e.endTime = new Date(new Date(e.endTime).setDate(1));
 
     // if (!router.currentRoute.value.path.includes("/device/")) {
-      if (e.id) {
-        const users = store.getters.getUserById(e.id);
-        const uploader = `${users.firstName} ${
-          users?.lastName?.charAt(0) || ""
-        }.`;
-        e.uploader = uploader;
-      }
+    if (e.id) {
+      const users = store.getters.getUserById(e.id);
+      const uploader = `${users.firstName} ${
+        users?.lastName?.charAt(0) || ""
+      }.`;
+      e.uploader = uploader;
+    }
 
-      if (e.image.length > 1) {
-        e.type = "Collection";
-      } else e.type = "Individual";
+    if (e.image.length > 1) {
+      e.type = "Collection";
+    } else e.type = "Individual";
 
-      e.image.forEach(async (e: ImageCollection) => {
-        const url = e.image;
-        const response = await convertImageToBase64(url);
-        const base64Data = response.split(",")[1];
-        const name = url.substring(
-          url.lastIndexOf("/") + 1,
-          url.lastIndexOf("?")
-        );
-        const type = name.substring(name.lastIndexOf("."));
-        const size = (base64Data.length * 3) / 4;
+    convertUrlToFile(e.image);
 
-        e.image = {
-          dataURL: `data:image/${type};base64,${base64Data}`,
-          lastModified: new Date().getTime(),
-          lastModifiedDate: new Date(),
-          name,
-          size,
-          type,
-        };
-      });
     // }
   });
   data.sort(
