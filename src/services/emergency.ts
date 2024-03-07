@@ -17,7 +17,9 @@ export async function getEmergency() {
       }
     );
 
-    convertUrlToFile(res.data.emergency);
+    res.data.emergency.forEach((e: Emergency) => {
+      convertUrlToFile(e);
+    });
 
     return res.data;
   } catch (err: any) {
@@ -53,6 +55,8 @@ export async function addEmergency(data: Emergency) {
 
     return res.data;
   } catch (err: any) {
+    console.log(err);
+
     if (!err.response) {
       return {
         message: "Cannot connect to API Server. Please try again later.",

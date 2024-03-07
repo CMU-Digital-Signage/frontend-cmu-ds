@@ -40,8 +40,6 @@ export async function getPoster() {
       withCredentials: true,
     });
 
-    convertUrlToFile(res.data.poster);
-
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -109,7 +107,6 @@ export async function editPoster(poster: Poster, display: Display[]) {
       store.state.posters = store.state.posters.filter(
         (e) => e.posterId !== res.data.updatePoster[0].posterId
       );
-      convertUrlToFile(res.data.updatePoster);
       store.state.posters.push(...res.data.updatePoster);
       createUnique(store.state.posters);
     }
