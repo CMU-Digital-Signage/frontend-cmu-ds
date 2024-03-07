@@ -8,6 +8,7 @@ import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
 import { Device } from "./types";
+import router from "./router";
 
 const user = computed(() => store.state.userInfo);
 let interval: any = null;
@@ -53,10 +54,14 @@ onMounted(() => {
   setupSocket();
 
   interval = setInterval(() => {
-    if (user.value.id) {
+    if (
+      user.value.id &&
+      !router.currentRoute.value.path.includes("/preview") &&
+      !router.currentRoute.value.path.includes("/emergency")
+    ) {
       fetchData();
     }
-  }, 1000 * 5); // fetch every 5 sec
+  }, 1000 * 10); // fetch every 10 sec
 });
 
 watch(user, async () => {

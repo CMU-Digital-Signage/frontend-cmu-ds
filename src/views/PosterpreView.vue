@@ -52,7 +52,7 @@ watch([filterDate, filterTime], () => {
       filterTime.value.getMinutes() !== new Date().getMinutes())
   ) {
     selectPoster.value = posters.value[0];
-    selectImage.value = selectPoster.value?.image[0].image;
+    selectImage.value = selectPoster.value?.image[0].image.dataURL;
   } else {
     selectPoster.value = undefined;
     selectImage.value = "";
@@ -85,7 +85,7 @@ const changeImage = (index: number) => {
   if (selectPoster.value && selectPoster.value.image.length > 1) {
     const newIndex = (currentindex + index) % selectPoster.value.image.length;
     currentindex = newIndex;
-    selectImage.value = selectPoster.value.image[newIndex].image;
+    selectImage.value = selectPoster.value.image[newIndex].image.dataURL;
   }
 };
 

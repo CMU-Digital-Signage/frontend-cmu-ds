@@ -310,7 +310,7 @@ export const setFieldPoster = (data: Poster[]) => {
     e.startTime = new Date(new Date(e.startTime).setDate(1));
     e.endTime = new Date(new Date(e.endTime).setDate(1));
 
-    if (!router.currentRoute.value.path.includes("/device/")) {
+    // if (!router.currentRoute.value.path.includes("/device/")) {
       if (e.id) {
         const users = store.getters.getUserById(e.id);
         const uploader = `${users.firstName} ${
@@ -343,7 +343,7 @@ export const setFieldPoster = (data: Poster[]) => {
           type,
         };
       });
-    }
+    // }
   });
   data.sort(
     (a: Poster, b: Poster) => a.createdAt.getTime() - b.createdAt.getTime()
