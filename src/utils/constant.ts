@@ -305,22 +305,20 @@ export const setFieldPoster = (data: Poster[]) => {
     e.startTime = new Date(new Date(e.startTime).setDate(1));
     e.endTime = new Date(new Date(e.endTime).setDate(1));
 
-    // if (!router.currentRoute.value.path.includes("/device/")) {
-    if (e.id) {
-      const users = store.getters.getUserById(e.id);
-      const uploader = `${users.firstName} ${
-        users?.lastName?.charAt(0) || ""
-      }.`;
-      e.uploader = uploader;
+    if (!router.currentRoute.value.path.includes("/device/")) {
+      if (e.id) {
+        const users = store.getters.getUserById(e.id);
+        const uploader = `${users.firstName} ${
+          users?.lastName?.charAt(0) || ""
+        }.`;
+        e.uploader = uploader;
+      }
+
+      if (e.image && e.image.length > 1) {
+        e.type = "Collection";
+      } else e.type = "Individual";
     }
-
-    if (e.image.length > 1) {
-      e.type = "Collection";
-    } else e.type = "Individual";
-
-    convertUrlToFile(e.image);
-
-    // }
+    if (e.image) convertUrlToFile(e.image);
   });
   data.sort(
     (a: Poster, b: Poster) => a.createdAt.getTime() - b.createdAt.getTime()
@@ -556,8 +554,9 @@ export const loopPoster = (
     ).getTime();
     currentIndexPoster = (currentIndexPoster + 1) % posters.length;
     const poster = posters[currentIndexPoster];
-    if (count > posters.length) return -1;
+    if (count > posters.length || !posters.length) return -1;
     else if (
+      poster.startTime &&
       poster.startTime.getTime() <= currentTime &&
       poster.endTime.getTime() >= currentTime
     ) {
