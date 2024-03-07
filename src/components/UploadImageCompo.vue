@@ -45,26 +45,36 @@ const errorSelectFile = async () => {
   }
 };
 
-const selectImage = (event: any) => {
-  if (store.state.formPoster.image) {
+const selectImage = async (event: any) => {
+  if (!store.state.formPoster.image) {
+    store.state.formPoster.image = [];
+  }
+  const initialLength = store.state.formPoster.image.length;
+  if (initialLength > 0) {
     store.state.formPoster.image.forEach((e, index) => {
       e.priority = index + 1;
       e.image.name = `${formPoster.value.title}-${index + 1}.${
         e.image.type?.split("/")[1]
       }`;
     });
-  } else store.state.formPoster.image = [];
-  event.files.forEach(async (e: any, i: number) => {
-    const priority = formPoster.value.image.length + i + 1;
+  }
+  const filePromises = event.files.map(async (e: any, i: number) => {
+    const priority = initialLength + i + 1;
     const file = await onUpload(e);
-    const fileExtension = file.type.split("/")[1]
-      ? file.type.split("/")[1]
-      : file.type;
+    const fileExtension = file.type.split("/")[1] || file.type;
     file.name = `${formPoster.value.title}-${priority}.${fileExtension}`;
-    store.state.formPoster.image.push({
-      image: { ...file },
+    return {
+      image: file,
       priority: priority,
-    });
+    };
+  });
+  const processedFiles = await Promise.all(filePromises);
+  store.state.formPoster.image.push(...processedFiles);
+  store.state.formPoster.image.forEach((e, index) => {
+    e.priority = index + 1;
+    e.image.name = `${formPoster.value.title}-${index + 1}.${
+      e.image.type?.split("/")[1]
+    }`;
   });
 };
 

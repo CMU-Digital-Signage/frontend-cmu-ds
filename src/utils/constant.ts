@@ -305,8 +305,8 @@ export const setFieldPoster = (data: Poster[]) => {
   data.forEach((e: Poster) => {
     e.createdAt = new Date(e.createdAt);
     e.updatedAt = new Date(e.updatedAt);
-    e.startDate = new Date(new Date(e.startDate).setHours(0, 0, 0, 0));
-    e.endDate = new Date(new Date(e.endDate).setHours(0, 0, 0, 0));
+    e.startDate = new Date(new Date(e.startDate).setHours(23, 59, 59, 0));
+    e.endDate = new Date(new Date(e.endDate).setHours(23, 59, 59, 0));
     e.startTime = new Date(new Date(e.startTime).setDate(1));
     e.endTime = new Date(new Date(e.endTime).setDate(1));
 
@@ -364,7 +364,7 @@ export const createUnique = (data: Poster[]) => {
   store.state.uniquePosters = data.reduce((acc: any[], e: Poster) => {
     // Check if the title is not already in the accumulator
     if (!acc.some((poster) => poster.title === e.title)) {
-      const currentDate = new Date(new Date().setHours(0, 0, 0, 0));
+      const currentDate = new Date(new Date().setHours(23, 59, 59, 0));
       const currentTime = new Date(
         1970,
         0,

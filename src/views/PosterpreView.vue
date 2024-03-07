@@ -35,7 +35,7 @@ watch(selectPoster, () => {
   if (!selectPoster.value) {
     selectImage.value = "";
   } else {
-    selectImage.value = selectPoster.value.image[0].image;
+    selectImage.value = selectPoster.value.image[0].image.dataURL;
   }
   currentindex = 0;
 });
@@ -43,7 +43,7 @@ watch(selectPoster, () => {
 watch([filterDate, filterTime], () => {
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
-  image.value.image = "";
+  image.value.image = null;
 
   if (
     posters.value &&
@@ -63,7 +63,9 @@ watch(
   posters,
   () => {
     if (
-      !posters.value?.find((e) => e.posterId === selectPoster.value?.posterId)
+      posters.value &&
+      selectPoster.value &&
+      !posters.value.find((e) => e.posterId === selectPoster.value?.posterId)
     ) {
       selectPoster.value = undefined;
       selectImage.value = "";
@@ -76,7 +78,7 @@ watch(
 onUnmounted(() => {
   if (stopLoop.value) stopLoop.value();
   image.value.key = "";
-  image.value.image = "";
+  image.value.image = null;
 });
 
 const changeImage = (index: number) => {
@@ -152,7 +154,7 @@ const rowStyle = (rowData: any) => {
             }"
           />
           <transition
-            v-else-if="image.key.length"
+            v-else-if="image.image"
             enter-active-class="transition duration-500"
             enter-from-class="opacity-0"
             leave-active-class="transition duration-500"
@@ -170,7 +172,9 @@ const rowStyle = (rowData: any) => {
             />
           </transition>
           <button
-            v-else-if="posters && dateFormatter(filterDate) === dateFormatter(new Date())"
+            v-else-if="
+              posters && dateFormatter(filterDate) === dateFormatter(new Date())
+            "
             class="pi pi-play text-[#808080] text-5xl rounded-full p-2 bg-white hover:bg-gray-200"
             @click="stopLoop = loopPoster(posters)"
           />
