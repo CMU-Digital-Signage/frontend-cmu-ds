@@ -424,7 +424,7 @@ const checkValidRoomNumber = () => {
           </template>
           <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
             <div class="flex flex-col gap-2">
-              <label class="text-[17px] font-semibold pt-2 w-32">Email </label>
+              <label class="text-[17px] font-semibold pt-2 w-32">CMU account </label>
               <InputText
                 class="border border-[#C6C6C6] p-2 h-9 w-96 rounded-lg"
                 placeholder="example@cmu.ac.th"
@@ -546,7 +546,7 @@ const checkValidRoomNumber = () => {
         />
         <Button
           label="Now"
-          class="text-green-800 items-center rounded-lg border-green-600 max-h-fit px-3 py-1 border-2 font-semibold bg-green-300 hover:bg-green-400"
+          class="text-white items-center font-bold rounded-[8px] border-none max-h-fit px-3 py-1 border-2  bg-green-500 hover:bg-green-600"
           @click="store.commit('resetFilter')"
         />
       </div>
@@ -558,7 +558,9 @@ const checkValidRoomNumber = () => {
       class="flex-wrap xl:gap-2 md:gap-2 text-[14px] xl:text-[16px] md:text-[15px]"
     >
       <li>
-        <label>Title</label>
+        <label class="text-[14px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
+          >Title</label
+        >
         <InputText
           id="title"
           v-model="filterInput.title"
@@ -567,7 +569,11 @@ const checkValidRoomNumber = () => {
         ></InputText>
       </li>
       <li v-if="store.state.selectTabview !== 1">
-        <label v-if="user?.isAdmin">Uploader</label>
+        <label
+          v-if="user?.isAdmin"
+          class="text-[14px] md:ml-[7px] ml-[12px] mr-1 xl:text-[16px] md:text-[12px]"
+          >Uploader</label
+        >
         <InputText
           id="uploader"
           v-model="filterInput.uploader"
@@ -578,7 +584,7 @@ const checkValidRoomNumber = () => {
       </li>
 
       <li v-if="store.state.selectTabview !== 1">
-        <label class="text-[14px] ml-[10px] mr-1 xl:text-[16px] md:text-[15px]"
+        <label class="text-[14px] md:ml-[7px] ml-[12px] mr-1 xl:text-[16px] md:text-[12px]"
           >Upload Date
         </label>
         <Calendar
@@ -594,7 +600,7 @@ const checkValidRoomNumber = () => {
         />
       </li>
       <li>
-        <label class="xl:text-[16px] md:text-[15px]">Status</label>
+        <label class="text-[14px] ml-[12px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]">Status</label>
         <Dropdown
           v-model="filterInput.status"
           :options="store.state.selectTabview === 0 ? statusPoster : statusEmer"
@@ -613,14 +619,14 @@ const checkValidRoomNumber = () => {
               <Button
                 label="Clear"
                 @click="store.commit('resetFilter')"
-                class="rounded-[10px] h-8 border-0 bg-red-500 text-right"
+                class="rounded-[8px] ont-bold h-8 border-0 bg-red-500 text-right"
               />
             </div>
             <div class="md:hidden xl:block">
               <Button
                 label="Clear Filter"
                 @click="store.commit('resetFilter')"
-                class="flex justify-end right-0 rounded-[10px] h-8 border-0 bg-red-500 text-right"
+                class="flex justify-end ml-3 right-0 font-bold rounded-[8px] h-8 border-0 bg-red-500 text-right hover:bg-red-600"
               />
             </div>
           </li>

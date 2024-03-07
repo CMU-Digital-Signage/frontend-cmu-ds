@@ -96,7 +96,7 @@ const del = async () => {
     >
       <Button
         label="Clear"
-        class="border-none bg-red-500 rounded-[10px] font-semibold min-w-fit h-10 px-5"
+        class="border-none bg-red-500 rounded-[8px] font-semibold min-w-fit h-10 px-5 hover:bg-red-600"
         @click="
           poster = undefined;
           store.commit('resetFilter');
@@ -106,23 +106,25 @@ const del = async () => {
       <div class="flex items-center justify-end w-full gap-3">
         <Button
           label="About"
-          icon="pi pi-info bg-[#039BE5] rounded-full text-white p-[4px] shadow-md"
-          class="border-[#adadad] bg-white text-[#039BE5] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-gray-200"
+          severity="primary"
+          icon="pi pi-info  rounded-full text-white p-[4px]"
+          class="border-none  text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-blue-600"
           :disabled="!poster"
           @click="showInfo = true"
         />
         <Button
           v-if="user.isAdmin || user.id === poster?.id"
           label="Edit"
-          icon="pi pi-pencil bg-[#FF9900] rounded-full text-white p-[4px] shadow-md"
-          class="border-[#adadad] bg-white text-[#FF9900] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-gray-200"
+          icon="pi pi-pencil bg-[#FF9900] rounded-full text-white p-[4px]"
+          class="border-none bg-[#FF9900]  text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-amber-600"
           @click="setNorForm(poster)"
         />
         <Button
           v-if="user.isAdmin || user.id === poster?.id"
           label="Delete"
-          icon="pi pi-trash bg-[#ff5e5e] rounded-full text-white p-[4px] shadow-md"
-          class="border-[#adadad] bg-white text-[#ff5e5e] font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-gray-200"
+          severity="danger"
+          icon="pi pi-trash bg-[#D3302F] rounded-full text-white p-[4px]"
+          class="border-none  text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-red-700"
           @click="deletePopup = true"
         />
       </div>

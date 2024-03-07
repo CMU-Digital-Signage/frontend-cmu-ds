@@ -635,10 +635,11 @@ const nextStepPreview = () => {
           </div>
         </div>
         <div v-if="currentState === 1 && !editPosterType.title.length">
-          <div class="text-center text-red-500">Max Image: {{ maxImage }}</div>
-          <div class="text-center text-blue-500">
-            Current Image: {{ formPoster.image.length }}
-          </div>
+          <div class="text-center text-red-500">Maximum upload limit: {{ maxImage }} images</div>
+          <div class="text-center text-blue-500 mb-2">
+  Your uploaded content: {{ formPoster.image.length === 0 ? 'No images' : formPoster.image.length === 1 ? '1 image' : formPoster.image.length + ' images' }}
+</div>
+
           <UploadImage
             :posType="selectedPosterType.code"
             :maxImage="maxImage"
