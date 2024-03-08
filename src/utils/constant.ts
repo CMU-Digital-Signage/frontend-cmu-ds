@@ -163,78 +163,11 @@ export const newInitialFormDisplay = () => {
   };
 };
 
-export const convertUrlToFile = async (data: any) => {
-  if (data.incidentName) {
-    data.status = data.status ? "Active" : "Inactive";
-    const url = data.emergencyImage;
-    const response = await convertImageToBase64(url);
-    const base64Data = response.split(",")[1];
-    const name = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("?"));
-    const type = name.substring(name.lastIndexOf("."));
-    const size = (base64Data.length * 3) / 4;
-
-    data.emergencyImage = {
-      dataURL: `data:image/${type};base64,${base64Data}`,
-      lastModified: new Date().getTime(),
-      lastModifiedDate: new Date(),
-      name,
-      size,
-      type,
-    };
-  } else {
-    data.forEach(async (p: ImageCollection) => {
-      const url = p.image;
-      const response = await convertImageToBase64(url);
-      const base64Data = response.split(",")[1];
-      const name = url.substring(
-        url.lastIndexOf("/") + 1,
-        url.lastIndexOf("?")
-      );
-      const type = name.substring(name.lastIndexOf("."));
-      const size = (base64Data.length * 3) / 4;
-
-      p.image = {
-        dataURL: `data:image/${type};base64,${base64Data}`,
-        lastModified: new Date().getTime(),
-        lastModifiedDate: new Date(),
-        name,
-        size,
-        type,
-      };
-    });
-  }
-};
-
-export const convertImageToBase64 = (url: string): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    if (url) {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        const reader = new FileReader();
-        reader.onloadend = function () {
-          resolve(reader.result as string);
-        };
-        reader.onerror = function (error) {
-          reject(error);
-        };
-        reader.readAsDataURL(xhr.response);
-      };
-      xhr.onerror = function (error) {
-        reject(error);
-      };
-      xhr.open("GET", url);
-      xhr.responseType = "blob";
-      xhr.send();
-    }
-  });
-};
-
 export const onUpload = (e: any): Promise<any> => {
   return new Promise((resolve, reject) => {
     if (!e) reject("No file selected");
 
     const type = e.type;
-    // const targetSize = 500 * 1024; // 500 kb
     let quality = 1;
 
     const compressFile = async (compressionQuality: number) => {
@@ -252,7 +185,6 @@ export const onUpload = (e: any): Promise<any> => {
     };
 
     const compressLoop = async () => {
-      // while (e.size > targetSize && quality > 0.01) {
       quality *= 0.4;
       try {
         e = await compressFile(quality);
@@ -260,11 +192,15 @@ export const onUpload = (e: any): Promise<any> => {
         reject(error);
         return;
       }
-      // }
       const reader = new FileReader();
       reader.onload = () => {
         const dataURL = reader.result;
-        resolve({ ...e, size: e.size, type, dataURL });
+        resolve({
+          ...e,
+          size: e.size,
+          type,
+          dataURL,
+        });
       };
       reader.onerror = (error) => {
         reject(error);
@@ -321,7 +257,6 @@ export const setFieldPoster = (data: Poster[]) => {
         e.type = "Collection";
       } else e.type = "Individual";
     }
-    if (e.image) convertUrlToFile(e.image);
   });
   data.sort(
     (a: Poster, b: Poster) => a.createdAt.getTime() - b.createdAt.getTime()
@@ -493,6 +428,7 @@ export const loopPoster = (
 ) => {
   let timeoutId: NodeJS.Timeout | null = null;
   let hasShownBotMapsThisRound = false;
+
   if (running) {
     currentIndexImage = currentIndexImage + 1;
     if (currentIndexImage === posters[currentIndexPoster].image.length) {
@@ -501,6 +437,8 @@ export const loopPoster = (
     }
   }
 
+  let previousMinutes = -1;
+
   const updatePosterInterval = () => {
     if (!posters.length && showBotMaps) {
       showBotMaps.value = true;
@@ -508,14 +446,18 @@ export const loopPoster = (
     }
     const currentMinutes = new Date().getMinutes();
     const isOnTheHalfHour = currentMinutes === 0 || currentMinutes === 30;
-    if (!isOnTheHalfHour) hasShownBotMapsThisRound = false;
+    if (isOnTheHalfHour && currentMinutes !== previousMinutes) {
+      hasShownBotMapsThisRound = false;
+    }
     if (showBotMaps && isOnTheHalfHour && !hasShownBotMapsThisRound) {
+      previousMinutes = currentMinutes;
       showBotMaps.value = true;
       hasShownBotMapsThisRound = true;
       timeoutId = setTimeout(() => {
         showBotMaps.value = false;
       }, 45 * 1000);
     }
+
     const currentTime = new Date(
       1970,
       0,

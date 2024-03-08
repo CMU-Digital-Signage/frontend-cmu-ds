@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Emergency } from "@/types";
 import store from "@/store";
-import { convertUrlToFile } from "@/utils/constant";
 
 const prefix = "/poster";
 
@@ -16,10 +15,6 @@ export async function getEmergency() {
         withCredentials: true,
       }
     );
-
-    res.data.emergency.forEach((e: Emergency) => {
-      convertUrlToFile(e);
-    });
 
     return res.data;
   } catch (err: any) {
@@ -46,7 +41,6 @@ export async function addEmergency(data: Emergency) {
       }
     );
     if (store.state.emerPosters) {
-      convertUrlToFile(res.data.emergency);
       store.state.emerPosters.push({
         ...res.data.emergency,
         status: res.data.emergency.status ? "Active" : "Inactive",
@@ -91,7 +85,6 @@ export async function editEmergency(
         (e) => e.incidentName === incidentName
       );
       if (index !== -1) {
-        if (incidentName !== "banner") convertUrlToFile(res.data.emergency);
         store.state.emerPosters[index] = {
           ...res.data.emergency,
           status: res.data.emergency.status ? "Active" : "Inactive",

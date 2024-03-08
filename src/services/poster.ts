@@ -1,10 +1,6 @@
 import store from "@/store";
 import { Poster, Display } from "@/types";
-import {
-  convertUrlToFile,
-  createUnique,
-  setFieldPoster,
-} from "@/utils/constant";
+import { createUnique, setFieldPoster } from "@/utils/constant";
 import axios from "axios";
 
 export async function searchPoster(title: string) {
@@ -69,7 +65,6 @@ export async function addPoster(poster: Poster, display: Display[]) {
 
     setFieldPoster(res.data.newPoster);
     if (store.state.posters) {
-      convertUrlToFile(res.data.newPoster);
       store.state.posters.push(...res.data.newPoster);
       createUnique(store.state.posters);
     }

@@ -17,6 +17,7 @@ const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
 const toast = useToast();
 const fileUpload = ref();
+const loading = ref(false);
 
 const errorSelectFile = async () => {
   if (
@@ -46,23 +47,17 @@ const errorSelectFile = async () => {
 };
 
 const selectImage = async (event: any) => {
+  loading.value = true;
   if (!store.state.formPoster.image) {
     store.state.formPoster.image = [];
   }
   const initialLength = store.state.formPoster.image.length;
-  if (initialLength > 0) {
-    store.state.formPoster.image.forEach((e, index) => {
-      e.priority = index + 1;
-      e.image.name = `${formPoster.value.title}-${index + 1}.${
-        e.image.type?.split("/")[1]
-      }`;
-    });
-  }
   const filePromises = event.files.map(async (e: any, i: number) => {
     const priority = initialLength + i + 1;
     const file = await onUpload(e);
-    const fileExtension = file.type.split("/")[1] || file.type;
-    file.name = `${formPoster.value.title}-${priority}.${fileExtension}`;
+    file.name = `${formPoster.value.title}-${priority}.${e.name
+      .split(".")
+      .pop()}`;
     return {
       image: file,
       priority: priority,
@@ -70,19 +65,16 @@ const selectImage = async (event: any) => {
   });
   const processedFiles = await Promise.all(filePromises);
   store.state.formPoster.image.push(...processedFiles);
-  store.state.formPoster.image.forEach((e, index) => {
-    e.priority = index + 1;
-    e.image.name = `${formPoster.value.title}-${index + 1}.${
-      e.image.type?.split("/")[1]
-    }`;
-  });
+  loading.value = false;
 };
 
 const removeImage = (i: number) => {
   store.state.formPoster.image.splice(i, 1);
   store.state.formPoster.image.forEach((e, index) => {
     e.priority = index + 1;
-    e.image.name = `${formPoster.value.title}-${index + 1}${e.image.type}`;
+    e.image.name = `${formPoster.value.title}-${index + 1}.${e.image.name
+      .split(".")
+      .pop()}`;
   });
 };
 </script>
@@ -109,9 +101,6 @@ const removeImage = (i: number) => {
       async (e) => {
         if (posType === 'EP' && e.files[0]) {
           formEmer.emergencyImage = await onUpload(e.files[0]);
-          formEmer.emergencyImage.name = `${formEmer.incidentName}.${
-            formEmer.emergencyImage.type.split('/')[1]
-          }`;
         } else if (
           e.files[0] &&
           maxImage &&
@@ -172,8 +161,14 @@ const removeImage = (i: number) => {
       </div>
     </template>
     <template #content="{ removeFileCallback }">
+      <ProgressSpinner
+        v-if="loading"
+        strokeWidth="6"
+        animationDuration=".5s"
+        class="flex flex-col text-center items-center"
+      />
       <div
-        v-if="posType === 'EP' && formEmer.emergencyImage"
+        v-else-if="posType === 'EP' && formEmer.emergencyImage"
         class="flex flex-row justify-center text-center items-center gap-3"
       >
         <i class="pi pi-power-off"></i>
@@ -217,7 +212,7 @@ const removeImage = (i: number) => {
         <div class="text-image bg-[#f85a5a]">Remove</div>
       </div>
     </template>
-    <template #empty>
+    <template #empty v-if="!loading">
       <div
         v-if="!formEmer.emergencyImage && !formPoster.image?.length"
         class="flex flex-col text-center items-center"
