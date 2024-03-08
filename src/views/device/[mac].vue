@@ -241,6 +241,22 @@ onUnmounted(() => {
           />
         </div>
       </div>
+      <div
+        v-if="roomCPE === '421' || roomCPE === '422'"
+        class="bottomBlock gap-3"
+      >
+        <div class="bg-[#10164b] justify-center items-center">
+          <img
+            class="w-24 h-24"
+            alt="arrow"
+            src="../../assets/images/arrow.png"
+          />
+        </div>
+        <div class="flex flex-col text-yellow-400 text-[52px] justify-center">
+          <p class="font-semibold">401</p>
+          <p class="font-semibold">402</p>
+        </div>
+      </div>
       <div v-if="weather" class="bottomBlock items-center justify-center py-3 flex-col">
         <div class="flex flex-row h-full">
           <div
@@ -303,22 +319,6 @@ onUnmounted(() => {
       <div class="bottomBlock h-fit flex-col text-[40px] text-white">
         <p>{{ timeFormatter(dateTime) }}</p>
         <p>{{ dateFormatter(dateTime, 3) }}</p>
-      </div>
-      <div
-        v-if="roomCPE === '421' || roomCPE === '422'"
-        class="bottomBlock gap-3"
-      >
-        <div class="bg-[#10164b] justify-center items-center">
-          <img
-            class="w-24 h-24"
-            alt="arrow"
-            src="../../assets/images/arrow.png"
-          />
-        </div>
-        <div class="flex flex-col text-yellow-400 text-[52px] justify-center">
-          <p class="font-semibold">401</p>
-          <p class="font-semibold">402</p>
-        </div>
       </div>
     </div>
   </div>
