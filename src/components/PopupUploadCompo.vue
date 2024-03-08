@@ -70,14 +70,6 @@ watch(
 );
 
 watch([showUpload, showSecondDialog, editPosterType.value], () => {
-  uploadState.value = editPosterType.value.title.length
-    ? [{ label: "Set Schedule" }, { label: "Review" }]
-    : [
-        { label: "Set Schedule" },
-        { label: "Upload Content" },
-        { label: "Orientation & Review" },
-      ];
-
   if (editPosterType.value.type && showUpload.value) {
     posterType.value.map((e) => {
       if (e.code === editPosterType.value.type) {
@@ -240,6 +232,9 @@ const handleEditPoster = async () => {
 const uploadPoster = async () => {
   loading.value = true;
   if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
+    formEmer.value.emergencyImage.name = `${
+      formEmer.value.incidentName
+    }.${formEmer.value.emergencyImage.name.split(".").pop()}`;
     editPosterType.value.title.length
       ? handleEditEmergency()
       : handleAddEmergency();
@@ -454,6 +449,8 @@ const nextStepPreview = () => {
       image: formPoster.value.image[0].image.dataURL,
       priority: formPoster.value.image[0].priority,
     };
+    console.log(formPoster.value.image);
+
     currentState.value = 2;
   } else {
     toast.add({
@@ -634,11 +631,20 @@ const nextStepPreview = () => {
             ></Button>
           </div>
         </div>
-        <div v-if="currentState === 1 && !editPosterType.title.length">
-          <div class="text-center text-red-500">Maximum upload limit: {{ maxImage }} images</div>
+        <div v-if="currentState === 1">
+          <div class="text-center text-red-500">
+            Maximum upload limit: {{ maxImage }} images
+          </div>
           <div class="text-center text-blue-500 mb-2">
-  Your uploaded content: {{ formPoster.image.length === 0 ? 'No images' : formPoster.image.length === 1 ? '1 image' : formPoster.image.length + ' images' }}
-</div>
+            Your uploaded content:
+            {{
+              formPoster.image.length === 0
+                ? "No images"
+                : formPoster.image.length === 1
+                ? "1 image"
+                : formPoster.image.length + " images"
+            }}
+          </div>
 
           <UploadImage
             :posType="selectedPosterType.code"
@@ -658,108 +664,96 @@ const nextStepPreview = () => {
             ></Button>
           </div>
         </div>
-        <div
-          v-if="
-            currentState === 2 ||
-            (currentState === 1 && editPosterType.title.length)
-          "
-        >
-          <div v-if="!editPosterType.title.length">
-            <div class="flex justify-between">
-              <div>
-                <label
-                  class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
-                >
-                  Orientation
-                </label>
-              </div>
-            </div>
-            <div class="orientOut border-2 border-black rounded-lg">
-              <div class="inline-flex gap-2">
-                <Button
-                  @click="
-                    async () => {
-                      formPoster.image[
-                        selectRotate.priority - 1
-                      ].image.dataURL = await rotate(selectRotate.image, -90);
-                      selectRotate.image =
-                        formPoster.image[
-                          selectRotate.priority - 1
-                        ].image.dataURL;
-                    }
-                  "
-                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                  icon="pi pi-replay"
-                  rounded
-                  outlined
-                  :disabled="!formPoster.image"
-                />
-                <Button
-                  @click="
-                    async () => {
-                      formPoster.image[
-                        selectRotate.priority - 1
-                      ].image.dataURL = await rotate(selectRotate.image, 90);
-                      selectRotate.image =
-                        formPoster.image[
-                          selectRotate.priority - 1
-                        ].image.dataURL;
-                    }
-                  "
-                  :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                  icon="pi pi-refresh"
-                  rounded
-                  outlined
-                  :disabled="!formPoster.image"
-                />
-              </div>
-              <div
-                class="flex flex-row justify-center text-center items-center gap-3 mb-3"
+        <div v-if="currentState === 2">
+          <div class="flex justify-between">
+            <div>
+              <label
+                class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
               >
-                <p>Logo TV</p>
-                <div
-                  class="flex justify-center border-2 border-black bg-black"
-                  :style="{
-                    width: `${2160 / 20}px`,
-                    height: `${3840 / 20}px`,
-                  }"
-                >
-                  <img
-                    :alt="formPoster.title"
-                    :src="
-                      formPoster.image[selectRotate.priority - 1].image.dataURL
-                    "
-                    class="max-w-full max-h-full m-auto rotate-90"
-                    :style="{
-                      maxWidth: `${3840 / 20}px`,
-                      maxHeight: `${2160 / 20}px`,
-                    }"
-                  />
-                </div>
-              </div>
-              <div
-                v-for="(image, index) in formPoster.image"
-                :key="image.image.name"
-                class="content-image"
-                @click="
-                  () => {
-                    selectRotate = {
-                      image: formPoster.image[index].image.dataURL,
-                      priority: formPoster.image[index].priority,
-                    };
-                  }
-                "
-              >
-                <img
-                  :alt="image.image.name"
-                  :src="image.image.dataURL"
-                  width="100%"
-                  height="100%"
-                />
-                <div class="text-image bg-[#9e9e9e]">Choose</div>
-              </div>
+                Orientation
+              </label>
             </div>
           </div>
+          <div class="orientOut border-2 border-black rounded-lg">
+            <div class="inline-flex gap-2">
+              <Button
+                @click="
+                  async () => {
+                    formPoster.image[selectRotate.priority - 1].image.dataURL =
+                      await rotate(selectRotate.image, -90);
+                    selectRotate.image =
+                      formPoster.image[selectRotate.priority - 1].image.dataURL;
+                  }
+                "
+                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                icon="pi pi-replay"
+                rounded
+                outlined
+                :disabled="!formPoster.image"
+              />
+              <Button
+                @click="
+                  async () => {
+                    formPoster.image[selectRotate.priority - 1].image.dataURL =
+                      await rotate(selectRotate.image, 90);
+                    selectRotate.image =
+                      formPoster.image[selectRotate.priority - 1].image.dataURL;
+                  }
+                "
+                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                icon="pi pi-refresh"
+                rounded
+                outlined
+                :disabled="!formPoster.image"
+              />
+            </div>
+            <div
+              class="flex flex-row justify-center text-center items-center gap-3 mb-3"
+            >
+              <p>Logo TV</p>
+              <div
+                class="flex justify-center border-2 border-black bg-black"
+                :style="{
+                  width: `${2160 / 20}px`,
+                  height: `${3840 / 20}px`,
+                }"
+              >
+                <img
+                  :alt="formPoster.title"
+                  :src="
+                    formPoster.image[selectRotate.priority - 1].image.dataURL
+                  "
+                  class="max-w-full max-h-full m-auto rotate-90"
+                  :style="{
+                    maxWidth: `${3840 / 20}px`,
+                    maxHeight: `${2160 / 20}px`,
+                  }"
+                />
+              </div>
+            </div>
+            <div
+              v-for="(image, index) in formPoster.image"
+              :key="image.image.name"
+              class="content-image"
+              @click="
+                () => {
+                  selectRotate = {
+                    image: formPoster.image[index].image.dataURL,
+                    priority: formPoster.image[index].priority,
+                  };
+                }
+              "
+            >
+              <img
+                :alt="image.image.name"
+                :src="image.image.dataURL"
+                width="100%"
+                height="100%"
+              />
+              <div class="text-image bg-[#9e9e9e]">Choose</div>
+            </div>
+          </div>
+
           <div class="flex flex-col gap-5">
             <label
               class="text-[#282828] font-semibold text-[18px] flex justify-start mt-5 -mb-2"

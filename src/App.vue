@@ -7,7 +7,7 @@ import PopupUpload from "@/components/PopupUploadCompo.vue";
 import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
-import { Device } from "./types";
+import { Device, Emergency } from "./types";
 import router from "./router";
 
 const user = computed(() => store.state.userInfo);
@@ -33,6 +33,9 @@ const fetchData = async () => {
   });
 
   const emerPromise = getEmergency().then((emerRes) => {
+    emerRes.emergency.forEach((e: Emergency) => {
+      e.status = e.status ? "Active" : "Inactive";
+    });
     store.state.emerPosters = emerRes.emergency;
   });
 

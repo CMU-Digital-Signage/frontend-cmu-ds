@@ -33,6 +33,7 @@ import Tag from "primevue/tag";
 import TieredMenu from "primevue/tieredmenu";
 import Menu from "primevue/menu";
 import Password from "primevue/password";
+import ProgressSpinner from "primevue/progressspinner";
 
 createApp(App)
   .use(store)
@@ -117,4 +118,5 @@ createApp(App)
   .component("Menu", Menu)
   .component("FloatLabel", FloatLabel)
   .component("Password", Password)
+  .component("ProgressSpinner", ProgressSpinner)
   .mount("#app");
