@@ -221,7 +221,7 @@ onUnmounted(() => {
     </div>
     <div
       v-if="emerPoster?.incidentName !== 'banner'"
-      class="flex flex-col w-[10vw] p-[10px] border-2 rounded-2xl bg-white text-black"
+      class="flex flex-col w-[10vw] p-[10px] bg-white text-black"
     >
       <div v-if="weather" class="bottomBlock border-t-2">
         <p class="text-4xl">{{ weather?.current?.weather.tp }} °C</p>
