@@ -22,7 +22,7 @@ import axios from "axios";
 
 const route = useRoute();
 const mac = route.params.mac as string;
-const floorCpe = ref("");
+const roomCPE = ref("");
 const showBotMaps = ref(false);
 const posters = computed(() => store.state.posters);
 const emerPoster = computed(() =>
@@ -104,21 +104,20 @@ const fetchWeather = async () => {
 };
 
 const aqiStatus = () => {
-  if (weather.value.current) {
+  if (weather.value?.current) {
     const aqiValue = weather.value.current.pollution.aqius;
     if (aqiValue <= 50) return "Good";
     else if (aqiValue <= 100) return "Moderate";
-    else if (aqiValue <= 150) return "Unhealthy (Sensitive Group)";
     else if (aqiValue <= 200) return "Unhealthy";
     else if (aqiValue <= 300) return "Very Unhealthy";
-    else return "Harzardous";
+    else return "Hazardous";
   }
 };
 
 const fetchData = async () => {
-  const { ok, floor, poster, message } = await getPosterEachDevice(mac);
+  const { ok, room, poster, message } = await getPosterEachDevice(mac);
   if (ok) {
-    floorCpe.value = floor;
+    roomCPE.value = room;
     setFieldPoster(poster);
     poster.sort((a: Poster, b: Poster) => {
       if (a.startTime < b.startTime) return -1;
@@ -200,12 +199,14 @@ onUnmounted(() => {
       </div>
     </div>
     <div
-      v-else-if="showBotMaps && floorCpe"
+      v-else-if="showBotMaps && roomCPE"
       class="flex flex-1 justify-center items-center"
     >
       <iframe
         title="BOTMATS"
-        :src="`https://main--darling-frangipane-e360a0.netlify.app/${floorCpe}`"
+        :src="`https://main--darling-frangipane-e360a0.netlify.app/${roomCPE.charAt(
+          0
+        )}`"
       ></iframe>
     </div>
     <div v-else class="flex flex-1">
@@ -221,55 +222,103 @@ onUnmounted(() => {
     </div>
     <div
       v-if="emerPoster?.incidentName !== 'banner'"
-      class="flex flex-col w-[10vw] p-[10px] bg-white text-black"
+      class="flex h-screen flex-col w-[10vw] bg-[#10164b] text-black"
     >
-      <div v-if="weather" class="bottomBlock border-t-2">
-        <p class="text-4xl">{{ weather?.current?.weather.tp }} °C</p>
-        <div class="inline-flex gap-3">
-          <p class="text-2xl ml-2 -mr-1 font-medium">
-            {{ iconWeather.condition }}
-          </p>
-          <img class="w-8 h-8" :src="iconWeather.image" />
+      <div
+        v-if="roomCPE === '421' || roomCPE === '422'"
+        class="bottomBlock gap-3"
+      >
+        <div
+          class="flex bg-[#10164b] text-yellow-400 text-[48px] justify-center"
+        >
+          <p class="font-semibold">41X</p>
         </div>
-        <div class="text-sm text-black">
+        <div class="flex bg-[#10164b] rotate-90 items-center">
+          <img
+            class="w-24 h-24"
+            alt="arrow"
+            src="../../assets/images/arrow.png"
+          />
+        </div>
+      </div>
+      <div v-if="weather" class="bottomBlock items-center justify-center py-3 flex-col">
+        <div class="flex flex-row h-full">
+          <div
+            class="items-center flex justify-center text-[30px]"
+            :class="{
+              'bg-[#80BE2E]': aqiStatus() === 'Good',
+              'bg-[#F3BF10]': aqiStatus() === 'Moderate',
+              'bg-[#EE4547]': aqiStatus() === 'Unhealthy',
+              'bg-[#8A609D]': aqiStatus() === 'Very Unhealthy',
+              'bg-[#814C63]': aqiStatus() === 'Hazardous',
+              'text-[#0C6515]': aqiStatus() === 'Good',
+              'text-[#654E0C]': aqiStatus() === 'Moderate',
+              'text-[#ffffff]':
+                aqiStatus() === 'Unhealthy' ||
+                aqiStatus() === 'Very Unhealthy' ||
+                aqiStatus() === 'Hazardous',
+            }"
+          >
+            <p class="text-3xl py-3 items-center p-2">
+              {{ weather?.current?.weather?.tp }} °C
+            </p>
+          </div>
+          <div
+            class="flex flex-row"
+            :class="{
+              'bg-[#A8E05F]': aqiStatus() === 'Good',
+              'bg-[#FDD64B]': aqiStatus() === 'Moderate',
+              'bg-[#fe5b5b]': aqiStatus() === 'Unhealthy',
+              'bg-[#A97ABC]': aqiStatus() === 'Very Unhealthy',
+              'bg-[#966B78]': aqiStatus() === 'Hazardous',
+              'text-[#0C6515]': aqiStatus() === 'Good',
+              'text-[#654E0C]': aqiStatus() === 'Moderate',
+              'text-[#ffffff]':
+                aqiStatus() === 'Unhealthy' ||
+                aqiStatus() === 'Very Unhealthy' ||
+                aqiStatus() === 'Hazardous',
+            }"
+          >
+            <div class="flex flex-col pt-5 pb-2">
+              <p class="text-[32px] whitespace-nowrap">AQI US</p>
+              <p class="text-[40px]">
+                {{ weather?.current?.pollution?.aqius }}
+              </p>
+            </div>
+            <div
+              class=" pb-5 pt-2 text-2xl items-center flex flex-1 justify-center"
+            >
+              {{ aqiStatus() }}
+            </div>
+          </div>
+        </div>
+        <div class="text-md font-medium text-white mr-3">
           Last Update:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
           }}
-          IQAir
+          | IQAir
         </div>
       </div>
-      <div v-if="weather" class="bottomBlock">
-        <div
-          :class="{
-            'text-[#2a8953]': aqiStatus() === 'Good',
-            'text-[#95a22f]': aqiStatus() === 'Moderate',
-            'text-[#F48D31]': aqiStatus() === 'Unhealthy (Sensitive Group)',
-            'text-[#CA142D]': aqiStatus() === 'Unhealthy',
-            'text-[#62008F]': aqiStatus() === 'Very Unhealthy',
-            'text-[#730B22]': aqiStatus() === 'Harzardous',
-          }"
-        >
-          <div class="flex-col justify-center items-center">
-            <div class="text-4xl">
-              AQI: {{ weather?.current?.pollution.aqius }} <br />
-            </div>
-            <div class="text-2xl ml-4 -mr-1 font-medium">
-              {{ aqiStatus() }}
-            </div>
-          </div>
-          <div class="text-sm text-black">
-            Last Update:
-            {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
-              updateWeather.getMinutes().toString().padStart(2, "0")
-            }}
-            IQAir
-          </div>
-        </div>
+      <div class="bottomBlock h-fit flex-col text-[40px] text-white">
+        <p>{{ timeFormatter(dateTime) }}</p>
+        <p>{{ dateFormatter(dateTime, 3) }}</p>
       </div>
-      <div class="bottomBlock border-b-2 text-4xl">
-        <p>{{ dateFormatter(dateTime) }}</p>
-        <p>{{ timeFormatter(dateTime, true) }}</p>
+      <div
+        v-if="roomCPE === '421' || roomCPE === '422'"
+        class="bottomBlock gap-3"
+      >
+        <div class="bg-[#10164b] justify-center items-center">
+          <img
+            class="w-24 h-24"
+            alt="arrow"
+            src="../../assets/images/arrow.png"
+          />
+        </div>
+        <div class="flex flex-col text-yellow-400 text-[52px] justify-center">
+          <p class="font-semibold">401</p>
+          <p class="font-semibold">402</p>
+        </div>
       </div>
     </div>
   </div>
@@ -300,8 +349,8 @@ iframe {
   transform: scale(-1, -1);
   flex: 1 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  background-color: #10164b;
   justify-content: center;
 }
 </style>
