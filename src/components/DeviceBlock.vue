@@ -23,17 +23,17 @@ const changeStatusDevice = async () => {
   }
 };
 
-watch(
-  () =>
-    store.state.devices?.find((e) => e.MACaddress === device.value.MACaddress)
-      ?.status,
-  () => {
-    if (device.value.status !== onOff.value) {
-      onOff.value = device.value.status;
-      loading.value = false;
-    }
-  }
-);
+// watch(
+//   () =>
+//     store.state.devices?.find((e) => e.MACaddress === device.value.MACaddress)
+//       ?.status,
+//   () => {
+//     if (device.value.status !== onOff.value) {
+//       onOff.value = device.value.status;
+//       loading.value = false;
+//     }
+//   }
+// );
 </script>
 
 <template>
@@ -65,11 +65,11 @@ watch(
         <p :class="[device.status ? 'text-black' : 'text-gray-500']">
           Room: {{ device.room }}
         </p>
-        <p class="text-gray-500 font-bold" v-if="device.status == false">Off</p>
-        <p class="text-[#62ccca] font-bold" v-if="device.status == true">On</p>
+        <!-- <p class="text-gray-500 font-bold" v-if="device.status == false">Off</p>
+        <p class="text-[#62ccca] font-bold" v-if="device.status == true">On</p> -->
       </div>
     </Button>
-    <div
+    <!-- <div
       v-if="store.state.userInfo.isAdmin"
       class="flex absolute bottom-2 right-2"
     >
@@ -81,7 +81,7 @@ watch(
         :loading="loading"
         @click="changeStatusDevice"
       ></Button>
-    </div>
+    </div> -->
   </div>
 </template>
 
