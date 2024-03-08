@@ -92,7 +92,7 @@ export const month = [
   "Dec",
 ];
 
-export const day = ["SUN", "MON", "TUE", "WED", "THR", "FRI", "SAT"];
+export const dayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
 
 export const dateFormatter = (
   date: Date | null | undefined,
@@ -100,7 +100,8 @@ export const dateFormatter = (
 ) => {
   if (!date) return "";
 
-  const day = date.getDate().toString().padStart(2, "0");
+  const day = date.getDate().toString();
+  const dayName = dayOfWeek[date.getDay()];
   const monthNum = (date.getMonth() + 1).toString().padStart(2, "0");
   const monthFullStr = fullMonth[date.getMonth()];
   const monthStr = month[date.getMonth()];
@@ -111,6 +112,8 @@ export const dateFormatter = (
       return `${day}/${monthNum}/${year}`; // 22/11/2023
     case 2:
       return `${day} ${monthFullStr} ${year}`; //22 November 2023
+    case 3:
+      return `${dayName} ${day} ${monthStr}`; //Mon 22 Nov
     default:
       return `${day} ${monthStr} ${year}`; //22 Nov 2023;
   }
@@ -481,6 +484,7 @@ export const setEmerForm = (data: any) => {
 let currentIndexPoster = 0;
 let currentIndexImage = 0;
 let count = 0;
+let running = false;
 
 export const loopPoster = (
   posters: Poster[],
@@ -489,6 +493,13 @@ export const loopPoster = (
 ) => {
   let timeoutId: NodeJS.Timeout | null = null;
   let hasShownBotMapsThisRound = false;
+  if (running) {
+    currentIndexImage = currentIndexImage + 1;
+    if (currentIndexImage === posters[currentIndexPoster].image.length) {
+      currentIndexImage = 0;
+      currentIndexPoster = (currentIndexPoster + 1) % posters.length;
+    }
+  }
 
   const updatePosterInterval = () => {
     if (!posters.length && showBotMaps) {
@@ -529,6 +540,8 @@ export const loopPoster = (
         currentPoster.image[currentIndexImage].image;
       store.state.currentImage.key =
         currentPoster.title + currentPoster.image[currentIndexImage].priority;
+      running = true;
+
       timeoutId = setTimeout(() => {
         currentIndexImage = currentIndexImage + 1;
         if (currentIndexImage === currentPoster.image.length) {
