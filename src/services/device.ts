@@ -1,6 +1,6 @@
 import store from "@/store";
 import { Device } from "@/types";
-import { color } from "@/utils/constant";
+import { color, convertUrlToFile } from "@/utils/constant";
 import axios from "axios";
 
 export async function getDevice() {
@@ -10,6 +10,11 @@ export async function getDevice() {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
       withCredentials: true,
+    });
+
+    res.data.data.forEach(async (e: Device) => {
+      if (e.location && typeof e.location === "string")
+        e.location = await convertUrlToFile(e.location);
     });
 
     return res.data;
@@ -36,15 +41,17 @@ export async function addDevice(data: Device) {
       }
     );
 
-    if (store.state.devices)
+    if (store.state.devices) {
+      res.data.device.location = data.location;
       store.state.devices.push({
         ...res.data.device,
         color: color[store.state.devices.length],
       });
-    store.state.macNotUse = store.state.macNotUse.filter(
-      (e: string) => e !== data.MACaddress
-    );
-    store.state.filterDevice.push(data.MACaddress);
+      store.state.macNotUse = store.state.macNotUse.filter(
+        (e: string) => e !== data.MACaddress
+      );
+      store.state.filterDevice.push(data.MACaddress);
+    }
 
     return res.data;
   } catch (err: any) {
@@ -71,6 +78,7 @@ export async function editDevice(data: Device) {
     );
 
     if (store.state.devices) {
+      res.data.device.location = data.location;
       const index = store.state.devices.findIndex(
         (e) => e.MACaddress === res.data.device.MACaddress
       );
