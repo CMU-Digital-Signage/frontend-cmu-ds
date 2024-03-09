@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import NavbarBelow from "@/components/NavbarBelow.vue";
-import { computed, ref, watch, onUnmounted } from "vue";
+import { computed, ref, watch, onUnmounted, onMounted } from "vue";
 import store from "@/store";
 import { useRoute } from "vue-router";
 import {
   dateFormatter,
   loopPoster,
   calculateScreenHeight,
+  convertUrlToFile,
 } from "@/utils/constant";
 import { Poster } from "@/types";
 
@@ -25,11 +26,28 @@ const posters = computed(() =>
     );
   })
 );
+const loading = ref(false);
 const image = computed(() => store.state.currentImage);
 const stopLoop = ref();
 const selectPoster = ref<Poster>();
 const selectImage = ref("");
 let currentindex = 0;
+
+onMounted(async () => {
+  if (posters.value) {
+    loading.value = true;
+    const promise = posters.value.map(async (e) => {
+      await Promise.all(
+        e.image.map(async (p) => {
+          if (p.image && typeof p.image === "string")
+            p.image = await convertUrlToFile(p.image);
+        })
+      );
+    });
+    await Promise.all(promise);
+    loading.value = false;
+  }
+});
 
 watch(selectPoster, () => {
   if (!selectPoster.value) {
@@ -137,7 +155,14 @@ const rowStyle = (rowData: any) => {
               : 'text-black hover:bg-gray-300 rounded-xl'
           "
         />
+        <ProgressSpinner
+          v-if="loading"
+          strokeWidth="6"
+          animationDuration=".5s"
+          class="flex flex-col text-center items-center"
+        />
         <div
+          v-else
           class="flex justify-center items-center"
           :style="{
             width: `${2160 / 6.5}px`,

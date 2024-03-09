@@ -1,6 +1,7 @@
 import router from "@/router";
 import store from "@/store";
 import { Device, Display, Emergency, ImageCollection, Poster } from "@/types";
+import axios from "axios";
 import Compressor from "compressorjs";
 import { Ref } from "vue";
 
@@ -163,6 +164,32 @@ export const newInitialFormDisplay = () => {
   };
 };
 
+export const convertUrlToFile = async (url: string): Promise<any> => {
+  const response = await axios.get(url, {
+    responseType: "arraybuffer",
+  });
+  let binary = "";
+  const bytes = new Uint8Array(response.data);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const base64Data = window.btoa(binary);
+  const contentType = response.headers["content-type"];
+  const name = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("?"));
+  const type = name.substring(name.lastIndexOf("."));
+  const size = (base64Data.length * 3) / 4;
+
+  return {
+    dataURL: `data:${contentType};base64,${base64Data}`,
+    lastModified: new Date().getTime(),
+    lastModifiedDate: new Date(),
+    name,
+    size,
+    type,
+  };
+};
+
 export const onUpload = (e: any): Promise<any> => {
   return new Promise((resolve, reject) => {
     if (!e) reject("No file selected");
@@ -195,12 +222,7 @@ export const onUpload = (e: any): Promise<any> => {
       const reader = new FileReader();
       reader.onload = () => {
         const dataURL = reader.result;
-        resolve({
-          ...e,
-          size: e.size,
-          type,
-          dataURL,
-        });
+        resolve({ ...e, size: e.size, type, dataURL });
       };
       reader.onerror = (error) => {
         reject(error);

@@ -58,6 +58,7 @@ onMounted(() => {
 
   interval = setInterval(() => {
     if (
+      !store.state.showUpload &&
       user.value.id &&
       !router.currentRoute.value.path.includes("/preview") &&
       !router.currentRoute.value.path.includes("/emergency")

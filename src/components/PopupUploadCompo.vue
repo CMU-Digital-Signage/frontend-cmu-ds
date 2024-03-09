@@ -232,9 +232,11 @@ const handleEditPoster = async () => {
 const uploadPoster = async () => {
   loading.value = true;
   if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
-    formEmer.value.emergencyImage.name = `${
-      formEmer.value.incidentName
-    }.${formEmer.value.emergencyImage.name.split(".").pop()}`;
+    if (formEmer.value.emergencyImage.name) {
+      formEmer.value.emergencyImage.name = `${
+        formEmer.value.incidentName
+      }.${formEmer.value.emergencyImage.name.split(".").pop()}`;
+    }
     editPosterType.value.title.length
       ? handleEditEmergency()
       : handleAddEmergency();
@@ -449,7 +451,6 @@ const nextStepPreview = () => {
       image: formPoster.value.image[0].image.dataURL,
       priority: formPoster.value.image[0].priority,
     };
-    console.log(formPoster.value.image);
 
     currentState.value = 2;
   } else {

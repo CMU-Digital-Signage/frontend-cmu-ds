@@ -6,8 +6,8 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, ref, toRefs, defineProps } from "vue";
-import { onUpload, rotate } from "@/utils/constant";
+import { computed, ref, toRefs, defineProps, onMounted } from "vue";
+import { convertUrlToFile, onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
 
@@ -18,6 +18,21 @@ const formEmer = computed(() => store.state.formEmer);
 const toast = useToast();
 const fileUpload = ref();
 const loading = ref(false);
+
+onMounted(async () => {
+  if (formPoster.value) {
+    loading.value = true;
+    await Promise.all(
+      formPoster.value.image.map(async (p) => {
+      console.log(typeof p.image);
+      
+        if (p.image && typeof p.image === "string")
+          p.image = await convertUrlToFile(p.image);
+      })
+    );
+    loading.value = false;
+  }
+});
 
 const errorSelectFile = async () => {
   if (
