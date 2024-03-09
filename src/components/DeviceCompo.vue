@@ -54,9 +54,11 @@ const edit = async () => {
     });
     return;
   }
-  form.location.name = `${form.MACaddress}.${form.location.name
-    .split(".")
-    .pop()}`;
+  if (form.location.name)
+    form.location.name = `${form.MACaddress}.${form.location.name
+      .split(".")
+      .pop()}`;
+
   const res = await editDevice(form);
   loading.value = true;
   if (res.ok) {

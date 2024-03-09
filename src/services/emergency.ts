@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Emergency } from "@/types";
 import store from "@/store";
+import { convertUrlToFile } from "@/utils/constant";
 
 const prefix = "/poster";
 
@@ -15,7 +16,10 @@ export async function getEmergency() {
         withCredentials: true,
       }
     );
-
+    res.data.emergency.forEach(async (e: Emergency) => {
+      if (e.emergencyImage && typeof e.emergencyImage === "string")
+        e.emergencyImage = await convertUrlToFile(e.emergencyImage);
+    });
     return res.data;
   } catch (err: any) {
     if (!err.response) {
@@ -41,6 +45,7 @@ export async function addEmergency(data: Emergency) {
       }
     );
     if (store.state.emerPosters) {
+      res.data.emergency.emergencyImage = data.emergencyImage;
       store.state.emerPosters.push({
         ...res.data.emergency,
         status: res.data.emergency.status ? "Active" : "Inactive",
@@ -49,8 +54,6 @@ export async function addEmergency(data: Emergency) {
 
     return res.data;
   } catch (err: any) {
-    console.log(err);
-
     if (!err.response) {
       return {
         message: "Cannot connect to API Server. Please try again later.",
@@ -85,6 +88,8 @@ export async function editEmergency(
         (e) => e.incidentName === incidentName
       );
       if (index !== -1) {
+        if (incidentName !== "banner")
+          res.data.emergency.emergencyImage = data.emergencyImage;
         store.state.emerPosters[index] = {
           ...res.data.emergency,
           status: res.data.emergency.status ? "Active" : "Inactive",
