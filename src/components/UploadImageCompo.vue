@@ -24,8 +24,6 @@ onMounted(async () => {
     loading.value = true;
     await Promise.all(
       formPoster.value.image.map(async (p) => {
-      console.log(typeof p.image);
-      
         if (p.image && typeof p.image === "string")
           p.image = await convertUrlToFile(p.image);
       })
