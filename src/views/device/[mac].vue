@@ -225,7 +225,7 @@ onUnmounted(() => {
       class="flex h-screen flex-col w-[10vw] bg-[#10164b] text-black"
     >
       <div
-        v-if="roomCPE === '421' || roomCPE === '422'"
+        v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
         class="bottomBlock gap-3"
       >
         <div
