@@ -242,7 +242,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div
-        v-if="roomCPE === '421' || roomCPE === '422'"
+        v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
         class="bottomBlock gap-3"
       >
         <div class="bg-[#10164b] justify-center items-center">
@@ -260,7 +260,7 @@ onUnmounted(() => {
       <div v-if="weather" class="bottomBlock items-center justify-center py-3 flex-col">
         <div class="flex flex-row h-full">
           <div
-            class="items-center flex justify-center text-[30px]"
+            class="items-center flex justify-center rounded-t-lg"
             :class="{
               'bg-[#80BE2E]': aqiStatus() === 'Good',
               'bg-[#F3BF10]': aqiStatus() === 'Moderate',
@@ -275,12 +275,12 @@ onUnmounted(() => {
                 aqiStatus() === 'Hazardous',
             }"
           >
-            <p class="text-3xl py-3 items-center p-2">
+            <p class="text-2xl py-4 items-center px-2">
               {{ weather?.current?.weather?.tp }} °C
             </p>
           </div>
           <div
-            class="flex flex-row"
+            class="flex flex-row rounded-b-lg"
             :class="{
               'bg-[#A8E05F]': aqiStatus() === 'Good',
               'bg-[#FDD64B]': aqiStatus() === 'Moderate',
@@ -295,14 +295,14 @@ onUnmounted(() => {
                 aqiStatus() === 'Hazardous',
             }"
           >
-            <div class="flex flex-col pt-5 pb-2">
-              <p class="text-[32px] whitespace-nowrap">AQI US</p>
-              <p class="text-[40px]">
+            <div class="flex flex-col pt-5 pb-3">
+              <p class="text-[26px] whitespace-nowrap -mt-1">AQI US</p>
+              <p class="text-[40px] font-semibold mt-1">
                 {{ weather?.current?.pollution?.aqius }}
               </p>
             </div>
             <div
-              class=" pb-5 pt-2 text-2xl items-center flex flex-1 justify-center"
+              class=" pb-3 pt-2 text-2xl items-center flex flex-1 justify-center"
             >
               {{ aqiStatus() }}
             </div>
