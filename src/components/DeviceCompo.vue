@@ -54,7 +54,7 @@ const edit = async () => {
     });
     return;
   }
-  if (form.location.name)
+  if (form.location)
     form.location.name = `${form.MACaddress}.${form.location.name
       .split(".")
       .pop()}`;
