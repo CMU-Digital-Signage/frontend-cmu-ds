@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import store from "@/store";
 import { computed, onMounted, ref, watch } from "vue";
-import { month, day } from "../utils/constant";
+import { month, dayOfWeek } from "../utils/constant";
 import { Device, Poster } from "@/types";
 
 const devices = computed(() => store.state.devices);
@@ -102,7 +102,7 @@ watch(filterDevice, () => {
               </p>
               <p>{{ month[item.data.month] }}</p>
               <p>{{ item.data.year }},</p>
-              <p>{{ day[item.data.day] }}</p>
+              <p>{{ dayOfWeek[item.data.day] }}</p>
             </div>
           </template>
         </Column>
