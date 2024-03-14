@@ -108,6 +108,7 @@ const aqiStatus = () => {
     const aqiValue = weather.value.current.pollution.aqius;
     if (aqiValue <= 50) return "Good";
     else if (aqiValue <= 100) return "Moderate";
+    else if (aqiValue <= 150) return "Unhealthy (Sensitive Group)";
     else if (aqiValue <= 200) return "Unhealthy";
     else if (aqiValue <= 300) return "Very Unhealthy";
     else return "Hazardous";
@@ -257,19 +258,26 @@ onUnmounted(() => {
           <p class="font-semibold">402</p>
         </div>
       </div>
-      <div v-if="weather" class="bottomBlock items-center justify-center py-3 flex-col">
+      <div
+        v-if="weather"
+        class="bottomBlock items-center justify-center py-3 flex-col"
+      >
         <div class="flex flex-row h-full">
           <div
             class="items-center flex justify-center rounded-t-lg"
             :class="{
-              'bg-[#80BE2E]': aqiStatus() === 'Good',
+              'bg-[#228b25]': aqiStatus() === 'Good',
               'bg-[#F3BF10]': aqiStatus() === 'Moderate',
+              'bg-[#ff9e5d]': aqiStatus() == 'Unhealthy (Sensitive Group)',
               'bg-[#EE4547]': aqiStatus() === 'Unhealthy',
               'bg-[#8A609D]': aqiStatus() === 'Very Unhealthy',
               'bg-[#814C63]': aqiStatus() === 'Hazardous',
               'text-[#0C6515]': aqiStatus() === 'Good',
               'text-[#654E0C]': aqiStatus() === 'Moderate',
               'text-[#ffffff]':
+                aqiStatus() === 'Good' ||
+                aqiStatus() === 'Moderate' ||
+                aqiStatus() === 'Unhealthy (Sensitive Group)' ||
                 aqiStatus() === 'Unhealthy' ||
                 aqiStatus() === 'Very Unhealthy' ||
                 aqiStatus() === 'Hazardous',
@@ -282,27 +290,28 @@ onUnmounted(() => {
           <div
             class="flex flex-row rounded-b-lg"
             :class="{
-              'bg-[#A8E05F]': aqiStatus() === 'Good',
+              'bg-[#43a027]': aqiStatus() === 'Good',
               'bg-[#FDD64B]': aqiStatus() === 'Moderate',
+              'bg-[#faa166]': aqiStatus() == 'Unhealthy (Sensitive Group)',
               'bg-[#fe5b5b]': aqiStatus() === 'Unhealthy',
               'bg-[#A97ABC]': aqiStatus() === 'Very Unhealthy',
               'bg-[#966B78]': aqiStatus() === 'Hazardous',
               'text-[#0C6515]': aqiStatus() === 'Good',
               'text-[#654E0C]': aqiStatus() === 'Moderate',
-              'text-[#ffffff]':
-                aqiStatus() === 'Unhealthy' ||
-                aqiStatus() === 'Very Unhealthy' ||
-                aqiStatus() === 'Hazardous',
+              'text-[#974A20]': aqiStatus() === 'Unhealthy (Sensitive Group)',
+              'text-[#AE2D35]': aqiStatus() === 'Unhealthy',
+              'text-[#64457A]': aqiStatus() === 'Very Unhealthy',
+              'text-[#6A3D57]': aqiStatus() === 'Hazardous',
             }"
           >
             <div class="flex flex-col pt-5 pb-3">
-              <p class="text-[26px] whitespace-nowrap -mt-1">AQI US</p>
-              <p class="text-[40px] font-semibold mt-1">
+              <p class="text-[26px] whitespace-nowrap -ml-4">AQI US</p>
+              <p class="text-[55px] font-semibold ">
                 {{ weather?.current?.pollution?.aqius }}
               </p>
             </div>
             <div
-              class=" pb-3 pt-2 text-2xl items-center flex flex-1 justify-center"
+              class="pb-3 pt-2 text-2xl items-center flex flex-1 justify-center"
             >
               {{ aqiStatus() }}
             </div>
