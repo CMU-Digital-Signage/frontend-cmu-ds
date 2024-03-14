@@ -298,10 +298,13 @@ onUnmounted(() => {
               'bg-[#966B78]': aqiStatus() === 'Hazardous',
               'text-[#0C6515]': aqiStatus() === 'Good',
               'text-[#654E0C]': aqiStatus() === 'Moderate',
-              'text-[#974A20]': aqiStatus() === 'Unhealthy (Sensitive Group)',
-              'text-[#AE2D35]': aqiStatus() === 'Unhealthy',
-              'text-[#64457A]': aqiStatus() === 'Very Unhealthy',
-              'text-[#6A3D57]': aqiStatus() === 'Hazardous',
+              'text-[#ffffff]':
+                aqiStatus() === 'Good' ||
+                aqiStatus() === 'Moderate' ||
+                aqiStatus() === 'Unhealthy (Sensitive Group)' ||
+                aqiStatus() === 'Unhealthy' ||
+                aqiStatus() === 'Very Unhealthy' ||
+                aqiStatus() === 'Hazardous',
             }"
           >
             <div class="flex flex-col pt-5 pb-3">
