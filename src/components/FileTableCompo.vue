@@ -25,7 +25,9 @@ const toggleShowStatus = (e: any) => {
 const loading = ref(false);
 const props = defineProps({ types: String });
 const deletePopup = ref(false);
-const selectDelPoster = ref<any>();
+const selectPoster = ref<any>();
+const showInfo = ref(false);
+const poster = ref();
 
 const filterInput = computed(() => store.state.filterInputPosters);
 const emerPosters = computed(() =>
@@ -63,10 +65,18 @@ const user = computed<User>(() => store.state.userInfo);
 const toast = useToast();
 let delP = "";
 
+watch(selectPoster, () => {
+  if (selectPoster.value) {
+    poster.value = store.state.posters?.find(
+      (e) => e.posterId === selectPoster.value.posterId
+    );
+  }
+});
+
 const del = async () => {
   loading.value = true;
   if (props.types == "NP") {
-    const res = await deletePoster(selectDelPoster.value.posterId || "");
+    const res = await deletePoster(selectPoster.value.posterId || "");
     toast.add({
       severity: "success",
       summary: "Success",
@@ -74,7 +84,7 @@ const del = async () => {
       life: 3000,
     });
   } else {
-    const res = await deleteEmergency(selectDelPoster.value.incidentName || "");
+    const res = await deleteEmergency(selectPoster.value.incidentName || "");
     toast.add({
       severity: "success",
       summary: "Success",
@@ -84,12 +94,13 @@ const del = async () => {
   }
   loading.value = false;
   delP = "";
-  selectDelPoster.value = undefined;
+  selectPoster.value = undefined;
   deletePopup.value = false;
 };
 </script>
 
 <template>
+  <!-- popup Delete -->
   <Dialog
     :closable="!loading"
     v-model:visible="deletePopup"
@@ -115,9 +126,9 @@ const del = async () => {
       <div class="header-popup">
         Delete
         {{
-          selectDelPoster?.posterId
-            ? `"${selectDelPoster.title}" Poster`
-            : `"${selectDelPoster?.incidentName}" Emergency Poster`
+          selectPoster?.posterId
+            ? `"${selectPoster.title}" Poster`
+            : `"${selectPoster?.incidentName}" Emergency Poster`
         }}?
       </div>
     </template>
@@ -146,6 +157,81 @@ const del = async () => {
       </div>
     </div>
   </Dialog>
+
+  <!-- popup Info -->
+  <Dialog
+    v-if="poster"
+    v-model:visible="showInfo"
+    modal
+    :draggable="false"
+    class="w-[500px] z-[100]"
+  >
+    <template #header>
+      <div class="inline-flex font-bold text-2xl gap-3 items-start">
+        <div class="flex flex-col">
+          <p>{{ selectPoster.title }}</p>
+          <p class="text-[16px] text-[#8d8d8d] -mt-1">
+            {{ selectPoster.type }}
+          </p>
+        </div>
+      </div>
+    </template>
+    <div class="flex flex-col gap-2">
+      <!-- Number of Poster -->
+      <div class="posterDetail">
+        <p>Number of Poster</p>
+        <p>{{ poster.image.length }} Posters</p>
+      </div>
+      <!-- Start Date -->
+      <div class="posterDetail">
+        <p>Start Date</p>
+        <p>{{ dateFormatter(poster.startDate) }}</p>
+      </div>
+      <!-- End Date -->
+      <div class="posterDetail">
+        <p>End Date</p>
+        <p>{{ dateFormatter(poster.endDate) }}</p>
+      </div>
+      <!-- Running Time -->
+      <div class="posterDetail">
+        <p>Running Time</p>
+        <p
+          v-if="
+            poster.startTime.getHours() === 0 &&
+            poster.endTime.getHours() === 23 &&
+            poster.endTime.getMinutes() === 59
+          "
+        >
+          All Day
+        </p>
+        <p v-else>
+          {{ poster.startTime.toTimeString().slice(0, 5) }} -
+          {{ poster.endTime.toTimeString().slice(0, 5) }}
+        </p>
+      </div>
+      <!-- Duration -->
+      <div class="posterDetail">
+        <p>Display Duration</p>
+        <p>{{ poster.duration * poster.image.length }} sec</p>
+      </div>
+
+      <!-- Uploader -->
+      <div class="posterDetail">
+        <p>Uploader</p>
+        <p>{{ poster.uploader }}</p>
+      </div>
+
+      <!-- Description -->
+      <div class="posterDetail flex-col gap-1">
+        <p class="font-[800px] text-[#535353]">Description</p>
+        <div class="bg-[#e9f2fd] rounded-lg p-3 px-5">
+          <p class="font-notoThai">{{ poster.description }}</p>
+          <p v-if="!poster.description">-</p>
+        </div>
+      </div>
+    </div>
+  </Dialog>
+
   <DataTable
     :value="props.types === 'NP' ? uniquePosters : emerPosters"
     scrollDirection="vertical"
@@ -171,7 +257,7 @@ const del = async () => {
       </template>
     </Column>
     <Column
-      v-if="user?.isAdmin && props.types === 'NP'"
+      v-if="props.types === 'NP'"
       field="uploader"
       header="Uploader"
       sortable
@@ -236,7 +322,7 @@ const del = async () => {
             <div class="inline-flex gap-2">
               <Tag severity="info" value="Awaited" />
               <p class="mt-1">
-                Poster will be displayed at a later date or time.
+                Posters will be displayed at a later date or time.
               </p>
             </div>
           </div>
@@ -264,32 +350,47 @@ const del = async () => {
       :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"
     >
       <template #body="rowData">
-        <Button
-          icon="pi pi-pencil"
-          rounded
-          class="w-8 h-8 md:w-9 md:h-9"
-          severity="warning"
-          @click="
-            props.types === 'NP'
-              ? setNorForm(rowData.data)
-              : setEmerForm(rowData.data)
-          "
-        />
-        <Button
-          icon="pi pi-trash"
-          rounded
-          class="w-8 h-8 md:w-9 md:h-9 ml-[5px] md:ml-3"
-          severity="danger"
-          :loading="
-            loading &&
-            (rowData.data.posterId === delP ||
-              rowData.data.incidentName === delP)
-          "
-          @click="
-            deletePopup = true;
-            selectDelPoster = rowData.data;
-          "
-        />
+        <div class="flex gap-3">
+          <Button
+          v-if="(user.isAdmin && store.state.selectTabview === 0) || !user.isAdmin"
+            icon="pi pi-info"
+            rounded
+            class="w-8 h-8 md:w-9 md:h-9"
+            severity="primary"
+            @click="
+              selectPoster = rowData.data;
+              showInfo = true;
+            "
+          />
+          <Button
+            v-if="user.isAdmin || user.id === rowData.data.id"
+            icon="pi pi-pencil"
+            rounded
+            class="w-8 h-8 md:w-9 md:h-9"
+            severity="warning"
+            @click="
+              props.types === 'NP'
+                ? setNorForm(rowData.data)
+                : setEmerForm(rowData.data)
+            "
+          />
+          <Button
+            v-if="user.isAdmin || user.id === rowData.data.id"
+            icon="pi pi-trash"
+            rounded
+            class="w-8 h-8 md:w-9 md:h-9"
+            severity="danger"
+            :loading="
+              loading &&
+              (rowData.data.posterId === delP ||
+                rowData.data.incidentName === delP)
+            "
+            @click="
+              selectPoster = rowData.data;
+              deletePopup = true;
+            "
+          />
+        </div>
       </template>
     </Column>
   </DataTable>

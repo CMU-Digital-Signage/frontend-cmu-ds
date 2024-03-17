@@ -326,23 +326,15 @@ export const createUnique = (data: Poster[]) => {
       } else {
         status = "Expired";
       }
-      if (store.state.userInfo.isAdmin) {
-        acc.push({
-          title: e.title,
-          posterId: e.posterId,
-          uploader: e.uploader,
-          createdAt: e.createdAt,
-          status,
-        });
-      } else if (e.id == store.state.userInfo.id) {
-        acc.push({
-          title: e.title,
-          posterId: e.posterId,
-          uploader: e.uploader,
-          createdAt: e.createdAt,
-          status,
-        });
-      }
+
+      acc.push({
+        title: e.title,
+        id: e.id,
+        posterId: e.posterId,
+        uploader: e.uploader,
+        createdAt: e.createdAt,
+        status,
+      });
     }
     return acc;
   }, []);

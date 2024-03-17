@@ -109,7 +109,6 @@ const del = async () => {
           severity="primary"
           icon="pi pi-info  rounded-full text-white p-[4px]"
           class="border-none  text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-blue-600"
-          :disabled="!poster"
           @click="showInfo = true"
         />
         <Button

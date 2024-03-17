@@ -55,7 +55,6 @@ const fetchData = async () => {
 
 onMounted(() => {
   setupSocket();
-
   interval = setInterval(() => {
     if (
       !store.state.showUpload &&
