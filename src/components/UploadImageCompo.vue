@@ -20,7 +20,7 @@ const fileUpload = ref();
 const loading = ref(false);
 
 onMounted(async () => {
-  if (formPoster.value) {
+  if (formPoster.value.image) {
     loading.value = true;
     await Promise.all(
       formPoster.value.image.map(async (p) => {

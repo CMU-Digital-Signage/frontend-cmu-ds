@@ -570,7 +570,6 @@ const checkValidRoomNumber = () => {
       </li>
       <li v-if="store.state.selectTabview !== 1">
         <label
-          v-if="user?.isAdmin"
           class="text-[14px] md:ml-[7px] ml-[12px] mr-1 xl:text-[16px] md:text-[12px]"
           >Uploader</label
         >
@@ -579,7 +578,6 @@ const checkValidRoomNumber = () => {
           v-model="filterInput.uploader"
           class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-32 xl:w-40 rounded-lg"
           placeholder="Ex.Navadon"
-          v-if="user?.isAdmin"
         ></InputText>
       </li>
 

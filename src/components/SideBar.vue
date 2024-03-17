@@ -371,7 +371,38 @@ const handleChangePassword = async () => {
             >
             </Button>
           </router-link>
+          <router-link to="/emergency">
+            <Button
+              class="bg-none space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1  menu-ho-emergency rounded-lg"
+              v-if="openSidebar"
+              link
+              :style="{
+                'background-color':
+                  $route.path === '/emergency' ? '#FF5B5B' : '',
+                color: $route.path === '/emergency' ? '#FFFFFF' : '',
+              }"
+            >
+              <i class="pi pi-exclamation-triangle"></i>
+              <span>Emergency</span>
+            </Button>
+            <Button
+              class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
+              :class="{
+                'bg-[#ff5b5b] text-[#FFFFFF]': $route.path === '/emergency',
+              }"
+              v-else
+              icon="pi pi-exclamation-triangle"
+              link
+              :style="{
+                'background-color':
+                  $route.path === '/emergency' ? '#ff5b5b' : '',
+                color: $route.path === '/emergency' ? '#FFFFFF' : '',
+              }"
+            >
+            </Button>
+          </router-link>
         </ul>
+        
       </div>
 
       <!-- admin management-->
@@ -418,36 +449,7 @@ const handleChangePassword = async () => {
             </Button>
           </router-link>
 
-          <router-link to="/emergency">
-            <Button
-              class="bg-none space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 underline-label menu-ho-emergency rounded-lg"
-              v-if="openSidebar"
-              link
-              :style="{
-                'background-color':
-                  $route.path === '/emergency' ? '#FF5B5B' : '',
-                color: $route.path === '/emergency' ? '#FFFFFF' : '',
-              }"
-            >
-              <i class="pi pi-exclamation-triangle"></i>
-              <span>Emergency</span>
-            </Button>
-            <Button
-              class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
-              :class="{
-                'bg-[#ff5b5b] text-[#FFFFFF]': $route.path === '/emergency',
-              }"
-              v-else
-              icon="pi pi-exclamation-triangle"
-              link
-              :style="{
-                'background-color':
-                  $route.path === '/emergency' ? '#ff5b5b' : '',
-                color: $route.path === '/emergency' ? '#FFFFFF' : '',
-              }"
-            >
-            </Button>
-          </router-link>
+          
         </ul>
       </div>
 
@@ -520,7 +522,7 @@ const handleChangePassword = async () => {
             <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
               <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
             </div>
-            <div class="text-[#00AEA4] text-[13px] font-700">
+            <div class="text-[#2b8a85] text-[13px] font-700">
               <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">
                 Instructor
               </p>

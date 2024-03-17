@@ -295,7 +295,7 @@ onUnmounted(() => {
               'bg-[#faa166]': aqiStatus() == 'Unhealthy (Sensitive Group)',
               'bg-[#fe5b5b]': aqiStatus() === 'Unhealthy',
               'bg-[#A97ABC]': aqiStatus() === 'Very Unhealthy',
-              'bg-[#966B78]': aqiStatus() === 'Hazardous',
+              'bg-[#966B78]': aqiStatus() === 'Hazardous', 
               'text-[#0C6515]': aqiStatus() === 'Good',
               'text-[#654E0C]': aqiStatus() === 'Moderate',
               'text-[#ffffff]':
