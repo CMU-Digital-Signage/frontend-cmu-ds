@@ -218,16 +218,16 @@ const del = async () => {
   padding-bottom: 10px;
   margin-left: 10px;
   margin-top: 20px;
-  background-color: rgb(255, 0, 0);
-  color: rgb(255, 255, 255);
+  background-color: white;
+  color: rgb(255, 0, 0);
   font-weight: 800;
   cursor: pointer;
   margin-left: 10px;
 }
 
 .primaryButtonDel:hover {
-  background-color: rgb(193, 0, 0);
-  text-decoration-line: underline;
+  background-color: rgb(224, 77, 77);
+  color: white;
 }
 
 .secondaryButton {

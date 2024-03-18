@@ -224,8 +224,18 @@ const rowStyle = (rowData: any) => {
 
 <style scoped>
 .rectangle {
-  flex: 1 1;
-  padding: 0.75rem;
+  width: 97.5%;
+  height: 100%;
+  margin-left: 1rem;
+  margin-bottom: 2.5rem;
+  padding-inline: 1rem;
+  border-radius: 20px;
   overflow: hidden;
+  margin-top: 0.5rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.15rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 </style>
