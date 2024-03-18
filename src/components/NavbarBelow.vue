@@ -88,7 +88,7 @@ const del = async () => {
     </div>
   </Dialog>
   <div
-    class="bg-[#ffffff] border-t border-[#c7bbbb] h-14 px-6 flex items-center"
+    class="bg-none border-t-[1px] border-neutral-300 h-14 py-[26px] px-6 flex items-center"
   >
     <ul
       v-if="$route.path.includes('/preview') && poster"

@@ -227,7 +227,7 @@ const rowStyle = (rowData: any) => {
   width: 97.5%;
   height: 100%;
   margin-left: 1rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
   padding-inline: 1rem;
   border-radius: 20px;
   overflow: hidden;
