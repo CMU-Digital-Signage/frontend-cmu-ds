@@ -85,13 +85,6 @@ const items = ref([
       showDialog();
     },
   },
-  {
-    label: "Log Out",
-    icon: "pi pi-sign-out",
-    command: () => {
-      signOut();
-    },
-  },
 ]);
 
 const resetChangeForm = () => {
@@ -237,23 +230,13 @@ const handleChangePassword = async () => {
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
           v-if="openSidebar"
-          class="upload-button mt-7 items-center justify-center"
+          class="upload-button mt-7 items-center justify-center bg-[#2b575c]"
           @click="store.state.showUpload = true"
         >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <div class="mr-[100px]">
-                <div
-                  class="h-6 w-6 font-semibold bg-[#4a9299] opacity-80 rounded-full flex items-center justify-center border-none"
-                >
-                  <i class="font-extrabold pi pi-plus text-[#ffffff]"></i>
-                </div>
-              </div>
-              <span
-                class="text-[#417f98] font-extrabold text-[16px] fixed ml-[40px]"
-                >Upload File</span
-              >
-            </div>
+          <div class="flex items-center h-5 justify-between">
+            <span class="text-[#ffffff] font-extrabold text-[16px]"
+              >Upload File</span
+            >
           </div>
         </Button>
 
@@ -373,7 +356,7 @@ const handleChangePassword = async () => {
           </router-link>
           <router-link to="/emergency">
             <Button
-              class="bg-none space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1  menu-ho-emergency rounded-lg"
+              class="bg-none space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 menu-ho-emergency rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -401,11 +384,40 @@ const handleChangePassword = async () => {
             >
             </Button>
           </router-link>
+          <div></div>
+          <div></div>
+          <div class="border-[1px]"></div>
+          <div></div>
+          <div></div>
+          <Button
+            class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+            v-if="openSidebar"
+            link
+            @click="signOut()"
+          >
+            <i class="pi pi-sign-out"></i>
+            <span>Log out</span>
+          </Button>
+          <Button
+            class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+            :class="{
+              'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/deviceManage',
+            }"
+            v-else
+            icon="pi pi-sign-out"
+            link
+            @click="signOut()"
+          >
+          </Button>
+          <div></div>
+          <div></div>
+          <div class="border-[1px]"></div>
         </ul>
         
       </div>
 
       <!-- admin management-->
+      
       <div
         v-if="user?.isAdmin && $route.path !== '/searchfile'"
         :class="openSidebar == true ? '' : ' flex justify-center '"
@@ -448,8 +460,6 @@ const handleChangePassword = async () => {
             >
             </Button>
           </router-link>
-
-          
         </ul>
       </div>
 
@@ -889,11 +899,10 @@ Button {
 }
 
 .upload-button {
-  background-color: #ffffffdc;
   color: rgb(54, 54, 54);
   width: 100%;
   border: none;
-  border-radius: 1.2rem;
+  border-radius: 0.7rem;
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
   display: flex;
@@ -902,12 +911,12 @@ Button {
   font-size: 14px;
   cursor: pointer;
   transition: box-shadow 0.3s;
-  box-shadow: 0px 0px 4px 1px rgba(50, 147, 105, 0.5);
+  box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.5);
 }
 
 .upload-button:hover {
   box-shadow: 0px 0px 10px 2px rgba(41, 128, 92, 0.5);
-  background-color: #ffffff;
+  background-color: #065241;
 }
 
 .menu-ho-upload {

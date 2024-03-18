@@ -533,9 +533,9 @@ const del = async (posterId: string) => {
   justify-content: space-between;
 }
 .fc {
-  border: 1px solid #a2a2a2;
-  border-radius: 15px;
+  border-radius: 25px;
   overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .fc .fc-popover {
   z-index: 10;
@@ -555,13 +555,16 @@ const del = async (posterId: string) => {
   border: 0;
 }
 .fc-day-sun,
-.fc-day-sat,
-.fc-day-today {
+.fc-day-sat {
   background-color: #f3f3f3 !important;
 }
 
+.fc-day-today {
+  background-color: #ffffff !important;
+}
+
 .fc .fc-daygrid-day-number {
-  margin: 2px;
+  margin: 5px;
   width: 30px;
   height: 30px;
   border-radius: 100%;
@@ -571,7 +574,7 @@ const del = async (posterId: string) => {
 }
 
 .fc-day-today .fc-daygrid-day-number {
-  background-color: #039be5 !important;
+  background-color: #e50356 !important;
   color: #fff !important;
 }
 
