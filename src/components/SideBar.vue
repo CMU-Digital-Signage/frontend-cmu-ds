@@ -161,7 +161,7 @@ const handleChangePassword = async () => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-screen side-bar z-10 sticky   font-sf-pro"
+    class="flex flex-col justify-between h-screen side-bar z-10 sticky font-sf-pro"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
     <div class="space-y-5" :class="{ 'p-4': openSidebar }">
@@ -498,9 +498,9 @@ const handleChangePassword = async () => {
 
     <!-- <UserInfo /> -->
     <div
-      class="flex h-14 w-full pl-2 pr-4 items-center"
+      class="flex h-14 bg-[#ffffff] rounded-2xl w-[94%] ml-1 pl-2 pr-4 items-center"
       :class="openSidebar ? 'justify-between' : 'justify-center'"
-      style="border-top: 1px solid #c2c2c2"
+      style="border: 1px solid #c2c2c2"
     >
       <div class="flex items-center">
         <div
@@ -804,16 +804,22 @@ Button {
 }
 
 .side-bar-open {
+  margin-top: 7px;
   width: 18rem;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
- 
+  border-radius: 20px;
+  height: 98%;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 30px;
 }
 .side-bar-close {
+  margin-top: 7px;
   width: 90px;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-
+  border-radius: 20px;
+  height: 98%;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 30px;
 }
 
 .p-inputtext.p-component.p-password-input {
