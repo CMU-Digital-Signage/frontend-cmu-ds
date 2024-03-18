@@ -85,7 +85,7 @@ onUnmounted(() => {
     class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe]"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar class="bg-[#f0f0f0] " />
+    <SideBar class="bg-[#f3f3f3] " />
     <div class="w-full h-full flex flex-col bg-[#fefefe]">
       <NavBar class="bg-[#fefefe] " />
       <router-view class="bg-[#ffffff] w-full" />

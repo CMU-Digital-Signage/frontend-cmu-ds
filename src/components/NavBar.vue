@@ -710,7 +710,7 @@ const checkValidRoomNumber = () => {
         <InputText
           v-model="searchP"
           autofocus
-          class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-60 rounded-lg"
+          class="border text-[13px] font-normal shadow-[0_3px_8px_rgba(0,0,0,0.24)] border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-96 rounded-md"
           placeholder="Title of Poster"
         ></InputText>
         <button
