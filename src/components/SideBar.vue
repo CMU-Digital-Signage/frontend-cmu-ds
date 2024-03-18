@@ -230,10 +230,10 @@ const handleChangePassword = async () => {
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
           v-if="openSidebar"
-          class="upload-button mt-7 items-center justify-center bg-[#2b575c]"
+          class="upload-button mt-7 items-center justify-center bg-[#236c79]"
           @click="store.state.showUpload = true"
         >
-          <div class="flex items-center h-5 justify-between">
+          <div class="flex items-center h-5 justify-between ">
             <span class="text-[#ffffff] font-extrabold text-[16px]"
               >Upload File</span
             >
@@ -241,7 +241,7 @@ const handleChangePassword = async () => {
         </Button>
 
         <Button
-          class="text-[#282828] bg-[#4a9299] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
+          class="text-[#282828] bg-[#236c79] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
           v-else
           @click="store.state.showUpload = true"
           icon="pi pi-plus"
@@ -498,9 +498,11 @@ const handleChangePassword = async () => {
 
     <!-- <UserInfo /> -->
     <div
-      class="flex h-14 bg-[#ffffff] rounded-2xl w-[94%] ml-1 pl-2 pr-4 items-center"
-      :class="openSidebar ? 'justify-between' : 'justify-center'"
-      style="border: 1px solid #c2c2c2"
+      :class="
+        openSidebar
+          ? 'flex h-14 bg-[#ffffff] rounded-2xl w-[94%] ml-1 pl-2 pr-4 items-center justify-between border-[1px] border-[#c2c2c2] shadow-[0_3px_8px_rgba(0,0,0,0.24)]'
+          : 'justify-center border-none items-center mr-[8px]'
+      "
     >
       <div class="flex items-center">
         <div
@@ -804,22 +806,18 @@ Button {
 }
 
 .side-bar-open {
-  margin-top: 7px;
   width: 18rem;
-  border-radius: 20px;
-  height: 98%;
-  margin-left: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 30px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  height: 100%;
+  padding-bottom: 37px;
 }
 .side-bar-close {
-  margin-top: 7px;
   width: 90px;
-  border-radius: 20px;
-  height: 98%;
-  margin-left: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 30px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  height: 100%;
+  padding-bottom: 37px;
 }
 
 .p-inputtext.p-component.p-password-input {
@@ -920,21 +918,21 @@ Button {
   font-size: 14px;
   cursor: pointer;
   transition: box-shadow 0.3s;
-  box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.5);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .upload-button:hover {
   box-shadow: 0px 0px 10px 2px rgba(41, 128, 92, 0.5);
-  background-color: #065241;
+  background-color: #006a56;
 }
 
 .menu-ho-upload {
-  box-shadow: 0px 0px 4px 1px rgba(51, 131, 171, 0.3);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border: none;
 }
 
 .menu-ho-upload:hover {
   box-shadow: 0px 0px 10px 2px rgba(62, 136, 172, 0.5);
-  background-color: #4a9299;
+  background-color: #006a56;
 }
 </style>
