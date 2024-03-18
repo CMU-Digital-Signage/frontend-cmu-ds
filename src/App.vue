@@ -82,12 +82,12 @@ onUnmounted(() => {
 <template>
   <PopupUpload />
   <div
-    class="flex flex-row w-screen h-screen md:fixed"
+    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe]"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar class="bg-[#f7f7f7]" />
-    <div class="w-full h-full flex flex-col bg-[#ffffff]">
-      <NavBar class="bg-[#f8f8f8]" />
+    <SideBar class="bg-[#f0f0f0] " />
+    <div class="w-full h-full flex flex-col bg-[#fefefe]">
+      <NavBar class="bg-[#fefefe] " />
       <router-view class="bg-[#ffffff] w-full" />
     </div>
   </div>
@@ -168,9 +168,9 @@ Button:focus {
 
 .p-datatable-wrapper {
   border-color: #ffffff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   border-width: 1px;
-  border-radius: 10px;
+  border-radius: 26px;
 }
 .p-row-odd {
   background-color: #fafafa;

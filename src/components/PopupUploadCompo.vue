@@ -440,6 +440,9 @@ const nextStepUpload = () => {
       numImage.push(num);
     });
     maxImage.value = Math.min(...numImage);
+    if (maxImage.value > 50) {
+      maxImage.value = 50;
+    }
     if (!editPosterType.value.title.length) store.state.formPoster.image = [];
     currentState.value = 1;
   }

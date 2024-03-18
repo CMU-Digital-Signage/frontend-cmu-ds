@@ -356,7 +356,7 @@ const handleChangePassword = async () => {
           </router-link>
           <router-link to="/emergency">
             <Button
-              class="bg-none space-x-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 menu-ho-emergency rounded-lg"
+              class="bg-none space-x-2 -mb-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 menu-ho-emergency rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -384,46 +384,20 @@ const handleChangePassword = async () => {
             >
             </Button>
           </router-link>
-          <div></div>
-          <div></div>
-          <div class="border-[1px]"></div>
-          <div></div>
-          <div></div>
-          <Button
-            class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
-            v-if="openSidebar"
-            link
-            @click="signOut()"
-          >
-            <i class="pi pi-sign-out"></i>
-            <span>Log out</span>
-          </Button>
-          <Button
-            class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-            :class="{
-              'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/deviceManage',
-            }"
-            v-else
-            icon="pi pi-sign-out"
-            link
-            @click="signOut()"
-          >
-          </Button>
-          <div></div>
-          <div></div>
-          <div class="border-[1px]"></div>
         </ul>
-        
       </div>
 
       <!-- admin management-->
-      
+
       <div
         v-if="user?.isAdmin && $route.path !== '/searchfile'"
         :class="openSidebar == true ? '' : ' flex justify-center '"
       >
+        <div class="border-[1px] border-neutral-300" v-if="openSidebar"></div>
+        <div></div>
+        <div></div>
         <p
-          class="flex pb-1 font-semibold text-[14px] text-[#615F5F]"
+          class="flex pb-1 mt-4 font-semibold text-[14px] text-[#615F5F]"
           v-show="openSidebar"
         >
           Admin
@@ -434,7 +408,7 @@ const handleChangePassword = async () => {
         >
           <router-link to="/admin">
             <Button
-              class="bg-none space-x-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
+              class="bg-none space-x-2 -mb-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
               v-if="openSidebar"
               link
               :style="{
@@ -462,7 +436,30 @@ const handleChangePassword = async () => {
           </router-link>
         </ul>
       </div>
+      <div :class="openSidebar == true ? '' : ' flex justify-center '">
+        <div
+          v-if="$route.path !== '/searchfile' && openSidebar"
+          class="border-[1px] border-neutral-300"
+        ></div>
 
+        <Button
+          v-if="$route.path !== '/searchfile' && openSidebar"
+          class="bg-none w-full mt-4 space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+          link
+          @click="signOut()"
+        >
+          <i class="pi pi-sign-out"></i>
+          <span>Log out</span>
+        </Button>
+        <Button
+          class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+          v-if="$route.path !== '/searchfile' && !openSidebar"
+          icon="pi pi-sign-out"
+          link
+          @click="signOut()"
+        >
+        </Button>
+      </div>
       <!-- searchfile -->
       <div v-if="$route.path === '/searchfile'" class="pt-3">
         <div class="flex pb-3 font-semibold text-[14px] text-[#615F5F]">
@@ -808,9 +805,15 @@ Button {
 
 .side-bar-open {
   width: 18rem;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+ 
 }
 .side-bar-close {
   width: 90px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+
 }
 
 .p-inputtext.p-component.p-password-input {
