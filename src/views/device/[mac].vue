@@ -227,6 +227,10 @@ onUnmounted(() => {
           <p class="font-semibold">402</p>
         </div>
       </div>
+      <div class="bottomBlock  h-fit flex-col text-[42px] text-white">
+        <p>{{ dateFormatter(dateTime, 3) }}</p>
+        <p>{{ timeFormatter(dateTime) }}</p>
+      </div>
       <div
         v-if="weather"
         class="bottomBlock items-center justify-center py-3 flex-col"
@@ -277,10 +281,10 @@ onUnmounted(() => {
             }"
           >
             <div class="flex flex-col pt-5 pb-3">
-              <p class="text-[55px] font-semibold">
+              <p class="text-[55px] font-semibold -ml-3">
                 {{ weather?.current?.pollution?.aqius }}
               </p>
-              <p class="text-[26px] whitespace-nowrap -ml-4">US AQI</p>
+              <p class="text-[24px] whitespace-nowrap ml-2 ">US AQI</p>
             </div>
             <div
               class="pb-3 pt-2 text-2xl items-center flex flex-1 justify-center"
@@ -289,18 +293,15 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <div class="text-md font-medium text-white mr-3">
-          Last Update:
+        <div class="text-[14px] font-medium text-white mr-3">
+          Last update:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
           }}
           | IQAir
         </div>
       </div>
-      <div class="bottomBlock h-fit flex-col text-[40px] text-white">
-        <p>{{ dateFormatter(dateTime, 3) }}</p>
-        <p>{{ timeFormatter(dateTime) }}</p>
-      </div>
+      
     </div>
     <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
       <div
@@ -363,4 +364,5 @@ iframe {
   background-color: #10164b;
   justify-content: center;
 }
+
 </style>
