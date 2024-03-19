@@ -1,6 +1,6 @@
 import router from "@/router";
 import store from "@/store";
-import { Device, Display, Emergency, ImageCollection, Poster } from "@/types";
+import { Device, Display, Emergency, Poster } from "@/types";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { Ref } from "vue";
@@ -433,7 +433,6 @@ export const setEmerForm = (data: any) => {
 let currentIndexPoster = 0;
 let currentIndexImage = 0;
 let count = 0;
-let running = false;
 
 export const loopPoster = (
   posters: Poster[],
@@ -443,17 +442,12 @@ export const loopPoster = (
   let timeoutId: NodeJS.Timeout | null = null;
   let hasShownBotMapsThisRound = false;
 
-  if (running) {
-    currentIndexImage = currentIndexImage + 1;
-    if (currentIndexImage === posters[currentIndexPoster].image.length) {
-      currentIndexImage = 0;
-      currentIndexPoster = (currentIndexPoster + 1) % posters.length;
-    }
-  }
-
   let previousMinutes = -1;
 
   const updatePosterInterval = () => {
+    if (showBotMaps && store.state.posters) {
+      posters = store.state.posters;
+    }
     if (!posters.length && showBotMaps) {
       showBotMaps.value = true;
       return;
@@ -496,7 +490,6 @@ export const loopPoster = (
         currentPoster.image[currentIndexImage].image;
       store.state.currentImage.key =
         currentPoster.title + currentPoster.image[currentIndexImage].priority;
-      running = true;
 
       timeoutId = setTimeout(() => {
         currentIndexImage = currentIndexImage + 1;

@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { getPosterEachDevice } from "@/services";
-import { computed, onMounted, ref, watch, onUnmounted } from "vue";
+import { computed, onMounted, ref, watch, onUnmounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
@@ -23,6 +23,7 @@ import axios from "axios";
 const route = useRoute();
 const mac = route.params.mac as string;
 const roomCPE = ref("");
+const showEmer = ref(false);
 const showBotMaps = ref(false);
 const posters = computed(() => store.state.posters);
 const emerPoster = computed(() =>
@@ -38,6 +39,7 @@ let dateTimeInterval: any = null;
 const weather: any = ref();
 const iconWeather = ref({ condition: "", image: "" });
 const updateWeather = ref(new Date());
+const error = reactive({ status: 0, message: "" });
 
 const fetchWeather = async () => {
   const res = await axios.get("https://api.airvisual.com/v2/nearest_city", {
@@ -116,7 +118,7 @@ const aqiStatus = () => {
 };
 
 const fetchData = async () => {
-  const { ok, room, poster, message } = await getPosterEachDevice(mac);
+  const { ok, room, poster, message, status } = await getPosterEachDevice(mac);
   if (ok) {
     roomCPE.value = room;
     setFieldPoster(poster);
@@ -126,52 +128,46 @@ const fetchData = async () => {
       return 0;
     });
     store.state.posters = poster;
+  } else {
+    error.message = message;
+    error.status = status;
   }
 };
 
 onMounted(async () => {
-  fetchWeather();
-  await getActivateEmerPoster();
-  fetchData();
+  await fetchData();
   if (posters.value) {
-    stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
-  }
-  dateTimeInterval = setInterval(async () => {
-    dateTime.value = new Date();
-  }, 1000);
-  intervalEmer = setInterval(async () => {
+    fetchWeather();
     await getActivateEmerPoster();
-  }, 1000);
-  intervalWeather = setInterval(async () => {
-    await fetchWeather();
-  }, 1000 * 60 * 30); // fetch every 30 minutes
-  intervalPoster = setInterval(async () => {
-    await fetchData();
-  }, 1000 * 16); // fetch every 16 sec
+    stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
+
+    dateTimeInterval = setInterval(async () => {
+      dateTime.value = new Date();
+    }, 1000);
+    intervalEmer = setInterval(async () => {
+      await getActivateEmerPoster();
+    }, 1000);
+    intervalWeather = setInterval(async () => {
+      await fetchWeather();
+    }, 1000 * 60 * 30); // fetch every 30 minutes
+    intervalPoster = setInterval(async () => {
+      await fetchData();
+    }, 1000 * 16); // fetch every 16 sec
+  }
 });
 
 watch(emerPoster, () => {
   if (emerPoster.value) {
     if (stopLoop.value) stopLoop.value();
+    showEmer.value = true;
     showBotMaps.value = false;
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
-  } else if (posters.value) {
+  } else if (showEmer.value && posters.value) {
+    showEmer.value = false;
     stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
   }
 });
-
-watch(
-  () => store.state.posters,
-  () => {
-    if (posters.value) {
-      if (stopLoop.value) stopLoop.value();
-      showBotMaps.value = false;
-      stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
-    }
-  },
-  { deep: true }
-);
 
 onUnmounted(() => {
   if (stopLoop.value) stopLoop.value();
@@ -186,6 +182,14 @@ onUnmounted(() => {
 
 <template>
   <div
+    v-if="error.status"
+    class="font-sf-pro flex flex-col h-screen w-screen justify-center items-center"
+  >
+    <p class="text-6xl font-bold">{{ error.status }}</p>
+    <p class="text-xl">{{ error.message }}</p>
+  </div>
+  <div
+    v-else
     class="flex flex-row justify-between h-screen w-screen overflow-hidden"
     :class="{
       'bg-[#ff0000]': emerPoster?.incidentName === 'banner',
@@ -295,7 +299,7 @@ onUnmounted(() => {
               'bg-[#faa166]': aqiStatus() == 'Unhealthy (Sensitive Group)',
               'bg-[#fe5b5b]': aqiStatus() === 'Unhealthy',
               'bg-[#A97ABC]': aqiStatus() === 'Very Unhealthy',
-              'bg-[#966B78]': aqiStatus() === 'Hazardous', 
+              'bg-[#966B78]': aqiStatus() === 'Hazardous',
               'text-[#0C6515]': aqiStatus() === 'Good',
               'text-[#654E0C]': aqiStatus() === 'Moderate',
               'text-[#ffffff]':
@@ -309,7 +313,7 @@ onUnmounted(() => {
           >
             <div class="flex flex-col pt-5 pb-3">
               <p class="text-[26px] whitespace-nowrap -ml-4">AQI US</p>
-              <p class="text-[55px] font-semibold ">
+              <p class="text-[55px] font-semibold">
                 {{ weather?.current?.pollution?.aqius }}
               </p>
             </div>

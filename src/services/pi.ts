@@ -18,7 +18,7 @@ export async function getPosterEachDevice(mac: string) {
         message: "Cannot connect to API Server. Please try again later.",
       };
     }
-    return err.response.data;
+    return { ...err.response.data, status: err.response.status };
   }
 }
 
