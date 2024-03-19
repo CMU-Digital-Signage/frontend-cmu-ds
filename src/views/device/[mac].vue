@@ -196,43 +196,11 @@ onUnmounted(() => {
       'bg-black': emerPoster?.incidentName !== 'banner',
     }"
   >
-    <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
-      <div
-        class="rotateText flex justify-center items-center h-screen w-screen -ml-[40px]"
-      >
-        <TextPoster :text="emerPoster.emergencyImage" />
-      </div>
-    </div>
-    <div
-      v-else-if="showBotMaps && roomCPE"
-      class="flex flex-1 justify-center items-center"
-    >
-      <iframe
-        title="BOTMATS"
-        :src="`https://main--darling-frangipane-e360a0.netlify.app/${roomCPE.charAt(
-          0
-        )}`"
-      ></iframe>
-    </div>
-    <div v-else class="flex flex-1">
-      <transition v-if="image.image" name="fade" mode="out-in">
-        <img
-          v-if="image.image"
-          class="max-w-screen h-screen m-auto duration-500 transition-opacity"
-          alt="poster"
-          :key="image.key"
-          :src="image.image"
-        />
-      </transition>
-    </div>
     <div
       v-if="emerPoster?.incidentName !== 'banner'"
       class="flex h-screen flex-col w-[10vw] bg-[#10164b] text-black"
     >
-      <div
-        v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
-        class="bottomBlock gap-3"
-      >
+      <div v-if="roomCPE.charAt(0) === '4'" class="bottomBlock gap-3">
         <div
           class="flex bg-[#10164b] text-yellow-400 text-[48px] justify-center"
         >
@@ -246,10 +214,7 @@ onUnmounted(() => {
           />
         </div>
       </div>
-      <div
-        v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
-        class="bottomBlock gap-3"
-      >
+      <div v-if="roomCPE.charAt(0) === '4'" class="bottomBlock gap-3">
         <div class="bg-[#10164b] justify-center items-center">
           <img
             class="w-24 h-24"
@@ -312,10 +277,10 @@ onUnmounted(() => {
             }"
           >
             <div class="flex flex-col pt-5 pb-3">
-              <p class="text-[26px] whitespace-nowrap -ml-4">AQI US</p>
               <p class="text-[55px] font-semibold">
                 {{ weather?.current?.pollution?.aqius }}
               </p>
+              <p class="text-[26px] whitespace-nowrap -ml-4">US AQI</p>
             </div>
             <div
               class="pb-3 pt-2 text-2xl items-center flex flex-1 justify-center"
@@ -333,9 +298,38 @@ onUnmounted(() => {
         </div>
       </div>
       <div class="bottomBlock h-fit flex-col text-[40px] text-white">
-        <p>{{ timeFormatter(dateTime) }}</p>
         <p>{{ dateFormatter(dateTime, 3) }}</p>
+        <p>{{ timeFormatter(dateTime) }}</p>
       </div>
+    </div>
+    <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
+      <div
+        class="rotateText flex justify-center items-center h-screen w-screen -ml-[40px]"
+      >
+        <TextPoster :text="emerPoster.emergencyImage" />
+      </div>
+    </div>
+    <div
+      v-else-if="showBotMaps && roomCPE"
+      class="flex flex-1 justify-center items-center"
+    >
+      <iframe
+        title="BOTMATS"
+        :src="`https://main--darling-frangipane-e360a0.netlify.app/${roomCPE.charAt(
+          0
+        )}`"
+      ></iframe>
+    </div>
+    <div v-else class="flex flex-1">
+      <transition v-if="image.image" name="fade" mode="out-in">
+        <img
+          v-if="image.image"
+          class="max-w-screen h-screen m-auto duration-500 transition-opacity"
+          alt="poster"
+          :key="image.key"
+          :src="image.image"
+        />
+      </transition>
     </div>
   </div>
 </template>
