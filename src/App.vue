@@ -82,13 +82,13 @@ onUnmounted(() => {
 <template>
   <PopupUpload />
   <div
-    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe]"
+    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig"
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-[#f3f3f3] " />
     <div class="w-full h-full flex flex-col bg-[#fefefe]">
       <NavBar class="bg-[#fefefe] " />
-      <router-view class="bg-[#ffffff] w-full overflow-y-scroll overflow-scrolling-touch" />
+      <router-view class="bg-[#ffffff]" />
     </div>
   </div>
   <div v-else class="flex flex-col w-screen h-full bg-[#ffffff] md:fixed">
@@ -128,6 +128,7 @@ onUnmounted(() => {
 
 .rectangle {
   overflow-y: auto;
+  height: 100svh;
 }
 
 router-view {
@@ -178,6 +179,10 @@ Button:focus {
 
 .p-dialog {
   border-radius: 40px;
+}
+
+.heig{
+  height: 100svh;
 }
 
 .p-tag {
