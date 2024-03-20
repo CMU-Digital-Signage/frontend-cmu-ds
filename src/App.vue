@@ -88,7 +88,7 @@ onUnmounted(() => {
     <SideBar class="bg-[#f3f3f3] " />
     <div class="w-full h-full flex flex-col bg-[#fefefe]">
       <NavBar class="bg-[#fefefe] " />
-      <router-view class="bg-[#ffffff] w-full" />
+      <router-view class="bg-[#ffffff] w-full overflow-y-scroll overflow-scrolling-touch" />
     </div>
   </div>
   <div v-else class="flex flex-col w-screen h-full bg-[#ffffff] md:fixed">
