@@ -85,6 +85,13 @@ const items = ref([
       showDialog();
     },
   },
+  {
+    label: "Log Out",
+    icon: "pi pi-sign-out",
+    command: () => {
+      signOut();
+    },
+  },
 ]);
 
 const resetChangeForm = () => {
@@ -164,6 +171,209 @@ const handleChangePassword = async () => {
     class="flex flex-col justify-between h-screen side-bar z-10 sticky font-sf-pro"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
+    <!-- //dialog reset password -->
+    <Dialog
+      v-model:visible="dialogVisible"
+      class="h-auto w-[550px]"
+      modal
+      :close-on-escape="false"
+      :draggable="false"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+        },
+        mask: {
+          style: 'backdrop-filter: blur(2px)',
+        },
+      }"
+    >
+      <template #header>
+        <div class="header-popup">Change Emergency Password</div>
+      </template>
+
+      <p v-if="user" class="text-[#0067A0] text-lg mb-2 font-semibold">
+        {{ user.firstName }} {{ user.lastName }}
+      </p>
+      <div class="flex flex-col gap-2 w-full">
+        <FloatLabel class="mt-6">
+          <Password
+            id="currentPassword"
+            v-model="oldPassword"
+            input-class="w-screen rounded-[12px] border-2"
+            class="w-full"
+            :feedback="false"
+            toggle-mask
+          />
+          <label for="currentPassword">Current Password</label>
+        </FloatLabel>
+        <FloatLabel class="mt-6">
+          <Password
+            id="newPassword"
+            v-model="password"
+            input-class="w-screen rounded-[12px] border-2"
+            class="w-full"
+            :feedback="false"
+            toggle-mask
+          />
+          <label for="newPassword">New Password</label>
+        </FloatLabel>
+        <FloatLabel class="mt-6">
+          <Password
+            id="reTypeNewPassword"
+            input-class="w-screen rounded-[12px] border-2"
+            class="w-full"
+            v-model="cfPassword"
+            :feedback="false"
+            toggle-mask
+          />
+          <label for="reTypeNewPassword">Re-type new password</label>
+        </FloatLabel>
+        <Button
+          text
+          link
+          @click="showSecondDialog"
+          class="-ml-3 w-fit underline font-semibold text-[#1b7be8] bg-none"
+          >Forget your password?</Button
+        >
+        <Button
+          label="Change Password"
+          text
+          :class="'primaryButton'"
+          @click="handleChangePassword"
+        ></Button></div
+    ></Dialog>
+
+    <Dialog
+      modal
+      v-model:visible="secondDialogVisible"
+      :draggable="false"
+      :close-on-escape="false"
+      class="h-auto w-[550px]"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+        },
+        mask: {
+          style: 'backdrop-filter: blur(2px)',
+        },
+      }"
+      ><template #header>
+        <div class="header-popup">Forget Emergency Password</div>
+      </template>
+      <p v-if="user" class="mb-6">
+        {{ user.firstName }} {{ user.lastName }} · pixelParade
+      </p>
+      <p v-if="user">
+        We'll send a password reset confirmation to
+        <span class="text-[#1b7be8] font-extrabold underline">{{
+          user.email
+        }}</span>
+        Check your inbox (including Spam and Junk) to reset your emergency
+        password.
+      </p>
+      <Button
+        label="Send Email"
+        :loading="loading"
+        text
+        @click="sendEmailDialog"
+        :class="'primaryButton'"
+      ></Button>
+    </Dialog>
+
+    <!-- //dialog Set Password -->
+    <Dialog
+      v-model:visible="dialogSetPassword"
+      class="w-[550px]"
+      modal
+      :close-on-escape="false"
+      :draggable="false"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+        },
+        mask: {
+          style: 'backdrop-filter: blur(2px)',
+        },
+      }"
+      :closable="false"
+    >
+      <template #header>
+        <div class="header-popup">Set Your Emergency Password</div>
+      </template>
+      <div class="mb-6 gap-7 bg-[#C7EBFF] rounded-lg h-fit p-4">
+        <div class="inline-flex">
+          <i class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"></i>
+          <p v-if="user" class="text-xl mb-2 font-bold text-[#0067A0]">
+            Hello! {{ user.firstName }} {{ user.lastName }}
+          </p>
+        </div>
+        <p class="ml-9">
+          pixelParade provides an Emergency Activation feature, as shown on the
+          login page, to display emergency posters on all screens.
+          <span class="font-bold text-black">
+            Before using this website, please set your Emergency Password. This
+            password is used to activate the emergency poster during an
+            incident.</span
+          >
+        </p>
+      </div>
+
+      <label class="text-[17px] w- font-semibold pt-2 w-32"> </label>
+      <div class="flex flex-col gap-2 w-full">
+        <FloatLabel class="mt-4">
+          <Password
+            id="Password"
+            v-model="password"
+            input-class="w-screen rounded-[12px] border-2"
+            class="w-full"
+            :feedback="false"
+            toggle-mask
+          />
+          <label for="newPassword">Password</label>
+        </FloatLabel>
+        <FloatLabel class="mt-6">
+          <Password
+            id="confirmPassword"
+            input-class="w-screen rounded-[12px] border-2"
+            class="w-full"
+            v-model="cfPassword"
+            :feedback="false"
+            toggle-mask
+          />
+          <label for="reTypeNewPassword">Confirm password</label>
+        </FloatLabel>
+        <div class="inline-flex">
+          <Button
+            label="Later, Log Out"
+            text
+            @click="signOut()"
+            :class="'secondaryButton1'"
+            type="submit"
+          ></Button>
+          <Button
+            label="Confirm"
+            text
+            @click="checkMatchPassword"
+            :class="'primaryButton1'"
+            type="submit"
+          ></Button>
+        </div></div
+    ></Dialog>
     <div class="space-y-5" :class="{ 'p-4': openSidebar }">
       <div
         class="flex justify-between items-start"
@@ -233,7 +443,7 @@ const handleChangePassword = async () => {
           class="upload-button mt-7 items-center justify-center bg-[#236c79]"
           @click="store.state.showUpload = true"
         >
-          <div class="flex items-center h-5 justify-between ">
+          <div class="flex items-center h-5 justify-between">
             <span class="text-[#ffffff] font-extrabold text-[16px]"
               >Upload File</span
             >
@@ -436,30 +646,6 @@ const handleChangePassword = async () => {
           </router-link>
         </ul>
       </div>
-      <div :class="openSidebar == true ? '' : ' flex justify-center '">
-        <div
-          v-if="$route.path !== '/searchfile' && openSidebar"
-          class="border-[1px] border-neutral-300"
-        ></div>
-
-        <Button
-          v-if="$route.path !== '/searchfile' && openSidebar"
-          class="bg-none w-full mt-4 space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
-          link
-          @click="signOut()"
-        >
-          <i class="pi pi-sign-out"></i>
-          <span>Log out</span>
-        </Button>
-        <Button
-          class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-          v-if="$route.path !== '/searchfile' && !openSidebar"
-          icon="pi pi-sign-out"
-          link
-          @click="signOut()"
-        >
-        </Button>
-      </div>
       <!-- searchfile -->
       <div v-if="$route.path === '/searchfile'" class="pt-3">
         <div class="flex pb-3 font-semibold text-[14px] text-[#615F5F]">
@@ -497,273 +683,62 @@ const handleChangePassword = async () => {
     </div>
 
     <!-- <UserInfo /> -->
-    <div
+    <Button
+      @click="toggle"
+      link
+      aria-haspopup="true"
+      aria-controls="overlay_menu"
       :class="
         openSidebar
-          ? 'flex h-14 fixe left-0 bottom-0 bg-[#ffffff] rounded-2xl w-[94%] ml-1 pl-2 pr-4 items-center justify-between border-[1px] border-[#c2c2c2] shadow-[0_3px_8px_rgba(0,0,0,0.24)]'
-          : 'justify-center border-none items-center mr-[8px]'
+          ? 'flex h-14 fixe left-0 bottom-0  rounded-2xl w-[94%] menu-ho3 ml-1 pl-2 pr-4 items-center justify-between border-[1px]  border-[#c2c2c2] '
+          : 'text-[#282828]   ml-5 rounded-full h-10 w-10 flex items-center justify-center hover:bg-slate-300'
       "
     >
+      <Menu
+        ref="menu"
+        id="overlay_menu"
+        :model="items"
+        :popup="true"
+        class="ml-2 rounded-2xl text-sm"
+      />
       <div class="flex items-center">
-        <div
-          class="flex flex-row gap-2 items-center fixed"
-          v-show="openSidebar"
-        >
+        <div class="flex flex-row gap-2 items-center fixed">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="38"
             height="38"
             viewBox="0 0 39 39"
             fill="none"
+            :style="{
+              transform: openSidebar ? 'translateX(3px)' : 'translateX(-18px)',
+            }"
           >
             <path
               d="M10.0685 28.4131C11.4498 27.4186 12.9155 26.6327 14.4658 26.0553C16.0149 25.4768 17.693 25.1875 19.5 25.1875C21.3059 25.1875 22.984 25.4768 24.5342 26.0553C26.0834 26.6327 27.5492 27.4181 28.9315 28.4115C30.004 27.3022 30.8669 25.9913 31.5201 24.479C32.1734 22.9645 32.5 21.3048 32.5 19.5C32.5 15.8979 31.2341 12.8305 28.7024 10.2976C26.1706 7.76479 23.1032 6.49892 19.5 6.5C15.8979 6.5 12.8305 7.76642 10.2976 10.2992C7.76479 12.8321 6.49892 15.899 6.5 19.5C6.5 21.3059 6.82663 22.965 7.47988 24.4774C8.13313 25.9908 8.996 27.3027 10.0685 28.4131ZM19.5016 20.3125C18.1323 20.3125 16.9769 19.8423 16.0355 18.902C15.0952 17.9627 14.625 16.8085 14.625 15.4391C14.625 14.0698 15.0952 12.9144 16.0355 11.973C16.9748 11.0327 18.129 10.5625 19.4984 10.5625C20.8677 10.5625 22.0231 11.0327 22.9645 11.973C23.9048 12.9123 24.375 14.0665 24.375 15.4359C24.375 16.8052 23.9048 17.9606 22.9645 18.902C22.0252 19.8423 20.871 20.3125 19.5016 20.3125ZM19.5 34.125C17.4601 34.125 15.5507 33.7453 13.7719 32.9859C11.993 32.2275 10.445 31.1897 9.12763 29.8724C7.81138 28.555 6.77354 27.007 6.01412 25.2281C5.25471 23.4493 4.875 21.5399 4.875 19.5C4.875 17.4601 5.25471 15.5507 6.01412 13.7719C6.77246 11.993 7.81029 10.445 9.12763 9.12763C10.445 7.81138 11.993 6.77354 13.7719 6.01412C15.5507 5.25471 17.4601 4.875 19.5 4.875C21.5399 4.875 23.4493 5.25471 25.2281 6.01412C27.007 6.77246 28.555 7.81029 29.8724 9.12763C31.1886 10.445 32.2265 11.993 32.9859 13.7719C33.7453 15.5507 34.125 17.4601 34.125 19.5C34.125 21.5399 33.7453 23.4493 32.9859 25.2281C32.2275 27.007 31.1897 28.555 29.8724 29.8724C28.555 31.1886 27.007 32.2265 25.2281 32.9859C23.4493 33.7453 21.5399 34.125 19.5 34.125ZM19.5 32.5C20.9982 32.5 22.4721 32.2378 23.9216 31.7135C25.3722 31.1903 26.6256 30.4731 27.6819 29.562C26.6256 28.7148 25.4036 28.0448 24.0159 27.5519C22.6292 27.059 21.1239 26.8125 19.5 26.8125C17.8772 26.8125 16.367 27.0535 14.9695 27.5356C13.572 28.0177 12.3549 28.6932 11.3181 29.562C12.3744 30.472 13.6278 31.1892 15.0784 31.7135C16.5279 32.2378 18.0018 32.5 19.5 32.5ZM19.5 18.6875C20.4122 18.6875 21.1819 18.3739 21.8091 17.7466C22.4364 17.1194 22.75 16.3497 22.75 15.4375C22.75 14.5253 22.4364 13.7556 21.8091 13.1284C21.1819 12.5011 20.4122 12.1875 19.5 12.1875C18.5878 12.1875 17.8181 12.5011 17.1909 13.1284C16.5636 13.7556 16.25 14.5253 16.25 15.4375C16.25 16.3497 16.5636 17.1194 17.1909 17.7466C17.8181 18.3739 18.5878 18.6875 19.5 18.6875Z"
               fill="black"
             />
           </svg>
-          <div
-            class="flex flex-col items-start font-normal text-[13px] left-14"
-          >
-            <p v-if="user" class="font-bold">
-              {{ user.firstName }}
-              {{ (user?.lastName || "").charAt(0) }}.
-            </p>
-            <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
-              <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
-            </div>
-            <div class="text-[#2b8a85] text-[13px] font-700">
-              <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">
-                Instructor
+          <div v-show="openSidebar">
+            <div
+              class="flex flex-col items-start font-normal text-[13px] left-14"
+            >
+              <p v-if="user" class="font-bold text-black ">
+                {{ user.firstName }}
+                {{ (user?.lastName || "").charAt(0) }}.
               </p>
+              <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
+                <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
+              </div>
+              <div class="text-[#2b8a85] text-[13px] font-700">
+                <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">
+                  Instructor
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="flex justify-center items-center">
-        <Button
-          text
-          @click="toggle"
-          aria-haspopup="true"
-          aria-controls="overlay_menu"
-          icon="pi pi-angle-up"
-          :style="{
-            transform: openSidebar ? 'translateX(-10px)' : 'translateX(3px)',
-          }"
-          :class="
-            openSidebar
-              ? '  rounded-full translateX(-3px) w-10'
-              : ' rounded-full  translateX(-3px) w-10'
-          "
-        />
-        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
-
-        <!-- //dialog reset password -->
-        <Dialog
-          v-model:visible="dialogVisible"
-          class="h-auto w-[550px]"
-          modal
-          :close-on-escape="false"
-          :draggable="false"
-          :pt="{
-            content: {
-              style:
-                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
-            },
-            header: {
-              style:
-                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
-            },
-            mask: {
-              style: 'backdrop-filter: blur(2px)',
-            },
-          }"
-        >
-          <template #header>
-            <div class="header-popup">Change Emergency Password</div>
-          </template>
-
-          <p v-if="user" class="text-[#0067A0] text-lg mb-2 font-semibold">
-            {{ user.firstName }} {{ user.lastName }}
-          </p>
-          <div class="flex flex-col gap-2 w-full">
-            <FloatLabel class="mt-6">
-              <Password
-                id="currentPassword"
-                v-model="oldPassword"
-                input-class="w-screen rounded-[12px] border-2"
-                class="w-full"
-                :feedback="false"
-                toggle-mask
-              />
-              <label for="currentPassword">Current Password</label>
-            </FloatLabel>
-            <FloatLabel class="mt-6">
-              <Password
-                id="newPassword"
-                v-model="password"
-                input-class="w-screen rounded-[12px] border-2"
-                class="w-full"
-                :feedback="false"
-                toggle-mask
-              />
-              <label for="newPassword">New Password</label>
-            </FloatLabel>
-            <FloatLabel class="mt-6">
-              <Password
-                id="reTypeNewPassword"
-                input-class="w-screen rounded-[12px] border-2"
-                class="w-full"
-                v-model="cfPassword"
-                :feedback="false"
-                toggle-mask
-              />
-              <label for="reTypeNewPassword">Re-type new password</label>
-            </FloatLabel>
-            <Button
-              text
-              link
-              @click="showSecondDialog"
-              class="-ml-3 w-fit underline font-semibold text-[#1b7be8] bg-none"
-              >Forget your password?</Button
-            >
-            <Button
-              label="Change Password"
-              text
-              :class="'primaryButton'"
-              @click="handleChangePassword"
-            ></Button></div
-        ></Dialog>
-
-        <Dialog
-          modal
-          v-model:visible="secondDialogVisible"
-          :draggable="false"
-          :close-on-escape="false"
-          class="h-auto w-[550px]"
-          :pt="{
-            content: {
-              style:
-                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
-            },
-            header: {
-              style:
-                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
-            },
-            mask: {
-              style: 'backdrop-filter: blur(2px)',
-            },
-          }"
-          ><template #header>
-            <div class="header-popup">Forget Emergency Password</div>
-          </template>
-          <p v-if="user" class="mb-6">
-            {{ user.firstName }} {{ user.lastName }} · pixelParade
-          </p>
-          <p v-if="user">
-            We'll send a password reset confirmation to
-            <span class="text-[#1b7be8] font-extrabold underline">{{
-              user.email
-            }}</span>
-            Check your inbox (including Spam and Junk) to reset your emergency
-            password.
-          </p>
-          <Button
-            label="Send Email"
-            :loading="loading"
-            text
-            @click="sendEmailDialog"
-            :class="'primaryButton'"
-          ></Button>
-        </Dialog>
-
-        <!-- //dialog Set Password -->
-        <Dialog
-          v-model:visible="dialogSetPassword"
-          class="w-[550px]"
-          modal
-          :close-on-escape="false"
-          :draggable="false"
-          :pt="{
-            content: {
-              style:
-                'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
-            },
-            header: {
-              style:
-                'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
-            },
-            mask: {
-              style: 'backdrop-filter: blur(2px)',
-            },
-          }"
-          :closable="false"
-        >
-          <template #header>
-            <div class="header-popup">Set Your Emergency Password</div>
-          </template>
-          <div class="mb-6 gap-7 bg-[#C7EBFF] rounded-lg h-fit p-4">
-            <div class="inline-flex">
-              <i
-                class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"
-              ></i>
-              <p v-if="user" class="text-xl mb-2 font-bold text-[#0067A0]">
-                Hello! {{ user.firstName }} {{ user.lastName }}
-              </p>
-            </div>
-            <p class="ml-9">
-              pixelParade provides an Emergency Activation feature, as shown on
-              the login page, to display emergency posters on all screens.
-              <span class="font-bold text-black">
-                Before using this website, please set your Emergency Password.
-                This password is used to activate the emergency poster during an
-                incident.</span
-              >
-            </p>
-          </div>
-
-          <label class="text-[17px] w- font-semibold pt-2 w-32"> </label>
-          <div class="flex flex-col gap-2 w-full">
-            <FloatLabel class="mt-4">
-              <Password
-                id="Password"
-                v-model="password"
-                input-class="w-screen rounded-[12px] border-2"
-                class="w-full"
-                :feedback="false"
-                toggle-mask
-              />
-              <label for="newPassword">Password</label>
-            </FloatLabel>
-            <FloatLabel class="mt-6">
-              <Password
-                id="confirmPassword"
-                input-class="w-screen rounded-[12px] border-2"
-                class="w-full"
-                v-model="cfPassword"
-                :feedback="false"
-                toggle-mask
-              />
-              <label for="reTypeNewPassword">Confirm password</label>
-            </FloatLabel>
-            <div class="inline-flex">
-              <Button
-                label="Later, Log Out"
-                text
-                @click="signOut()"
-                :class="'secondaryButton1'"
-                type="submit"
-              ></Button>
-              <Button
-                label="Confirm"
-                text
-                @click="checkMatchPassword"
-                :class="'primaryButton1'"
-                type="submit"
-              ></Button>
-            </div></div
-        ></Dialog>
-      </div>
-    </div>
+    </Button>
   </div>
 </template>
 
@@ -777,6 +752,9 @@ Button {
   color: #282828;
 }
 
+.menu-ho3:hover {
+  background-color: #cfcfcf58;
+}
 .menu-ho-emergency:hover {
   background-color: #fbcfcf;
 }
