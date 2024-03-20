@@ -93,7 +93,7 @@ export const month = [
   "Dec",
 ];
 
-export const dayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat"];
+export const dayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const dateFormatter = (
   date: Date | null | undefined,
