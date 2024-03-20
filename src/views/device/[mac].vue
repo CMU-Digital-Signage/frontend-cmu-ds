@@ -51,58 +51,6 @@ const fetchWeather = async () => {
   });
   updateWeather.value = new Date();
   weather.value = res.data.data;
-  const weatherValue = weather.value.current.weather.ic;
-  if (weatherValue === "01d") {
-    iconWeather.value = {
-      condition: "Clear",
-      image: require("../../assets/images/clearDay.png"),
-    };
-  } else if (weatherValue === "01n") {
-    iconWeather.value = {
-      condition: "Clear",
-      image: require("../../assets/images/clearNight.jpg"),
-    };
-  } else if (weatherValue === "02d") {
-    iconWeather.value = {
-      condition: "Mostly Clear",
-      image: require("../../assets/images/clearDay.png"),
-    };
-  } else if (weatherValue === "02n") {
-    iconWeather.value = {
-      condition: "Mostly Clear",
-      image: require("../../assets/images/clearNight.jpg"),
-    };
-  } else if (weatherValue === "03d") {
-    iconWeather.value = {
-      condition: "Partly Cloudy",
-      image: require("../../assets/images/partlyCloudy.png"),
-    };
-  } else if (weatherValue === "09d") {
-    iconWeather.value = {
-      condition: "Drizzle",
-      image: require("../../assets/images/drizzle.png"),
-    };
-  } else if (weatherValue === "10d" || weatherValue === "10n") {
-    iconWeather.value = {
-      condition: "Rain",
-      image: require("../../assets/images/rain.png"),
-    };
-  } else if (weatherValue === "11d" || weatherValue === "11n") {
-    iconWeather.value = {
-      condition: "Thunderstorm",
-      image: require("../../assets/images/thunderstorm.png"),
-    };
-  } else if (weatherValue === "13d") {
-    iconWeather.value = {
-      condition: "Snow",
-      image: require("../../assets/images/snow.png"),
-    };
-  } else {
-    iconWeather.value = {
-      condition: "Fog",
-      image: require("../../assets/images/fog.png"),
-    };
-  }
 };
 
 const aqiStatus = () => {
@@ -140,7 +88,6 @@ onMounted(async () => {
     fetchWeather();
     await getActivateEmerPoster();
     stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
-
     dateTimeInterval = setInterval(async () => {
       dateTime.value = new Date();
     }, 1000);
@@ -198,42 +145,46 @@ onUnmounted(() => {
   >
     <div
       v-if="emerPoster?.incidentName !== 'banner'"
-      class="flex h-screen flex-col w-[10vw] bg-[#10164b] text-black"
+      class="flex h-screen flex-col w-[11vw] items-center py-6 bg-[#10164b] text-black"
     >
-      <div v-if="roomCPE.charAt(0) === '4'" class="bottomBlock gap-3">
+      <div class="flex flex-col gap-6   justify-center items-center rotate-0 " >
         <div
-          class="flex bg-[#10164b] text-yellow-400 text-[48px] justify-center"
+          v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
+          class="bottomBlock gap-2"
         >
-          <p class="font-semibold">41X</p>
+          <div
+            class="flex bg-[#10164b] text-yellow-400 text-[48px] justify-center"
+          >
+            <p class="font-semibold">41X</p>
+          </div>
+          <div class="flex bg-[#10164b] rotate-90 items-center">
+            <img
+              class="w-[88px] h-[88px]"
+              alt="arrow"
+              src="../../assets/images/arrow.png"
+            />
+          </div>
         </div>
-        <div class="flex bg-[#10164b] rotate-90 items-center">
-          <img
-            class="w-24 h-24"
-            alt="arrow"
-            src="../../assets/images/arrow.png"
-          />
+        <div
+          v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
+          class="bottomBlock gap-2"
+        >
+          <div class="bg-[#10164b] justify-center items-center">
+            <img
+              class="w-[88px] h-[88px]"
+              alt="arrow"
+              src="../../assets/images/arrow.png"
+            />
+          </div>
+          <div class="flex flex-col text-yellow-400 text-[52px] justify-center">
+            <p class="font-semibold">401</p>
+            <p class="font-semibold">402</p>
+          </div>
         </div>
-      </div>
-      <div v-if="roomCPE.charAt(0) === '4'" class="bottomBlock gap-3">
-        <div class="bg-[#10164b] justify-center items-center">
-          <img
-            class="w-24 h-24"
-            alt="arrow"
-            src="../../assets/images/arrow.png"
-          />
-        </div>
-        <div class="flex flex-col text-yellow-400 text-[52px] justify-center">
-          <p class="font-semibold">401</p>
-          <p class="font-semibold">402</p>
-        </div>
-      </div>
-      <div class="bottomBlock  h-fit flex-col text-[42px] text-white">
-        <p>{{ dateFormatter(dateTime, 3) }}</p>
-        <p>{{ timeFormatter(dateTime) }}</p>
       </div>
       <div
         v-if="weather"
-        class="bottomBlock items-center justify-center py-3 flex-col"
+        class="bottomBlock items-center justify-center py-3 mt-10 flex-col"
       >
         <div class="flex flex-row h-full">
           <div
@@ -241,16 +192,15 @@ onUnmounted(() => {
             :class="{
               'bg-[#228b25]': aqiStatus() === 'Good',
               'bg-[#F3BF10]': aqiStatus() === 'Moderate',
-              'bg-[#ff9e5d]': aqiStatus() == 'Unhealthy (Sensitive Group)',
+              'bg-[#F89049]': aqiStatus() == 'Unhealthy (Sensitive Group)',
               'bg-[#EE4547]': aqiStatus() === 'Unhealthy',
               'bg-[#8A609D]': aqiStatus() === 'Very Unhealthy',
               'bg-[#814C63]': aqiStatus() === 'Hazardous',
               'text-[#0C6515]': aqiStatus() === 'Good',
               'text-[#654E0C]': aqiStatus() === 'Moderate',
+              'text-[#571F00]': aqiStatus() === 'Unhealthy (Sensitive Group)',
               'text-[#ffffff]':
                 aqiStatus() === 'Good' ||
-                aqiStatus() === 'Moderate' ||
-                aqiStatus() === 'Unhealthy (Sensitive Group)' ||
                 aqiStatus() === 'Unhealthy' ||
                 aqiStatus() === 'Very Unhealthy' ||
                 aqiStatus() === 'Hazardous',
@@ -271,10 +221,9 @@ onUnmounted(() => {
               'bg-[#966B78]': aqiStatus() === 'Hazardous',
               'text-[#0C6515]': aqiStatus() === 'Good',
               'text-[#654E0C]': aqiStatus() === 'Moderate',
+              'text-[#571F00]': aqiStatus() === 'Unhealthy (Sensitive Group)',
               'text-[#ffffff]':
                 aqiStatus() === 'Good' ||
-                aqiStatus() === 'Moderate' ||
-                aqiStatus() === 'Unhealthy (Sensitive Group)' ||
                 aqiStatus() === 'Unhealthy' ||
                 aqiStatus() === 'Very Unhealthy' ||
                 aqiStatus() === 'Hazardous',
@@ -284,10 +233,10 @@ onUnmounted(() => {
               <p class="text-[55px] font-semibold -ml-3">
                 {{ weather?.current?.pollution?.aqius }}
               </p>
-              <p class="text-[24px] whitespace-nowrap ml-2 ">US AQI</p>
+              <p class="text-[24px] whitespace-nowrap ml-2">US AQI</p>
             </div>
             <div
-              class="pb-3 pt-2 text-2xl items-center flex flex-1 justify-center"
+              class="pb-5 pt-4 text-2xl items-center font-medium flex flex-1 justify-center"
             >
               {{ aqiStatus() }}
             </div>
@@ -301,7 +250,10 @@ onUnmounted(() => {
           | IQAir
         </div>
       </div>
-      
+      <div class="bottomBlockGroup h-fit flex-col  font-medium text-[40px] text-white">
+        <p class="text-[68px]" >{{ timeFormatter(dateTime) }}</p>
+        <p>{{ dateFormatter(dateTime, 3) }}</p>
+      </div>
     </div>
     <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
       <div
@@ -365,4 +317,13 @@ iframe {
   justify-content: center;
 }
 
+.bottomBlockGroup {
+  writing-mode: vertical-rl;
+  transform: scale(-1, -1);
+  flex: 1 1;
+  display: flex;
+  align-items: start;
+  background-color: #10164b;
+  justify-content: start;
+}
 </style>
