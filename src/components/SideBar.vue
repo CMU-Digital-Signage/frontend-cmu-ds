@@ -500,7 +500,7 @@ const handleChangePassword = async () => {
     <div
       :class="
         openSidebar
-          ? 'flex h-14 bg-[#ffffff] rounded-2xl w-[94%] ml-1 pl-2 pr-4 items-center justify-between border-[1px] border-[#c2c2c2] shadow-[0_3px_8px_rgba(0,0,0,0.24)]'
+          ? 'flex h-14 fixe left-0 bottom-0 bg-[#ffffff] rounded-2xl w-[94%] ml-1 pl-2 pr-4 items-center justify-between border-[1px] border-[#c2c2c2] shadow-[0_3px_8px_rgba(0,0,0,0.24)]'
           : 'justify-center border-none items-center mr-[8px]'
       "
     >
