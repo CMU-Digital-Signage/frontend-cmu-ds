@@ -481,6 +481,8 @@ const del = async (posterId: string) => {
   overflow: hidden;
   padding-top: 0.75rem;
   padding-bottom: 2rem;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 .header-popup {
@@ -536,8 +538,7 @@ const del = async (posterId: string) => {
   border-radius: 20px;
   overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  margin-top: -4px;
-  margin-bottom: 8px;
+  margin-top: -10px;
 }
 .fc .fc-popover {
   z-index: 10;
