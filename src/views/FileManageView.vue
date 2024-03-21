@@ -76,7 +76,7 @@ onUnmounted(() => {
 
 <style scoped>
 .rectangle {
-  width: 97.5%;
+  width: 98%;
   height: 100%;
   margin-left: 1rem;
   margin-bottom: 2rem;
