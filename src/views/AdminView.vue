@@ -48,7 +48,7 @@ watch([admin, devices], () => {
 <style scoped>
 /* Add styles for the rectangle */
 .rectangle {
-  width: 97.5%;
+  width: 98%;
   height: 100%;
   margin-left: 1rem;
   
