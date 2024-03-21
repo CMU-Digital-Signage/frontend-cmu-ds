@@ -690,8 +690,8 @@ const handleChangePassword = async () => {
       aria-controls="overlay_menu"
       :class="
         openSidebar
-          ? 'flex h-14 fixe left-0 bottom-0  rounded-2xl w-[94%] menu-ho3 ml-1 pl-2 pr-4 items-center justify-between border-[1px]  border-[#c2c2c2] '
-          : 'text-[#282828]   ml-5 rounded-full h-10 w-10 flex items-center justify-center hover:bg-slate-300'
+          ? 'flex h-14 left-0 -bottom-5 rounded-2xl w-[94%] hover:bg-gray-300 ml-1 pl-2 pr-4 items-center justify-between border-[1px]  border-[#c2c2c2] '
+          : 'text-[#282828]   ml-5 rounded-full h-10 w-10 flex items-center justify-center hover:bg-gray-300 translate-y-3'
       "
     >
       <Menu
@@ -699,14 +699,14 @@ const handleChangePassword = async () => {
         id="overlay_menu"
         :model="items"
         :popup="true"
-        class="ml-2 rounded-2xl text-sm"
+        class="ml-2 rounded-2xl text-md"
       />
       <div class="flex items-center">
         <div class="flex flex-row gap-2 items-center fixed">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="38"
-            height="38"
+            width="40"
+            height="40"
             viewBox="0 0 39 39"
             fill="none"
             :style="{
@@ -720,7 +720,7 @@ const handleChangePassword = async () => {
           </svg>
           <div v-show="openSidebar">
             <div
-              class="flex flex-col items-start font-normal text-[13px] left-14"
+              class="flex flex-col items-start  text-[15px] left-14"
             >
               <p v-if="user" class="font-bold text-black ">
                 {{ user.firstName }}

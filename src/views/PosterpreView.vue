@@ -231,9 +231,9 @@ const rowStyle = (rowData: any) => {
   padding-inline: 1rem;
   border-radius: 20px;
   overflow: hidden;
-  margin-top: 0.5rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.15rem;
+  margin-top: 0.2rem;
+  border-radius: 20px;
+  overflow: hidden;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   padding-top: 1rem;
   padding-bottom: 1rem;

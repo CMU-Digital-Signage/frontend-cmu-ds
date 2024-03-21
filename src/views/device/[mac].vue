@@ -145,7 +145,7 @@ onUnmounted(() => {
   >
     <div
       v-if="emerPoster?.incidentName !== 'banner'"
-      class="flex h-screen flex-col w-[11vw] items-center py-6 bg-[#10164b] text-black"
+      class="flex h-screen flex-col w-[11vw] items-center py-6 bg-[#0e1235] text-black"
     >
       <div class="flex flex-col gap-6   justify-center items-center rotate-0 " >
         <div
@@ -153,15 +153,15 @@ onUnmounted(() => {
           class="bottomBlock gap-2"
         >
           <div
-            class="flex bg-[#10164b] text-yellow-400 text-[48px] justify-center"
+            class="flex bg-[#0e1235] text-green-300 font-sf-pro-rounded text-[48px] justify-center"
           >
             <p class="font-semibold">41X</p>
           </div>
-          <div class="flex bg-[#10164b] rotate-90 items-center">
+          <div class="flex bg-[#0e1235] rotate-90 items-center">
             <img
               class="w-[88px] h-[88px]"
               alt="arrow"
-              src="../../assets/images/arrow.png"
+              src="../../assets/images/arrowGreen.png"
             />
           </div>
         </div>
@@ -169,7 +169,7 @@ onUnmounted(() => {
           v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
           class="bottomBlock gap-2"
         >
-          <div class="bg-[#10164b] justify-center items-center">
+          <div class="bg-[#0e1235] justify-center items-center">
             <img
               class="w-[88px] h-[88px]"
               alt="arrow"
@@ -177,14 +177,14 @@ onUnmounted(() => {
             />
           </div>
           <div class="flex flex-col text-yellow-400 text-[52px] justify-center">
-            <p class="font-semibold">401</p>
-            <p class="font-semibold">402</p>
+            <p class="font-semibold font-sf-pro-rounded">401</p>
+            <p class="font-semibold font-sf-pro-rounded">402</p>
           </div>
         </div>
       </div>
       <div
         v-if="weather"
-        class="bottomBlock items-center justify-center py-3 mt-10 flex-col"
+        class="bottomBlock items-center justify-center py-3 mt-10 flex-col font-sf-pro-rounded"
       >
         <div class="flex flex-row h-full">
           <div
@@ -242,7 +242,7 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <div class="text-[14px] font-medium text-white mr-3">
+        <div class="text-[13px] font-medium text-white mr-3 font-sf-pro-rounded">
           Last update:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
@@ -250,9 +250,9 @@ onUnmounted(() => {
           | IQAir
         </div>
       </div>
-      <div class="bottomBlockGroup h-fit flex-col  font-medium text-[40px] text-white">
-        <p class="text-[68px]" >{{ timeFormatter(dateTime) }}</p>
-        <p>{{ dateFormatter(dateTime, 3) }}</p>
+      <div class="bottomBlockGroup h-fit flex-col font-medium text-[44px] font-sf-pro-rounded text-white">
+        <p class="text-[72px]" >{{ timeFormatter(dateTime) }}</p>
+        <p >{{ dateFormatter(dateTime, 3) }}</p>
       </div>
     </div>
     <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
@@ -313,7 +313,7 @@ iframe {
   flex: 1 1;
   display: flex;
   align-items: center;
-  background-color: #10164b;
+  background-color: #0e1235;
   justify-content: center;
 }
 
@@ -323,7 +323,7 @@ iframe {
   flex: 1 1;
   display: flex;
   align-items: start;
-  background-color: #10164b;
+  background-color: #0e1235;
   justify-content: start;
 }
 </style>

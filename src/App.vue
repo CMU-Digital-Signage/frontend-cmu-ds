@@ -100,12 +100,12 @@ onUnmounted(() => {
     <router-view />
   </div>
   <div
-    class="min-h-4 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed"
+    class="min-h-2 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed"
     v-if="
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "
   >
-    <span class="pb-3 text-[9px] font-light text-stone-400 hide-on-mobile">
+    <span class="pb-2 text-[9px] font-light text-stone-400 hide-on-mobile">
       <span class="pb-3 font-normal text-stone-600">
         © 2024 Department of Computer Engineering
       </span>
