@@ -447,11 +447,12 @@ export const loopPoster = (
   const updatePosterInterval = () => {
     if (showBotMaps && store.state.posters) {
       posters = store.state.posters;
+      while (!posters.length) {
+        showBotMaps.value = true;
+      }
+      showBotMaps.value = false;
     }
-    if (!posters.length && showBotMaps) {
-      showBotMaps.value = true;
-      return;
-    }
+
     const currentMinutes = new Date().getMinutes();
     const isOnTheHalfHour = currentMinutes === 0 || currentMinutes === 30;
     if (isOnTheHalfHour && currentMinutes !== previousMinutes) {
