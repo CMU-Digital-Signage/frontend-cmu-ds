@@ -243,7 +243,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="text-[13px] font-medium text-white mr-3 font-sf-pro-rounded">
-          Last update:
+          Last updated:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
           }}
