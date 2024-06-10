@@ -28,7 +28,40 @@ export async function getDevice() {
   }
 }
 
-export async function addDevice(data: Device) {
+export async function addDeviceTV(data: Device) {
+  try {
+    const res = await axios.post(
+      `${process.env.VUE_APP_API_BASE_URL}/device`,
+      data,
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (store.state.devices) {
+      res.data.device.location = data.location;
+      store.state.devices.push({
+        ...res.data.device,
+        color: color[store.state.devices.length],
+      });
+      store.state.filterDevice.push(data.MACaddress!);
+    }
+
+    return res.data;
+  } catch (err: any) {
+    if (!err.response) {
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
+    }
+    return err.response.data;
+  }
+}
+
+export async function addDevicePi(data: Device) {
   try {
     const res = await axios.put(
       `${process.env.VUE_APP_API_BASE_URL}/device`,
@@ -50,7 +83,7 @@ export async function addDevice(data: Device) {
       store.state.macNotUse = store.state.macNotUse.filter(
         (e: string) => e !== data.MACaddress
       );
-      store.state.filterDevice.push(data.MACaddress);
+      store.state.filterDevice.push(data.MACaddress!);
     }
 
     return res.data;

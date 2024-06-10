@@ -6,7 +6,13 @@ import {
   changePassword,
 } from "./user";
 import { addAdmin, deleteAdmin } from "./admin";
-import { getDevice, addDevice, editDevice, deleteDevice } from "./device";
+import {
+  getDevice,
+  addDeviceTV,
+  addDevicePi,
+  editDevice,
+  deleteDevice,
+} from "./device";
 import {
   searchPoster,
   getPoster,
@@ -32,7 +38,8 @@ export {
   addAdmin,
   deleteAdmin,
   getDevice,
-  addDevice,
+  addDeviceTV,
+  addDevicePi,
   editDevice,
   deleteDevice,
   searchPoster,

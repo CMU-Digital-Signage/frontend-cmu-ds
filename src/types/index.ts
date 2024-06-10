@@ -8,7 +8,7 @@ export interface User {
 }
 
 export interface Device {
-  MACaddress: string | null;
+  MACaddress: string | undefined;
   deviceName: string | null;
   room: string | null;
   location: any;

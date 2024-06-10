@@ -8,8 +8,9 @@ export default defineComponent({
 import store from "@/store";
 import { computed, reactive, ref, watchEffect, defineProps } from "vue";
 import { useToast } from "primevue/usetoast";
+import InputMask from "primevue/inputmask";
 import router from "@/router";
-import { addDevice, addAdmin, searchPoster } from "@/services";
+import { addDeviceTV, addDevicePi, addAdmin, searchPoster } from "@/services";
 import {
   initialFormDevice,
   onUpload,
@@ -19,13 +20,14 @@ import {
 import { Poster } from "@/types";
 import { filesize } from "filesize";
 
+const manualMac = ref(false);
 const form = reactive({ ...initialFormDevice });
 const filterInput = computed(() => store.state.filterInputPosters);
 const user = computed(() => store.state.userInfo);
 const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
 const showPopup = ref(false);
-const showPopupAddDevice = ref(false);
+const showPopupAddDevice = ref(true);
 const currentViewDate = computed(() => store.state.currentViewDate);
 const viewType = computed(() => store.state.viewType);
 const clickSearch = ref(false);
@@ -101,13 +103,18 @@ const search = async () => {
 };
 
 const add = async () => {
-  if (form.location.dataURL) {
+  if (form.location?.dataURL) {
     const fileExtension = form.location.type.split("/")[1];
     form.location.name = `${form.MACaddress}.${fileExtension}`;
   }
 
   loading.value = true;
-  const res = await addDevice(form);
+  let res;
+  if (manualMac.value) {
+    res = await addDeviceTV(form);
+  } else {
+    res = await addDevicePi(form);
+  }
   if (res.ok) {
     showPopupAddDevice.value = false;
     toast.add({
@@ -172,7 +179,7 @@ const checkValidRoomNumber = () => {
 
 <template>
   <div
-    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white  font-semibold font-sf-pro text-gray-800 text-[18px]"
+    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white font-semibold font-sf-pro text-gray-800 text-[18px]"
   >
     <Toast />
     <!-- Popup Add Device -->
@@ -231,25 +238,51 @@ const checkValidRoomNumber = () => {
         </div>
       </div>
       <div class="flex flex-col gap-2 h-[90px]">
-        <div class="inline-block">
+        <div class="inline-flex">
           <label for="deviceName" class="text-primary-50 font-medium">
-            MAC Address
+            Device Type
           </label>
           <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
         </div>
         <Dropdown
-          class="mb-3"
+          v-model:model-value="manualMac"
+          :options="[
+            { label: 'Smart TV', value: true },
+            { label: 'Raspberry Pi', value: false },
+          ]"
+          optionLabel="label"
+          optionValue="value"
+          :placeholder="'Select a MAC Address Type'"
+        />
+      </div>
+      <div class="flex flex-col gap-2 h-[90px]">
+        <div class="inline-flex">
+          <label for="deviceName" class="text-primary-50 font-medium">
+            {{ manualMac ? "MAC Address TV" : "MAC Address Raspberry Pi" }}
+          </label>
+          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+        </div>
+        <InputMask
+          v-if="manualMac"
+          mask="**:**:**:**:**:**"
+          v-model="form.MACaddress"
+          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+          placeholder="Ex.ff:ff:ff:ff:ff:ff"
+          id="MACaddress"
+        />
+        <Dropdown
+          v-else
           v-model:model-value="form.MACaddress"
           :options="macNotUse"
           :placeholder="
             macNotUse.length
               ? 'Select a MAC Address'
-              : 'All Device has already been added'
+              : 'All Raspberry Pi has already been added'
           "
           :disabled="!macNotUse.length"
         />
       </div>
-      <div class="flex flex-col gap-2 h-[90px]">
+      <div class="flex flex-col gap-2 h-[90px] mt-3">
         <div class="inline-block">
           <label for="macAddress" class="text-primary-50 font-medium">
             Room
@@ -394,7 +427,7 @@ const checkValidRoomNumber = () => {
         <Button
           label="Add Admin"
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
-          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white hover:bg-gray-200"
+          class="flex text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
           @click="showPopup = true"
         >
         </Button>
@@ -424,7 +457,9 @@ const checkValidRoomNumber = () => {
           </template>
           <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
             <div class="flex flex-col gap-2">
-              <label class="text-[17px] font-semibold pt-2 w-32">CMU account </label>
+              <label class="text-[17px] font-semibold pt-2 w-32"
+                >CMU account
+              </label>
               <InputText
                 class="border border-[#C6C6C6] p-2 h-9 w-96 rounded-lg"
                 placeholder="example@cmu.ac.th"
@@ -546,7 +581,7 @@ const checkValidRoomNumber = () => {
         />
         <Button
           label="Now"
-          class="text-white items-center font-bold rounded-[8px] border-none max-h-fit px-3 py-1 border-2  bg-green-500 hover:bg-green-600"
+          class="text-white items-center font-bold rounded-[8px] border-none max-h-fit px-3 py-1 border-2 bg-green-500 hover:bg-green-600"
           @click="store.commit('resetFilter')"
         />
       </div>
@@ -558,7 +593,8 @@ const checkValidRoomNumber = () => {
       class="flex-wrap xl:gap-2 md:gap-2 text-[14px] xl:text-[16px] md:text-[15px]"
     >
       <li>
-        <label class="text-[14px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
+        <label
+          class="text-[14px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
           >Title</label
         >
         <InputText
@@ -582,7 +618,8 @@ const checkValidRoomNumber = () => {
       </li>
 
       <li v-if="store.state.selectTabview !== 1">
-        <label class="text-[14px] md:ml-[7px] ml-[12px] mr-1 xl:text-[16px] md:text-[12px]"
+        <label
+          class="text-[14px] md:ml-[7px] ml-[12px] mr-1 xl:text-[16px] md:text-[12px]"
           >Upload Date
         </label>
         <Calendar
@@ -598,7 +635,10 @@ const checkValidRoomNumber = () => {
         />
       </li>
       <li>
-        <label class="text-[14px] ml-[12px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]">Status</label>
+        <label
+          class="text-[14px] ml-[12px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
+          >Status</label
+        >
         <Dropdown
           v-model="filterInput.status"
           :options="store.state.selectTabview === 0 ? statusPoster : statusEmer"

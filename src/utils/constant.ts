@@ -134,7 +134,7 @@ export const timeFormatter = (
 };
 
 export const initialFormDevice = {
-  MACaddress: null,
+  MACaddress: undefined,
   deviceName: null,
   room: null,
   location: null,

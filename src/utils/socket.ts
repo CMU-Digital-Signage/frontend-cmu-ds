@@ -48,7 +48,7 @@ export default function setupSocket() {
         ...data,
         color: color[store.state.devices.length],
       });
-      store.state.filterDevice.push(data.MACaddress);
+      store.state.filterDevice.push(data.MACaddress!);
     }
     store.state.macNotUse = store.state.macNotUse.filter(
       (e: string) => e !== data.MACaddress
