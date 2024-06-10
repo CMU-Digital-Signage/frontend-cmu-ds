@@ -27,7 +27,7 @@ const user = computed(() => store.state.userInfo);
 const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
 const showPopup = ref(false);
-const showPopupAddDevice = ref(true);
+const showPopupAddDevice = ref(false);
 const currentViewDate = computed(() => store.state.currentViewDate);
 const viewType = computed(() => store.state.viewType);
 const clickSearch = ref(false);
