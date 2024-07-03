@@ -272,8 +272,12 @@ const showDifferentDialog = () => {
   showUpload.value = false;
   if (selectedContentType.value.code === "NP") {
     selectedContentType.value = contentType.value[0];
-  } else if (selectedContentType.value.code === "EP") {
+  } else if (selectedContentType.value.code === "VDO") {
     selectedContentType.value = contentType.value[1];
+  } else if (selectedContentType.value.code === "URL") {
+    selectedContentType.value = contentType.value[2];
+  } else if (selectedContentType.value.code === "EP") {
+    selectedContentType.value = contentType.value[3];
   }
   showSecondDialog.value = true;
 };
@@ -481,11 +485,11 @@ const nextStepPreview = () => {
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-color: #F4F4F4;',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  background-color: #F4F4F4; ',
         },
         mask: {
           style: 'backdrop-filter: blur(2px)',
@@ -577,14 +581,15 @@ const nextStepPreview = () => {
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10;  background-color: #F4F4F4;',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;  z-index: 10',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  background-color: #F4F4F4; z-index: 10; ',
         },
         mask: {
-          style: 'backdrop-filter: blur(2px); z-index: 10',
+          style:
+            'backdrop-filter: blur(2px); z-index: 10  background-color: #F4F4F4;',
         },
       }"
     >
@@ -594,70 +599,84 @@ const nextStepPreview = () => {
         </div>
       </template>
       <div v-if="selectedContentType.code === 'NP'">
-        <Steps class="mb-5" :model="uploadState" :active-step="currentState" />
+        <Steps
+          :pt="{
+            step: { class: `bg-[#14C6A4]` },
+          }"
+          class="mb-5"
+          :model="uploadState"
+          :active-step="currentState"
+        />
         <div v-if="currentState === 0">
-          <div class="inline-flex items-center">
-            <label
-              class="text-[#4e93f3] font-semibold text-[18px] flex justify-start mt-4 mb-1"
-            >
-              Title
-            </label>
-            <label class="text-[#FF0000] font-medium"> * </label>
-          </div>
-          <InputText
-            v-model="formPoster.title"
-            @keydown="limitCharTitle = formPoster?.title?.length >= 28"
-            type="text"
-            placeholder="Max 28 Character Ex.CPE Music Box"
-            maxlength="28"
-            class="title-input w-full mb-3 rounded-[12px]"
-            :class="{
-              'border-red-500 shadow-none':
-                formPoster?.title?.length >= 28 && limitCharTitle,
-            }"
-          />
-          <div
-            v-if="formPoster?.title?.length >= 28 && limitCharTitle"
-            class="text-red-500 -mt-2"
-          >
-            You have reached the character limit.
-          </div>
-          <label
-            class="text-[#4e93f3] font-semibold text-[18px] flex justify-start mb-1"
-          >
-            Description
-          </label>
-          <InputText
-            v-model="formPoster.description"
-            class="description-input h-full w-full mb-5 rounded-[12px]"
-            placeholder="(Optional)"
-          />
+          <div flex flex-col gap-1>
+            <div class="bg-white p-5 rounded-lg">
+              <div class="inline-flex items-center">
+                <label
+                  class="text-black font-semibold text-[18px] flex justify-start mt-4 mb-1"
+                >
+                  Title
+                </label>
+                <label class="font-medium text-red-500"> * </label>
+              </div>
+              <InputText
+                v-model="formPoster.title"
+                @keydown="limitCharTitle = formPoster?.title?.length >= 28"
+                type="text"
+                placeholder="Max 28 Character Ex.CPE Music Box"
+                maxlength="28"
+                class="title-input w-full mb-3 rounded-[12px]"
+                :class="{
+                  'border-red-500 shadow-none':
+                    formPoster?.title?.length >= 28 && limitCharTitle,
+                }"
+              />
+              <div
+                v-if="formPoster?.title?.length >= 28 && limitCharTitle"
+                class="text-red-500 -mt-2"
+              >
+                You have reached the character limit.
+              </div>
+              <label
+                class="text-black font-semibold text-[18px] flex justify-start mb-1"
+              >
+                Description
+              </label>
+              <InputText
+                v-model="formPoster.description"
+                class="description-input h-full w-full mb-5 rounded-[12px]"
+                placeholder="(Optional)"
+              />
+            </div>
 
-          <div class="line-separator"></div>
+            <div class="bg-white p-5 rounded-lg mt-5">
+              <div class="flex flex-inline items-end">
+                <Dropdown
+                  v-model="selectSchedule"
+                  :options="scheduleTabs"
+                  optionLabel="header"
+                  class="w-full md:w-14rem mt-3 rounded-lg bg-blue-100 drop-shadow-lg border-2 border-blue-400 text-black font-medium"
+                >
+                </Dropdown>
+                <Button
+                  v-if="selectSchedule.index"
+                  text
+                  class="bg-red-500 w-fit mt-1 ml-2 h-11 rounded-md"
+                  @click="deleteSchedule(selectSchedule.index)"
+                >
+                  <i class="pi pi-trash text-white"></i
+                ></Button>
+              </div>
 
-          <div class="flex flex-inline items-end">
-            <Dropdown
-              v-model="selectSchedule"
-              :options="scheduleTabs"
-              optionLabel="header"
-              class="w-full md:w-14rem mt-3 rounded-lg bg-blue-100 drop-shadow-lg border-2 border-blue-400 text-black font-medium"
-            >
-            </Dropdown>
-            <Button
-              v-if="selectSchedule.index"
-              text
-              class="bg-red-500 w-fit mt-1 ml-2 h-11 rounded-md"
-              @click="deleteSchedule(selectSchedule.index)"
-            >
-              <i class="pi pi-trash text-white"></i
-            ></Button>
+              <div class="line-separator"></div>
+
+              <ScheduleForm
+                v-for="(schedule, index) in scheduleTabs"
+                v-show="index === selectSchedule.index"
+                :key="schedule.header"
+                :index="index"
+              />
+            </div>
           </div>
-          <ScheduleForm
-            v-for="(schedule, index) in scheduleTabs"
-            v-show="index === selectSchedule.index"
-            :key="schedule.header"
-            :index="index"
-          />
 
           <div class="flex flex-row gap-4 pt-3">
             <Button
@@ -673,6 +692,7 @@ const nextStepPreview = () => {
             ></Button>
           </div>
         </div>
+
         <div v-if="currentState === 1">
           <div class="text-center text-red-500">
             Maximum upload limit: {{ maxImage }} images
@@ -1023,7 +1043,7 @@ const nextStepPreview = () => {
 }
 
 .line-separator {
-  border-top: 3px solid #4e93f3;
+  border-top: 1px solid #0bb191;
   margin: 15px 0;
 }
 
