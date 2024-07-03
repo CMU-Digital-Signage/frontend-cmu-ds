@@ -119,9 +119,6 @@ const setEvent = () => {
     );
     currentDevice.forEach((e) => {
       const displayDuration = e.image.length * e.duration;
-      if (e.image.length > 1) {
-        e.type = "Collection";
-      } else e.type = "Individual";
 
       const allDay =
         e.startTime.getHours() === 0 &&
@@ -381,8 +378,10 @@ const del = async (posterId: string) => {
             ></i>
             <div class="flex flex-col">
               <p>{{ selectedEvent.title }}</p>
-              <p class="text-[16px] text-[#8d8d8d] -mt-1">
-                {{ selectedEvent.type }}
+              <!-- Start Date to End Date -->
+              <p class="text-[14px] text-[#8d8d8d] -mt-1">
+                <span>{{ dateFormatter(new Date(selectedEvent.start), 3) }} - </span>
+                <span>{{ dateFormatter(new Date(selectedEvent.end), 3) }}</span>
               </p>
             </div>
           </div>
@@ -412,16 +411,6 @@ const del = async (posterId: string) => {
             {{ selectedEvent.amount }}
             {{ selectedEvent.amount > 1 ? "Posters" : "Poster" }}
           </p>
-        </div>
-        <!-- Start Date -->
-        <div class="posterDetail">
-          <p>Start Date</p>
-          <p>{{ selectedEvent.start }}</p>
-        </div>
-        <!-- End Date -->
-        <div class="posterDetail">
-          <p>End Date</p>
-          <p>{{ selectedEvent.end }}</p>
         </div>
         <!-- Running Time -->
         <div class="posterDetail">

@@ -51,7 +51,7 @@ const devicePreview = computed(() =>
 const panel = ref();
 
 watchEffect(() => {
-  if (router.currentRoute.value.path === "/searchfile") {
+  if (router.currentRoute.value.path === "/search-content") {
     clickSearch.value = true;
   } else {
     clickSearch.value = false;
@@ -78,7 +78,7 @@ const resetForm = () => {
 const goToSearch = () => {
   store.state.openSidebar = true;
   clickSearch.value = true;
-  router.push("/searchfile");
+  router.push("/search-content");
 };
 
 const search = async () => {
@@ -587,9 +587,9 @@ const checkValidRoomNumber = () => {
       </div>
     </ul>
 
-    <!-- "File Manage" -->
+    <!-- "Content Manage" -->
     <ul
-      v-if="$route.path === '/file'"
+      v-if="$route.path === '/content'"
       class="flex-wrap xl:gap-2 md:gap-2 text-[14px] xl:text-[16px] md:text-[15px]"
     >
       <li>
@@ -674,7 +674,7 @@ const checkValidRoomNumber = () => {
 
     <!-- "calendar dashboard"-->
     <ul
-      v-if="$route.path === '/' || $route.path === '/searchfile'"
+      v-if="$route.path === '/' || $route.path === '/search-content'"
       class="justify-between flex-wrap gap-2 lg:gap-5 text-[14px] lg:text-[16px]"
     >
       <div

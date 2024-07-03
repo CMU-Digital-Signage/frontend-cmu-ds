@@ -4,10 +4,10 @@ import { getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
 import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
-import FileManage from "../views/FileManageView.vue";
+import ContentManage from "../views/ContentManageView.vue";
 import DeviceManage from "../views/DeviceView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
-import SearchPage from "../views/SearchFileView.vue";
+import SearchPage from "../views/SearchContentView.vue";
 import AdminDashboard from "../views/AdminView.vue";
 import Mac from "@/views/device/[mac].vue";
 import Token from "@/views/reset/[token].vue";
@@ -52,17 +52,17 @@ const routes: Array<RouteRecordRaw> = [
     component: Dashboard,
   },
   {
-    path: "/searchfile",
-    name: "SearchFile",
+    path: "/search-content",
+    name: "SearchContent",
     component: SearchPage,
     meta: {
       crossIconSidebar: true,
     },
   },
   {
-    path: "/file",
-    name: "File",
-    component: FileManage,
+    path: "/content",
+    name: "Content",
+    component: ContentManage,
   },
   {
     path: "/deviceManage",

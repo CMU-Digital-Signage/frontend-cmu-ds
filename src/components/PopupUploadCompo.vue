@@ -33,17 +33,19 @@ const uploadState = ref([
   { label: "Upload Content" },
   { label: "Orientation & Review" },
 ]);
-const posterType = ref([
-  { header: "Normal Poster", code: "NP" },
-  { header: "Emergency Poster", code: "EP" },
+const contentType = ref([
+  { header: "Normal", code: "NP", icon: "images" },
+  { header: "Video", code: "VDO", icon: "video" },
+  { header: "Webview", code: "URL", icon: "link" },
+  { header: "Emergency", code: "EP", icon: "exclamation-triangle" },
 ]);
-const selectedPosterType = ref({ header: "", code: "" });
+const selectedContentType = ref({ header: "", code: "" });
 const currentState = ref(0);
 const scheduleTabs = ref<{ header: string; index: number }[]>([
   { header: `Schedule 1`, index: 0 },
 ]);
 const posters = computed(() => store.state.posters);
-const editPosterType = computed(() => store.state.editPoster);
+const editcontentType = computed(() => store.state.editPoster);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
@@ -69,22 +71,22 @@ watch(
   { deep: true }
 );
 
-watch([showUpload, showSecondDialog, editPosterType.value], () => {
-  if (editPosterType.value.type && showUpload.value) {
-    posterType.value.map((e) => {
-      if (e.code === editPosterType.value.type) {
-        selectedPosterType.value = { ...e };
+watch([showUpload, showSecondDialog, editcontentType.value], () => {
+  if (editcontentType.value.type && showUpload.value) {
+    contentType.value.map((e) => {
+      if (e.code === editcontentType.value.type) {
+        selectedContentType.value = { ...e };
       }
     });
     showUpload.value = false;
     showSecondDialog.value = true;
   } else if (showUpload.value && !user.value.isAdmin) {
-    selectedPosterType.value = posterType.value[0];
+    selectedContentType.value = contentType.value[0];
     showUpload.value = false;
     showSecondDialog.value = true;
   } else if (!showUpload.value && !showSecondDialog.value) {
     store.state.editPoster = { title: "", type: "" };
-    selectedPosterType.value = { header: "", code: "" };
+    selectedContentType.value = { header: "", code: "" };
     store.commit("resetForm");
   }
   currentState.value = 0;
@@ -92,14 +94,14 @@ watch([showUpload, showSecondDialog, editPosterType.value], () => {
 
 const validateForm = () => {
   if (
-    (selectedPosterType.value.code === "NP" && !formPoster.value.title) ||
-    (selectedPosterType.value.code === "EP" && !formEmer.value.incidentName)
+    (selectedContentType.value.code === "NP" && !formPoster.value.title) ||
+    (selectedContentType.value.code === "EP" && !formEmer.value.incidentName)
   ) {
     return "Title is empty";
   }
 
   if (
-    selectedPosterType.value.code === "EP" &&
+    selectedContentType.value.code === "EP" &&
     !formEmer.value.emergencyImage
   ) {
     return "Image selected not found.";
@@ -186,7 +188,7 @@ const handleAddPoster = async () => {
 };
 
 const handleEditEmergency = async () => {
-  const res = await editEmergency(editPosterType.value.title, formEmer.value);
+  const res = await editEmergency(editcontentType.value.title, formEmer.value);
   if (res.ok) {
     toast.add({
       severity: "success",
@@ -237,7 +239,7 @@ const uploadPoster = async () => {
         formEmer.value.incidentName
       }.${formEmer.value.emergencyImage.name.split(".").pop()}`;
     }
-    editPosterType.value.title.length
+    editcontentType.value.title.length
       ? handleEditEmergency()
       : handleAddEmergency();
   } else if (
@@ -251,7 +253,7 @@ const uploadPoster = async () => {
         !e.endDate
     )
   ) {
-    editPosterType.value.title.length ? handleEditPoster() : handleAddPoster();
+    editcontentType.value.title.length ? handleEditPoster() : handleAddPoster();
   } else {
     toast.add({
       severity: "error",
@@ -264,14 +266,14 @@ const uploadPoster = async () => {
 };
 
 const isNextButtonDisabled = computed(() => {
-  return !selectedPosterType.value.header;
+  return !selectedContentType.value.header;
 });
 const showDifferentDialog = () => {
   showUpload.value = false;
-  if (selectedPosterType.value.code === "NP") {
-    selectedPosterType.value = posterType.value[0];
-  } else if (selectedPosterType.value.code === "EP") {
-    selectedPosterType.value = posterType.value[1];
+  if (selectedContentType.value.code === "NP") {
+    selectedContentType.value = contentType.value[0];
+  } else if (selectedContentType.value.code === "EP") {
+    selectedContentType.value = contentType.value[1];
   }
   showSecondDialog.value = true;
 };
@@ -344,7 +346,7 @@ const nextStepUpload = () => {
     });
   } else if (posters.value) {
     let poster = [] as Poster[];
-    if (editPosterType.value.type === "NP") {
+    if (editcontentType.value.type === "NP") {
       poster = posters.value.filter(
         (e) => e.posterId !== formPoster.value.posterId
       );
@@ -443,7 +445,7 @@ const nextStepUpload = () => {
     if (maxImage.value > 50) {
       maxImage.value = 50;
     }
-    if (!editPosterType.value.title.length) store.state.formPoster.image = [];
+    if (!editcontentType.value.title.length) store.state.formPoster.image = [];
     currentState.value = 1;
   }
 };
@@ -475,7 +477,7 @@ const nextStepPreview = () => {
       modal
       close-on-escape
       :draggable="false"
-      class="w-96"
+      class="w-96 font-sf-pro"
       :pt="{
         content: {
           style:
@@ -491,7 +493,7 @@ const nextStepPreview = () => {
       }"
     >
       <template #header>
-        <div class="header-popup">Upload File</div>
+        <div class="header-popup text-[#049A7E]">Upload Content</div>
       </template>
       <div class="flex flex-col gap-2">
         <div class="inline-block">
@@ -499,16 +501,52 @@ const nextStepPreview = () => {
             <label
               for="deviceName"
               class="flex justify-start font-semibold text-[18px] text-[#282828]"
-              >Type of Poster</label
             >
+              Type of content
+            </label>
           </div>
           <Dropdown
-            v-model="selectedPosterType"
-            :options="posterType"
+            v-model="selectedContentType"
+            :options="contentType"
             optionLabel="header"
-            placeholder="Select poster"
+            placeholder="Select content"
             class="w-full md:w-14rem mt-1"
-          />
+            :pt="{
+              item: (slotProps) => ({
+                class: [
+                  {
+                    '!bg-[#FFD5D5]':
+                      slotProps.context.focused &&
+                      !slotProps.context.selected &&
+                      slotProps.state.focusedOptionIndex == 3,
+                    '!bg-[#FFB3B3]':
+                      slotProps.context.selected &&
+                      slotProps.context.index == 3,
+                  },
+                ],
+              }),
+            }"
+          >
+            <template #value="slotProps">
+              <div
+                v-if="slotProps.value.code"
+                :class="`flex items-center ${
+                  slotProps.value.code == 'EP' && 'text-[#FF4242]'
+                }`"
+              >
+                <div>{{ slotProps.value.header }}</div>
+              </div>
+              <span v-else>
+                {{ slotProps.placeholder }}
+              </span>
+            </template>
+            <template #option="slotProps">
+              <div class="flex items-center">
+                <i :class="`mr-2 pi pi-${slotProps.option.icon}`" />
+                <div>{{ slotProps.option.header }}</div>
+              </div>
+            </template>
+          </Dropdown>
 
           <div class="flex flex-row gap-4 pt-3">
             <Button
@@ -552,10 +590,10 @@ const nextStepPreview = () => {
     >
       <template #header>
         <div class="header-popup">
-          {{ editPosterType.type ? "Edit File" : "Upload File" }}
+          {{ editcontentType.type ? "Edit Content" : "Upload Content" }}
         </div>
       </template>
-      <div v-if="selectedPosterType.code === 'NP'">
+      <div v-if="selectedContentType.code === 'NP'">
         <Steps class="mb-5" :model="uploadState" :active-step="currentState" />
         <div v-if="currentState === 0">
           <div class="inline-flex items-center">
@@ -651,7 +689,7 @@ const nextStepPreview = () => {
           </div>
 
           <UploadImage
-            :posType="selectedPosterType.code"
+            :posType="selectedContentType.code"
             :maxImage="maxImage"
           />
           <div class="flex flex-row gap-4 pt-3">
@@ -859,7 +897,7 @@ const nextStepPreview = () => {
         </div>
       </div>
 
-      <div v-else-if="selectedPosterType.code === 'EP'">
+      <div v-else-if="selectedContentType.code === 'EP'">
         <div class="flex flex-row justify-between gap-3 mx-1">
           <div class="flex flex-col justify-start w-full max-w-4xl">
             <div class="inline-flex items-center">
@@ -878,7 +916,7 @@ const nextStepPreview = () => {
             />
             <!-- File Upload -->
             <UploadImage
-              :posType="selectedPosterType.code"
+              :posType="selectedContentType.code"
               :maxImage="undefined"
             />
 
@@ -924,7 +962,6 @@ const nextStepPreview = () => {
 .header-popup {
   font-weight: 700;
   font-size: 22px;
-  color: black;
 }
 
 .secondaryButton {
@@ -954,7 +991,7 @@ const nextStepPreview = () => {
   margin-left: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: none;
+  background-color: #14c6a4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;

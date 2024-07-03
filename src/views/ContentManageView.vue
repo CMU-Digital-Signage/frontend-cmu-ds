@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FileTable from "@/components/FileTableCompo.vue";
+import ContentTable from "@/components/ContentTableCompo.vue";
 import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import store from "../store";
 
@@ -39,8 +39,8 @@ onUnmounted(() => {
       v-else-if="store.state.userInfo.isAdmin"
       v-model:activeIndex="click"
     >
-      <TabPanel header="Normal File">
-        <FileTable v-if="uniquePosters?.length" :types="'NP'" />
+      <TabPanel header="Content">
+        <ContentTable v-if="uniquePosters?.length" :types="'NP'" />
         <div
           v-else
           class="my-[0.75rem] flex h-full justify-center items-center align-middle"
@@ -49,18 +49,18 @@ onUnmounted(() => {
         </div>
       </TabPanel>
       <TabPanel
-        header="Emergency File"
+        header="Emergency Content"
         :pt="{
           headerAction: {
             class: `${click != 0 ? 'text-[#f00] border-[#f00]' : ''}`,
           },
         }"
       >
-        <FileTable :types="'EP'" />
+        <ContentTable :types="'EP'" />
       </TabPanel>
     </TabView>
 
-    <FileTable
+    <ContentTable
       v-else-if="uniquePosters?.length"
       :types="'NP'"
       class="rectangle flex flex-col"
@@ -87,6 +87,5 @@ onUnmounted(() => {
   padding-top: 0.25rem;
   padding-bottom: 0.15rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
 }
 </style>

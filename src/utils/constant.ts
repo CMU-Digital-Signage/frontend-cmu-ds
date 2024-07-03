@@ -4,6 +4,7 @@ import { Device, Display, Emergency, Poster } from "@/types";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { Ref } from "vue";
+import { TYPE } from "./enum";
 
 export const calculateScreenHeight = () => {
   const screenHeight = window.innerHeight;
@@ -274,10 +275,6 @@ export const setFieldPoster = (data: Poster[]) => {
         }.`;
         e.uploader = uploader;
       }
-
-      if (e.image && e.image.length > 1) {
-        e.type = "Collection";
-      } else e.type = "Individual";
     }
   });
   data.sort(
@@ -285,6 +282,11 @@ export const setFieldPoster = (data: Poster[]) => {
   );
 };
 
+export const typePoster = [
+  { type: TYPE.POSTER, severity: "info" },
+  { type: TYPE.VIDEO, severity: "warning" },
+  { type: TYPE.URL, severity: "secondary" },
+];
 export const statusPoster = [
   { status: "Displayed", severity: "success" },
   { status: "Awaited", severity: "info" },
@@ -333,6 +335,7 @@ export const createUnique = (data: Poster[]) => {
         posterId: e.posterId,
         uploader: e.uploader,
         createdAt: e.createdAt,
+        type: e.type,
         status,
       });
     }

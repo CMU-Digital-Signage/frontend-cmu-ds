@@ -201,7 +201,7 @@ const rowStyle = (rowData: any) => {
               posters && dateFormatter(filterDate) === dateFormatter(new Date())
             "
             class="pi pi-play text-[#808080] text-5xl rounded-full p-2 bg-white hover:bg-gray-200"
-            @click="stopLoop = loopPoster(posters)"
+            @click="stopLoop = loopPoster(posters ?? [])"
           />
           <div v-else>No Content to Preview.</div>
         </div>
