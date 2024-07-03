@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "FileTableCompo",
+  name: "ContentTable",
 });
 </script>
 <script setup lang="ts">
@@ -9,10 +9,12 @@ import { ref, computed, defineProps, watch } from "vue";
 import store from "@/store";
 import {
   dateFormatter,
+  typePoster,
   statusEmer,
   setNorForm,
   setEmerForm,
 } from "@/utils/constant";
+import { TYPE } from "@/utils/enum";
 import { User } from "@/types";
 import { statusPoster, calculateScreenHeight } from "@/utils/constant";
 import { deletePoster, deleteEmergency } from "@/services";
@@ -292,6 +294,41 @@ const del = async () => {
         ></i>
       </template>
     </Column>
+
+    <Column
+      v-if="props.types !== 'EP'"
+      sortable
+      header="Type"
+      field="type"
+      :class="`w-1/6`"
+    >
+      <template #sorticon="slotProps">
+        <i
+          class="m-3 pi"
+          :class="{
+            'pi-sort-alt': slotProps.sortOrder === 0,
+            'pi-sort-alpha-down': slotProps.sortOrder === 1,
+            'pi-sort-alpha-up': slotProps.sortOrder === -1,
+          }"
+        ></i>
+      </template>
+      <template #body="rowData">
+        <Tag
+          :icon="`pi pi-${
+            rowData.data.type === TYPE.POSTER
+              ? 'images'
+              : rowData.data.type === TYPE.VIDEO
+              ? 'video'
+              : 'link'
+          }`"
+          :value="rowData.data.type"
+          rounded
+          :severity="
+            typePoster.find((e) => rowData.data.type === e.type)?.severity
+          "
+        />
+      </template>
+    </Column>
     <Column
       field="status"
       :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"
@@ -352,7 +389,9 @@ const del = async () => {
       <template #body="rowData">
         <div class="flex gap-3">
           <Button
-          v-if="(user.isAdmin && store.state.selectTabview === 0) || !user.isAdmin"
+            v-if="
+              (user.isAdmin && store.state.selectTabview === 0) || !user.isAdmin
+            "
             icon="pi pi-info"
             rounded
             class="w-8 h-8 md:w-9 md:h-9"

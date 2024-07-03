@@ -108,14 +108,14 @@ const del = async () => {
           label="About"
           severity="primary"
           icon="pi pi-info  rounded-full text-white p-[4px]"
-          class="border-none  text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-blue-600"
+          class="border-none text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-blue-600"
           @click="showInfo = true"
         />
         <Button
           v-if="user.isAdmin || user.id === poster?.id"
           label="Edit"
           icon="pi pi-pencil bg-[#FF9900] rounded-full text-white p-[4px]"
-          class="border-none bg-[#FF9900]  text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-amber-600"
+          class="border-none bg-[#FF9900] text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-amber-600"
           @click="setNorForm(poster)"
         />
         <Button
@@ -123,7 +123,7 @@ const del = async () => {
           label="Delete"
           severity="danger"
           icon="pi pi-trash bg-[#D3302F] rounded-full text-white p-[4px]"
-          class="border-none  text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-red-700"
+          class="border-none text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-red-700"
           @click="deletePopup = true"
         />
       </div>
@@ -140,8 +140,10 @@ const del = async () => {
       <div class="inline-flex font-bold text-2xl gap-3 items-start">
         <div class="flex flex-col">
           <p>{{ poster.title }}</p>
-          <p class="text-[16px] text-[#8d8d8d] -mt-1">
-            {{ poster.type }}
+          <!-- Start Date to End Date -->
+          <p class="text-[14px] text-[#8d8d8d] -mt-1">
+            <span>{{ dateFormatter(poster.startDate, 3) }} - </span>
+            <span>{{ dateFormatter(poster.endDate, 3) }}</span>
           </p>
         </div>
       </div>
@@ -151,16 +153,6 @@ const del = async () => {
       <div class="posterDetail">
         <p>Number of Poster</p>
         <p>{{ poster.image.length }} Posters</p>
-      </div>
-      <!-- Start Date -->
-      <div class="posterDetail">
-        <p>Start Date</p>
-        <p>{{ dateFormatter(poster.startDate) }}</p>
-      </div>
-      <!-- End Date -->
-      <div class="posterDetail">
-        <p>End Date</p>
-        <p>{{ dateFormatter(poster.endDate) }}</p>
       </div>
       <!-- Running Time -->
       <div class="posterDetail">

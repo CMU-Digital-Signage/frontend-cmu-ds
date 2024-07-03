@@ -61,7 +61,7 @@ watch(searchPosters, () => {
 
 watch(filterDevice, () => {
   filterData.value = data.value.filter((e: Device) => {
-    return filterDevice.value.includes(e.MACaddress);
+    return filterDevice.value.includes(e.MACaddress!);
   });
 });
 </script>

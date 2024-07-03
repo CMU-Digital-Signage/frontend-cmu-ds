@@ -29,7 +29,7 @@ const fetchData = async () => {
     devices.map((e, i) => (e.color = color[i]));
     store.state.devices = devices;
     store.state.selectDevice = devices[0].MACaddress || "";
-    store.state.filterDevice = devices.map((e) => e.MACaddress);
+    store.state.filterDevice = devices.map((e) => e.MACaddress!);
   });
 
   const emerPromise = getEmergency().then((emerRes) => {
@@ -85,9 +85,9 @@ onUnmounted(() => {
     class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar class="bg-[#f3f3f3] " />
+    <SideBar class="bg-[#f3f3f3]" />
     <div class="w-full h-full flex flex-col bg-[#fefefe]">
-      <NavBar class="bg-[#fefefe] " />
+      <NavBar class="bg-[#fefefe]" />
       <router-view class="bg-[#ffffff]" />
     </div>
   </div>
@@ -169,7 +169,8 @@ Button:focus {
 
 .p-datatable-wrapper {
   border-color: #ffffff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   border-width: 1px;
   border-radius: 26px;
 }
@@ -181,7 +182,27 @@ Button:focus {
   border-radius: 40px;
 }
 
-.heig{
+.p-dropdown {
+  border-radius: 8px;
+}
+.p-dropdown-panel {
+  border-radius: 8px;
+}
+.p-dropdown-label {
+  margin-left: 12px;
+}
+.p-dropdown-item {
+  margin-inline: 8px;
+  border-radius: 8px;
+}
+.p-dropdown-item.p-focus {
+  background-color: #c1e5ff;
+}
+.p-dropdown-item.p-highlight {
+  background-color: #97d3ff;
+}
+
+.heig {
   height: 100svh;
 }
 

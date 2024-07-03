@@ -1,3 +1,5 @@
+import { TYPE } from "@/utils/enum";
+
 export interface User {
   id: string;
   firstName: string;
@@ -34,7 +36,7 @@ export interface Poster {
   duration: number;
   uploader: string;
   status: string;
-  type: string;
+  type: TYPE;
 }
 
 export interface ImageCollection {

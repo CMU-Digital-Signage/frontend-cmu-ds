@@ -445,7 +445,7 @@ const handleChangePassword = async () => {
         >
           <div class="flex items-center h-5 justify-between">
             <span class="text-[#ffffff] font-extrabold text-[16px]"
-              >Upload File</span
+              >Upload Content</span
             >
           </div>
         </Button>
@@ -460,7 +460,7 @@ const handleChangePassword = async () => {
       </div>
 
       <div
-        v-if="$route.path !== '/searchfile'"
+        v-if="$route.path !== '/search-content'"
         :class="{
           'pt-2': openSidebar,
           'pt-4 flex justify-center': !openSidebar,
@@ -503,31 +503,33 @@ const handleChangePassword = async () => {
             </Button>
           </router-link>
 
-          <router-link to="/file">
+          <router-link to="/content">
             <div>
               <Button
                 class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
                 v-if="openSidebar"
                 link
                 :style="{
-                  'background-color': $route.path === '/file' ? '#2E3F4A' : '',
-                  color: $route.path === '/file' ? '#FFFFFF' : '',
+                  'background-color':
+                    $route.path === '/content' ? '#2E3F4A' : '',
+                  color: $route.path === '/content' ? '#FFFFFF' : '',
                 }"
               >
                 <i class="pi pi-file"></i>
-                <span>File</span>
+                <span>Content</span>
               </Button>
               <Button
                 class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
                 :class="{
-                  'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/file',
+                  'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/content',
                 }"
                 v-else
                 icon="pi pi-file"
                 link
                 :style="{
-                  'background-color': $route.path === '/file' ? '#2E3F4A' : '',
-                  color: $route.path === '/file' ? '#FFFFFF' : '',
+                  'background-color':
+                    $route.path === '/content' ? '#2E3F4A' : '',
+                  color: $route.path === '/content' ? '#FFFFFF' : '',
                 }"
               >
               </Button>
@@ -600,7 +602,7 @@ const handleChangePassword = async () => {
       <!-- admin management-->
 
       <div
-        v-if="user?.isAdmin && $route.path !== '/searchfile'"
+        v-if="user?.isAdmin && $route.path !== '/search-content'"
         :class="openSidebar == true ? '' : ' flex justify-center '"
       >
         <div class="border-[1px] border-neutral-300" v-if="openSidebar"></div>
@@ -646,8 +648,8 @@ const handleChangePassword = async () => {
           </router-link>
         </ul>
       </div>
-      <!-- searchfile -->
-      <div v-if="$route.path === '/searchfile'" class="pt-3">
+      <!-- search-content -->
+      <div v-if="$route.path === '/search-content'" class="pt-3">
         <div class="flex pb-3 font-semibold text-[14px] text-[#615F5F]">
           Device
         </div>
@@ -719,10 +721,8 @@ const handleChangePassword = async () => {
             />
           </svg>
           <div v-show="openSidebar">
-            <div
-              class="flex flex-col items-start  text-[15px] left-14"
-            >
-              <p v-if="user" class="font-bold text-black ">
+            <div class="flex flex-col items-start text-[15px] left-14">
+              <p v-if="user" class="font-bold text-black">
                 {{ user.firstName }}
                 {{ (user?.lastName || "").charAt(0) }}.
               </p>
