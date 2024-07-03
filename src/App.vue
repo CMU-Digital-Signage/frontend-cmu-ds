@@ -196,10 +196,10 @@ Button:focus {
   border-radius: 8px;
 }
 .p-dropdown-item.p-focus {
-  background-color: #c1e5ff;
+  background-color: #14c6a543;
 }
 .p-dropdown-item.p-highlight {
-  background-color: #97d3ff;
+  background-color: #14c6a588;
 }
 
 .heig {

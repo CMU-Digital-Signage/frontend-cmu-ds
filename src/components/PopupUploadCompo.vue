@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import Panel from "primevue/panel";
 export default defineComponent({
   name: "PopupUpload",
 });
@@ -34,10 +35,10 @@ const uploadState = ref([
   { label: "Orientation & Review" },
 ]);
 const contentType = ref([
-  { header: "Normal", code: "NP", icon: "images" },
-  { header: "Video", code: "VDO", icon: "video" },
-  { header: "Webview", code: "URL", icon: "link" },
-  { header: "Emergency", code: "EP", icon: "exclamation-triangle" },
+  { header: "Normal", code: "NP", icon: "images", disabled:false },
+  { header: "Video (Unavailable)", code: "VDO", icon: "video", disabled:true },
+  { header: "Webview (Unavailable)", code: "URL", icon: "link", disabled:true },
+  { header: "Emergency", code: "EP", icon: "exclamation-triangle", disabled:false },
 ]);
 const selectedContentType = ref({ header: "", code: "" });
 const currentState = ref(0);
@@ -485,11 +486,11 @@ const nextStepPreview = () => {
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-color: #F4F4F4;',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;  background-color: #F4F4F4; ',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;   ',
         },
         mask: {
           style: 'backdrop-filter: blur(2px)',
@@ -504,7 +505,7 @@ const nextStepPreview = () => {
           <div>
             <label
               for="deviceName"
-              class="flex justify-start font-semibold text-[18px] text-[#282828]"
+              class="flex justify-start font-semibold text-[14px] text-[#282828]"
             >
               Type of content
             </label>
@@ -513,12 +514,14 @@ const nextStepPreview = () => {
             v-model="selectedContentType"
             :options="contentType"
             optionLabel="header"
+            option-disabled="disabled"
             placeholder="Select content"
-            class="w-full md:w-14rem mt-1"
+            class="w-full md:w-14rem mt-2 h-10 flex items-center"
             :pt="{
               item: (slotProps) => ({
                 class: [
                   {
+                    '!text-[#B2B2B2]': slotProps.context.disabled,
                     '!bg-[#FFD5D5]':
                       slotProps.context.focused &&
                       !slotProps.context.selected &&
@@ -529,6 +532,7 @@ const nextStepPreview = () => {
                   },
                 ],
               }),
+              input: { class: 'text-[14px]'}
             }"
           >
             <template #value="slotProps">
@@ -554,6 +558,7 @@ const nextStepPreview = () => {
 
           <div class="flex flex-row gap-4 pt-3">
             <Button
+              color=""
               text
               label="Cancel"
               @click="showUpload = false"
@@ -581,15 +586,14 @@ const nextStepPreview = () => {
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10;  background-color: #F4F4F4;',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10;  ',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;  background-color: #F4F4F4; z-index: 10; ',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;   z-index: 10; ',
         },
         mask: {
-          style:
-            'backdrop-filter: blur(2px); z-index: 10  background-color: #F4F4F4;',
+          style: 'backdrop-filter: blur(2px); z-index: 10  ',
         },
       }"
     >
@@ -601,7 +605,7 @@ const nextStepPreview = () => {
       <div v-if="selectedContentType.code === 'NP'">
         <Steps
           :pt="{
-            step: { class: `bg-[#14C6A4]` },
+            step: { class: `bg-[#14C6A4] text-white` },
           }"
           class="mb-5"
           :model="uploadState"
@@ -609,10 +613,13 @@ const nextStepPreview = () => {
         />
         <div v-if="currentState === 0">
           <div flex flex-col gap-1>
-            <div class="bg-white p-5 rounded-lg">
+            <div
+              class="bg-white p-2 px-4 rounded-lg items-start justify-start"
+              style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+            >
               <div class="inline-flex items-center">
                 <label
-                  class="text-black font-semibold text-[18px] flex justify-start mt-4 mb-1"
+                  class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
                 >
                   Title
                 </label>
@@ -624,7 +631,7 @@ const nextStepPreview = () => {
                 type="text"
                 placeholder="Max 28 Character Ex.CPE Music Box"
                 maxlength="28"
-                class="title-input w-full mb-3 rounded-[12px]"
+                class="h-8 w-full mb-3 rounded-[8px] text-[12px]"
                 :class="{
                   'border-red-500 shadow-none':
                     formPoster?.title?.length >= 28 && limitCharTitle,
@@ -637,24 +644,37 @@ const nextStepPreview = () => {
                 You have reached the character limit.
               </div>
               <label
-                class="text-black font-semibold text-[18px] flex justify-start mb-1"
+                class="text-black font-semibold text-[14px] flex justify-start mb-1"
               >
                 Description
               </label>
               <InputText
                 v-model="formPoster.description"
-                class="description-input h-full w-full mb-5 rounded-[12px]"
+                class="h-8 w-full mb-3 rounded-[8px] text-[12px]"
                 placeholder="(Optional)"
               />
             </div>
 
-            <div class="bg-white p-5 rounded-lg mt-5">
+            <div
+              class="bg-white px-4 p-2 rounded-lg mt-5"
+              style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+            >
               <div class="flex flex-inline items-end">
+                <label
+                  class="text-black font-semibold text-[14px] items-center flex justify-start mb-2 mr-5"
+                >
+                  Schedule
+                </label>
+
                 <Dropdown
                   v-model="selectSchedule"
                   :options="scheduleTabs"
+                  h
                   optionLabel="header"
-                  class="w-full md:w-14rem mt-3 rounded-lg bg-blue-100 drop-shadow-lg border-2 border-blue-400 text-black font-medium"
+                  class="w-full hover:border-[#14C6A4] focus:border-[#14C6A4] md:w-14rem mt-3 h-10 rounded-md drop-shadow-lg border-2 text-black font-medium"
+                  :pt="{
+                    input: { class: ` text-[14px] items-center flex ` },
+                  }"
                 >
                 </Dropdown>
                 <Button
@@ -666,8 +686,6 @@ const nextStepPreview = () => {
                   <i class="pi pi-trash text-white"></i
                 ></Button>
               </div>
-
-              <div class="line-separator"></div>
 
               <ScheduleForm
                 v-for="(schedule, index) in scheduleTabs"
@@ -694,23 +712,26 @@ const nextStepPreview = () => {
         </div>
 
         <div v-if="currentState === 1">
-          <div class="text-center text-red-500">
-            Maximum upload limit: {{ maxImage }} images
-          </div>
-          <div class="text-center text-blue-500 mb-2">
-            Your uploaded content:
-            {{
-              formPoster.image.length === 0
-                ? "No images"
-                : formPoster.image.length === 1
-                ? "1 image"
-                : formPoster.image.length + " images"
-            }}
+          <div class="bg-[#eeeeee] p-2 px-4 rounded-lg justify-center mb-3">
+            <div class="text-[14px] text-center mt-2 text-red-500">
+              Upload limit: {{ maxImage }} contents
+            </div>
+            <div class="text-[14px] text-center text-[#41b8a2] mb-2">
+              Uploaded content:
+              {{
+                formPoster.image?.length === 0
+                  ? "No images"
+                  : formPoster.image?.length === 1
+                  ? "1 image"
+                  : formPoster.image?.length + " contents"
+              }}
+            </div>
           </div>
 
           <UploadImage
             :posType="selectedContentType.code"
             :maxImage="maxImage"
+          
           />
           <div class="flex flex-row gap-4 pt-3">
             <Button
@@ -981,7 +1002,8 @@ const nextStepPreview = () => {
 
 .header-popup {
   font-weight: 700;
-  font-size: 22px;
+  font-size: 20px;
+  color: #049a7e;
 }
 
 .secondaryButton {
@@ -1019,7 +1041,7 @@ const nextStepPreview = () => {
 
 .primaryButton:hover {
   cursor: pointer;
-  background-color: rgb(37, 135, 240);
+  background-color: #0eb092;
   text-decoration-line: underline;
 }
 
@@ -1040,11 +1062,6 @@ const nextStepPreview = () => {
   cursor: pointer;
   background-color: rgb(255, 233, 228);
   text-decoration-line: underline;
-}
-
-.line-separator {
-  border-top: 1px solid #0bb191;
-  margin: 15px 0;
 }
 
 .orientOut {

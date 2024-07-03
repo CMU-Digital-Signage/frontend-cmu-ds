@@ -103,7 +103,7 @@ const removeImage = (i: number) => {
     :maxFileSize="52428800" 
     :pt="{
       buttonbar: {
-        class: `${
+        class: ` p-2 ${
           posType === 'EP' ? 'border-[#f00] bg-[#f00] bg-opacity-10' : ''
         }`,
       },
@@ -127,13 +127,13 @@ const removeImage = (i: number) => {
     "
   >
     <template #header="{ chooseCallback }">
-      <div class="flex w-full gap-3 items-center justify-between">
+      <div class="flex w-full gap-3  items-center justify-between">
         <div class="flex gap-3 items-center">
           <Button
             @click="chooseCallback()"
-            icon="pi pi-plus"
+            icon="pi pi-plus text-[14px]"
             label="Choose File"
-            rounded
+            class="rounded-2xl h-fit w-fit text-[14px] border-[#14C6A4] text-[#14C6A4] font-bold hover:bg-[#14C6A433]"
             outlined
           />
         </div>
@@ -234,7 +234,7 @@ const removeImage = (i: number) => {
         <i
           class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
         />
-        <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
+        <p class="mt-4 text-[14px] mb-0">Drag and drop files to here to upload.</p>
       </div>
     </template>
   </FileUpload>
