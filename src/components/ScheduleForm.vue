@@ -126,95 +126,22 @@ const minEndTime = (i: number) => {
 </script>
 
 <template>
-  <div class="mt-5">
+  <div class="mt-5 flex gap-5">
     <div class="flex flex-col justify-start gap-5">
-      <!-- Running Time -->
+      <!-- Running Show -->
       <div class="flex flex-col justify-start gap-2">
         <div class="inline-flex items-center">
           <label
             for="Time"
-            class="flex justify-start font-semibold text-[18px] text-[#4e93f3]"
+            class="flex justify-start font-semibold text-[18px] text-black"
           >
-            Running Time
+            Running Show
           </label>
           <label class="text-[#FF0000] font-medium"> * </label>
         </div>
-        <div class="flex gap-4 ml-7 items-center mt-1 mb-1">
-          <RadioButton v-model="formDisplay.allDay" :value="true" />
-          <label>All-Day</label>
-          <RadioButton v-model="formDisplay.allDay" :value="false" />
-          <label>Time range</label>
-        </div>
-        <!-- Time Range -->
-        <div class="flex flex-row items-star gap-3">
-          <div v-show="!formDisplay.allDay" class="flex flex-col gap-4">
-            <div v-for="(time, i) in formDisplay.time" :key="`${index}-${i}`">
-              <div class="flex flex-row gap-2 items-center">
-                <div
-                  class="flex flex-row gap-4 items-center text-[18px] text-[#282828]"
-                >
-                  <Calendar
-                    v-model="time.startTime"
-                    showIcon
-                    iconDisplay="input"
-                    icon="pi pi-clock"
-                    timeOnly
-                    :manualInput="false"
-                    :stepMinute="30"
-                    class="w-[200px] ml-7"
-                    :minDate="minStartTime(i)"
-                    @update:model-value="changeStartTime(i)"
-                  />
-                  <p class="text-gray-600">to</p>
-                  <Calendar
-                    v-model="time.endTime"
-                    showIcon
-                    iconDisplay="input"
-                    icon="pi pi-clock"
-                    timeOnly
-                    :manualInput="false"
-                    :stepMinute="30"
-                    class="w-[200px]"
-                    :minDate="minEndTime(i)"
-                    @update:model-value="changeEndTime(i)"
-                    :disabled="!time.startTime || formDisplay.allDay"
-                  />
-                </div>
-                <Button
-                  v-if="i === 0"
-                  icon="pi pi-plus"
-                  style="color: rgb(255, 255, 255)"
-                  @click="addTime()"
-                  class="w-8 h-8 rounded-lg bg-blue-500 border-0"
-                  :disabled="formDisplay.allDay || !time.endTime"
-                ></Button>
-                <Button
-                  v-if="i !== 0"
-                  icon="pi pi-minus"
-                  @click="deleteTime(i)"
-                  severity="danger"
-                  class="w-8 h-8 rounded-lg"
-                ></Button>
-              </div>
-            </div>
-          </div>
-          <!-- add time range -->
-          <div></div>
-        </div>
-      </div>
 
-      <!-- Running Date -->
-      <div class="flex flex-col justify-start gap-2">
-        <div class="inline-flex items-center">
-          <label
-            class="flex justify-start font-semibold text-[18px] text-[#4e93f3]"
-          >
-            Running Date
-          </label>
-          <label class="text-[#FF0000] font-medium"> * </label>
-        </div>
-        <div class="flex flex-row items-star gap-3">
-          <div class="flex flex-row gap-2 items-center">
+        <div class="flex flex-col justify-start gap-2">
+          <div class="flex flex-row items-star gap-3">
             <div
               class="flex flex-row gap-4 items-center text-[18px] text-[#4e93f3]"
             >
@@ -245,14 +172,79 @@ const minEndTime = (i: number) => {
             </div>
           </div>
         </div>
+        <div class="flex flex-col gap-4 ml-7 mt-1 mb-1">
+          <div class="flex items-center gap-2">
+            <RadioButton v-model="formDisplay.allDay" :value="true" />
+            <label>All-Day</label>
+          </div>
+          <div class="flex items-center gap-2">
+            <RadioButton v-model="formDisplay.allDay" :value="false" />
+            <label>Time range</label>
+          </div>
+        </div>
+        <!-- Time Range -->
+        <div class="flex flex-row items-star gap-3">
+          <div v-show="!formDisplay.allDay" class="flex flex-col gap-4">
+            <div v-for="(time, i) in formDisplay.time" :key="`${index}-${i}`">
+              <div class="flex flex-row gap-4 items-center">
+                <div
+                  class="flex flex-row gap-4 items-center text-[18px] text-[#282828]"
+                >
+                  <Calendar
+                    v-model="time.startTime"
+                    showIcon
+                    iconDisplay="input"
+                    icon="pi pi-clock"
+                    timeOnly
+                    :manualInput="false"
+                    :stepMinute="30"
+                    class="w-[100px] ml-7"
+                    :minDate="minStartTime(i)"
+                    @update:model-value="changeStartTime(i)"
+                  />
+                  <p class="text-gray-600">to</p>
+                  <Calendar
+                    v-model="time.endTime"
+                    showIcon
+                    iconDisplay="input"
+                    icon="pi pi-clock"
+                    timeOnly
+                    :manualInput="false"
+                    :stepMinute="30"
+                    class="w-[100px]"
+                    :minDate="minEndTime(i)"
+                    @update:model-value="changeEndTime(i)"
+                    :disabled="!time.startTime || formDisplay.allDay"
+                  />
+                </div>
+                <Button
+                  v-if="i === 0"
+                  icon="pi pi-plus"
+                  style="color: rgb(255, 255, 255)"
+                  @click="addTime()"
+                  class="w-8 h-8 rounded-lg bg-blue-500 border-0"
+                  :disabled="formDisplay.allDay || !time.endTime"
+                ></Button>
+                <Button
+                  v-if="i !== 0"
+                  icon="pi pi-minus"
+                  @click="deleteTime(i)"
+                  severity="danger"
+                  class="w-8 h-8 rounded-lg"
+                ></Button>
+              </div>
+            </div>
+          </div>
+          <!-- add time range -->
+        </div>
       </div>
 
       <!-- Display Duration-->
-      <div class="flex flex-col mt-1 gap-2">
+      <div class="flex flex-col -mt-4 gap-2">
         <div class="inline-flex items-center">
           <label
             for="duration"
-            class="flex justify-start font-semibold text-[18px] text-[#4e93f3]"
+            class="flex justify-start font-semibold text-[18px] text-black"
           >
             Display Duration
           </label>
@@ -263,14 +255,14 @@ const minEndTime = (i: number) => {
             v-model="formDisplay.duration"
             inputId="minmax-buttons"
             mode="decimal"
-            class="ml-7 w-[150px]"
+            class="ml-7 w-[100px]"
             showButtons
             showButton
             :min="0"
             :max="15"
             :inputStyle="{ width: '70px' }"
           />
-          <p class="text-gray-600">seconds</p>
+          <p class="text-gray-600">Seconds</p>
         </div>
       </div>
 
@@ -279,23 +271,19 @@ const minEndTime = (i: number) => {
         <div class="inline-flex items-center">
           <label
             for="Device"
-            class="flex justify-start font-semibold text-[18px] text-[#4e93f3]"
+            class="flex justify-start font-semibold text-[18px] text-black"
           >
             Device
           </label>
           <label class="text-[#FF0000] font-medium"> * </label>
         </div>
-        <div class="flex flex-col gap-4 text-[16px] text-black">
+        <div class="flex flex-col gap-2 text-[16px] text-black">
           <div class="flex gap-2 items-center ml-7">
             <Checkbox v-model="formDisplay.allDevice" :binary="true" />
             <label>All Devices</label>
           </div>
-          <div class="flex flex-wrap ml-7">
-            <div
-              v-for="(item, i) in device"
-              :key="i"
-              class="flex gap-2 items-center w-1/4"
-            >
+          <div class="flex flex-col gap-2 ml-7">
+            <div v-for="(item, i) in device" :key="i">
               <div v-if="item.deviceName" class="flex gap-2 items-center">
                 <div>
                   <Checkbox
@@ -307,11 +295,11 @@ const minEndTime = (i: number) => {
                 </div>
                 <div>
                   <label :for="item.deviceName">{{ item.deviceName }}</label>
-                  <br />
-                  <!-- New line -->
-                  <label :for="item.deviceName">{{
-                    "(" + item.room + ")"
-                  }}</label>
+                  <span>
+                    <label :for="item.deviceName">{{
+                      " (" + item.room + ")"
+                    }}</label>
+                  </span>
                 </div>
               </div>
             </div>
