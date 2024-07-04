@@ -97,8 +97,10 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const token = checkTokenExpired(localStorage.getItem("token") ?? "");
-  if (token == "Link Expired.") localStorage.removeItem("token");
+  const token = await checkTokenExpired(localStorage.getItem("token")!);  
+  if (token == "Link Expired.") {
+    localStorage.removeItem("token");
+  }
   if (to.path.includes("/emergency")) {
     next();
     return;

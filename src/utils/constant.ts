@@ -13,17 +13,19 @@ export const calculateScreenHeight = () => {
   return `${scrollHeight}px`;
 };
 
-export const checkTokenExpired = (token: string) => {
+export const checkTokenExpired = async (token: string) => {
   try {
-    const decode = JSON.parse(atob(token.split(".")[1]));
+    const decode = await JSON.parse(atob(token.split(".")[1]));
     // check email
     if (decode.email.includes(store.state.userInfo.email)) {
       // check expired
-      if (decode.exp * 1000 >= new Date().getTime()) {
+      if (decode.exp * 1000 < new Date().getTime()) {
+        return "Link Expired.";
+      } else {
         return "Success";
       }
     }
-    return "Link Expired.";
+    return "Invalid Token.";
   } catch (err) {
     // token invalid
     return "Invalid Token.";
