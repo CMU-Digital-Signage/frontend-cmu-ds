@@ -82,7 +82,7 @@ onUnmounted(() => {
 <template>
   <PopupUpload />
   <div
-    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig"
+    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-[#f3f3f3]" />
@@ -91,7 +91,7 @@ onUnmounted(() => {
       <router-view class="bg-[#ffffff]" />
     </div>
   </div>
-  <div v-else class="flex flex-col w-screen h-full bg-[#ffffff] md:fixed">
+  <div v-else class="flex flex-col w-screen h-full bg-[#ffffff] md:fixed font-sf-pro">
     <NavBar
       v-if="$route.path === '/emergency'"
       class="bg-white"
@@ -100,7 +100,7 @@ onUnmounted(() => {
     <router-view />
   </div>
   <div
-    class="min-h-2 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed"
+    class="min-h-2 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed font-sf-pro"
     v-if="
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "

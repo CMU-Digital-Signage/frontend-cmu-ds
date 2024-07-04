@@ -240,7 +240,7 @@ const del = async () => {
     scrollDirection="vertical"
     scrollable
     :scrollHeight="calculateScreenHeight()"
-    :class="`text-[12px] lg:text-[14px] ${user.isAdmin ? '' : 'py-2'}`"
+    :class="`text-[12px] lg:text-[14px] flex-1 ${user.isAdmin ? '' : 'py-2'}`"
   >
     <Column
         class="text-[14px]"
