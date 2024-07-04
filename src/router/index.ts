@@ -12,6 +12,7 @@ import AdminDashboard from "../views/AdminView.vue";
 import Mac from "@/views/device/[mac].vue";
 import Token from "@/views/reset/[token].vue";
 import PosterpreView from "@/views/PosterpreView.vue";
+import { checkTokenExpired } from "@/utils/constant";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -96,7 +97,9 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  if (to.path.includes("/emergency") && !localStorage.getItem("token")) {
+  const token = checkTokenExpired(localStorage.getItem("token") ?? "");
+  if (token == "Link Expired.") localStorage.removeItem("token");
+  if (to.path.includes("/emergency")) {
     next();
     return;
   }
