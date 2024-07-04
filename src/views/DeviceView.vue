@@ -40,8 +40,8 @@ watch(devices, () => {
       :key="index"
       class="text-left pb-7 first:border-none border-t-2 border-[#dee2e6]"
     >
-      <p class="font-semibold text-[16px] px-4 pt-4">{{ floor }}th Floor</p>
-      <p class="text-[#3671BF] text-[16px] px-4 pb-4">
+      <p class="font-semibold text-[14px] px-4 pt-4">{{ floor }}th Floor</p>
+      <p class="text-[#3671BF] text-[12px] px-4 pb-4">
         {{ devices.filter((e) => e.room?.startsWith(floor || "")).length }}
         {{
           devices.filter((e) => e.room?.startsWith(floor || "")).length > 1

@@ -163,7 +163,7 @@ const checkValidRoomNumber = () => {
       scrollDirection="vertical"
       scrollable
       :scrollHeight="calculateScreenHeight()"
-      class="mt-2"
+      class="mt-2 text-[14px]"
     >
       <Column
         field="deviceName"
@@ -241,7 +241,7 @@ const checkValidRoomNumber = () => {
             <Button
               icon="pi pi-pencil"
               rounded
-              class="w-9 h-9"
+              class="w-7 h-7"
               severity="warning"
               @click="
                 showPopup = true;
@@ -251,7 +251,7 @@ const checkValidRoomNumber = () => {
             <Button
               icon="pi pi-trash"
               rounded
-              class="w-9 h-9"
+              class="w-7 h-7"
               severity="danger"
               @click="
                 deletePopup = true;

@@ -49,7 +49,7 @@ const changeStatusDevice = async () => {
         :class="[
           device.status ? 'text-[#62ccca]' : 'text-gray-400',
           'pi pi-desktop',
-          'text-[70px]',
+          'text-[50px]',
         ]"
       ></i>
       <div class="mr-7">
@@ -57,12 +57,17 @@ const changeStatusDevice = async () => {
           :class="[
             device.status ? 'text-black' : 'text-gray-500',
             'font-bold',
-            'text-[16px]',
+            'text-[14px]',
           ]"
         >
           {{ device.deviceName }}
         </p>
-        <p :class="[device.status ? 'text-black' : 'text-gray-500']">
+        <p
+          :class="[
+            device.status ? 'text-black' : 'text-gray-500',
+            'text-[12px]',
+          ]"
+        >
           Room: {{ device.room }}
         </p>
         <!-- <p class="text-gray-500 font-bold" v-if="device.status == false">Off</p>
@@ -92,6 +97,6 @@ const changeStatusDevice = async () => {
   gap: 25px;
   text-align: left;
   border-color: #bbbaba;
-  padding: 20px 35px;
+  padding: 20px 25px;
 }
 </style>
