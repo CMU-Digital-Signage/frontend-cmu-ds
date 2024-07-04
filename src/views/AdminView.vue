@@ -30,7 +30,7 @@ watch([admin, devices], () => {
       v-if="loadAdmin"
       class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
     ></Skeleton>
-    <TabView v-else v-model:active-index="click" class="flex flex-col">
+    <TabView v-else v-model:active-index="click" class="flex text-[14px] flex-col">
       <TabPanel header="Admin">
         <Admin />
       </TabPanel>

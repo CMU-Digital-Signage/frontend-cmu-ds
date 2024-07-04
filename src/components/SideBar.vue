@@ -374,10 +374,10 @@ const handleChangePassword = async () => {
           ></Button>
         </div></div
     ></Dialog>
-    <div class="space-y-5" :class="{ 'p-4': openSidebar }">
+    <div class="space-y-5" :class="{ 'p-4 py-6': openSidebar }">
       <div
         class="flex justify-between items-start"
-        :class="{ 'p-4': !openSidebar }"
+        :class="{ 'p-4 py-6': !openSidebar }"
       >
         <div>
           <div class="flex items-center gap-2 md:fixed">
@@ -393,7 +393,7 @@ const handleChangePassword = async () => {
               v-show="openSidebar"
             >
               <img
-                class="w-32"
+                class="w-28 items-center"
                 alt="textlogo"
                 src="../assets/images/text_logo_v2.png"
               />
@@ -409,7 +409,6 @@ const handleChangePassword = async () => {
           :style="{
             transform: openSidebar ? '' : 'translateX(8px)',
             marginLeft: openSidebar ? '' : '-8px',
-            marginTop: openSidebar ? '2px' : '-2px',
           }"
           v-if="!$route.meta.crossIconSidebar"
         >
@@ -428,7 +427,6 @@ const handleChangePassword = async () => {
           :style="{
             transform: openSidebar ? '' : 'translateX(8px)',
             marginLeft: openSidebar ? '' : '-8px',
-            marginTop: openSidebar ? '2px' : '-2px',
           }"
           link
         >
@@ -440,11 +438,11 @@ const handleChangePassword = async () => {
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
           v-if="openSidebar"
-          class="upload-button mt-7 items-center justify-center bg-[#236c79]"
+          class="upload-button mt-7 items-center justify-center"
           @click="store.state.showUpload = true"
         >
           <div class="flex items-center h-5 justify-between">
-            <span class="text-[#ffffff] font-extrabold text-[16px]"
+            <span class="text-[#ffffff] font-extrabold text-[14px]"
               >Upload Content</span
             >
           </div>
@@ -487,7 +485,7 @@ const handleChangePassword = async () => {
               }"
             >
               <i class="pi pi-microsoft"></i>
-              <span>Dashboard</span>
+              <span class="text-[12px]">Dashboard</span>
             </Button>
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
@@ -516,7 +514,7 @@ const handleChangePassword = async () => {
                 }"
               >
                 <i class="pi pi-file"></i>
-                <span>Content</span>
+                <span class="text-[12px]">Content</span>
               </Button>
               <Button
                 class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
@@ -548,7 +546,7 @@ const handleChangePassword = async () => {
               }"
             >
               <i class="pi pi-desktop"></i>
-              <span>Device</span>
+              <span class="text-[12px]">Device</span>
             </Button>
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
@@ -578,10 +576,10 @@ const handleChangePassword = async () => {
               }"
             >
               <i class="pi pi-exclamation-triangle"></i>
-              <span>Emergency</span>
+              <span class="text-[12px]">Emergency</span>
             </Button>
             <Button
-              class="text-[#f00] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
+              class="text-[#f00] text-[12px] rounded-full h-10 w-10 flex items-center justify-center menu-ho-emergency"
               :class="{
                 'bg-[#ff5b5b] text-[#FFFFFF]': $route.path === '/emergency',
               }"
@@ -629,7 +627,7 @@ const handleChangePassword = async () => {
               }"
             >
               <i class="pi pi-users"></i>
-              <span>Management</span>
+              <span class="text-[12px]">Management</span>
             </Button>
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
@@ -692,7 +690,7 @@ const handleChangePassword = async () => {
       aria-controls="overlay_menu"
       :class="
         openSidebar
-          ? 'flex h-14 left-0 -bottom-5 rounded-2xl w-[94%] hover:bg-gray-300 ml-1 pl-2 pr-4 items-center justify-between border-[1px]  border-[#c2c2c2] '
+          ? 'flex h-12 left-0 -bottom-5 rounded-xl w-[94%] hover:bg-gray-300  ml-1 pl-2 pr-4 items-center justify-between border-[1px]  border-[#c2c2c2] '
           : 'text-[#282828]   ml-5 rounded-full h-10 w-10 flex items-center justify-center hover:bg-gray-300 translate-y-3'
       "
     >
@@ -701,14 +699,14 @@ const handleChangePassword = async () => {
         id="overlay_menu"
         :model="items"
         :popup="true"
-        class="ml-2 rounded-2xl text-md"
+        class="rounded-lg text-[14px]"
       />
       <div class="flex items-center">
         <div class="flex flex-row gap-2 items-center fixed">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="40"
-            height="40"
+            width="32"
+            height="32"
             viewBox="0 0 39 39"
             fill="none"
             :style="{
@@ -721,15 +719,15 @@ const handleChangePassword = async () => {
             />
           </svg>
           <div v-show="openSidebar">
-            <div class="flex flex-col items-start text-[15px] left-14">
+            <div class="flex flex-col items-start text-[12px] left-14">
               <p v-if="user" class="font-bold text-black">
                 {{ user.firstName }}
                 {{ (user?.lastName || "").charAt(0) }}.
               </p>
-              <div class="-mt-1 text-[#0094ff] text-[13px] font-700">
+              <div class="-mt-1 text-[#0094ff] text-[12px] font-700">
                 <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
               </div>
-              <div class="text-[#2b8a85] text-[13px] font-700">
+              <div class="text-[#2b8a85] text-[12px] font-700">
                 <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">
                   Instructor
                 </p>
@@ -784,7 +782,7 @@ Button {
 }
 
 .side-bar-open {
-  width: 18rem;
+  width: 17rem;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   height: 100%;
@@ -887,22 +885,70 @@ Button {
   color: rgb(54, 54, 54);
   width: 100%;
   border: none;
-  border-radius: 0.7rem;
+  border-radius: 2rem;
   padding-top: 0.7rem;
   padding-bottom: 0.7rem;
   display: flex;
   align-items: center;
+  justify-content: center; /* Center text horizontally */
   font-weight: 900;
   font-size: 14px;
   cursor: pointer;
-  transition: box-shadow 0.3s;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  transition: transform 0.2s ease-out;
+  background-image: linear-gradient(45deg, #57eb7f 0%, #3a9ad2 50%, #5386A4 100%);
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 8px;
 }
 
 .upload-button:hover {
-  box-shadow: 0px 0px 10px 2px rgba(41, 128, 92, 0.5);
-  background-color: #006a56;
+  animation: pulse 1s infinite linear;
+  transform: scale(1.02);
 }
+
+@keyframes pulse {
+  0% {
+    box-shadow: 
+      0 0 10px rgba(87, 235, 127, 0.8), 
+      0 0 25px rgba(58, 210, 147, 0.8), 
+      0 0 35px rgba(155, 202, 228, 0.8), 
+      0 0 20px rgba(192, 230, 252, 0.8);
+  }
+  100% {
+    box-shadow: 
+      0 0 15px rgba(87, 235, 127, 0.8), 
+      0 0 40px rgba(58, 210, 147, 0.8), 
+      0 0 50px rgba(155, 202, 228, 0.8), 
+      0 0 30px rgba(192, 230, 252, 0.8);
+  }
+}
+
+.upload-button:active {
+  transform: scale(0.95);
+}
+
+.upload-button:focus {
+  outline: none;
+}
+
+.upload-button.jelly {
+  animation: jelly 0.5s;
+}
+
+@keyframes jelly {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+}
+
+
 
 .menu-ho-upload {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;

@@ -38,12 +38,24 @@ onUnmounted(() => {
     <TabView
       v-else-if="store.state.userInfo.isAdmin"
       v-model:activeIndex="click"
-      class="flex flex-col flex-1 mb-2 overflow-hidden"
+      class="flex flex-col flex-1 mb-2 text-[14px] overflow-hidden"
     >
-      <TabPanel header="Content">
-        <ContentTable v-if="uniquePosters?.length" :types="'NP'" />
-        <div v-else class="my-3 justify-center items-center">
-          Content not found
+      <TabPanel  header="Content">
+        <ContentTable  v-if="uniquePosters?.length" :types="'NP'" />
+        <div
+          v-else
+          class="flex   justify-center items-center h-screen "
+        >
+        <div class="flex flex-col mb-[180px]">
+        <p class=" text-[18px] font-semibold text-[#575757]">Nothing in Content</p>
+        <p class=" text-[14px] mt-1 font-regular">Content will be displayed after uploading.</p>
+      </div>
+        <img
+              class="w-[420px] h-[420px] mb-52 ml-32 translate-x-12"
+              alt="cmulogo"
+              src="../assets/images/notFound.jpg"
+            />
+         
         </div>
       </TabPanel>
       <TabPanel
@@ -54,9 +66,21 @@ onUnmounted(() => {
           },
         }"
       >
-        <ContentTable v-if="emerPosters?.length! > 1" :types="'EP'" />
-        <div v-else class="my-3 justify-center items-center">
-          Content not found
+        <ContentTable   v-if="emerPosters?.length! > 1" :types="'EP'" />
+        <div
+          v-else
+          class="flex   justify-center items-center h-screen "
+        >
+        <div class="flex flex-col mb-[180px]">
+        <p class=" text-[18px] font-semibold text-[#575757]">Nothing in Emergency Content</p>
+        <p class=" text-[14px] mt-1 font-regular">Emergency Content will be displayed after uploading.</p>
+      </div>
+        <img
+              class="w-[420px] h-[420px] mb-52 ml-32 translate-x-12"
+              alt="cmulogo"
+              src="../assets/images/notFound.jpg"
+            />
+         
         </div>
       </TabPanel>
     </TabView>

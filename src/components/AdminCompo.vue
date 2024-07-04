@@ -44,12 +44,12 @@ const del = async (id: number) => {
 <template>
   <div class="rectangle2">
     <div class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 font-semibold pt-2.5"
+      <label for="macAddress" class="text-primary-50 text-[12px] font-semibold pt-[10px]"
         >Search
       </label>
       <InputText
         v-model="search"
-        class="border border-[#C6C6C6] p-2 h-9 ml-2 mt-1 mb-3 w-96 rounded-lg"
+        class="border border-[#C6C6C6] p-2 h-8 ml-2 mt-1 mb-3 w-96 text-[12px] rounded-lg"
         placeholder="Ex. Navadon Khunlertgit"
         type="text"
       ></InputText>
@@ -59,7 +59,7 @@ const del = async (id: number) => {
       scrollDirection="vertical"
       scrollable
       :scrollHeight="calculateScreenHeight()"
-      class="mt-2"
+      class="mt-2 text-[14px]"
     >
       <Column
         field="firstName"
@@ -94,7 +94,7 @@ const del = async (id: number) => {
           <Button
             icon="pi pi-trash"
             rounded
-            class="w-9 h-9 mx-3"
+            class="w-7 h-7 "
             severity="danger"
             v-if="!isCurrentUser(rowData.data)"
             @click="del(rowData.data.id)"

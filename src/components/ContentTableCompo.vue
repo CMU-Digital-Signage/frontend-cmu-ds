@@ -240,9 +240,10 @@ const del = async () => {
     scrollDirection="vertical"
     scrollable
     :scrollHeight="calculateScreenHeight()"
-    :class="`text-[14px] lg:text-[16px] ${user.isAdmin ? '' : 'py-2'}`"
+    :class="`text-[12px] lg:text-[14px] ${user.isAdmin ? '' : 'py-2'}`"
   >
     <Column
+        class="text-[14px]"
       :field="(e) => (props.types === 'NP' ? e.title : e.incidentName)"
       header="Title"
       sortable
@@ -260,11 +261,12 @@ const del = async () => {
       </template>
     </Column>
     <Column
+  
       v-if="props.types === 'NP'"
       field="uploader"
       header="Uploader"
       sortable
-      class="w-1/5"
+      class="w-1/5 text-[14px]"
     >
       <template #sorticon="slotProps">
         <i
@@ -278,11 +280,12 @@ const del = async () => {
       </template>
     </Column>
     <Column
+
       v-if="props.types === 'NP'"
       :field="(e) => dateFormatter(e.createdAt)"
       header="Upload Date"
       sortable
-      class="w-1/5"
+      class="w-1/5 text-[14px]"
     >
       <template #sorticon="slotProps">
         <i
@@ -297,6 +300,7 @@ const del = async () => {
     </Column>
 
     <Column
+        class="text-[14px]"
       v-if="props.types !== 'EP'"
       sortable
       header="Type"
@@ -331,6 +335,7 @@ const del = async () => {
       </template>
     </Column>
     <Column
+        class="text-[14px]"
       field="status"
       :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"
     >
@@ -343,7 +348,7 @@ const del = async () => {
           @mouseleave="(e) => toggleShowStatus(e)"
         ></i>
         <OverlayPanel
-          class="w-fit h-fit max-w-full max-h-full p-2 rounded-lg"
+          class="w-fit h-fit max-w-full max-h-full text-[12px] p-2 rounded-lg"
           ref="isOverlayPanelVisible"
         >
           <div class="flex flex-col gap-3">
@@ -383,6 +388,7 @@ const del = async () => {
     </Column>
 
     <Column
+    class="text-[14px]"
       field="management"
       header="Action"
       :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"
@@ -395,7 +401,7 @@ const del = async () => {
             "
             icon="pi pi-info"
             rounded
-            class="w-8 h-8 md:w-9 md:h-9"
+            class="w-5 h-5 md:w-7 md:h-7"
             severity="primary"
             @click="
               selectPoster = rowData.data;
@@ -406,7 +412,7 @@ const del = async () => {
             v-if="user.isAdmin || user.id === rowData.data.id"
             icon="pi pi-pencil"
             rounded
-            class="w-8 h-8 md:w-9 md:h-9"
+            class="w-5 h-5 md:w-7 md:h-7"
             severity="warning"
             @click="
               props.types === 'NP'
@@ -418,7 +424,7 @@ const del = async () => {
             v-if="user.isAdmin || user.id === rowData.data.id"
             icon="pi pi-trash"
             rounded
-            class="w-8 h-8 md:w-9 md:h-9"
+            class="w-5 h-5 md:w-7 md:h-7"
             severity="danger"
             :loading="
               loading &&

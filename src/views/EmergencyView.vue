@@ -154,17 +154,17 @@ const handleEmergency = async () => {
     >
       <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
-          class="flex flex-row px-3 py-2 lg:px-5 lg:py-1 mb-4 gap-7 bg-[#ffe5e5] rounded-lg h-20 items-center"
+          class="flex flex-row px-3 py-2 lg:px-5 lg:py-1 mb-4 gap-5 bg-[#ffe5e5] rounded-lg h-16 items-center"
         >
           <div
-            class="w-8 h-8 ml-3 flex items-center justify-center rounded-full"
+            class="w-8 h-8 ml-1 flex items-center justify-center rounded-full"
           >
             <i
-              class="pi pi-exclamation-triangle mb-1 text-red-500 text-3xl"
+              class="pi pi-exclamation-triangle text-red-500 text-2xl"
             ></i>
           </div>
 
-          <div class="ml-1 md:text-[15px] text-[12px]">
+          <div class="ml-1 md:text-[14px] text-[12px]">
             <p class="font-bold text-red-500">
               <span>Activating the Emergency Poster</span>
             </p>
@@ -176,7 +176,7 @@ const handleEmergency = async () => {
         </div>
         <div class="flex flex-col gap-5 -mt-2">
           <div>
-            <p class="md:text-[16px] text-[14px] font-semibold mb-2">
+            <p class="md:text-[14px] text-[12px] mt-3 font-semibold mb-2">
               Choose Poster to displayed
             </p>
             <div
@@ -201,7 +201,7 @@ const handleEmergency = async () => {
           </div>
 
           <div class="-mt-2">
-            <p class="md:text-[16px] text-[14px] font-semibold mb-2">
+            <p class="md:text-[14px] text-[12px] font-semibold mb-2">
               Or type text to display banner
             </p>
             <div
@@ -215,7 +215,7 @@ const handleEmergency = async () => {
                     "
                     v-model="selectEmer"
                   />
-                  <label :for="'Banner'">Banner</label>
+                  <label class="text-[14px]" :for="'Banner'">Banner</label>
                 </div>
                 <div class="flex flex-col gap-2 w-full">
                   <Textarea
@@ -224,7 +224,7 @@ const handleEmergency = async () => {
                     @input="getTextPoster"
                     :maxlength="312"
                     placeholder="Ex: There's a fire, do not use the elevator"
-                    class="md:text-[16px] text-[14px] font-notoThai border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] md:h-[85px] xl:h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
+                    class="md:text-[14px] text-[12px]  border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] md:h-[85px] xl:h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
                     :class="{
                       'border-red-500':
                         selectEmer.incidentName === 'banner' &&
@@ -278,16 +278,16 @@ const handleEmergency = async () => {
 
       <div v-if="selectEmer">
         <p
-          class="md:text-[17px] text-[14px] font-semibold mb-2 md:-mt-6 xl:mb-2"
+          class="md:text-[14px] text-[12px] font-semibold mb-2 md:-mt-6 xl:mb-2"
           :class="{ 'md:-mt-[100px]  xl:mb-2': selectEmer.status === 'Active' }"
         >
           Type your Emergency Password in the box below
         </p>
         <div class="flex flex-col">
           <Password
-            class="w-full mb-2"
+            class="w-full mb-2 h-9"
             v-model="password"
-            input-class="w-full rounded-[12px] border-2"
+            input-class="w-full rounded-[5px] border-1"
             :feedback="false"
             toggle-mask
             @keypress="
@@ -347,7 +347,7 @@ const handleEmergency = async () => {
             <div
               class="font-semibold text-xl text-center opacity-20 rounded-full"
             >
-              <p class="text-[#3a3737] opacity-100">Preview Poster</p>
+              <p class="text-[#3a3737] text-[16px] opacity-400">Preview Poster</p>
             </div>
           </div>
         </div>

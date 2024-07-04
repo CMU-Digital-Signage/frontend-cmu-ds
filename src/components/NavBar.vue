@@ -596,32 +596,32 @@ const checkValidRoomNumber = () => {
     >
       <li>
         <label
-          class="text-[14px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
+          class="text-[12px] md:ml-[7px] mr-1 xl:text-[14px] md:text-[10px]"
           >Title</label
         >
         <InputText
           id="title"
           v-model="filterInput.title"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-32 xl:w-40 rounded-lg"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-28 xl:w-32 rounded-lg"
           placeholder="Ex.CPE Music"
         ></InputText>
       </li>
       <li v-if="store.state.selectTabview !== 1">
         <label
-          class="text-[14px] md:ml-[7px] ml-[12px] mr-1 xl:text-[16px] md:text-[12px]"
+          class="text-[12px] md:ml-[7px] ml-[12px] mr-1 xl:text-[14px] md:text-[10px]"
           >Uploader</label
         >
         <InputText
           id="uploader"
           v-model="filterInput.uploader"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-32 xl:w-40 rounded-lg"
+          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-28 xl:w-32 rounded-lg"
           placeholder="Ex.Navadon"
         ></InputText>
       </li>
 
       <li v-if="store.state.selectTabview !== 1">
         <label
-          class="text-[14px] md:ml-[7px] ml-[12px] mr-1 xl:text-[16px] md:text-[12px]"
+          class="text-[12px] md:ml-[7px] ml-[12px] mr-1 xl:text-[14px] md:text-[10px]"
           >Upload Date
         </label>
         <Calendar
@@ -633,12 +633,15 @@ const checkValidRoomNumber = () => {
           inputId="icondisplay"
           dateFormat="dd M yy"
           inputClass="text-[13px] lg:text-[16px]"
-          class="w-[120px] md:w-[140px] xl:w-[150px] h-8 rounded-lg align-middle"
+          class="w-[90px] md:w-[100px] xl:w-[120px] h-8 rounded-lg align-middle"
+          :pt="{
+            input: { class: ` text-[10px] ` },
+          }"
         />
       </li>
       <li v-if="store.state.selectTabview === 0">
         <label
-          class="text-[14px] ml-[12px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
+          class="text-[12px] ml-[12px] md:ml-[7px] mr-1 xl:text-[14px] md:text-[10px]"
         >
           Type
         </label>
@@ -649,7 +652,7 @@ const checkValidRoomNumber = () => {
           optionValue="type"
           inputClass="text-[13px] lg:text-[16px] text-left"
           :showClear="filterInput.status !== null"
-          class="rounded-lg items-center h-8 w-28 md:w-32 xl:w-36"
+          class="rounded-lg items-center h-8 w-24 md:w-38 xl:w-32"
         >
           <template #option="slotProps">
             <Tag
@@ -669,7 +672,7 @@ const checkValidRoomNumber = () => {
       </li>
       <li>
         <label
-          class="text-[14px] ml-[12px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
+          class="text-[12px] ml-[12px] md:ml-[7px] mr-1 xl:text-[14px] md:text-[10px]"
         >
           Status
         </label>
@@ -680,7 +683,7 @@ const checkValidRoomNumber = () => {
           optionValue="status"
           inputClass="text-[13px] lg:text-[16px] text-left"
           :showClear="filterInput.status !== ''"
-          class="rounded-lg items-center h-8 w-28 md:w-32 xl:w-36"
+          class="rounded-lg items-center h-8 w-24 md:w-38 xl:w-32"
         >
           <template #option="slotProps">
             <Tag
@@ -703,7 +706,7 @@ const checkValidRoomNumber = () => {
             </div>
             <div class="md:hidden xl:block">
               <Button
-                label="Clear Filter"
+                label="Clear"
                 @click="store.commit('resetFilter')"
                 class="flex justify-end ml-3 right-0 font-bold rounded-[8px] h-8 border-0 bg-red-500 text-right hover:bg-red-600"
               />
