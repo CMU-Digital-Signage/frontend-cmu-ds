@@ -2,13 +2,21 @@
 import ContentTable from "@/components/ContentTableCompo.vue";
 import { computed, onBeforeMount, onUnmounted, ref, watch } from "vue";
 import store from "../store";
+import { User } from "@/types";
 
 const click = computed({
   get: () => store.state.selectTabview,
   set: (val) => (store.state.selectTabview = val),
 });
 
-const uniquePosters = computed(() => store.state.uniquePosters);
+const user = computed<User>(() => store.state.userInfo);
+const uniquePosters = computed(() =>
+  user.value.isAdmin
+    ? store.state.uniquePosters
+    : store.state.uniquePosters?.filter((e) =>
+        e.uploader.includes(user.value.firstName)
+      )
+);
 const emerPosters = computed(() => store.state.emerPosters);
 const loading = ref(false);
 
@@ -30,32 +38,37 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="rectangle flex flex-col flex-1">
+  <div class="rectangle flex flex-col flex-1 font-sf-pro">
     <Skeleton
       v-if="loading"
       class="bg-gray-200 rounded-xl flex-1 my-3"
     ></Skeleton>
     <TabView
-      v-else-if="store.state.userInfo.isAdmin"
+      v-else-if="user.isAdmin"
       v-model:activeIndex="click"
       class="flex flex-col flex-1 mb-2 text-[14px] overflow-hidden"
     >
-      <TabPanel  header="Content">
-        <ContentTable  v-if="uniquePosters?.length" :types="'NP'" />
-        <div
-          v-else
-          class="flex   justify-center items-center h-screen "
-        >
-        <div class="flex flex-col mb-[180px]">
-        <p class=" text-[18px] font-semibold text-[#575757]">Nothing in Content</p>
-        <p class=" text-[14px] mt-1 font-regular">Content will be displayed after uploading.</p>
-      </div>
-        <img
-              class="w-[420px] h-[420px] mb-52 ml-32 translate-x-12"
-              alt="cmulogo"
-              src="../assets/images/notFound.jpg"
-            />
-         
+      <TabPanel
+        header="Content"
+        :pt="{
+          content: { class: `flex flex-1` },
+        }"
+      >
+        <ContentTable v-if="uniquePosters?.length" :types="'NP'" />
+        <div v-else class="flex flex-1 gap-10 justify-center items-center">
+          <div class="flex flex-col">
+            <p class="text-[16px] font-semibold text-[#575757]">
+              Nothing in Content
+            </p>
+            <p class="text-[12px] mt-1 font-regular">
+              Content will be displayed after uploading.
+            </p>
+          </div>
+          <img
+            class="w-[420px] h-[420px]"
+            alt="cmulogo"
+            src="../assets/images/notFound.jpg"
+          />
         </div>
       </TabPanel>
       <TabPanel
@@ -64,23 +77,24 @@ onUnmounted(() => {
           headerAction: {
             class: `${click != 0 ? 'text-[#f00] border-[#f00]' : ''}`,
           },
+          content: { class: `flex flex-1` },
         }"
       >
-        <ContentTable   v-if="emerPosters?.length! > 1" :types="'EP'" />
-        <div
-          v-else
-          class="flex   justify-center items-center h-screen "
-        >
-        <div class="flex flex-col mb-[180px]">
-        <p class=" text-[18px] font-semibold text-[#575757]">Nothing in Emergency Content</p>
-        <p class=" text-[14px] mt-1 font-regular">Emergency Content will be displayed after uploading.</p>
-      </div>
-        <img
-              class="w-[420px] h-[420px] mb-52 ml-32 translate-x-12"
-              alt="cmulogo"
-              src="../assets/images/notFound.jpg"
-            />
-         
+        <ContentTable v-if="emerPosters?.length! > 1" :types="'EP'" />
+        <div v-else class="flex flex-1 gap-10 justify-center items-center">
+          <div class="flex flex-col">
+            <p class="text-[16px] font-semibold text-[#575757]">
+              Nothing in Emergency Content
+            </p>
+            <p class="text-[12px] mt-1 font-regular">
+              Emergency Content will be displayed after uploading.
+            </p>
+          </div>
+          <img
+            class="w-[420px] h-[420px]"
+            alt="cmulogo"
+            src="../assets/images/notFound.jpg"
+          />
         </div>
       </TabPanel>
     </TabView>
@@ -90,11 +104,20 @@ onUnmounted(() => {
       :types="'NP'"
       class="rectangle flex flex-col"
     />
-    <div
-      v-else
-      class="my-3 flex h-full justify-center items-center align-middle"
-    >
-      Your Content not found
+    <div v-else class="flex flex-1 gap-10 justify-center items-center">
+      <div class="flex flex-col">
+        <p class="text-[16px] font-semibold text-[#575757]">
+          Nothing in Content
+        </p>
+        <p class="text-[12px] mt-1 font-regular">
+          Your Content will be displayed after uploading.
+        </p>
+      </div>
+      <img
+        class="w-[420px] h-[420px]"
+        alt="cmulogo"
+        src="../assets/images/notFound.jpg"
+      />
     </div>
   </div>
 </template>

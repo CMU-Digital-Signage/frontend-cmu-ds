@@ -697,13 +697,6 @@ const checkValidRoomNumber = () => {
         <div>
           <!-- Button for md screens -->
           <li>
-            <div class="md:block xl:hidden">
-              <Button
-                label="Clear"
-                @click="store.commit('resetFilter')"
-                class="rounded-[8px] ont-bold h-8 border-0 bg-red-500 text-right"
-              />
-            </div>
             <div class="md:hidden xl:block">
               <Button
                 label="Clear"
