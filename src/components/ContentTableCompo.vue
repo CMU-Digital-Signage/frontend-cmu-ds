@@ -5,7 +5,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { ref, computed, defineProps, watch } from "vue";
+import { ref, computed, defineProps, watch, onMounted } from "vue";
 import store from "@/store";
 import {
   dateFormatter,
@@ -58,6 +58,7 @@ const uniquePosters = computed(() =>
       (!filterInput.value.uploadDate ||
         dateFormatter(e.createdAt) ===
           dateFormatter(filterInput.value.uploadDate)) &&
+      (!filterInput.value.type || e.type === filterInput.value.type) &&
       (!filterInput.value.status || e.status === filterInput.value.status)
     );
   })
@@ -239,7 +240,7 @@ const del = async () => {
     scrollDirection="vertical"
     scrollable
     :scrollHeight="calculateScreenHeight()"
-    class="mt-2 text-[14px] lg:text-[16px]"
+    :class="`text-[14px] lg:text-[16px] ${user.isAdmin ? '' : 'py-2'}`"
   >
     <Column
       :field="(e) => (props.types === 'NP' ? e.title : e.incidentName)"
@@ -314,6 +315,7 @@ const del = async () => {
       </template>
       <template #body="rowData">
         <Tag
+          rounded
           :icon="`pi pi-${
             rowData.data.type === TYPE.POSTER
               ? 'images'
@@ -322,7 +324,6 @@ const del = async () => {
               : 'link'
           }`"
           :value="rowData.data.type"
-          rounded
           :severity="
             typePoster.find((e) => rowData.data.type === e.type)?.severity
           "
@@ -368,8 +369,8 @@ const del = async () => {
 
       <template #body="rowData">
         <Tag
-          :value="rowData.data.status"
           rounded
+          :value="rowData.data.status"
           :severity="
             props.types === 'NP'
               ? statusPoster.find((e) => rowData.data.status === e.status)

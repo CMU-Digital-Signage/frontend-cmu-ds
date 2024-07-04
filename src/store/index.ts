@@ -1,5 +1,6 @@
 import { Device, Display, Emergency, Poster, User } from "@/types";
 import { newInitialFormDisplay, fullMonth } from "@/utils/constant";
+import { TYPE } from "@/utils/enum";
 import { createStore } from "vuex";
 
 const date = new Date();
@@ -29,6 +30,7 @@ export default createStore({
       title: "",
       uploader: "",
       uploadDate: undefined as Date | undefined,
+      type: null as TYPE | null,
       status: "" as string,
       date: new Date(new Date().setHours(23, 59, 59, 0)) as Date,
       time: new Date(
@@ -64,6 +66,7 @@ export default createStore({
         title: "",
         uploader: "",
         uploadDate: undefined,
+        type: null,
         status: "",
         date: new Date(new Date().setHours(23, 59, 59, 0)),
         time: new Date(

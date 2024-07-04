@@ -14,9 +14,11 @@ import { addDeviceTV, addDevicePi, addAdmin, searchPoster } from "@/services";
 import {
   initialFormDevice,
   onUpload,
+  typePoster,
   statusPoster,
   statusEmer,
 } from "@/utils/constant";
+import { TYPE } from "@/utils/enum";
 import { Poster } from "@/types";
 import { filesize } from "filesize";
 
@@ -634,11 +636,43 @@ const checkValidRoomNumber = () => {
           class="w-[120px] md:w-[140px] xl:w-[150px] h-8 rounded-lg align-middle"
         />
       </li>
+      <li v-if="store.state.selectTabview === 0">
+        <label
+          class="text-[14px] ml-[12px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
+        >
+          Type
+        </label>
+        <Dropdown
+          v-model="filterInput.type"
+          :options="typePoster"
+          optionLabel="type"
+          optionValue="type"
+          inputClass="text-[13px] lg:text-[16px] text-left"
+          :showClear="filterInput.status !== null"
+          class="rounded-lg items-center h-8 w-28 md:w-32 xl:w-36"
+        >
+          <template #option="slotProps">
+            <Tag
+              rounded
+              :icon="`pi pi-${
+                slotProps.option.type === TYPE.POSTER
+                  ? 'images'
+                  : slotProps.option.type === TYPE.VIDEO
+                  ? 'video'
+                  : 'link'
+              }`"
+              :value="slotProps.option.type"
+              :severity="slotProps.option.severity"
+            />
+          </template>
+        </Dropdown>
+      </li>
       <li>
         <label
           class="text-[14px] ml-[12px] md:ml-[7px] mr-1 xl:text-[16px] md:text-[12px]"
-          >Status</label
         >
+          Status
+        </label>
         <Dropdown
           v-model="filterInput.status"
           :options="store.state.selectTabview === 0 ? statusPoster : statusEmer"
@@ -647,7 +681,14 @@ const checkValidRoomNumber = () => {
           inputClass="text-[13px] lg:text-[16px] text-left"
           :showClear="filterInput.status !== ''"
           class="rounded-lg items-center h-8 w-28 md:w-32 xl:w-36"
-        ></Dropdown>
+        >
+          <template #option="slotProps">
+            <Tag
+              :value="slotProps.option.status"
+              :severity="slotProps.option.severity"
+            />
+          </template>
+        </Dropdown>
       </li>
       <li>
         <div>
