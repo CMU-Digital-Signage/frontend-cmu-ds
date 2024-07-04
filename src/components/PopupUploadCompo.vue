@@ -35,10 +35,20 @@ const uploadState = ref([
   { label: "Orientation & Review" },
 ]);
 const contentType = ref([
-  { header: "Normal", code: "NP", icon: "images", disabled:false },
-  { header: "Video (Unavailable)", code: "VDO", icon: "video", disabled:true },
-  { header: "Webview (Unavailable)", code: "URL", icon: "link", disabled:true },
-  { header: "Emergency", code: "EP", icon: "exclamation-triangle", disabled:false },
+  { header: "Normal", code: "NP", icon: "images", disabled: false },
+  { header: "Video (Unavailable)", code: "VDO", icon: "video", disabled: true },
+  {
+    header: "Webview (Unavailable)",
+    code: "WV",
+    icon: "link",
+    disabled: true,
+  },
+  {
+    header: "Emergency",
+    code: "EP",
+    icon: "exclamation-triangle",
+    disabled: false,
+  },
 ]);
 const selectedContentType = ref({ header: "", code: "" });
 const currentState = ref(0);
@@ -518,6 +528,7 @@ const nextStepPreview = () => {
             placeholder="Select content"
             class="w-full md:w-14rem mt-2 h-10 flex items-center"
             :pt="{
+              input: { class: 'text-[14px]' },
               item: (slotProps) => ({
                 class: [
                   {
@@ -532,7 +543,6 @@ const nextStepPreview = () => {
                   },
                 ],
               }),
-              input: { class: 'text-[14px]'}
             }"
           >
             <template #value="slotProps">
@@ -598,7 +608,13 @@ const nextStepPreview = () => {
       }"
     >
       <template #header>
-        <div class="header-popup">
+        <div
+          v-if="selectedContentType.code === 'EP'"
+          class="header-popup !text-[#FF4D4D]"
+        >
+          {{ editcontentType.type ? "Edit Emergency" : "Upload Emergency" }}
+        </div>
+        <div v-else class="header-popup">
           {{ editcontentType.type ? "Edit Content" : "Upload Content" }}
         </div>
       </template>
@@ -656,10 +672,10 @@ const nextStepPreview = () => {
             </div>
 
             <div
-              class="bg-white px-4 p-2 rounded-lg mt-5"
+              class="bg-white px-4 p-2 rounded-lg mt-5 h-fit"
               style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
             >
-              <div class="flex flex-inline items-end">
+              <div class="flex flex-inline items-end h-10">
                 <label
                   class="text-black font-semibold text-[14px] items-center flex justify-start mb-2 mr-5"
                 >
@@ -669,18 +685,23 @@ const nextStepPreview = () => {
                 <Dropdown
                   v-model="selectSchedule"
                   :options="scheduleTabs"
-                  h
                   optionLabel="header"
-                  class="w-full hover:border-[#14C6A4] focus:border-[#14C6A4] md:w-14rem mt-3 h-10 rounded-md drop-shadow-lg border-2 text-black font-medium"
+                  class="w-full hover:border-[#14C6A4] focus:border-[#14C6A4] md:w-14rem mt-3 h-10 rounded-md drop-shadow-sm border-2 text-black font-medium"
                   :pt="{
-                    input: { class: ` text-[14px] items-center flex ` },
+                    input: {
+                      class: ` text-[14px] font-sf-pro`,
+                    },
+                    item: {
+                      class: `text-[14px] focus-visible:color-white`, //แก้ให้เป็น color white
+                    },
                   }"
                 >
                 </Dropdown>
+
                 <Button
                   v-if="selectSchedule.index"
                   text
-                  class="bg-red-500 w-fit mt-1 ml-2 h-11 rounded-md"
+                  class="flex items-center justify-center w-8 h-8 ml-2 mb-1 rounded-lg bg-[#ff6961] border-[#ff6961] hover:bg-[#ed5a52]"
                   @click="deleteSchedule(selectSchedule.index)"
                 >
                   <i class="pi pi-trash text-white"></i
@@ -712,7 +733,7 @@ const nextStepPreview = () => {
         </div>
 
         <div v-if="currentState === 1">
-          <div class="bg-[#eeeeee] p-2 px-4 rounded-lg justify-center mb-3">
+          <div class="bg-[#f2f2f2] p-2 px-4 rounded-lg justify-center mb-3">
             <div class="text-[14px] text-center mt-2 text-red-500">
               Upload limit: {{ maxImage }} contents
             </div>
@@ -731,7 +752,6 @@ const nextStepPreview = () => {
           <UploadImage
             :posType="selectedContentType.code"
             :maxImage="maxImage"
-          
           />
           <div class="flex flex-row gap-4 pt-3">
             <Button
@@ -748,118 +768,197 @@ const nextStepPreview = () => {
           </div>
         </div>
         <div v-if="currentState === 2">
-          <div class="flex justify-between">
-            <div>
-              <label
-                class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
-              >
-                Orientation
-              </label>
-            </div>
-          </div>
-          <div class="orientOut border-2 border-black rounded-lg">
-            <div class="inline-flex gap-2">
-              <Button
-                @click="
-                  async () => {
-                    formPoster.image[selectRotate.priority - 1].image.dataURL =
-                      await rotate(selectRotate.image, -90);
-                    selectRotate.image =
-                      formPoster.image[selectRotate.priority - 1].image.dataURL;
-                  }
-                "
-                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                icon="pi pi-replay"
-                rounded
-                outlined
-                :disabled="!formPoster.image"
-              />
-              <Button
-                @click="
-                  async () => {
-                    formPoster.image[selectRotate.priority - 1].image.dataURL =
-                      await rotate(selectRotate.image, 90);
-                    selectRotate.image =
-                      formPoster.image[selectRotate.priority - 1].image.dataURL;
-                  }
-                "
-                :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
-                icon="pi pi-refresh"
-                rounded
-                outlined
-                :disabled="!formPoster.image"
-              />
-            </div>
-            <div
-              class="flex flex-row justify-center text-center items-center gap-3 mb-3"
+          <!-- Orientation -->
+          <div
+            class="orientOut border-2 rounded-lg flex flex-col gap-5 bg-white"
+            style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+          >
+            <label
+              class="text-[#282828] font-semibold text-[14px] flex justify-start mb-1"
             >
-              <p>Logo TV</p>
+              Orientation (Portrait, Logo TV the left side of the screen)
+            </label>
+            <div
+              class="flex flex-row items-start justify-start overflow-hidden h-[430px]"
+            >
+              <div class="w-full flex justify-start">
+                <div
+                  class="flex flex-col items-end justify-end w-fit gap-6 px-5 bg-white rounded-lg"
+                >
+                  <div
+                    class="flex flex-row justify-center text-center items-center gap-3 w-full"
+                  >
+                    <p class="text-[14px] text-[#575757]">Logo <br />TV</p>
+                    <div
+                      class="flex items-center justify-center bg-[#282828] border-[#D3D1D1] rounded-md shadow-md"
+                      :style="{
+                        width: `${2160 / 11}px`,
+                        height: `${3840 / 11}px`,
+                      }"
+                    >
+                      <div
+                        class="flex justify-center bg-black shadow-sm shadow-slate-600 rounded-md"
+                        :style="{
+                          width: `${2160 / 12}px`,
+                          height: `${3840 / 12}px`,
+                        }"
+                      >
+                        <img
+                          :alt="formPoster.title"
+                          :src="
+                            formPoster.image[selectRotate.priority - 1].image
+                              .dataURL
+                          "
+                          class="max-w-full max-h-full m-auto rotate-90"
+                          :style="{
+                            maxWidth: `${3840 / 12}px`,
+                            maxHeight: `${2160 / 12}px`,
+                          }"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="inline-flex gap-4 justify-center w-[196px]">
+                    <Button
+                      @click="
+                        async () => {
+                          formPoster.image[
+                            selectRotate.priority - 1
+                          ].image.dataURL = await rotate(
+                            selectRotate.image,
+                            -90
+                          );
+                          selectRotate.image =
+                            formPoster.image[
+                              selectRotate.priority - 1
+                            ].image.dataURL;
+                        }
+                      "
+                      class="bg-white border-[#0FAB8D] hover:bg-[#0FAB8D] hover:bg-opacity-15 w-12 h-12"
+                      :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                      rounded
+                      outlined
+                      :disabled="!formPoster.image"
+                    >
+                      <template v-slot:icon>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="21"
+                          height="23"
+                          viewBox="0 0 17 19"
+                          fill="none"
+                        >
+                          <path
+                            d="M11.6639 4.93987C12.1409 5.29747 12.6343 5.15464 12.6343 4.52594V3.43683H12.658C14.3836 3.43683 15.4727 4.62976 15.4727 6.33128C15.4727 7.38883 15.147 7.78681 15.1233 8.07283C15.1151 8.2954 15.1945 8.43078 15.3777 8.51831C15.624 8.6374 15.9104 8.52612 16.0454 8.2954C16.2921 7.87401 16.4668 7.1744 16.4668 6.32347C16.4668 4.04924 14.9482 2.51431 12.6658 2.51431H12.6339V1.34547C12.6339 0.70151 12.1487 0.558331 11.6639 0.924081L9.49314 2.51431C9.12739 2.78472 9.12739 3.09483 9.49314 3.35744L11.6639 4.93987ZM2.57477 18.4424H10.4554C11.8149 18.4424 12.4989 17.7903 12.4989 16.3986V8.53392C12.4989 7.14251 11.8149 6.4904 10.4554 6.4904H2.57477C1.21491 6.4904 0.53125 7.14251 0.53125 8.53392V16.3986C0.53125 17.7903 1.21491 18.4424 2.57477 18.4424ZM2.59852 17.162C2.05804 17.162 1.81138 16.9394 1.81138 16.3748V8.55767C1.81138 7.99344 2.05804 7.77053 2.59852 7.77053H10.4313C10.9799 7.77053 11.2184 7.99344 11.2184 8.55767V16.3748C11.2184 16.9394 10.9799 17.162 10.4313 17.162H2.59852Z"
+                            fill="#0FAB8D"
+                          />
+                        </svg>
+                      </template>
+                    </Button>
+                    <Button
+                      @click="
+                        async () => {
+                          formPoster.image[
+                            selectRotate.priority - 1
+                          ].image.dataURL = await rotate(
+                            selectRotate.image,
+                            90
+                          );
+                          selectRotate.image =
+                            formPoster.image[
+                              selectRotate.priority - 1
+                            ].image.dataURL;
+                        }
+                      "
+                      class="bg-white border-[#0FAB8D] hover:bg-[#0FAB8D] hover:bg-opacity-15 w-12 h-12"
+                      :class="`${formPoster.image ? '' : 'text-[#9c9b9b]'}`"
+                      rounded
+                      outlined
+                      :disabled="!formPoster.image"
+                    >
+                      <template v-slot:icon>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="21"
+                          height="23"
+                          viewBox="0 0 17 19"
+                          fill="none"
+                        >
+                          <path
+                            d="M5.33611 4.93987C4.85907 5.29747 4.36575 5.15464 4.36575 4.52594V3.43683H4.342C2.61639 3.43683 1.52728 4.62976 1.52728 6.33128C1.52728 7.38883 1.853 7.78681 1.87675 8.07283C1.88489 8.2954 1.8055 8.43078 1.62228 8.51831C1.37596 8.6374 1.08961 8.52612 0.95457 8.2954C0.707909 7.87401 0.533177 7.1744 0.533177 6.32347C0.533177 4.04924 2.05182 2.51431 4.3342 2.51431H4.36609V1.34547C4.36609 0.70151 4.85127 0.558331 5.33611 0.924081L7.50686 2.51431C7.87261 2.78472 7.87261 3.09483 7.50686 3.35744L5.33611 4.93987ZM14.4252 18.4424H6.54464C5.18512 18.4424 4.50112 17.7903 4.50112 16.3986V8.53392C4.50112 7.14251 5.18512 6.4904 6.54464 6.4904H14.4252C15.7851 6.4904 16.4688 7.14251 16.4688 8.53392V16.3986C16.4688 17.7903 15.7851 18.4424 14.4252 18.4424ZM14.4015 17.162C14.942 17.162 15.1886 16.9394 15.1886 16.3748V8.55767C15.1886 7.99344 14.942 7.77053 14.4015 7.77053H6.56873C6.02011 7.77053 5.78159 7.99344 5.78159 8.55767V16.3748C5.78159 16.9394 6.02011 17.162 6.56873 17.162H14.4015Z"
+                            fill="#0FAB8D"
+                          />
+                        </svg>
+                      </template>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
               <div
-                class="flex justify-center border-2 border-black bg-black"
-                :style="{
-                  width: `${2160 / 20}px`,
-                  height: `${3840 / 20}px`,
-                }"
+                class="border-[2px] border-[#D9D9D9] grid grid-cols-3 gap-2 p-2 justify-center rounded-xl w-full max-h-full min-h-full overflow-auto"
               >
-                <img
-                  :alt="formPoster.title"
-                  :src="
-                    formPoster.image[selectRotate.priority - 1].image.dataURL
+                <div
+                  v-for="(image, index) in formPoster.image"
+                  :key="image.image.name"
+                  class="content-image !w-[100px] !h-[100px]"
+                  @click="
+                    () => {
+                      selectRotate = {
+                        image: formPoster.image[index].image.dataURL,
+                        priority: formPoster.image[index].priority,
+                      };
+                    }
                   "
-                  class="max-w-full max-h-full m-auto rotate-90"
-                  :style="{
-                    maxWidth: `${3840 / 20}px`,
-                    maxHeight: `${2160 / 20}px`,
-                  }"
-                />
+                >
+                  <img
+                    :alt="image.image.name"
+                    :src="image.image.dataURL"
+                    width="100%"
+                    height="100%"
+                  />
+                  <div class="text-image bg-[#9e9e9e]">Choose</div>
+                </div>
               </div>
             </div>
-            <div
-              v-for="(image, index) in formPoster.image"
-              :key="image.image.name"
-              class="content-image"
-              @click="
-                () => {
-                  selectRotate = {
-                    image: formPoster.image[index].image.dataURL,
-                    priority: formPoster.image[index].priority,
-                  };
-                }
-              "
-            >
-              <img
-                :alt="image.image.name"
-                :src="image.image.dataURL"
-                width="100%"
-                height="100%"
-              />
-              <div class="text-image bg-[#9e9e9e]">Choose</div>
-            </div>
           </div>
-
-          <div class="flex flex-col gap-5">
+          <!-- Review -->
+          <div
+            class="flex flex-col gap-5 bg-white rounded-lg p-[30px] items-start justify-start my-6"
+            style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+          >
             <label
-              class="text-[#282828] font-semibold text-[18px] flex justify-start mt-5 -mb-2"
+              class="text-[#282828] font-semibold text-[14px] flex justify-start -mb-2"
             >
               Review
             </label>
-            <div class="bg-[#e9f2fd] rounded-lg px-9 py-5">
-              <div class="text-black-500 flex flex-col gap-1">
-                <p class="font-semibold text-[#282828]">Title</p>
-                <p class="font-notoThai">{{ formPoster.title }}</p>
-              </div>
-              <div class="text-black-500 flex flex-col gap-1 mt-3">
-                <p class="font-semibold text-[#282828]">Description</p>
-                <p class="font-notoThai">{{ formPoster.description || "-" }}</p>
+            <div class="bg-[#e9f2fd] rounded-xl px-9 py-5 w-full">
+              <div class="font-notoThai text-black-500 flex flex-col gap-1">
+                <p class="text-[18px] font-semibold">{{ formPoster.title }}</p>
+                <p class="text-[12px] font">
+                  Description:
+                  <span class="font-normal">{{
+                    formPoster.description || "-"
+                  }}</span>
+                </p>
               </div>
             </div>
 
             <DataTable
               :value="formDisplay"
-              tableClass="b rounded-lg"
-              class="overflow-hidden border-[1px] border-black-500 rounded-lg"
+              class="border-[1px] border-gray rounded-xl w-full"
+              :pt="{
+                column: {
+                  headerContent: { class: `!text-[14px]` },
+                  bodyCell: { class: `!text-[14px]` },
+                },
+                bodyRow: {
+                  class: `!h-[10px]`,
+                },
+              }"
             >
-              <Column header="Date" class="w-[160px]">
+              <Column header="Date" class="w-[120px]">
                 <template #body="{ data }">
                   <span class="flex items-start justify-start">
                     {{ dateFormatter(data.startDate) }}
@@ -906,7 +1005,7 @@ const nextStepPreview = () => {
                     <tr
                       v-for="mac in data.MACaddress"
                       :key="mac"
-                      class="border-b- border-collapse"
+                      class="border-collapse"
                     >
                       <td>
                         {{
@@ -920,6 +1019,7 @@ const nextStepPreview = () => {
               </Column>
             </DataTable>
           </div>
+          <!-- Button Back & Next -->
           <div class="flex flex-inline gap-4 pt-3">
             <Button
               text
@@ -943,17 +1043,17 @@ const nextStepPreview = () => {
           <div class="flex flex-col justify-start w-full max-w-4xl">
             <div class="inline-flex items-center">
               <label
-                class="text-[#282828] font-semibold text-[18px] flex justify-start mb-1"
+                class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
               >
                 Title
               </label>
-              <label class="text-[#FF0000] mb-3 font-medium"> * </label>
+              <label class="font-medium text-red-500"> * </label>
             </div>
             <InputText
               v-model="formEmer.incidentName"
               type="text"
               placeholder="Ex. Gas leakage"
-              class="title-input mb-3"
+              class="title-input mb-3 text-[12px]"
             />
             <!-- File Upload -->
             <UploadImage
@@ -965,14 +1065,14 @@ const nextStepPreview = () => {
             <div class="flex flex-col gap-1 w-full">
               <label
                 for="Description"
-                class="text-[#282828] mt-3 font-semibold text-[18px] flex justify-start"
+                class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
                 >Description</label
               >
               <InputText
                 v-model="formEmer.description"
                 type="text"
                 placeholder="(optional)"
-                class="description-input h-full font-notoThai"
+                class="description-input h-full font-notoThai text-[12px]"
               ></InputText>
             </div>
             <Button
@@ -1052,7 +1152,7 @@ const nextStepPreview = () => {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: rgb(255, 120, 47);
+  background-color: #0eb092;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
@@ -1069,9 +1169,9 @@ const nextStepPreview = () => {
   /* height: 50vh; */
   width: 100%;
   padding-top: 30px;
-  padding-left: 26px;
+  padding-left: 30px;
   padding-right: 30px;
-  padding-bottom: 80px;
+  padding-bottom: 30px;
   flex: 1 1;
 }
 </style>

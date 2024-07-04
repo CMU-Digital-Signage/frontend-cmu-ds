@@ -176,7 +176,7 @@ Button:focus {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   border-width: 1px;
-  border-radius: 26px;
+  border-radius: 12px;
 }
 .p-row-odd {
   background-color: #fafafa;
@@ -188,6 +188,8 @@ Button:focus {
 
 .p-dropdown {
   border-radius: 8px;
+  box-shadow: none !important;
+  border-color: #ced4da;
 }
 .p-dropdown-panel {
   border-radius: 8px;
@@ -247,6 +249,33 @@ Button:focus {
 .p-tag-secondary {
   background-color: #f1f5f9;
   color: #475569;
+}
+
+.p-inputtext:focus {
+  box-shadow: none !important;
+  border-color: #ced4da;
+}
+
+/* Scroll bar stylings */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--lightestgrey);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #bebebe;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #909090;
 }
 
 @media (max-width: 790px) or (max-height: 600px) {
