@@ -30,21 +30,19 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="rectangle flex flex-col">
+  <div class="rectangle flex flex-col flex-1">
     <Skeleton
       v-if="loading"
-      class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
+      class="bg-gray-200 rounded-xl flex-1 my-3"
     ></Skeleton>
     <TabView
       v-else-if="store.state.userInfo.isAdmin"
       v-model:activeIndex="click"
+      class="flex flex-col flex-1 mb-2 overflow-hidden"
     >
       <TabPanel header="Content">
         <ContentTable v-if="uniquePosters?.length" :types="'NP'" />
-        <div
-          v-else
-          class="my-[0.75rem] flex h-full justify-center items-center align-middle"
-        >
+        <div v-else class="my-3 justify-center items-center">
           Content not found
         </div>
       </TabPanel>
@@ -56,7 +54,10 @@ onUnmounted(() => {
           },
         }"
       >
-        <ContentTable :types="'EP'" />
+        <ContentTable v-if="emerPosters?.length! > 1" :types="'EP'" />
+        <div v-else class="my-3 justify-center items-center">
+          Content not found
+        </div>
       </TabPanel>
     </TabView>
 
@@ -67,7 +68,7 @@ onUnmounted(() => {
     />
     <div
       v-else
-      class="my-[0.75rem] flex h-full justify-center items-center align-middle"
+      class="my-3 flex h-full justify-center items-center align-middle"
     >
       Your Content not found
     </div>

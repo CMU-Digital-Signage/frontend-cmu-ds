@@ -25,7 +25,7 @@ watch([admin, devices], () => {
 </script>
 
 <template>
-  <div class="rectangle flex flex-col">
+  <div class="rectangle flex flex-col flex-1">
     <Skeleton
       v-if="loadAdmin"
       class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
@@ -51,14 +51,12 @@ watch([admin, devices], () => {
   width: 98%;
   height: 100%;
   margin-left: 1rem;
-  
   padding-inline: 1rem;
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 2rem;
   padding-inline: 1rem;
   border-radius: 20px;
-  overflow: hidden;
   margin-top: 0.2rem;
   padding-top: 0.25rem;
   padding-bottom: 0.15rem;

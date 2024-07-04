@@ -165,6 +165,10 @@ Button:focus {
 }
 .p-tabview-panels {
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
 }
 
 .p-datatable-wrapper {
