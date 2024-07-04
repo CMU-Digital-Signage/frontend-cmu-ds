@@ -1,5 +1,5 @@
 export enum TYPE {
   POSTER = "Poster",
-  URL = "Url",
+  WEBVIEW = "Webview",
   VIDEO = "Video",
 }

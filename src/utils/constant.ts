@@ -285,7 +285,7 @@ export const setFieldPoster = (data: Poster[]) => {
 export const typePoster = [
   { type: TYPE.POSTER, severity: "info" },
   { type: TYPE.VIDEO, severity: "warning" },
-  { type: TYPE.URL, severity: "secondary" },
+  { type: TYPE.WEBVIEW, severity: "secondary" },
 ];
 export const statusPoster = [
   { status: "Displayed", severity: "success" },
