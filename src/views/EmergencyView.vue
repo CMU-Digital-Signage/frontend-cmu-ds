@@ -141,7 +141,7 @@ const handleEmergency = async () => {
 </script>
 
 <template>
-  <div class="rectangle flex md:flex-row !overflow-auto flex-col md:gap-0 font-sf-pro">
+  <div class="rectangle flex md:flex-row !overflow-auto flex-col md:gap-6 font-sf-pro">
     <Toast />
     <Skeleton
       v-if="loading1st"
@@ -150,7 +150,7 @@ const handleEmergency = async () => {
     ></Skeleton>
     <div
       v-else
-      class="pt-[12px] pb-[32px] md:pb-[68px] xl:pb-[32px] px-[20px] flex flex-1 flex-col text-left justify-between md:gap-0 gap-5 md:mb-[10px]"
+      class="    flex flex-1 flex-col text-left justify-between md:gap-0 gap-5 "
     >
       <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
@@ -319,7 +319,7 @@ const handleEmergency = async () => {
     </div>
 
     <div
-      class="flex-1 border-l-[2px]; border-[#eaeaea] pt-[12px] md:pb-[68px] xl:pb-[40px] px-[20px] flex flex-col"
+      class="flex-1 border-l-[2px]; border-[#eaeaea]  flex flex-col"
     >
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
@@ -358,7 +358,7 @@ const handleEmergency = async () => {
 
 <style scoped>
 .rectangle {
-  padding-bottom: 1rem;
+padding: 20px;
 }
 
 .rotated-image {
