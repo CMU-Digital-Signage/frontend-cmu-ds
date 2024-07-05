@@ -121,7 +121,8 @@ const rowStyle = (rowData: any) => {
         <DataTable
           scrollDirection="vertical"
           scrollable
-          :scrollHeight="calculateScreenHeight()"
+          scrollHeight="flex"
+          :virtualScrollerOptions="{ itemSize: 46 }"
           class="text-[14px] lg:text-[16px] w-full"
           v-model:selection="selectPoster"
           :value="posters"
@@ -224,18 +225,8 @@ const rowStyle = (rowData: any) => {
 
 <style scoped>
 .rectangle {
-  width: 98%;
-  height: 100%;
-  margin-left: 1rem;
-  margin-bottom: 1rem;
-  padding-inline: 1rem;
-  border-radius: 20px;
-  overflow: hidden;
   margin-top: 0.2rem;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 1rem;
 }
 </style>

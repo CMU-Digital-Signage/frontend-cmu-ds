@@ -6,9 +6,8 @@ import Compressor from "compressorjs";
 import { Ref } from "vue";
 import { TYPE } from "./enum";
 
-export const calculateScreenHeight = () => {
+export const calculateScreenHeight = (multiplier: number) => {
   const screenHeight = window.innerHeight;
-  const multiplier = 0.69;
   const scrollHeight = screenHeight * multiplier;
   return `${scrollHeight}px`;
 };

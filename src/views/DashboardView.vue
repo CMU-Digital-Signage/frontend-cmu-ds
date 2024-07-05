@@ -299,179 +299,175 @@ const del = async (posterId: string) => {
 </script>
 
 <template>
+  <Toast />
   <div class="rectangle flex flex-col">
-    <Toast />
     <Skeleton
       v-if="loadPoster"
       class="bg-gray-200 rounded-xl flex-1"
     ></Skeleton>
-    <Dialog
-      :closable="!loading"
-      v-model:visible="deletePopup"
-      modal
-      close-on-escape
-      :draggable="false"
-      class="w-[425px]"
-      :pt="{
-        content: {
-          style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
-        },
-        header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
-        },
-        mask: {
-          style:
-            'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
-        },
-      }"
-    >
-      <template #header>
-        <div class="header-popup">
-          Delete
-          {{
-            selectedEvent?.posterId
-              ? `"${selectedEvent.title}" Poster`
-              : `"${selectedEvent?.incidentName}" Emergency Poster`
-          }}?
-        </div>
-      </template>
-      <div class="flex flex-col gap-2">
-        <div>
-          Deleting this poster or collection will be permenently deleted from
-          all devices.
-        </div>
-        <div class="inline-block">
-          <div class="flex flex-row gap-4 pt-3">
-            <Button
-              text
-              label="Cancel"
-              :loading="loading"
-              @click="deletePopup = false"
-              :class="'secondaryButton'"
-            ></Button>
-            <Button
-              :loading="loading"
-              label="Delete Poster"
-              :class="'primaryButtonDel'"
-              type="submit"
-              @click="del(selectedEvent.posterId)"
-            ></Button>
-          </div>
+    <div v-show="!loadPoster" ref="fullCalendar"></div>
+  </div>
+  <Dialog
+    :closable="!loading"
+    v-model:visible="deletePopup"
+    modal
+    close-on-escape
+    :draggable="false"
+    class="w-[425px]"
+    :pt="{
+      content: {
+        style:
+          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+      },
+      header: {
+        style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+      },
+      mask: {
+        style:
+          'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
+      },
+    }"
+  >
+    <template #header>
+      <div class="header-popup">
+        Delete
+        {{
+          selectedEvent?.posterId
+            ? `"${selectedEvent.title}" Poster`
+            : `"${selectedEvent?.incidentName}" Emergency Poster`
+        }}?
+      </div>
+    </template>
+    <div class="flex flex-col gap-2">
+      <div>
+        Deleting this poster or collection will be permenently deleted from all
+        devices.
+      </div>
+      <div class="inline-block">
+        <div class="flex flex-row gap-4 pt-3">
+          <Button
+            text
+            label="Cancel"
+            :loading="loading"
+            @click="deletePopup = false"
+            :class="'secondaryButton'"
+          ></Button>
+          <Button
+            :loading="loading"
+            label="Delete Poster"
+            :class="'primaryButtonDel'"
+            type="submit"
+            @click="del(selectedEvent.posterId)"
+          ></Button>
         </div>
       </div>
-    </Dialog>
-    <div v-show="!loadPoster" ref="fullCalendar"></div>
-    <Dialog
-      v-model:visible="showInfo"
-      modal
-      :draggable="false"
-      class="w-[550px] z-[100]"
-    >
-      <template #header>
-        <div class="inline-flex justify-between items-center w-full">
-          <div class="inline-flex font-bold text-2xl gap-3 items-start">
-            <i
-              class="pi pi-circle-fill mt-2"
-              :style="{ color: selectedEvent.color }"
-            ></i>
-            <div class="flex flex-col">
-              <p>{{ selectedEvent.title }}</p>
-              <!-- Start Date to End Date -->
-              <p class="text-[14px] text-[#8d8d8d] -mt-1">
-                <span>{{ dateFormatter(new Date(selectedEvent.start), 3) }} - </span>
-                <span>{{ dateFormatter(new Date(selectedEvent.end), 3) }}</span>
-              </p>
-            </div>
-          </div>
-          <div
-            v-if="user.isAdmin || user.id === selectedEvent.userId"
-            class="inline-flex gap-5 mr-5"
-          >
-            <i
-              class="pi pi-pencil cursor-pointer rounded-full p-2 hover:bg-gray-200"
-              @click="
-                setNorForm(selectedEvent);
-                showInfo = false;
-              "
-            ></i>
-            <i
-              class="pi pi-trash cursor-pointer rounded-full p-2 hover:bg-gray-200"
-              @click="deletePopup = true"
-            ></i>
-          </div>
-        </div>
-      </template>
-      <div class="flex flex-col gap-2">
-        <!-- Number of Poster -->
-        <div class="posterDetail">
-          <p>Number of Poster</p>
-          <p>
-            {{ selectedEvent.amount }}
-            {{ selectedEvent.amount > 1 ? "Posters" : "Poster" }}
-          </p>
-        </div>
-        <!-- Running Time -->
-        <div class="posterDetail">
-          <p>Running Time</p>
-          <p v-if="selectedEvent.allDay">All Day</p>
-          <p v-else>
-            {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
-          </p>
-        </div>
-        <!-- Duration -->
-        <div class="posterDetail">
-          <p>Display Duration</p>
-          <p>{{ selectedEvent.duration }} sec</p>
-        </div>
-        <!-- Device -->
-        <div class="posterDetail">
-          <p>Device</p>
+    </div>
+  </Dialog>
+  <Dialog
+    v-model:visible="showInfo"
+    modal
+    :draggable="false"
+    class="w-[550px] z-[100]"
+  >
+    <template #header>
+      <div class="inline-flex justify-between items-center w-full">
+        <div class="inline-flex font-bold text-2xl gap-3 items-start">
+          <i
+            class="pi pi-circle-fill mt-2"
+            :style="{ color: selectedEvent.color }"
+          ></i>
           <div class="flex flex-col">
-            <p
-              v-for="(item, index) in selectedEvent.onDevice"
-              :key="index"
-              class="inline-flex justify-between gap-1"
-            >
-              <span>{{ item }}</span>
-              <span>
-                ({{
-                  store.state.devices?.find((e) => e.deviceName === item)?.room
-                }})
+            <p>{{ selectedEvent.title }}</p>
+            <!-- Start Date to End Date -->
+            <p class="text-[14px] text-[#8d8d8d] -mt-1">
+              <span
+                >{{ dateFormatter(new Date(selectedEvent.start), 3) }} -
               </span>
+              <span>{{ dateFormatter(new Date(selectedEvent.end), 3) }}</span>
             </p>
           </div>
         </div>
-        <!-- Uploader -->
-        <div class="posterDetail">
-          <p>Uploader</p>
-          <p>{{ selectedEvent.uploader }}</p>
-        </div>
-
-        <!-- Description -->
-        <div class="posterDetail flex-col gap-1">
-          <p class="font-[800px] text-[#535353]">Description</p>
-          <div class="bg-[#e9f2fd] rounded-lg p-3 px-5">
-            <p class="font-notoThai">{{ selectedEvent.description }}</p>
-            <p v-if="!selectedEvent.description">-</p>
-          </div>
+        <div
+          v-if="user.isAdmin || user.id === selectedEvent.userId"
+          class="inline-flex gap-5 mr-5"
+        >
+          <i
+            class="pi pi-pencil cursor-pointer rounded-full p-2 hover:bg-gray-200"
+            @click="
+              setNorForm(selectedEvent);
+              showInfo = false;
+            "
+          ></i>
+          <i
+            class="pi pi-trash cursor-pointer rounded-full p-2 hover:bg-gray-200"
+            @click="deletePopup = true"
+          ></i>
         </div>
       </div>
-    </Dialog>
-  </div>
+    </template>
+    <div class="flex flex-col gap-2">
+      <!-- Number of Poster -->
+      <div class="posterDetail">
+        <p>Number of Poster</p>
+        <p>
+          {{ selectedEvent.amount }}
+          {{ selectedEvent.amount > 1 ? "Posters" : "Poster" }}
+        </p>
+      </div>
+      <!-- Running Time -->
+      <div class="posterDetail">
+        <p>Running Time</p>
+        <p v-if="selectedEvent.allDay">All Day</p>
+        <p v-else>
+          {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
+        </p>
+      </div>
+      <!-- Duration -->
+      <div class="posterDetail">
+        <p>Display Duration</p>
+        <p>{{ selectedEvent.duration }} sec</p>
+      </div>
+      <!-- Device -->
+      <div class="posterDetail">
+        <p>Device</p>
+        <div class="flex flex-col">
+          <p
+            v-for="(item, index) in selectedEvent.onDevice"
+            :key="index"
+            class="inline-flex justify-between gap-1"
+          >
+            <span>{{ item }}</span>
+            <span>
+              ({{
+                store.state.devices?.find((e) => e.deviceName === item)?.room
+              }})
+            </span>
+          </p>
+        </div>
+      </div>
+      <!-- Uploader -->
+      <div class="posterDetail">
+        <p>Uploader</p>
+        <p>{{ selectedEvent.uploader }}</p>
+      </div>
+
+      <!-- Description -->
+      <div class="posterDetail flex-col gap-1">
+        <p class="font-[800px] text-[#535353]">Description</p>
+        <div class="bg-[#e9f2fd] rounded-lg p-3 px-5">
+          <p class="font-notoThai">{{ selectedEvent.description }}</p>
+          <p v-if="!selectedEvent.description">-</p>
+        </div>
+      </div>
+    </div>
+  </Dialog>
 </template>
 
 <style scoped>
 .rectangle {
-  width: 100%;
-  height: 100%;
-  padding-inline: 1rem;
-  overflow: hidden;
-  padding-top: 0.75rem;
-  padding-bottom: 2rem;
-  border-radius: 20px;
-  overflow: hidden;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding: 0;
 }
 
 .header-popup {
@@ -526,8 +522,6 @@ const del = async (posterId: string) => {
 .fc {
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  margin-top: -10px;
 }
 .fc .fc-popover {
   z-index: 10;

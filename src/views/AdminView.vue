@@ -28,9 +28,13 @@ watch([admin, devices], () => {
   <div class="rectangle flex flex-col flex-1">
     <Skeleton
       v-if="loadAdmin"
-      class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
+      class="bg-gray-200 rounded-xl flex-1 my-3"
     ></Skeleton>
-    <TabView v-else v-model:active-index="click" class="flex text-[14px] flex-col">
+    <TabView
+      v-else
+      v-model:active-index="click"
+      class="flex flex-col text-[14px]"
+    >
       <TabPanel header="Admin">
         <Admin />
       </TabPanel>
@@ -46,24 +50,6 @@ watch([admin, devices], () => {
 </template>
 
 <style scoped>
-/* Add styles for the rectangle */
-.rectangle {
-  width: 98%;
-  height: 100%;
-  margin-left: 1rem;
-  padding-inline: 1rem;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-bottom: 2rem;
-  padding-inline: 1rem;
-  border-radius: 20px;
-  margin-top: 0.2rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.15rem;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
-}
-
 .bold-ho:hover {
   font-weight: 600;
 }
