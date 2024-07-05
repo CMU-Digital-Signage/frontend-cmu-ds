@@ -608,14 +608,17 @@ const nextStepPreview = () => {
       }"
     >
       <template #header>
-        <div
-          v-if="selectedContentType.code === 'EP'"
-          class="header-popup !text-[#FF4D4D]"
-        >
-          {{ editcontentType.type ? "Edit Emergency" : "Upload Emergency" }}
-        </div>
-        <div v-else class="header-popup">
-          {{ editcontentType.type ? "Edit Content" : "Upload Content" }}
+        <div class="flex flex-col">
+          <div
+            :class="`header-popup ${
+              selectedContentType.code === 'EP' ? '!text-[#FF4D4D]' : ''
+            }`"
+          >
+            {{ editcontentType.type ? "Edit Content" : "Upload Content" }}
+          </div>
+          <div class="text-[14px] font-thin text-[#828282]">
+            {{ selectedContentType.header }} Content
+          </div>
         </div>
       </template>
       <div v-if="selectedContentType.code === 'NP'">
