@@ -162,7 +162,7 @@ const checkValidRoomNumber = () => {
       :value="device"
       scrollDirection="vertical"
       scrollable
-      :scrollHeight="calculateScreenHeight()"
+      :scrollHeight="calculateScreenHeight(0.75)"
       class="mt-2 text-[14px]"
     >
       <Column

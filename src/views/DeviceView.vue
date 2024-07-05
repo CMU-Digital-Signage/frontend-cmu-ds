@@ -63,20 +63,6 @@ watch(devices, () => {
 </template>
 
 <style scoped>
-.rectangle {
-  width: 98%;
-  height: 100%;
-  margin-left: 1rem;
-  margin-bottom: 2rem;
-  padding-inline: 1rem;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-top: 0.2rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.15rem;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
-}
 .column {
   margin-top: 1%;
   column-count: 4;

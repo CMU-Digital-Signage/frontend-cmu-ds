@@ -67,7 +67,7 @@ watch(filterDevice, () => {
 </script>
 
 <template>
-  <div class="flex-1">
+  <div class="flex-1 mb-6 overflow-hidden">
     <div class="h-full overflow-y-auto p-4">
       <DataTable v-if="loading" :value="new Array(10)">
         <Column class="w-[243px] border-r-[#CFCECE] border-r-2">

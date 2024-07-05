@@ -44,7 +44,9 @@ const del = async (id: number) => {
 <template>
   <div class="rectangle2">
     <div class="flex flex-row gap-2">
-      <label for="macAddress" class="text-primary-50 text-[12px] font-semibold pt-[10px]"
+      <label
+        for="macAddress"
+        class="text-primary-50 text-[12px] font-semibold pt-[10px]"
         >Search
       </label>
       <InputText
@@ -58,7 +60,7 @@ const del = async (id: number) => {
       :value="admin"
       scrollDirection="vertical"
       scrollable
-      :scrollHeight="calculateScreenHeight()"
+      :scrollHeight="calculateScreenHeight(0.69)"
       class="mt-2 text-[14px]"
     >
       <Column
@@ -94,7 +96,7 @@ const del = async (id: number) => {
           <Button
             icon="pi pi-trash"
             rounded
-            class="w-7 h-7 "
+            class="w-7 h-7"
             severity="danger"
             v-if="!isCurrentUser(rowData.data)"
             @click="del(rowData.data.id)"

@@ -141,7 +141,7 @@ const handleEmergency = async () => {
 </script>
 
 <template>
-  <div class="rectangleOut flex md:flex-row flex-col md:gap-0 font-sf-pro">
+  <div class="rectangle flex md:flex-row !overflow-auto flex-col md:gap-0 font-sf-pro">
     <Toast />
     <Skeleton
       v-if="loading1st"
@@ -357,22 +357,8 @@ const handleEmergency = async () => {
 </template>
 
 <style scoped>
-.rectangleOut {
-  width: 98%;
-  height: 100%;
-  margin-left: 1rem;
-  margin-bottom: 2rem;
-  padding-inline: 1rem;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-top: 0.2rem;
-  padding-inline: 1rem;
-  border-radius: 20px;
-  overflow: hidden;
-  padding-top: 0.25rem;
-  padding-bottom: 0.15rem;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-
+.rectangle {
+  padding-bottom: 1rem;
 }
 
 .rotated-image {

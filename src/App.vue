@@ -86,12 +86,15 @@ onUnmounted(() => {
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="bg-[#f3f3f3]" />
-    <div class="w-full h-full flex flex-col bg-[#fefefe]">
+    <div class="flex flex-col flex-1 px-6 bg-[#fefefe] overflow-hidden">
       <NavBar class="bg-[#fefefe]" />
-      <router-view class="bg-[#ffffff]" />
+      <router-view class="bg-[#ffffff] mb-8 mt-1" />
     </div>
   </div>
-  <div v-else class="flex flex-col w-screen h-full bg-[#ffffff] md:fixed font-sf-pro">
+  <div
+    v-else
+    class="flex flex-col px-6 w-screen h-full bg-[#ffffff] md:fixed font-sf-pro"
+  >
     <NavBar
       v-if="$route.path === '/emergency'"
       class="bg-white"
@@ -127,8 +130,13 @@ onUnmounted(() => {
 }
 
 .rectangle {
-  overflow-y: auto;
-  height: 100svh;
+  width: 100%;
+  height: 100%;
+  padding-top: 0.25rem;
+  padding-bottom: 0.15rem;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  overflow: hidden;
 }
 
 router-view {
