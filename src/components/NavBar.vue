@@ -181,7 +181,7 @@ const checkValidRoomNumber = () => {
 
 <template>
   <div
-    class="min-h-14 inline-flex flex-wrap items-center z-10 bg-white font-semibold font-sf-pro text-gray-800 text-[18px]"
+    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white font-semibold font-sf-pro text-gray-800 text-[18px]"
   >
     <Toast />
     <!-- Popup Add Device -->
