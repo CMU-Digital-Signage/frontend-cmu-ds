@@ -174,18 +174,18 @@ const handleChangePassword = async () => {
     <!-- //dialog reset password -->
     <Dialog
       v-model:visible="dialogVisible"
-      class="h-auto w-[550px]"
+      class="h-auto w-[500px]"
       modal
       :close-on-escape="false"
       :draggable="false"
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;  ',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
         },
         mask: {
           style: 'backdrop-filter: blur(2px)',
@@ -193,51 +193,72 @@ const handleChangePassword = async () => {
       }"
     >
       <template #header>
-        <div class="header-popup">Change Emergency Password</div>
+        <div class="flex flex-col">
+          <div class="header-popup">Change Emergency Password</div>
+          <p v-if="user" class="text-[14px] mt-2 font-thin text-[#14C6A4]">
+            {{ user.firstName }} {{ user.lastName }}
+          </p>
+        </div>
       </template>
 
-      <p v-if="user" class="text-[#0067A0] text-lg mb-2 font-semibold">
-        {{ user.firstName }} {{ user.lastName }}
-      </p>
-      <div class="flex flex-col gap-2 w-full">
+      <div class="flex flex-col gap-1  w-full">
         <FloatLabel class="mt-6">
           <Password
             id="currentPassword"
             v-model="oldPassword"
-            input-class="w-screen rounded-[12px] border-2"
+            input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
             class="w-full"
             :feedback="false"
             toggle-mask
+            :pt="{
+              input: {
+                class: ` text-[12px] font-sf-pro`,
+              },
+            }"
           />
-          <label for="currentPassword">Current Password</label>
-        </FloatLabel>
+          <label
+            for="currentPassword"
+            class="text-[12px] flex  text-center"
+            >Current Password</label
+          >
+      </FloatLabel>
         <FloatLabel class="mt-6">
           <Password
             id="newPassword"
             v-model="password"
-            input-class="w-screen rounded-[12px] border-2"
+           input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
             class="w-full"
             :feedback="false"
             toggle-mask
+            :pt="{
+              input: {
+                class: ` text-[12px] font-sf-pro`,
+              },
+            }"
           />
-          <label for="newPassword">New Password</label>
+          <label  class="text-[12px] flex  text-center" for="newPassword">New Password</label>
         </FloatLabel>
         <FloatLabel class="mt-6">
           <Password
             id="reTypeNewPassword"
-            input-class="w-screen rounded-[12px] border-2"
+           input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
             class="w-full"
             v-model="cfPassword"
             :feedback="false"
             toggle-mask
+            :pt="{
+              input: {
+                class: ` text-[12px] font-sf-pro`,
+              },
+            }"
           />
-          <label for="reTypeNewPassword">Re-type new password</label>
+          <label  class="text-[12px] flex  text-center" for="reTypeNewPassword">Re-type new password</label>
         </FloatLabel>
         <Button
           text
           link
           @click="showSecondDialog"
-          class="-ml-3 w-fit underline font-semibold text-[#1b7be8] bg-none"
+          class="-ml-3 w-fit underline font-normal text-[12px] text-[#1b7be8] bg-none"
           >Forget your password?</Button
         >
         <Button
@@ -257,11 +278,11 @@ const handleChangePassword = async () => {
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
         },
         mask: {
           style: 'backdrop-filter: blur(2px)',
@@ -270,10 +291,7 @@ const handleChangePassword = async () => {
       ><template #header>
         <div class="header-popup">Forget Emergency Password</div>
       </template>
-      <p v-if="user" class="mb-6">
-        {{ user.firstName }} {{ user.lastName }} · pixelParade
-      </p>
-      <p v-if="user">
+      <p v-if="user" class="text-[14px]">
         We'll send a password reset confirmation to
         <span class="text-[#1b7be8] font-extrabold underline">{{
           user.email
@@ -315,7 +333,7 @@ const handleChangePassword = async () => {
       <template #header>
         <div class="header-popup">Set Your Emergency Password</div>
       </template>
-      <div class="mb-6 gap-7 bg-[#C7EBFF] rounded-lg h-fit p-4">
+      <div class="mb-6 gap-7  rounded-lg h-fit p-4">
         <div class="inline-flex">
           <i class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"></i>
           <p v-if="user" class="text-xl mb-2 font-bold text-[#0067A0]">
@@ -339,7 +357,7 @@ const handleChangePassword = async () => {
           <Password
             id="Password"
             v-model="password"
-            input-class="w-screen rounded-[12px] border-2"
+            input-class="w-screen rounded-[12px] border-1"
             class="w-full"
             :feedback="false"
             toggle-mask
@@ -349,7 +367,7 @@ const handleChangePassword = async () => {
         <FloatLabel class="mt-6">
           <Password
             id="confirmPassword"
-            input-class="w-screen rounded-[12px] border-2"
+            input-class="w-screen rounded-[12px] border-1"
             class="w-full"
             v-model="cfPassword"
             :feedback="false"
@@ -449,8 +467,16 @@ const handleChangePassword = async () => {
         </Button>
 
         <Button
-          class="text-[#282828] bg-[#236c79] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
+          class="text-[#282828] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
           v-else
+          style="
+            background-image: linear-gradient(
+              45deg,
+              #57eb7f 0%,
+              #3a9ad2 50%,
+              #5386a4 100%
+            );
+          "
           @click="store.state.showUpload = true"
           icon="pi pi-plus"
           ><i class="pi pi-plus text-white"></i
@@ -480,8 +506,8 @@ const handleChangePassword = async () => {
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/' ? '#2E3F4A' : '',
-                color: $route.path === '/' ? '#FFFFFF' : '',
+                'background-color': $route.path === '/' ? '#11cfff6a' : '',
+                color: $route.path === '/' ? '#297dbe' : '',
               }"
             >
               <i class="pi pi-microsoft"></i>
@@ -489,13 +515,13 @@ const handleChangePassword = async () => {
             </Button>
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-              :class="{ 'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/' }"
+              :class="{ 'bg-[#11cfff6a] text-[#FFFFFF]': $route.path === '/' }"
               v-else
               link
               icon="pi pi-microsoft"
               :style="{
-                'background-color': $route.path === '/' ? '#2E3F4A' : '',
-                color: $route.path === '/' ? '#FFFFFF' : '',
+                'background-color': $route.path === '/' ? '#11cfff6a' : '',
+                color: $route.path === '/' ? '#297dbe' : '',
               }"
             >
             </Button>
@@ -509,8 +535,8 @@ const handleChangePassword = async () => {
                 link
                 :style="{
                   'background-color':
-                    $route.path === '/content' ? '#2E3F4A' : '',
-                  color: $route.path === '/content' ? '#FFFFFF' : '',
+                    $route.path === '/content' ? '#11cfff6a' : '',
+                  color: $route.path === '/content' ? '#297dbe' : '',
                 }"
               >
                 <i class="pi pi-file"></i>
@@ -519,15 +545,15 @@ const handleChangePassword = async () => {
               <Button
                 class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
                 :class="{
-                  'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/content',
+                  'bg-[#11cfff6a] text-[#297dbe]': $route.path === '/content',
                 }"
                 v-else
                 icon="pi pi-file"
                 link
                 :style="{
                   'background-color':
-                    $route.path === '/content' ? '#2E3F4A' : '',
-                  color: $route.path === '/content' ? '#FFFFFF' : '',
+                    $route.path === '/content' ? '#11cfff6a' : '',
+                  color: $route.path === '/content' ? '#297dbe' : '',
                 }"
               >
               </Button>
@@ -541,8 +567,8 @@ const handleChangePassword = async () => {
               link
               :style="{
                 'background-color':
-                  $route.path === '/deviceManage' ? '#2E3F4A' : '',
-                color: $route.path === '/deviceManage' ? '#FFFFFF' : '',
+                  $route.path === '/deviceManage' ? '#11cfff6a' : '',
+                color: $route.path === '/deviceManage' ? '#297dbe' : '',
               }"
             >
               <i class="pi pi-desktop"></i>
@@ -551,15 +577,16 @@ const handleChangePassword = async () => {
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
               :class="{
-                'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/deviceManage',
+                'bg-[#11cfff6a] text-[#297dbe]':
+                  $route.path === '/deviceManage',
               }"
               v-else
               icon="pi pi-desktop"
               link
               :style="{
                 'background-color':
-                  $route.path === '/deviceManage' ? '#2E3F4A' : '',
-                color: $route.path === '/deviceManage' ? '#FFFFFF' : '',
+                  $route.path === '/deviceManage' ? '#11cfff6a' : '',
+                color: $route.path === '/deviceManage' ? '#297dbeF' : '',
               }"
             >
             </Button>
@@ -622,8 +649,8 @@ const handleChangePassword = async () => {
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
-                color: $route.path === '/admin' ? '#FFFFFF' : '',
+                'background-color': $route.path === '/admin' ? '#11cfff6a' : '',
+                color: $route.path === '/admin' ? '#297dbe' : '',
               }"
             >
               <i class="pi pi-users"></i>
@@ -632,14 +659,14 @@ const handleChangePassword = async () => {
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
               :class="{
-                'bg-[#2E3F4A] text-[#FFFFFF]': $route.path === '/admin',
+                'bg-[#11cfff6a] text-[#297dbe]': $route.path === '/admin',
               }"
               v-else
               icon="pi pi-user"
               link
               :style="{
-                'background-color': $route.path === '/admin' ? '#2E3F4A' : '',
-                color: $route.path === '/admin' ? '#FFFFFF' : '',
+                'background-color': $route.path === '/admin' ? '#11cfff6a' : '',
+                color: $route.path === '/admin' ? '#297dbe' : '',
               }"
             >
             </Button>
@@ -746,7 +773,7 @@ Button {
 }
 
 .menu-ho:hover {
-  background-color: #cfcfcf58;
+  background-color: #a4a4a458;
   color: #282828;
 }
 
@@ -808,7 +835,7 @@ Button {
   padding-bottom: 10px;
   margin-top: 30px;
   margin-left: 10px;
-  background-color: rgb(74, 158, 255);
+  background-color: #14C6A4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
@@ -829,8 +856,8 @@ Button {
 
 .primaryButton1:hover {
   cursor: pointer;
-  background-color: rgb(9, 120, 247);
-  text-decoration-line: underline;
+  background-color: #0eb092;
+
 }
 
 .secondaryButton1:hover {
@@ -845,7 +872,7 @@ Button {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 30px;
-  background-color: rgb(74, 158, 255);
+  background-color: #14C6A4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
@@ -866,8 +893,7 @@ Button {
 
 .primaryButton:hover {
   cursor: pointer;
-  background-color: rgb(9, 120, 247);
-  text-decoration-line: underline;
+  background-color: #0eb092;
 }
 
 .secondaryButton:hover {
@@ -877,7 +903,7 @@ Button {
 
 .header-popup {
   font-weight: 700;
-  font-size: 22px;
+  font-size: 18px;
   color: black;
 }
 
@@ -895,7 +921,12 @@ Button {
   font-size: 14px;
   cursor: pointer;
   transition: transform 0.2s ease-out;
-  background-image: linear-gradient(45deg, #57eb7f 0%, #3a9ad2 50%, #5386A4 100%);
+  background-image: linear-gradient(
+    45deg,
+    #57eb7f 0%,
+    #3a9ad2 50%,
+    #5386a4 100%
+  );
   box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 8px;
 }
 
@@ -906,17 +937,13 @@ Button {
 
 @keyframes pulse {
   0% {
-    box-shadow: 
-      0 0 10px rgba(87, 235, 127, 0.8), 
-      0 0 25px rgba(58, 210, 147, 0.8), 
-      0 0 35px rgba(155, 202, 228, 0.8), 
+    box-shadow: 0 0 10px rgba(153, 255, 253, 0.8),
+      0 0 25px rgba(167, 252, 217, 0.8), 0 0 35px rgba(155, 202, 228, 0.8),
       0 0 20px rgba(192, 230, 252, 0.8);
   }
   100% {
-    box-shadow: 
-      0 0 15px rgba(87, 235, 127, 0.8), 
-      0 0 40px rgba(58, 210, 147, 0.8), 
-      0 0 50px rgba(155, 202, 228, 0.8), 
+    box-shadow: 0 0 10px rgba(153, 255, 253, 0.8),
+      0 0 25px rgba(167, 252, 217, 0.8), 0 0 50px rgba(155, 202, 228, 0.8),
       0 0 30px rgba(192, 230, 252, 0.8);
   }
 }
@@ -934,7 +961,8 @@ Button {
 }
 
 @keyframes jelly {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   25% {
@@ -947,8 +975,6 @@ Button {
     transform: scale(1.05);
   }
 }
-
-
 
 .menu-ho-upload {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
