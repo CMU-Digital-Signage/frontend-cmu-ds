@@ -365,31 +365,24 @@ const del = async (posterId: string) => {
   </Dialog>
   <Dialog
     v-model:visible="showInfo"
+    close
     modal
     :draggable="false"
-    class="w-[550px] z-[100]"
+    class="w-[400px] z-[100]"
+    :pt="{
+      header: {
+        class: 'items-start rounded-t-lg  pt-3',
+      },
+      content: {
+        class: 'px-5 pb-5 rounded-b-lg',
+      },
+    }"
   >
     <template #header>
-      <div class="inline-flex justify-between items-center w-full">
-        <div class="inline-flex font-bold text-2xl gap-3 items-start">
-          <i
-            class="pi pi-circle-fill mt-2"
-            :style="{ color: selectedEvent.color }"
-          ></i>
-          <div class="flex flex-col">
-            <p>{{ selectedEvent.title }}</p>
-            <!-- Start Date to End Date -->
-            <p class="text-[14px] text-[#8d8d8d] -mt-1">
-              <span
-                >{{ dateFormatter(new Date(selectedEvent.start), 3) }} -
-              </span>
-              <span>{{ dateFormatter(new Date(selectedEvent.end), 3) }}</span>
-            </p>
-          </div>
-        </div>
+      <div class="flex flex-col w-full">
         <div
           v-if="user.isAdmin || user.id === selectedEvent.userId"
-          class="inline-flex gap-5 mr-5"
+          class="inline-flex gap-3 justify-end mr-[12px] mb-2"
         >
           <i
             class="pi pi-pencil cursor-pointer rounded-full p-2 hover:bg-gray-200"
@@ -403,59 +396,162 @@ const del = async (posterId: string) => {
             @click="deletePopup = true"
           ></i>
         </div>
+
+        <div class="inline-flex font-normal text-[22px] gap-3">
+          <i
+            class="pi pi-circle-fill mt-2"
+            :style="{ color: selectedEvent.color }"
+          ></i>
+          <div class="flex flex-col">
+            <p>{{ selectedEvent.title }}</p>
+            <!-- Start Date to End Date -->
+            <p class="text-[14px] font-thin text-[#575757]">
+              <span
+                >{{ dateFormatter(new Date(selectedEvent.start), 3) }} -
+              </span>
+              <span>{{ dateFormatter(new Date(selectedEvent.end), 3) }}</span>
+            </p>
+          </div>
+        </div>
       </div>
     </template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col text-[14px] gap-1 ml-4">
       <!-- Number of Poster -->
-      <div class="posterDetail">
-        <p>Number of Poster</p>
+      <div class="posterDetail flex-row gap-">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="44"
+          fill="currentColor"
+          class="bi bi-collection-play"
+          viewBox="0 0 30 32"
+        >
+          <path
+            d="M2 3a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 0-1h-11A.5.5 0 0 0 2 3m2-2a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7A.5.5 0 0 0 4 1m2.765 5.576A.5.5 0 0 0 6 7v5a.5.5 0 0 0 .765.424l4-2.5a.5.5 0 0 0 0-.848z"
+          />
+          <path
+            d="M1.5 14.5A1.5 1.5 0 0 1 0 13V6a1.5 1.5 0 0 1 1.5-1.5h13A1.5 1.5 0 0 1 16 6v7a1.5 1.5 0 0 1-1.5 1.5zm13-1a.5.5 0 0 0 .5-.5V6a.5.5 0 0 0-.5-.5h-13A.5.5 0 0 0 1 6v7a.5.5 0 0 0 .5.5z"
+          />
+        </svg>
         <p>
           {{ selectedEvent.amount }}
           {{ selectedEvent.amount > 1 ? "Posters" : "Poster" }}
         </p>
       </div>
       <!-- Running Time -->
-      <div class="posterDetail">
-        <p>Running Time</p>
-        <p v-if="selectedEvent.allDay">All Day</p>
+      <div class="posterDetail flex-row gap-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="44"
+          fill="currentColor"
+          class="bi bi-clock"
+          viewBox="0 0 30 32"
+        >
+          <path
+            d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"
+          />
+          <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"
+          />
+        </svg>
+        <p v-if="selectedEvent.allDay">All-day</p>
         <p v-else>
           {{ selectedEvent.startTime }} - {{ selectedEvent.endTime }}
         </p>
       </div>
       <!-- Duration -->
-      <div class="posterDetail">
-        <p>Display Duration</p>
-        <p>{{ selectedEvent.duration }} sec</p>
-      </div>
-      <!-- Device -->
-      <div class="posterDetail">
-        <p>Device</p>
-        <div class="flex flex-col">
-          <p
-            v-for="(item, index) in selectedEvent.onDevice"
-            :key="index"
-            class="inline-flex justify-between gap-1"
-          >
-            <span>{{ item }}</span>
-            <span>
-              ({{
-                store.state.devices?.find((e) => e.deviceName === item)?.room
-              }})
-            </span>
-          </p>
+      <div class="posterDetail flex-row gap-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="44"
+          fill="currentColor"
+          class="bi bi-play-circle"
+          viewBox="0 0 30 32"
+        >
+          <path
+            d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+          />
+          <path
+            d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"
+          />
+        </svg>
+        <div class="mt-[2px]">
+          <p>{{ selectedEvent.duration }} sec</p>
         </div>
       </div>
-      <!-- Uploader -->
-      <div class="posterDetail">
-        <p>Uploader</p>
-        <p>{{ selectedEvent.uploader }}</p>
+      <!-- Device -->
+      <div class="posterDetail flex-row gap-1 mb-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="44"
+          fill="currentColor"
+          class="bi bi-display"
+          viewBox="0 0 30 32"
+        >
+          <path
+            d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4q0 1 .25 1.5H11a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1h.75Q6 13 6 12H2s-2 0-2-2zm1.398-.855a.76.76 0 0 0-.254.302A1.5 1.5 0 0 0 1 4.01V10c0 .325.078.502.145.602q.105.156.302.254a1.5 1.5 0 0 0 .538.143L2.01 11H14c.325 0 .502-.078.602-.145a.76.76 0 0 0 .254-.302 1.5 1.5 0 0 0 .143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.76.76 0 0 0-.302-.254A1.5 1.5 0 0 0 13.99 3H2c-.325 0-.502.078-.602.145"
+          />
+        </svg>
+        <div class="mt-[2px]">
+          <div class="flex flex-col">
+            <p
+              v-for="(item, index) in selectedEvent.onDevice"
+              :key="index"
+              class="inline-flex justify-between gap-1"
+            >
+              <span>{{ item }}</span>
+              <span>
+                ({{
+                  store.state.devices?.find((e) => e.deviceName === item)?.room
+                }})
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="posterDetail flex-row gap-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="44"
+          fill="currentColor"
+          class="bi bi-person-add"
+          viewBox="0 0 30 32"
+        >
+          <path
+            d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"
+          />
+          <path
+            d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"
+          />
+        </svg>
+
+        <div class="mt-[2px]">
+          <p>{{ selectedEvent.uploader }}</p>
+        </div>
       </div>
 
       <!-- Description -->
-      <div class="posterDetail flex-col gap-1">
-        <p class="font-[800px] text-[#535353]">Description</p>
-        <div class="bg-[#e9f2fd] rounded-lg p-3 px-5">
-          <p class="font-notoThai">{{ selectedEvent.description }}</p>
+      <div class="posterDetail flex-row gap-1">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="40"
+          height="44"
+          fill="currentColor"
+          class="bi bi-text-paragraph"
+          viewBox="0 0 30 32"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5"
+          />
+        </svg>
+        <div class="mt-[2px]">
+          <p>{{ selectedEvent.description }}</p>
           <p v-if="!selectedEvent.description">-</p>
         </div>
       </div>
@@ -517,7 +613,7 @@ const del = async (posterId: string) => {
 <style>
 .posterDetail {
   display: inline-flex;
-  justify-content: space-between;
+  gap: 6px;
 }
 .fc {
   border-radius: 20px;
