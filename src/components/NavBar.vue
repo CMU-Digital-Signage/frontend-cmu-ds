@@ -672,6 +672,9 @@ const checkValidRoomNumber = () => {
               }`"
               :value="slotProps.option.type"
               :severity="slotProps.option.severity"
+              :pt="{
+            value: 'text-[12px]',
+          }"
             />
           </template>
         </Dropdown>
@@ -695,6 +698,9 @@ const checkValidRoomNumber = () => {
             <Tag
               :value="slotProps.option.status"
               :severity="slotProps.option.severity"
+              :pt="{
+            value: 'text-[12px]',
+          }"
             />
           </template>
         </Dropdown>
@@ -740,7 +746,7 @@ const checkValidRoomNumber = () => {
         <div class="flex items-center gap-4 pl-3">
           <button
             id="today"
-            class="border-[1px] rounded-xl hover:bg-gray-200 border-[#878787] text-[#878787] w-[60px] h-[25px] text-[14px] font-normal flex items-center justify-center"
+            class="border-[1px] rounded-xl hover:bg-gray-200 border-[#878787] text-[#878787] w-[60px] h-[25px] text-[12px] font-normal flex items-center justify-center"
           >
             Today
           </button>

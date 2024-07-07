@@ -28,7 +28,7 @@ export async function addAdmin(email: string) {
   }
 }
 
-export async function deleteAdmin(id: number) {
+export async function deleteAdmin(id: string) {
   try {
     const res = await axios.delete(
       `${process.env.VUE_APP_API_BASE_URL}/admin`,

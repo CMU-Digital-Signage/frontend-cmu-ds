@@ -10,9 +10,11 @@ import { deleteAdmin } from "@/services";
 import { User } from "@/types";
 import store from "@/store";
 import { useToast } from "primevue/usetoast";
-import { calculateScreenHeight } from "@/utils/constant";
 
 const toast = useToast();
+const loading = ref(false);
+const deletePopup = ref(false);
+const selectDelUser = ref<User>();
 const user = ref<User>(store.state.userInfo);
 const admin = computed(() =>
   store.state.allUser?.filter(
@@ -28,8 +30,9 @@ const isCurrentUser = (admin: User) => {
   return admin.id === user.value.id;
 };
 
-const del = async (id: number) => {
-  const res = await deleteAdmin(id);
+const del = async () => {
+  loading.value = true;
+  const res = await deleteAdmin(selectDelUser.value?.id || "");
   if (res.ok) {
     toast.add({
       severity: "success",
@@ -38,10 +41,59 @@ const del = async (id: number) => {
       life: 3000,
     });
   }
+  loading.value = false;
+  deletePopup.value = false;
+  selectDelUser.value = undefined;
 };
 </script>
 
 <template>
+  <Dialog
+    :closable="!loading"
+    v-model:visible="deletePopup"
+    modal
+    close-on-escape
+    :draggable="false"
+    class="w-[400px]"
+    :pt="{
+      content: {
+        style:
+          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+      },
+      header: {
+        style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
+      },
+    }"
+  >
+    <template #header>
+      <div class="header-popup">
+        Delete "{{ selectDelUser?.firstName }} {{ selectDelUser?.lastName }}" ?
+      </div>
+    </template>
+    <div class="flex flex-col gap-2 text-[14px]">
+      <div>
+        Deleting this user will not have access to all contents (except their own content), add device and add emergency content.
+      </div>
+      <div class="inline-block">
+        <div class="flex flex-row gap-4 pt-3">
+          <Button
+            text
+            :loading="loading"
+            label="Cancel"
+            @click="deletePopup = false"
+            :class="'secondaryButton'"
+          ></Button>
+          <Button
+            :loading="loading"
+            label="Delete admin"
+            :class="'primaryButtonDel'"
+            type="submit"
+            @click="del()"
+          ></Button>
+        </div>
+      </div>
+    </div>
+  </Dialog>
   <div class="rectangle2 flex flex-col">
     <div class="flex flex-row gap-2">
       <label
@@ -100,7 +152,10 @@ const del = async (id: number) => {
             class="w-7 h-7"
             severity="danger"
             v-if="!isCurrentUser(rowData.data)"
-            @click="del(rowData.data.id)"
+            @click="
+              deletePopup = true;
+              selectDelUser = rowData.data;
+            "
           />
         </template>
       </Column>
@@ -110,8 +165,69 @@ const del = async (id: number) => {
 
 <style scoped>
 .rectangle2 {
-width: 100%;
-height: 100%;
+  width: 100%;
+  height: 100%;
+}
 
+.secondaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  background-color: none;
+  color: black;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.secondaryButton:hover {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+}
+
+.primaryButton {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 10px;
+  margin-top: 20px;
+  background-color: none;
+  color: rgb(255, 255, 255);
+  font-weight: 800;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.primaryButtonDel {
+  width: 50%;
+  border-width: 0;
+  border-radius: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 10px;
+  margin-top: 20px;
+  background-color: white;
+  color: rgb(255, 91, 91);
+  font-weight: 800;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.primaryButtonDel:hover {
+  background-color: rgb(255, 235, 235);
+}
+
+.primaryButton:hover {
+  background-color: rgb(37, 135, 240);
+}
+
+.header-popup {
+  font-weight: 700;
+  font-size: 18px;
+  color: rgb(255, 91, 91);
 }
 </style>
