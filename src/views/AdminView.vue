@@ -33,12 +33,22 @@ watch([admin, devices], () => {
     <TabView
       v-else
       v-model:active-index="click"
-      class="flex flex-col text-[14px]"
+      class="flex flex-col flex-1 text-[14px] overflow-hidden"
     >
-      <TabPanel header="Admin">
+      <TabPanel
+        header="Admin"
+        :pt="{
+          content: { class: `flex flex-1` },
+        }"
+      >
         <Admin />
       </TabPanel>
-      <TabPanel header="Device">
+      <TabPanel
+        header="Device"
+        :pt="{
+          content: { class: `flex flex-1` },
+        }"
+      >
         <Skeleton
           v-if="loadDevice"
           class="bg-gray-200 rounded-xl flex-1"

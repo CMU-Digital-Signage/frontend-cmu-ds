@@ -38,7 +38,7 @@ watch(devices, () => {
       v-else-if="devices"
       v-for="(floor, index) in floors"
       :key="index"
-      class="text-left pb-7 first:border-none border-t-2 border-[#dee2e6]"
+      class="text-left pb-7 first:border-none border-t-[1px] border-[#dddddd]"
     >
       <p class="font-semibold text-[14px] px-4 pt-4">{{ floor }}th Floor</p>
       <p class="text-[#3671BF] text-[12px] px-4 pb-4">
