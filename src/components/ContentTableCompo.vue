@@ -110,7 +110,7 @@ const del = async () => {
     modal
     close-on-escape
     :draggable="false"
-    class="w-[425px]"
+    class="w-[400px]"
     :pt="{
       content: {
         style:
@@ -119,10 +119,6 @@ const del = async () => {
       header: {
         style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
       },
-      mask: {
-        style:
-          'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
-      },
     }"
   >
     <template #header>
@@ -130,15 +126,14 @@ const del = async () => {
         Delete
         {{
           selectPoster?.posterId
-            ? `"${selectPoster.title}" Poster`
-            : `"${selectPoster?.incidentName}" Emergency Poster`
+            ? `"${selectPoster.title}"`
+            : `"${selectPoster?.incidentName}"`
         }}?
       </div>
     </template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 text-[14px]">
       <div>
-        Deleting this poster or collection will be permenently deleted from all
-        devices.
+        Deleting this content will be permenently deleted from all devices.
       </div>
       <div class="inline-block">
         <div class="flex flex-row gap-4 pt-3">
@@ -330,6 +325,9 @@ const del = async () => {
           :severity="
             typePoster.find((e) => rowData.data.type === e.type)?.severity
           "
+          :pt="{
+            value: 'text-[12px]',
+          }"
         />
       </template>
     </Column>
@@ -352,17 +350,35 @@ const del = async () => {
         >
           <div class="flex flex-col gap-3">
             <div class="inline-flex gap-2">
-              <Tag severity="success" value="Displayed" />
+              <Tag
+                :pt="{
+                  value: 'text-[12px]',
+                }"
+                severity="success"
+                value="Displayed"
+              />
               <p class="mt-1">Poster is currently being displayed.</p>
             </div>
             <div class="inline-flex gap-2">
-              <Tag severity="danger" value="Expired" />
+              <Tag
+                :pt="{
+                  value: 'text-[12px]',
+                }"
+                severity="danger"
+                value="Expired"
+              />
               <p class="mt-1">
                 Posters are no longer scheduled to be displayed.
               </p>
             </div>
             <div class="inline-flex gap-2">
-              <Tag severity="info" value="Awaited" />
+              <Tag
+                :pt="{
+                  value: 'text-[12px]',
+                }"
+                severity="info"
+                value="Awaited"
+              />
               <p class="mt-1">
                 Posters will be displayed at a later date or time.
               </p>
@@ -382,6 +398,9 @@ const del = async () => {
               : statusEmer.find((e) => rowData.data.status === e.status)
                   ?.severity
           "
+          :pt="{
+            value: 'text-[12px]',
+          }"
         />
       </template>
     </Column>
@@ -444,8 +463,8 @@ const del = async () => {
 <style scoped>
 .header-popup {
   font-weight: 700;
-  font-size: 22px;
-  color: rgb(255, 0, 0);
+  font-size: 18px;
+  color: rgb(255, 91, 91);
 }
 
 .primaryButtonDel {
@@ -457,15 +476,14 @@ const del = async () => {
   margin-left: 10px;
   margin-top: 20px;
   background-color: white;
-  color: rgb(255, 0, 0);
+  color: rgb(255, 91, 91);
   font-weight: 800;
   cursor: pointer;
   margin-left: 10px;
 }
 
 .primaryButtonDel:hover {
-  background-color: rgb(224, 77, 77);
-  color: white;
+  background-color: rgb(255, 235, 235);
 }
 
 .secondaryButton {

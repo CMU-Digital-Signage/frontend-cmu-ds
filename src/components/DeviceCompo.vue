@@ -111,7 +111,7 @@ const checkValidRoomNumber = () => {
     modal
     close-on-escape
     :draggable="false"
-    class="w-[425px]"
+    class="w-[400px]"
     :pt="{
       content: {
         style:
@@ -120,10 +120,7 @@ const checkValidRoomNumber = () => {
       header: {
         style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
       },
-      mask: {
-        style:
-          'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
-      },
+    
     }"
   >
     <template #header>
@@ -131,9 +128,9 @@ const checkValidRoomNumber = () => {
         Delete "{{ selectDelDevice?.deviceName }}" device?
       </div>
     </template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 text-[14px]">
       <div>
-        Deleting this device will also remove all posters associated with it,
+        Deleting this device will also remove all contents associated with it,
         but this device's MAC address can be re-added if Raspberry Pi restart
         again.
       </div>
@@ -197,7 +194,7 @@ const checkValidRoomNumber = () => {
             />
             <OverlayPanel
               :ref="`overlay_${rowData.data.MACaddress}`"
-              class="w-fit h-fit max-w-sm max-h-max"
+              class="w-fit h-fit max-w-sm max-h-max text-[12px]"
             >
               <img
                 v-if="rowData.data.location"
@@ -518,16 +515,15 @@ const checkValidRoomNumber = () => {
   padding-bottom: 10px;
   margin-left: 10px;
   margin-top: 20px;
-  background-color: rgb(255, 0, 0);
-  color: rgb(255, 255, 255);
+  background-color: white;
+  color: rgb(255, 91, 91);
   font-weight: 800;
   cursor: pointer;
   margin-left: 10px;
 }
 
 .primaryButtonDel:hover {
-  background-color: rgb(193, 0, 0);
-
+  background-color: rgb(255, 235, 235);
 }
 
 .primaryButton:hover {
@@ -537,7 +533,7 @@ const checkValidRoomNumber = () => {
 
 .header-popup {
   font-weight: 700;
-  font-size: 22px;
-  color: rgb(255, 0, 0);
+  font-size: 18px;
+  color: rgb(255, 91, 91);
 }
 </style>

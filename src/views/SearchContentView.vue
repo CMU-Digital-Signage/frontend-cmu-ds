@@ -70,7 +70,7 @@ watch(filterDevice, () => {
   <div class="flex-1 mb-6 overflow-hidden">
     <div class="h-full overflow-y-auto p-4">
       <DataTable v-if="loading" :value="new Array(10)">
-        <Column class="w-[243px] border-r-[#CFCECE] border-r-2">
+        <Column class="w-[170px] text-[12px] border-r-[#dddddd] border-r-[1px]">
           <template #body
             ><Skeleton width="100%" height="30px"></Skeleton
           ></template>
@@ -86,23 +86,24 @@ watch(filterDevice, () => {
         columnResizeMode="fit"
         scrollDirection="vertical"
         scrollable
-        class="rounded-2xl h-12"
+        class="rounded-[8px] h-12 text-[14px]"
         :value="filterData"
         rowGroupMode="rowspan"
         groupRowsBy="date"
       >
         <Column
           field="date"
-          class="w-fit text-black border-r-[#CFCECE] border-r-2 px-6"
+          class="w-fit text-[#575757] border-r-[#dddddd] border-r-[1px] px-4"
         >
           <template #body="item">
             <div class="flex flex-row gap-1 items-center">
-              <p class="w-fit mr-2 text-black font-bold text-[20px]">
+              <p class="w-fit mr-2 text-[#575757] font-semibold text-[16px]">
                 {{ item.data.date }}
               </p>
+              <p>{{ dayOfWeek[item.data.day] }},</p>
               <p>{{ month[item.data.month] }}</p>
-              <p>{{ item.data.year }},</p>
-              <p>{{ dayOfWeek[item.data.day] }}</p>
+              <p>{{ item.data.year }}</p>
+             
             </div>
           </template>
         </Column>

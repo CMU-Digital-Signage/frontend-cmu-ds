@@ -440,7 +440,7 @@ const handleChangePassword = async () => {
 
         <Button
           @click="$router.back"
-          class="text-black bg-[#f6f6f600] rounded-full h-6 w-6 flex -mt-1 text-[#575757] items-center justify-center menu-ho outline-none"
+          class=" bg-[#f6f6f600] rounded-full h-6 w-6 flex -mt-1 text-[#575757] items-center justify-center menu-ho outline-none"
           v-else
           :style="{
             transform: openSidebar ? '' : 'translateX(8px) ',
