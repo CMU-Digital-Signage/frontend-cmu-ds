@@ -616,20 +616,27 @@ const del = async (posterId: string) => {
   gap: 6px;
 }
 .fc {
-  border-radius: 20px;
   overflow: hidden;
 }
 .fc .fc-popover {
   z-index: 10;
 }
 
-.fc-col-header,
+.fc-col-header-cell
+{
+  font-size: 13px;
+  
+}
 .fc-scrollgrid-sync-table,
 .fc-timegrid-body,
 .fc-timegrid-body table,
 .fc-daygrid-body,
 .fc-daygrid-body-balanced {
   width: 100% !important;
+  font-size: 13px;
+  font-weight: 800;
+  color: #575757;
+  border-radius: 0%;
 }
 
 .fc-event {
@@ -647,8 +654,8 @@ const del = async (posterId: string) => {
 
 .fc .fc-daygrid-day-number {
   margin: 5px;
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   border-radius: 100%;
   display: flex;
   justify-content: center;
@@ -656,7 +663,7 @@ const del = async (posterId: string) => {
 }
 
 .fc-day-today .fc-daygrid-day-number {
-  background-color: #e50356 !important;
+  background-color: #3889f2 !important;
   color: #fff !important;
 }
 

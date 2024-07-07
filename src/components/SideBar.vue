@@ -168,7 +168,7 @@ const handleChangePassword = async () => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-screen side-bar z-10 sticky font-sf-pro"
+    class="flex flex-col justify-between h-screen side-bar border-r-[1px] border-[#dddddd] z-10 sticky font-sf-pro"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
     <!-- //dialog reset password -->
@@ -258,7 +258,7 @@ const handleChangePassword = async () => {
           text
           link
           @click="showSecondDialog"
-          class="-ml-3 w-fit underline font-normal text-[12px] text-[#1b7be8] bg-none"
+          class="-ml-3 w-fit  font-normal text-[12px] text-[#1b7be8] bg-none"
           >Forget your password?</Button
         >
         <Button
@@ -293,7 +293,7 @@ const handleChangePassword = async () => {
       </template>
       <p v-if="user" class="text-[14px]">
         We'll send a password reset confirmation to
-        <span class="text-[#1b7be8] font-extrabold underline">{{
+        <span class="text-[#1b7be8] font-extrabold ">{{
           user.email
         }}</span>
         Check your inbox (including Spam and Junk) to reset your emergency
@@ -400,13 +400,13 @@ const handleChangePassword = async () => {
         <div>
           <div class="flex items-center gap-2 md:fixed">
             <img
-              class="w-7 -mt-2"
+              class="w-7 -mt-3"
               alt="cmulogo"
               src="../assets/images/logo close.png"
             />
             <div
               :class="{
-                'font-medium text-[18px] lg:text-[20px] -mt-2': openSidebar,
+                'font-medium text-[18px] lg:text-[20px] -mt-3': openSidebar,
               }"
               v-show="openSidebar"
             >
@@ -423,7 +423,7 @@ const handleChangePassword = async () => {
           id="sideBarButton"
           @click="toggleSidebar()"
           link
-          class="text-black bg-[#f6f6f600] rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
+          class="text-black bg-[#f6f6f600] rounded-full h-6 w-6 -mt-1 flex items-center justify-center menu-ho outline-none"
           :style="{
             transform: openSidebar ? '' : 'translateX(8px)',
             marginLeft: openSidebar ? '' : '-8px',
@@ -440,10 +440,10 @@ const handleChangePassword = async () => {
 
         <Button
           @click="$router.back"
-          class="text-black bg-[#f6f6f600] rounded-full h-6 w-6 flex items-center justify-center menu-ho outline-none"
+          class="text-black bg-[#f6f6f600] rounded-full h-6 w-6 flex -mt-1 text-[#575757] items-center justify-center menu-ho outline-none"
           v-else
           :style="{
-            transform: openSidebar ? '' : 'translateX(8px)',
+            transform: openSidebar ? '' : 'translateX(8px) ',
             marginLeft: openSidebar ? '' : '-8px',
           }"
           link
@@ -456,7 +456,7 @@ const handleChangePassword = async () => {
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
           v-if="openSidebar"
-          class="upload-button mt-7 items-center justify-center"
+          class="upload-button mt-[37px] items-center justify-center "
           @click="store.state.showUpload = true"
         >
           <div class="flex items-center h-5 justify-between">
@@ -467,7 +467,7 @@ const handleChangePassword = async () => {
         </Button>
 
         <Button
-          class="text-[#282828] border-none drop-shadow-xl rounded-full h-10 w-10 flex menu-ho-upload"
+          class="text-[#282828] border-none drop-shadow-xl -mt-2 rounded-full h-10 w-10 flex menu-ho-upload"
           v-else
           style="
             background-image: linear-gradient(
@@ -630,11 +630,11 @@ const handleChangePassword = async () => {
         v-if="user?.isAdmin && $route.path !== '/search-content'"
         :class="openSidebar == true ? '' : ' flex justify-center '"
       >
-        <div class="border-[1px] border-neutral-300" v-if="openSidebar"></div>
+        <div></div>
         <div></div>
         <div></div>
         <p
-          class="flex pb-1 mt-4 font-semibold text-[14px] text-[#615F5F]"
+          class="flex pb-1 mt-8 font-semibold text-[14px] text-[#615F5F]"
           v-show="openSidebar"
         >
           Admin
@@ -683,7 +683,7 @@ const handleChangePassword = async () => {
           :key="index"
           class="flex align-items-center text-[15px] ml-4"
         >
-          <div v-if="item.deviceName" class="flex items-center gap-3 pb-3">
+          <div v-if="item.deviceName" class="flex items-center text-[12px] gap-4 pb-3">
             <Checkbox
               v-model="filterDevice"
               :value="item.MACaddress"
@@ -801,24 +801,18 @@ Button {
 .logout-bt:hover .logout-icon {
   stroke: #fff;
 }
-.underline-ho-em:hover {
-  border-bottom: 1px solid #f00;
-}
+
 .side-bar {
   transition: all 300ms ease-in-out;
 }
 
 .side-bar-open {
-  width: 17rem;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  width: 16.5rem;
   height: 100%;
   padding-bottom: 37px;
 }
 .side-bar-close {
   width: 90px;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
   height: 100%;
   padding-bottom: 37px;
 }

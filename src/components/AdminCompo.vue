@@ -42,7 +42,7 @@ const del = async (id: number) => {
 </script>
 
 <template>
-  <div class="rectangle2">
+  <div class="rectangle2 flex flex-col">
     <div class="flex flex-row gap-2">
       <label
         for="macAddress"
@@ -60,8 +60,9 @@ const del = async (id: number) => {
       :value="admin"
       scrollDirection="vertical"
       scrollable
-      :scrollHeight="calculateScreenHeight(0.69)"
-      class="mt-2 text-[14px]"
+      scrollHeight="flex"
+      :virtualScrollerOptions="{ itemSize: 46 }"
+      :class="`text-[12px] lg:text-[14px] flex-1 mt-2`"
     >
       <Column
         field="firstName"
@@ -109,7 +110,8 @@ const del = async (id: number) => {
 
 <style scoped>
 .rectangle2 {
-  flex: 1 1;
-  padding-bottom: 2rem;
+width: 100%;
+height: 100%;
+
 }
 </style>

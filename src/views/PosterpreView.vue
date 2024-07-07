@@ -123,7 +123,7 @@ const rowStyle = (rowData: any) => {
           scrollable
           scrollHeight="flex"
           :virtualScrollerOptions="{ itemSize: 46 }"
-          class="text-[14px] lg:text-[16px] w-full"
+          class="text-[14px] lg:text-[14px] w-full"
           v-model:selection="selectPoster"
           :value="posters"
           selectionMode="single"

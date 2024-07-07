@@ -157,7 +157,7 @@ const checkValidRoomNumber = () => {
       </div>
     </div>
   </Dialog>
-  <div class="rectangle2">
+  <div class="rectangle2 flex flex-col">
     <DataTable
       :value="device"
       scrollDirection="vertical"
@@ -462,8 +462,8 @@ const checkValidRoomNumber = () => {
 
 <style scoped>
 .rectangle2 {
-  flex: 1 1;
-  padding-bottom: 2rem;
+  width: 100%;
+  height: 100%;
 }
 
 .bold-ho:hover {
@@ -473,7 +473,7 @@ const checkValidRoomNumber = () => {
 
 .bold-ho-add:hover {
   font-weight: 600;
-  text-decoration: underline;
+
   background-color: #a9ddf8;
 }
 
@@ -527,12 +527,12 @@ const checkValidRoomNumber = () => {
 
 .primaryButtonDel:hover {
   background-color: rgb(193, 0, 0);
-  text-decoration-line: underline;
+
 }
 
 .primaryButton:hover {
   background-color: rgb(37, 135, 240);
-  text-decoration-line: underline;
+
 }
 
 .header-popup {

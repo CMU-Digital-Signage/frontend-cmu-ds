@@ -85,7 +85,7 @@ onUnmounted(() => {
     class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-sf-pro"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar class="bg-[#f3f3f3]" />
+    <SideBar  />
     <div class="flex flex-col w-full h-full bg-[#fefefe] overflow-hidden">
       <NavBar class="bg-[#fefefe]" />
       <router-view class="bg-[#ffffff] mb-8 mt-1" />
@@ -133,14 +133,9 @@ onUnmounted(() => {
   // width: 100%;
   // height: 100%;
   flex: 1 1;
-  margin-top: 0.2rem;
-  margin-inline: 1rem;
+  margin-inline: 0.9rem;
   margin-bottom: 2rem;
-  padding-top: 0.25rem;
-  padding-inline: 1rem;
-  padding-bottom: 0.15rem;
-  border-radius: 20px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -168,6 +163,10 @@ Button:focus {
 .p-sortable-column {
   height: 20px;
   padding: 15px;
+}
+
+.p-steps-title {
+  font-size: 12px !important;
 }
 
 .p-tabview-nav-link {
@@ -208,11 +207,14 @@ Button:focus {
   border-radius: 8px;
 }
 .p-dropdown-label {
+  margin-top: 0.9px !important;
   margin-left: 12px;
+  font-size: 12px !important;
 }
 .p-dropdown-item {
   margin-inline: 8px;
   border-radius: 8px;
+  font-size: 12px !important;
 }
 .p-dropdown-item.p-focus {
   background-color: #14c6a543;

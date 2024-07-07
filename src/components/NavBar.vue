@@ -181,7 +181,7 @@ const checkValidRoomNumber = () => {
 
 <template>
   <div
-    class="min-h-14 px-6 inline-flex flex-wrap items-center z-10 bg-white font-semibold font-sf-pro text-gray-800 text-[18px]"
+    class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px]  border-[#dddddd] py-3   font-semibold font-sf-pro text-[#575757] text-[16px]"
   >
     <Toast />
     <!-- Popup Add Device -->
@@ -431,6 +431,9 @@ const checkValidRoomNumber = () => {
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
           class="flex text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
           @click="showPopup = true"
+          :pt = "{
+            label: 'text-[14px]'
+          }"
         >
         </Button>
         <Dialog
@@ -494,7 +497,7 @@ const checkValidRoomNumber = () => {
         <Button
           label="Add Device"
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
-          class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white hover:bg-gray-200"
+          class="flex bg-while text-black pr-2 pl-1 text-[14px] py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bold-ho bg-white hover:bg-gray-200"
           @click="showPopupAddDevice = true"
         >
         </Button>
@@ -523,6 +526,9 @@ const checkValidRoomNumber = () => {
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
           class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
           @click="showPopupAddDevice = true"
+          :pt = "{
+            label: 'text-[14px]'
+          }"
         >
         </Button>
       </div>
@@ -536,11 +542,11 @@ const checkValidRoomNumber = () => {
       <div class="inline-flex gap-3 items-center justify-center">
         <p>{{ devicePreview.deviceName }}</p>
         <i
-          class="pi pi-info-circle cursor-pointer"
+          class="pi pi-info-circle cursor-pointer text-[14px]"
           @mouseover="toggleOverlay"
           @mouseleave="toggleOverlay"
         />
-        <OverlayPanel ref="panel" class="w-fit h-fit max-w-md max-h-max">
+        <OverlayPanel ref="panel" class="w-fit h-fit max-w-md max-h-max text-[12px]">
           <table>
             <tr>
               <td>MAC Address</td>
@@ -558,7 +564,7 @@ const checkValidRoomNumber = () => {
         </OverlayPanel>
       </div>
       <div class="inline-flex gap-3 items-center justify-center">
-        <label class="text-[14px] lg:text-[16px]">Date</label>
+        <label class="text-[12px] lg:text-[14px]">Date</label>
         <Calendar
           v-model="filterInput.date"
           :manualInput="false"
@@ -566,11 +572,11 @@ const checkValidRoomNumber = () => {
           iconDisplay="input"
           :minDate="new Date(new Date().setHours(0, 0, 0, 0))"
           dateFormat="dd M yy"
-          inputClass="text-[13px] lg:text-[16px]"
-          class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
+          inputClass="text-[12px] lg:text-[14px] rounded-lg"
+          class="w-[120px] lg:w-[150px] h-8 align-middle"
         />
 
-        <label class="text-[14px] lg:text-[16px]">Time</label>
+        <label class="text-[12px] lg:text-[14px]">Time</label>
         <Calendar
           v-model="filterInput.time"
           showIcon
@@ -578,8 +584,8 @@ const checkValidRoomNumber = () => {
           icon="pi pi-clock"
           timeOnly
           :stepMinute="30"
-          inputClass="text-[13px] lg:text-[16px]"
-          class="w-[120px] lg:w-[150px] h-8 rounded-lg align-middle"
+           inputClass="text-[12px] lg:text-[14px] rounded-lg"
+          class="w-[80px] lg:w-[90px] h-8  align-middle"
         />
         <Button
           label="Now"
@@ -715,11 +721,11 @@ const checkValidRoomNumber = () => {
       class="justify-between flex-wrap gap-2 lg:gap-5 text-[14px] lg:text-[16px]"
     >
       <div
-        class="text-lg font-normal text-[13px] flex items-center"
+        class="font-normal text-[16px] flex items-center"
         v-if="!clickSearch"
       >
-        <div class="flex gap-2 items-center text-[#777]">
-          <label class="font-semibold w-40 text-black text-left">
+        <div class="flex gap-2 items-center text-[#575757]">
+          <label class="font-semibold w-36  text-left">
             {{ currentViewDate }}
           </label>
           <button
@@ -783,12 +789,12 @@ const checkValidRoomNumber = () => {
         @submit.prevent="search"
         class="flex items-center duration-500"
       >
-        <p for="macAddress" class="font-bold">Search</p>
+        <p for="macAddress" class="font-bold text-[12px]" >Search</p>
         <InputText
           v-model="searchP"
           autofocus
-          class="border text-[13px] font-normal shadow-[0_3px_8px_rgba(0,0,0,0.24)] border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-96 rounded-md"
-          placeholder="Title of Poster"
+          class="border text-[13px] font-normal  border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-96 rounded-lg"
+          placeholder="Title of Poster (Press Enter to search)"
         ></InputText>
         <button
           class="pi pi-search p-2 text-[#878787] rounded-full hover:bg-[#e4e3e3] ml-3"
@@ -808,7 +814,8 @@ const checkValidRoomNumber = () => {
           :options="devices"
           optionLabel="deviceName"
           optionValue="MACaddress"
-          class="w-fit h-10 rounded-lg border-[#A3A3A3] border-opacity-30 border-2 items-center hover:bg-gray-200"
+          class=" h-8 w-fit  rounded-lg border-[#A3A3A3] border-opacity-30 border-[1px] items-center hover:bg-gray-200"
+          
         />
       </div>
     </ul>
@@ -867,7 +874,7 @@ td:first-child {
 .primaryButton:hover {
   cursor: pointer;
   background-color: rgb(37, 135, 240);
-  text-decoration-line: underline;
+
 }
 
 .header-popup {
@@ -875,4 +882,7 @@ td:first-child {
   font-size: 22px;
   color: black;
 }
+
+
+
 </style>

@@ -35,10 +35,10 @@ const uploadState = ref([
   { label: "Orientation & Review" },
 ]);
 const contentType = ref([
-  { header: "Normal", code: "NP", icon: "images", disabled: false },
-  { header: "Video (Unavailable)", code: "VDO", icon: "video", disabled: true },
+  { header: "Poster", code: "NP", icon: "images", disabled: false },
+  { header: "Video (Coming soon)", code: "VDO", icon: "video", disabled: true },
   {
-    header: "Webview (Unavailable)",
+    header: "Webview (Coming soon)",
     code: "WV",
     icon: "link",
     disabled: true,
@@ -1099,7 +1099,7 @@ const nextStepPreview = () => {
 
 .bold-ho-add:hover {
   font-weight: 800;
-  text-decoration: underline;
+
   background-color: #a0dbfb;
 }
 
@@ -1145,7 +1145,7 @@ const nextStepPreview = () => {
 .primaryButton:hover {
   cursor: pointer;
   background-color: #0eb092;
-  text-decoration-line: underline;
+
 }
 
 .primaryButtonEmer {
@@ -1164,7 +1164,7 @@ const nextStepPreview = () => {
 .primaryButtonEmer:hover {
   cursor: pointer;
   background-color: rgb(255, 233, 228);
-  text-decoration-line: underline;
+
 }
 
 .orientOut {
