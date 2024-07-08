@@ -82,10 +82,10 @@ onUnmounted(() => {
 <template>
   <PopupUpload />
   <div
-    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-sf-pro"
+    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-sf-pro font-weight:100;"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar  />
+    <SideBar class="font-weight:100" />
     <div class="flex flex-col w-full h-full bg-[#fefefe] overflow-hidden">
       <NavBar class="bg-[#fefefe]" />
       <router-view class="bg-[#ffffff] mb-8 mt-1" />
@@ -123,10 +123,16 @@ onUnmounted(() => {
 
 <style lang="scss">
 #app {
-  font-family: "SF Pro", "NotoSansThai" Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Roboto", "SF Pro", "NotoSansThai" Helvetica, Arial, sans-serif !important;
+  -moz-osx-font-smoothing: grayscale !important; /* Firefox */
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  text-rendering: optimizeLegibility !important;
   text-align: center;
+}
+
+body * {
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  text-rendering: optimizeLegibility !important;
 }
 
 .rectangle {
