@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import Panel from "primevue/panel";
+
 export default defineComponent({
   name: "PopupUpload",
 });
@@ -21,6 +21,8 @@ import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import Panel from "primevue/panel";
+import { TYPE } from "@/utils/enum";
 
 const toast = useToast();
 const limitCharTitle = ref(false);
@@ -38,10 +40,10 @@ const contentType = ref([
   { header: "Poster", code: "NP", icon: "images", disabled: false },
   { header: "Video (Coming soon)", code: "VDO", icon: "video", disabled: true },
   {
-    header: "Webview (Coming soon)",
+    header: "Webview",
     code: "WV",
     icon: "link",
-    disabled: true,
+    disabled: false,
   },
   {
     header: "Emergency",
@@ -50,16 +52,16 @@ const contentType = ref([
     disabled: false,
   },
 ]);
-const selectedContentType = ref({ header: "", code: "" });
-const currentState = ref(0);
-const scheduleTabs = ref<{ header: string; index: number }[]>([
-  { header: `Schedule 1`, index: 0 },
-]);
 const posters = computed(() => store.state.posters);
 const editcontentType = computed(() => store.state.editPoster);
 const formPoster = computed(() => store.state.formPoster);
 const formDisplay = computed(() => store.state.formDisplay);
 const formEmer = computed(() => store.state.formEmer);
+const selectedContentType = ref({ header: "", code: "" });
+const scheduleTabs = ref<{ header: string; index: number }[]>([
+  { header: `Schedule 1`, index: 0 },
+]);
+const currentState = ref(0);
 const maxImage = ref(0);
 const selectRotate = ref({ image: "", priority: 1 });
 const selectSchedule = ref({ header: `Schedule 1`, index: 0 });
@@ -83,12 +85,10 @@ watch(
 );
 
 watch([showUpload, showSecondDialog, editcontentType.value], () => {
-  if (editcontentType.value.type && showUpload.value) {
-    contentType.value.map((e) => {
-      if (e.code === editcontentType.value.type) {
-        selectedContentType.value = { ...e };
-      }
-    });
+  if (editcontentType.value.code && showUpload.value) {
+    selectedContentType.value = contentType.value.find(
+      (e) => e.code == editcontentType.value.code
+    )!;
     showUpload.value = false;
     showSecondDialog.value = true;
   } else if (showUpload.value && !user.value.isAdmin) {
@@ -96,7 +96,7 @@ watch([showUpload, showSecondDialog, editcontentType.value], () => {
     showUpload.value = false;
     showSecondDialog.value = true;
   } else if (!showUpload.value && !showSecondDialog.value) {
-    store.state.editPoster = { title: "", type: "" };
+    store.state.editPoster = { title: "", code: "" };
     selectedContentType.value = { header: "", code: "" };
     store.commit("resetForm");
   }
@@ -105,7 +105,7 @@ watch([showUpload, showSecondDialog, editcontentType.value], () => {
 
 const validateForm = () => {
   if (
-    (selectedContentType.value.code === "NP" && !formPoster.value.title) ||
+    (selectedContentType.value.code !== "EP" && !formPoster.value.title) ||
     (selectedContentType.value.code === "EP" && !formEmer.value.incidentName)
   ) {
     return "Title is empty";
@@ -282,10 +282,13 @@ const isNextButtonDisabled = computed(() => {
 const showDifferentDialog = () => {
   showUpload.value = false;
   if (selectedContentType.value.code === "NP") {
+    store.state.formPoster.type = TYPE.POSTER;
     selectedContentType.value = contentType.value[0];
   } else if (selectedContentType.value.code === "VDO") {
+    store.state.formPoster.type = TYPE.VIDEO;
     selectedContentType.value = contentType.value[1];
-  } else if (selectedContentType.value.code === "URL") {
+  } else if (selectedContentType.value.code === "WV") {
+    store.state.formPoster.type = TYPE.WEBVIEW;
     selectedContentType.value = contentType.value[2];
   } else if (selectedContentType.value.code === "EP") {
     selectedContentType.value = contentType.value[3];
@@ -361,7 +364,7 @@ const nextStepUpload = () => {
     });
   } else if (posters.value) {
     let poster = [] as Poster[];
-    if (editcontentType.value.type === "NP") {
+    if (editcontentType.value.code !== "EP") {
       poster = posters.value.filter(
         (e) => e.posterId !== formPoster.value.posterId
       );
@@ -442,6 +445,9 @@ const nextStepUpload = () => {
     let numImage = [] as number[];
     if (!formPoster.value.image) {
       store.state.formPoster.image = [];
+      if (selectedContentType.value.code === "WV") {
+        store.state.formPoster.image = [{ image: "", priority: 1 }];
+      }
     }
 
     durationTime.forEach((e: any) => {
@@ -460,15 +466,31 @@ const nextStepUpload = () => {
     if (maxImage.value > 50) {
       maxImage.value = 50;
     }
-    if (!editcontentType.value.title.length) store.state.formPoster.image = [];
+    if (!editcontentType.value.title.length) {
+      store.state.formPoster.image = [];
+      if (selectedContentType.value.code === "WV") {
+        store.state.formPoster.image = [{ image: "", priority: 1 }];
+      }
+    }
     currentState.value = 1;
   }
 };
 
 const nextStepPreview = () => {
-  if (formPoster.value.image.length) {
+  let err = "";
+  if (!formPoster.value.image.length) {
+    err = `${
+      selectedContentType.value.code === "NP" ? "Image" : "Video"
+    } selected not found.`;
+  } else if (!formPoster.value.image[0].image.length) {
+    err = "Url is empty";
+  }
+  if (!err.length) {
     selectRotate.value = {
-      image: formPoster.value.image[0].image.dataURL,
+      image:
+        selectedContentType.value.code === "WV"
+          ? formPoster.value.image[0].image
+          : formPoster.value.image[0].image.dataURL,
       priority: formPoster.value.image[0].priority,
     };
 
@@ -477,11 +499,16 @@ const nextStepPreview = () => {
     toast.add({
       severity: "error",
       summary: "Invalid",
-      detail: "Image selected not found.",
+      detail: err,
       life: 3000,
     });
   }
 };
+// const webview = ref<IframeHTMLAttributes>();
+
+// watch([webview], () => {
+//   console.log(webview);
+// });
 </script>
 
 <template>
@@ -614,14 +641,14 @@ const nextStepPreview = () => {
               selectedContentType.code === 'EP' ? '!text-[#FF4D4D]' : ''
             }`"
           >
-            {{ editcontentType.type ? "Edit Content" : "Upload Content" }}
+            {{ editcontentType.code ? "Edit Content" : "Upload Content" }}
           </div>
           <div class="text-[14px] font-thin text-[#828282]">
             {{ selectedContentType.header }} Content
           </div>
         </div>
       </template>
-      <div v-if="selectedContentType.code === 'NP'">
+      <div v-if="selectedContentType.code !== 'EP'">
         <Steps
           :pt="{
             step: { class: `bg-[#14C6A4] text-white` },
@@ -736,26 +763,49 @@ const nextStepPreview = () => {
         </div>
 
         <div v-if="currentState === 1">
-          <div class="bg-[#f2f2f2] p-2 px-4 rounded-lg justify-center mb-3">
-            <div class="text-[14px] text-center mt-2 text-red-500">
-              Upload limit: {{ maxImage }} contents
+          <div v-if="selectedContentType.code === 'NP'">
+            <div class="bg-[#f2f2f2] p-2 px-4 rounded-lg justify-center mb-3">
+              <div class="text-[14px] text-center mt-2 text-red-500">
+                Upload limit: {{ maxImage }} contents
+              </div>
+              <div class="text-[14px] text-center text-[#41b8a2] mb-2">
+                Uploaded content:
+                {{
+                  formPoster.image?.length === 0
+                    ? "No images"
+                    : formPoster.image?.length === 1
+                    ? "1 image"
+                    : formPoster.image?.length + " contents"
+                }}
+              </div>
             </div>
-            <div class="text-[14px] text-center text-[#41b8a2] mb-2">
-              Uploaded content:
-              {{
-                formPoster.image?.length === 0
-                  ? "No images"
-                  : formPoster.image?.length === 1
-                  ? "1 image"
-                  : formPoster.image?.length + " contents"
-              }}
-            </div>
+
+            <UploadImage
+              :posType="selectedContentType.code"
+              :maxImage="maxImage"
+            />
           </div>
 
-          <UploadImage
-            :posType="selectedContentType.code"
-            :maxImage="maxImage"
-          />
+          <div
+            v-else-if="selectedContentType.code === 'WV'"
+            class="bg-white p-2 px-4 rounded-lg items-start justify-start"
+            style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+          >
+            <div class="inline-flex items-center">
+              <label
+                class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
+              >
+                Upload URL
+              </label>
+              <label class="font-medium text-red-500"> * </label>
+            </div>
+            <InputText
+              v-model="formPoster.image[0].image"
+              type="url"
+              placeholder="https://www.cpe.eng.cmu.ac.th/"
+              class="h-8 w-full mb-3 rounded-[8px] text-[12px] bg-[#EDEDED] border-none"
+            />
+          </div>
           <div class="flex flex-row gap-4 pt-3">
             <Button
               text
@@ -772,26 +822,26 @@ const nextStepPreview = () => {
         </div>
         <div v-if="currentState === 2">
           <!-- Orientation -->
+          <label
+            class="text-[#282828] font-semibold text-[14px] flex justify-start mb-1"
+          >
+            Orientation (Portrait, Logo TV the left side of the screen)
+          </label>
           <div
             class="orientOut border-2 rounded-lg flex flex-col gap-5 bg-white"
             style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
           >
-            <label
-              class="text-[#282828] font-semibold text-[14px] flex justify-start mb-1"
-            >
-              Orientation (Portrait, Logo TV the left side of the screen)
-            </label>
             <div
-              class="flex flex-row items-start justify-start overflow-hidden h-[430px]"
+              class="flex flex-row items-start justify-start overflow-hidden max-h-[430px] h-fit"
             >
-              <div class="w-full flex justify-start">
+              <div class="w-full flex justify-center items-center">
                 <div
                   class="flex flex-col items-end justify-end w-fit gap-6 px-5 bg-white rounded-lg"
                 >
                   <div
                     class="flex flex-row justify-center text-center items-center gap-3 w-full"
                   >
-                    <p class="text-[14px] text-[#575757]">Logo <br />TV</p>
+                    <p class="text-[14px] text-[#575757]">Logo<br />TV</p>
                     <div
                       class="flex items-center justify-center bg-[#282828] border-[#D3D1D1] rounded-md shadow-md"
                       :style="{
@@ -806,7 +856,27 @@ const nextStepPreview = () => {
                           height: `${3840 / 12}px`,
                         }"
                       >
+                        <div
+                          v-if="selectedContentType.code === 'WV'"
+                          class="flex-1 overflow-hidden relative"
+                        >
+                          <iframe
+                            ref="webview"
+                            :title="formPoster.title"
+                            :src="`${formPoster.image[0].image}`"
+                            :width="`${2160 / 2}px`"
+                            :height="`${3840 / 2}px`"
+                            scrolling="no"
+                            fullScreen="true"
+                            class="absolute top-0 left-0 overflow-hidden pointer-events-none"
+                            style="
+                              transform: scale(0.167);
+                              transform-origin: 0 0;
+                            "
+                          />
+                        </div>
                         <img
+                          v-else
                           :alt="formPoster.title"
                           :src="
                             formPoster.image[selectRotate.priority - 1].image
@@ -822,7 +892,10 @@ const nextStepPreview = () => {
                     </div>
                   </div>
 
-                  <div class="inline-flex gap-4 justify-center w-[196px]">
+                  <div
+                    v-if="selectedContentType.code === 'NP'"
+                    class="inline-flex gap-4 justify-center w-[196px]"
+                  >
                     <Button
                       @click="
                         async () => {
@@ -900,6 +973,7 @@ const nextStepPreview = () => {
               </div>
 
               <div
+                v-if="selectedContentType.code === 'NP'"
                 class="border-[2px] border-[#D9D9D9] grid grid-cols-3 gap-2 p-2 justify-center rounded-xl w-full max-h-full min-h-full overflow-auto"
               >
                 <div
@@ -1145,7 +1219,6 @@ const nextStepPreview = () => {
 .primaryButton:hover {
   cursor: pointer;
   background-color: #0eb092;
-
 }
 
 .primaryButtonEmer {
@@ -1164,7 +1237,6 @@ const nextStepPreview = () => {
 .primaryButtonEmer:hover {
   cursor: pointer;
   background-color: rgb(255, 233, 228);
-
 }
 
 .orientOut {

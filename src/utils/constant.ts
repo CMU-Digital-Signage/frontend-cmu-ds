@@ -4,14 +4,9 @@ import { Device, Display, Emergency, Poster } from "@/types";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { Ref } from "vue";
-import { TYPE } from "./enum";
+import { CONTENT_CODE, TYPE } from "./enum";
 
-export const calculateScreenHeight = (multiplier: number) => {
-  const screenHeight = window.innerHeight;
-  const scrollHeight = screenHeight * multiplier;
-  return `${scrollHeight}px`;
-};
-
+export const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export const checkTokenExpired = async (token: string) => {
   try {
     const decode = await JSON.parse(atob(token.split(".")[1]));
@@ -29,6 +24,11 @@ export const checkTokenExpired = async (token: string) => {
     // token invalid
     return "Invalid Token.";
   }
+};
+export const calculateScreenHeight = (multiplier: number) => {
+  const screenHeight = window.innerHeight;
+  const scrollHeight = screenHeight * multiplier;
+  return `${scrollHeight}px`;
 };
 
 export const color = [
@@ -363,6 +363,7 @@ export const setNorForm = (data: any) => {
       posterId: data.posterId,
       title: data.title,
       description: poster[0].description,
+      type: data.type,
       image: JSON.parse(JSON.stringify(poster[0].image)),
     } as Poster;
     store.state.formPoster = { ...form };
@@ -418,7 +419,7 @@ export const setNorForm = (data: any) => {
       }
     });
 
-    store.state.editPoster.type = "NP";
+    store.state.editPoster.code = CONTENT_CODE[form.type];
     store.state.showUpload = true;
   }
 };
@@ -430,7 +431,7 @@ export const setEmerForm = (data: any) => {
     emergencyImage: { ...data.emergencyImage },
     status: data.status === "Active" ? true : false,
   };
-  store.state.editPoster.type = "EP";
+  store.state.editPoster.code = "EP";
   store.state.showUpload = true;
 };
 
@@ -438,39 +439,13 @@ let currentIndexPoster = 0;
 let currentIndexImage = 0;
 let count = 0;
 
-export const loopPoster = (
-  posters: Poster[],
-  emerPoster?: Emergency,
-  showBotMaps?: Ref<boolean>
-) => {
+export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
   let timeoutId: NodeJS.Timeout | null = null;
-  let hasShownBotMapsThisRound = false;
-
-  let previousMinutes = -1;
 
   const updatePosterInterval = () => {
-    if (showBotMaps && store.state.posters) {
-      posters = store.state.posters;
-      while (!posters.length) {
-        showBotMaps.value = true;
-      }
-      showBotMaps.value = false;
+    if (!store.state.posters?.length) {
+      return;
     }
-
-    const currentMinutes = new Date().getMinutes();
-    const isOnTheHalfHour = currentMinutes === 0 || currentMinutes === 30;
-    if (isOnTheHalfHour && currentMinutes !== previousMinutes) {
-      hasShownBotMapsThisRound = false;
-    }
-    if (showBotMaps && isOnTheHalfHour && !hasShownBotMapsThisRound) {
-      previousMinutes = currentMinutes;
-      showBotMaps.value = true;
-      hasShownBotMapsThisRound = true;
-      timeoutId = setTimeout(() => {
-        showBotMaps.value = false;
-      }, 45 * 1000);
-    }
-
     const currentTime = new Date(
       1970,
       0,
@@ -478,10 +453,6 @@ export const loopPoster = (
       new Date().getHours(),
       new Date().getMinutes()
     );
-    if (currentIndexPoster === -1 && showBotMaps) {
-      showBotMaps.value = true;
-      return;
-    }
     const currentPoster = posters[currentIndexPoster];
     if (
       currentPoster &&
@@ -491,10 +462,10 @@ export const loopPoster = (
       if (emerPoster) return;
 
       store.state.currentImage.image =
-        currentPoster.image[currentIndexImage].image.dataURL ||
         currentPoster.image[currentIndexImage].image;
       store.state.currentImage.key =
         currentPoster.title + currentPoster.image[currentIndexImage].priority;
+      store.state.currentImage.type = currentPoster.type;
 
       timeoutId = setTimeout(() => {
         currentIndexImage = currentIndexImage + 1;

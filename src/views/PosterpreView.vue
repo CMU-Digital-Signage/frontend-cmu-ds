@@ -4,12 +4,14 @@ import { computed, ref, watch, onUnmounted, onMounted } from "vue";
 import store from "@/store";
 import { useRoute } from "vue-router";
 import {
+  apiBaseUrl,
   dateFormatter,
   loopPoster,
   calculateScreenHeight,
   convertUrlToFile,
 } from "@/utils/constant";
 import { Poster } from "@/types";
+import { TYPE } from "@/utils/enum";
 
 const route = useRoute();
 const mac = route.params.mac as string;
@@ -36,15 +38,18 @@ let currentindex = 0;
 onMounted(async () => {
   if (posters.value) {
     loading.value = true;
-    const promise = posters.value.map(async (e) => {
-      await Promise.all(
-        e.image.map(async (p) => {
-          if (p.image && typeof p.image === "string")
-            p.image = await convertUrlToFile(p.image);
-        })
-      );
-    });
-    await Promise.all(promise);
+    // const promise = posters.value.map(async (e) => {
+    //   if ([TYPE.POSTER].includes(e.type)) {
+    //     await Promise.all(
+    //       e.image.map(async (p) => {
+    //         if (p.image && typeof p.image === "string")
+    //           p.image = await convertUrlToFile(p.image);
+    //       })
+    //     );
+    //   }
+    // });
+    // await Promise.all(promise);
+    selectPoster.value = posters.value[0];
     loading.value = false;
   }
 });
@@ -53,13 +58,13 @@ watch(selectPoster, () => {
   if (!selectPoster.value) {
     selectImage.value = "";
   } else {
-    selectImage.value = selectPoster.value.image[0].image.dataURL;
+    selectImage.value = selectPoster.value.image[0].image;
   }
   currentindex = 0;
 });
 
 watch([filterDate, filterTime], () => {
-  if (stopLoop.value) stopLoop.value();
+  // if (stopLoop.value) stopLoop.value();
   image.value.key = "";
   image.value.image = null;
 
@@ -70,7 +75,7 @@ watch([filterDate, filterTime], () => {
       filterTime.value.getMinutes() !== new Date().getMinutes())
   ) {
     selectPoster.value = posters.value[0];
-    selectImage.value = selectPoster.value?.image[0].image.dataURL;
+    selectImage.value = selectPoster.value?.image[0].image;
   } else {
     selectPoster.value = undefined;
     selectImage.value = "";
@@ -85,25 +90,25 @@ watch(
       selectPoster.value &&
       !posters.value.find((e) => e.posterId === selectPoster.value?.posterId)
     ) {
-      selectPoster.value = undefined;
-      selectImage.value = "";
+      selectPoster.value = posters.value[0];
+      selectImage.value = posters.value[0].image[0].image;
       currentindex = 0;
     }
   },
   { deep: true }
 );
 
-onUnmounted(() => {
-  if (stopLoop.value) stopLoop.value();
-  image.value.key = "";
-  image.value.image = null;
-});
+// onUnmounted(() => {
+//   if (stopLoop.value) stopLoop.value();
+//   image.value.key = "";
+//   image.value.image = null;
+// });
 
 const changeImage = (index: number) => {
   if (selectPoster.value && selectPoster.value.image.length > 1) {
     const newIndex = (currentindex + index) % selectPoster.value.image.length;
     currentindex = newIndex;
-    selectImage.value = selectPoster.value.image[newIndex].image.dataURL;
+    selectImage.value = selectPoster.value.image[newIndex].image;
   }
 };
 
@@ -165,45 +170,80 @@ const rowStyle = (rowData: any) => {
         <div
           v-else
           class="flex justify-center items-center"
+          :class="{
+            'overflow-hidden relative': selectPoster?.type == TYPE.WEBVIEW,
+          }"
           :style="{
             width: `${2160 / 6.5}px`,
             height: `${3840 / 6.5}px`,
           }"
         >
-          <img
+          <!-- <div
             v-if="selectImage"
-            class="max-w-full h-full m-auto rotate-90"
-            :src="selectImage"
-            :style="{
-              maxWidth: `${3840 / 6.5}px`,
-              maxHeight: `${2160 / 6.5}px`,
+            class="flex-1"
+            :class="{
+              'overflow-hidden relative': selectPoster?.type == TYPE.WEBVIEW,
             }"
-          />
+          >
+            <iframe
+              v-if="selectPoster?.type == TYPE.WEBVIEW"
+              title="webview"
+              :src="selectImage"
+              class="absolute top-0 left-0 overflow-hidden"
+              style="
+                transform: scale(0.167);
+                transform-origin: 0 0;
+                width: 1080px;
+                height: 1920px;
+              "
+            />
+            <img
+              v-else
+              class="max-w-full h-full m-auto rotate-90"
+              :src="selectImage"
+              :style="{
+                maxWidth: `${3840 / 6.5}px`,
+                maxHeight: `${2160 / 6.5}px`,
+              }"
+            />
+          </div> -->
           <transition
-            v-else-if="image.image"
+            v-if="selectImage"
             enter-active-class="transition duration-500"
             enter-from-class="opacity-0"
             leave-active-class="transition duration-500"
             leave-to-class="opacity-0"
           >
+            <iframe
+              v-if="selectPoster?.type == TYPE.WEBVIEW"
+              title="webview"
+              :src="`${selectImage}`"
+              :width="`${2160 / 2}px`"
+              :height="`${3840 / 2}px`"
+              scrolling="no"
+              fullScreen="true"
+              class="absolute overflow-hidden pointer-events-none"
+              style="transform: scale(0.3)"
+            />
             <img
+              v-else
               class="max-w-full h-full m-auto rotate-90 absolute"
               alt="poster"
               :key="image.key"
-              :src="image.image"
+              :src="selectImage"
               :style="{
                 maxWidth: `${3840 / 6.5}px`,
                 maxHeight: `${2160 / 6.5}px`,
               }"
             />
           </transition>
-          <button
+          <!-- <button
             v-else-if="
               posters && dateFormatter(filterDate) === dateFormatter(new Date())
             "
             class="pi pi-play text-[#808080] text-5xl rounded-full p-2 bg-white hover:bg-gray-200"
             @click="stopLoop = loopPoster(posters ?? [])"
-          />
+          /> -->
           <div v-else>No Content to Preview.</div>
         </div>
         <button

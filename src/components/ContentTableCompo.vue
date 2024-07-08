@@ -80,20 +80,38 @@ const del = async () => {
   loading.value = true;
   if (props.types == "NP") {
     const res = await deletePoster(selectPoster.value.posterId || "");
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Delete Poster successful.",
-      life: 3000,
-    });
+    if (res.ok) {
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Delete Poster successful.",
+        life: 3000,
+      });
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: res.message,
+        life: 3000,
+      });
+    }
   } else {
     const res = await deleteEmergency(selectPoster.value.incidentName || "");
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Delete Emergency successful.",
-      life: 3000,
-    });
+    if (res.ok) {
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Delete Emergency successful.",
+        life: 3000,
+      });
+    } else {
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: res.message,
+        life: 3000,
+      });
+    }
   }
   loading.value = false;
   delP = "";
@@ -235,7 +253,7 @@ const del = async () => {
     scrollDirection="vertical"
     scrollable
     scrollHeight="flex"
-    :virtualScrollerOptions="{ itemSize: 46 }"
+    :virtualScrollerOptions="{ itemSize: 50 }"
     :class="`text-[12px] lg:text-[14px] flex-1 ${user.isAdmin ? '' : 'py-2'}`"
   >
     <Column

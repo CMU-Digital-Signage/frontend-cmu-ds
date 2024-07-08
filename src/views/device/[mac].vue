@@ -19,12 +19,12 @@ import {
 } from "@/utils/constant";
 import { getActivateEmerPoster } from "@/services/pi";
 import axios from "axios";
+import { TYPE } from "@/utils/enum";
 
 const route = useRoute();
 const mac = route.params.mac as string;
 const roomCPE = ref("");
 const showEmer = ref(false);
-const showBotMaps = ref(false);
 const posters = computed(() => store.state.posters);
 const emerPoster = computed(() =>
   store.state.emerPosters ? store.state.emerPosters[0] : undefined
@@ -87,7 +87,7 @@ onMounted(async () => {
   if (posters.value) {
     fetchWeather();
     await getActivateEmerPoster();
-    stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
     dateTimeInterval = setInterval(async () => {
       dateTime.value = new Date();
     }, 1000);
@@ -107,12 +107,11 @@ watch(emerPoster, () => {
   if (emerPoster.value) {
     if (stopLoop.value) stopLoop.value();
     showEmer.value = true;
-    showBotMaps.value = false;
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
   } else if (showEmer.value && posters.value) {
     showEmer.value = false;
-    stopLoop.value = loopPoster(posters.value, emerPoster.value, showBotMaps);
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
   }
 });
 
@@ -147,7 +146,7 @@ onUnmounted(() => {
       v-if="emerPoster?.incidentName !== 'banner'"
       class="flex h-screen flex-col w-[11vw] items-center py-6 bg-[#0e1235] text-black"
     >
-      <div class="flex flex-col gap-6   justify-center items-center rotate-0 " >
+      <div class="flex flex-col gap-6 justify-center items-center rotate-0">
         <div
           v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
           class="bottomBlock gap-2"
@@ -242,7 +241,9 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <div class="text-[13px] font-medium text-white mr-3 font-sf-pro-rounded">
+        <div
+          class="text-[13px] font-medium text-white mr-3 font-sf-pro-rounded"
+        >
           Last updated:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
@@ -250,9 +251,11 @@ onUnmounted(() => {
           | IQAir
         </div>
       </div>
-      <div class="bottomBlockGroup h-fit flex-col font-medium text-[44px] font-sf-pro-rounded text-white">
-        <p class="text-[72px]" >{{ timeFormatter(dateTime) }}</p>
-        <p >{{ dateFormatter(dateTime, 3) }}</p>
+      <div
+        class="bottomBlockGroup h-fit flex-col font-medium text-[44px] font-sf-pro-rounded text-white"
+      >
+        <p class="text-[72px]">{{ timeFormatter(dateTime) }}</p>
+        <p>{{ dateFormatter(dateTime, 3) }}</p>
       </div>
     </div>
     <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
@@ -263,20 +266,24 @@ onUnmounted(() => {
       </div>
     </div>
     <div
-      v-else-if="showBotMaps && roomCPE"
-      class="flex flex-1 justify-center items-center"
+      v-else
+      class="flex-1"
+      :class="{ 'overflow-hidden relative': image.type == TYPE.WEBVIEW }"
     >
-      <iframe
-        title="BOTMATS"
-        :src="`https://main--darling-frangipane-e360a0.netlify.app/${roomCPE.charAt(
-          0
-        )}`"
-      ></iframe>
-    </div>
-    <div v-else class="flex flex-1">
       <transition v-if="image.image" name="fade" mode="out-in">
+        <iframe
+          v-if="image.type == TYPE.WEBVIEW && image.image"
+          title="webview"
+          :src="`${image.image}`"
+          :width="`${2160 / 2}px`"
+          :height="`${3840 / 2}px`"
+          scrolling="no"
+          fullScreen="true"
+          class="absolute top-full left-0 overflow-hidden pointer-events-none duration-500 transition-opacity"
+          style="transform: rotate(-90deg) scale(0.735); transform-origin: 0 0"
+        ></iframe>
         <img
-          v-if="image.image"
+          v-else-if="image.image"
           class="max-w-screen h-screen m-auto duration-500 transition-opacity"
           alt="poster"
           :key="image.key"
@@ -298,12 +305,6 @@ onUnmounted(() => {
 }
 
 .rotateText {
-  transform: rotate(-90deg);
-}
-
-iframe {
-  width: 100vh;
-  height: 90vw;
   transform: rotate(-90deg);
 }
 

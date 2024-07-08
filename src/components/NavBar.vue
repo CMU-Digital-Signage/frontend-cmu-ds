@@ -181,7 +181,7 @@ const checkValidRoomNumber = () => {
 
 <template>
   <div
-    class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px]  border-[#dddddd] py-3   font-semibold font-sf-pro text-[#575757] text-[16px]"
+    class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px] border-[#dddddd] py-3 font-semibold font-sf-pro text-[#575757] text-[16px]"
   >
     <Toast />
     <!-- Popup Add Device -->
@@ -431,8 +431,8 @@ const checkValidRoomNumber = () => {
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
           class="flex text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
           @click="showPopup = true"
-          :pt = "{
-            label: 'text-[14px]'
+          :pt="{
+            label: 'text-[14px]',
           }"
         >
         </Button>
@@ -526,8 +526,8 @@ const checkValidRoomNumber = () => {
           icon="pi pi-plus text-white p-1 rounded-full bg-[#039BE5] ml-1"
           class="flex bg-while text-black pr-2 pl-1 py-1.5 items-center rounded-lg border-[#A3A3A3] border-opacity-30 border-2 font-semibold bg-white hover:bg-gray-200"
           @click="showPopupAddDevice = true"
-          :pt = "{
-            label: 'text-[14px]'
+          :pt="{
+            label: 'text-[14px]',
           }"
         >
         </Button>
@@ -546,7 +546,10 @@ const checkValidRoomNumber = () => {
           @mouseover="toggleOverlay"
           @mouseleave="toggleOverlay"
         />
-        <OverlayPanel ref="panel" class="w-fit h-fit max-w-md max-h-max text-[12px]">
+        <OverlayPanel
+          ref="panel"
+          class="w-fit h-fit max-w-md max-h-max text-[12px]"
+        >
           <table>
             <tr>
               <td>MAC Address</td>
@@ -570,7 +573,7 @@ const checkValidRoomNumber = () => {
           :manualInput="false"
           showIcon
           iconDisplay="input"
-          :minDate="new Date(new Date().setHours(0, 0, 0, 0))"
+          :minDate="new Date('2024-03-01')"
           dateFormat="dd M yy"
           inputClass="text-[12px] lg:text-[14px] rounded-lg"
           class="w-[120px] lg:w-[150px] h-8 align-middle"
@@ -584,8 +587,8 @@ const checkValidRoomNumber = () => {
           icon="pi pi-clock"
           timeOnly
           :stepMinute="30"
-           inputClass="text-[12px] lg:text-[14px] rounded-lg"
-          class="w-[80px] lg:w-[90px] h-8  align-middle"
+          inputClass="text-[12px] lg:text-[14px] rounded-lg"
+          class="w-[80px] lg:w-[90px] h-8 align-middle"
         />
         <Button
           label="Now"
@@ -673,8 +676,8 @@ const checkValidRoomNumber = () => {
               :value="slotProps.option.type"
               :severity="slotProps.option.severity"
               :pt="{
-            value: 'text-[12px]',
-          }"
+                value: 'text-[12px]',
+              }"
             />
           </template>
         </Dropdown>
@@ -699,8 +702,8 @@ const checkValidRoomNumber = () => {
               :value="slotProps.option.status"
               :severity="slotProps.option.severity"
               :pt="{
-            value: 'text-[12px]',
-          }"
+                value: 'text-[12px]',
+              }"
             />
           </template>
         </Dropdown>
@@ -731,7 +734,7 @@ const checkValidRoomNumber = () => {
         v-if="!clickSearch"
       >
         <div class="flex gap-2 items-center text-[#575757]">
-          <label class="font-semibold w-36  text-left">
+          <label class="font-semibold w-36 text-left">
             {{ currentViewDate }}
           </label>
           <button
@@ -795,11 +798,11 @@ const checkValidRoomNumber = () => {
         @submit.prevent="search"
         class="flex items-center duration-500"
       >
-        <p for="macAddress" class="font-bold text-[12px]" >Search</p>
+        <p for="macAddress" class="font-bold text-[12px]">Search</p>
         <InputText
           v-model="searchP"
           autofocus
-          class="border text-[13px] font-normal  border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-96 rounded-lg"
+          class="border text-[13px] font-normal border-[#C6C6C6] ml-4 pl-3 h-4 py-4 w-96 rounded-lg"
           placeholder="Title of Poster (Press Enter to search)"
         ></InputText>
         <button
@@ -820,8 +823,7 @@ const checkValidRoomNumber = () => {
           :options="devices"
           optionLabel="deviceName"
           optionValue="MACaddress"
-          class=" h-8 w-fit  rounded-lg border-[#A3A3A3] border-opacity-30 border-[1px] items-center hover:bg-gray-200"
-          
+          class="h-8 w-fit rounded-lg border-[#A3A3A3] border-opacity-30 border-[1px] items-center hover:bg-gray-200"
         />
       </div>
     </ul>
@@ -880,7 +882,6 @@ td:first-child {
 .primaryButton:hover {
   cursor: pointer;
   background-color: rgb(37, 135, 240);
-
 }
 
 .header-popup {
@@ -888,7 +889,4 @@ td:first-child {
   font-size: 22px;
   color: black;
 }
-
-
-
 </style>

@@ -51,10 +51,7 @@ export async function addPoster(poster: Poster, display: Display[]) {
   try {
     const res = await axios.post(
       `${process.env.VUE_APP_API_BASE_URL}/poster`,
-      {
-        poster,
-        display,
-      },
+      { poster, display },
       {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
@@ -84,10 +81,7 @@ export async function editPoster(poster: Poster, display: Display[]) {
   try {
     const res = await axios.put(
       `${process.env.VUE_APP_API_BASE_URL}/poster`,
-      {
-        poster,
-        display,
-      },
+      { poster, display },
       {
         params: { posterId: poster.posterId },
         headers: {
