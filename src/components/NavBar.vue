@@ -210,7 +210,12 @@ const checkValidRoomNumber = () => {
       <template #header>
         <div class="header-popup">Add Device</div>
       </template>
-      <div class="flex flex-col gap-2 h-[90px]">
+      <div class="text-[14px]">About device</div>
+      <div
+              class="bg-white p-4 mt-2 mb-4  gap-5 flex flex-col h-full w-full rounded-lg items-start justify-start"
+              style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+            >
+      <div class="flex w-full flex-col gap-2 text-[14px] h-fit">
         <div class="inline-block">
           <label for="deviceName" class="text-primary-50 font-medium">
             Device Name
@@ -224,7 +229,7 @@ const checkValidRoomNumber = () => {
               limitCharDevice = form.deviceName?.length === 8;
             }
           "
-          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+            class="h-8 w-full mb-3  rounded-[8px] text-[12px]"
           placeholder="Max 8 Character Ex.CPE01 "
           maxlength="8"
           :class="{
@@ -239,10 +244,10 @@ const checkValidRoomNumber = () => {
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-2 h-[90px]">
+      <div class="flex flex-col w-full text-[14px] gap-2 h-fit">
         <div class="inline-flex">
           <label for="deviceName" class="text-primary-50 font-medium">
-            Device Type
+            Device type
           </label>
           <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
         </div>
@@ -255,11 +260,12 @@ const checkValidRoomNumber = () => {
           optionLabel="label"
           optionValue="value"
           :placeholder="'Select a MAC Address Type'"
+          class="-mt-1"
         />
       </div>
-      <div class="flex flex-col gap-2 h-[90px]">
+      <div class="flex text-[14px] w-full flex-col gap-2 h-fit">
         <div class="inline-flex">
-          <label for="deviceName" class="text-primary-50 font-medium">
+          <label for="deviceName" class="text-primary-50 text-[14px] font-medium">
             {{ manualMac ? "MAC Address TV" : "MAC Address Raspberry Pi" }}
           </label>
           <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
@@ -268,7 +274,7 @@ const checkValidRoomNumber = () => {
           v-if="manualMac"
           mask="**:**:**:**:**:**"
           v-model="form.MACaddress"
-          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+            class="h-8 w-96  rounded-[8px] text-[12px]"
           placeholder="Ex.ff:ff:ff:ff:ff:ff"
           id="MACaddress"
         />
@@ -282,9 +288,16 @@ const checkValidRoomNumber = () => {
               : 'All Raspberry Pi has already been added'
           "
           :disabled="!macNotUse.length"
+                class="-mt-1"
         />
       </div>
-      <div class="flex flex-col gap-2 h-[90px] mt-3">
+      </div>
+      <div class="text-[14px]">Device location</div>
+      <div
+              class="bg-white p-4 mt-2   gap-7 flex flex-col h-full w-full rounded-lg items-start justify-start"
+              style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+            >
+      <div class="flex flex-col w-full text-[14px] gap-2 h-fit ">
         <div class="inline-block">
           <label for="macAddress" class="text-primary-50 font-medium">
             Room
@@ -304,7 +317,7 @@ const checkValidRoomNumber = () => {
               }
             }
           "
-          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+          class="h-8 w-full   rounded-[8px] text-[12px]"
           placeholder="Number only Ex.516"
           maxlength="3"
           :class="{
@@ -325,17 +338,17 @@ const checkValidRoomNumber = () => {
         </div>
       </div>
 
-      <div class="flex flex-col gap-1 fix h-[90px]">
+      <div class="flex flex-col w-full gap-1 fix text-[14px] h-fit">
         <label for="macAddress" class="text-primary-50 font-medium">
           Location Description
         </label>
         <InputText
           v-model:model-value="form.description"
-          class="border border-[#C6C6C6] p-2 text-primary-50 w-full rounded-lg mb-3"
+          class="h-8 w-full  rounded-[8px] text-[12px]"
           placeholder="(Optional)"
         ></InputText>
       </div>
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-col w-full text-[14px] -mt-2 h-fit gap-1">
         <label for="macAddress" class="text-primary-50 font-medium">
           Location Photo (Optional)
         </label>
@@ -392,10 +405,11 @@ const checkValidRoomNumber = () => {
               <i
                 class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
               />
-              <p class="mt-4 mb-0">Drag and drop files to here to upload.</p>
+              <p class="mt-4 mb-0 text-[14px]">Drag and drop files to here to upload.</p>
             </div>
           </template>
         </FileUpload>
+      </div>
       </div>
       <div class="flex flex-row gap-4 pt-3">
         <Button
@@ -411,7 +425,9 @@ const checkValidRoomNumber = () => {
         <Button
           :loading="loading"
           label="Add"
-          :class="'primaryButton'"
+          icon="pi pi-plus" 
+                :class="'primaryButton justify-center'" 
+                :pt="{ label: { class: 'flex-none mr-2' } }"
           @click="add"
           :disabled="
             !form.MACaddress || !form.deviceName || !form.room || !isNumber
@@ -451,10 +467,7 @@ const checkValidRoomNumber = () => {
             header: {
               style:
                 'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-            },
-            mask: {
-              style: 'backdrop-filter: blur(2px)',
-            },
+            }
           }"
         >
           <template #header>
@@ -462,11 +475,11 @@ const checkValidRoomNumber = () => {
           </template>
           <form @submit.prevent="addEmailAdmin" class="flex flex-row gap-2">
             <div class="flex flex-col gap-2">
-              <label class="text-[17px] font-semibold pt-2 w-32"
+              <label class="text-[14px] text-[#282828] font-semibold pt-2 w-32"
                 >CMU account
               </label>
               <InputText
-                class="border border-[#C6C6C6] p-2 h-9 w-96 rounded-lg"
+                class="h-8 w-96  rounded-[8px] text-[12px]"
                 placeholder="example@cmu.ac.th"
                 type="text"
                 v-model="email"
@@ -480,10 +493,14 @@ const checkValidRoomNumber = () => {
                   :class="'secondaryButton'"
                 ></Button>
                 <Button
+                icon="pi pi-plus" 
+                :class="'primaryButton justify-center'" 
+                :pt="{ label: { class: 'flex-none mr-2' } }"
                   label="Add"
-                  :class="'primaryButton'"
+                 
                   type="submit"
                   :disabled="!email.length || !validateEmail()"
+                  
                 ></Button>
               </div>
             </div>
@@ -854,10 +871,10 @@ td:first-child {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  margin-right: 10px;
   background-color: none;
   color: black;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .secondaryButton:hover {
@@ -871,22 +888,22 @@ td:first-child {
   border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-left: 10px;
   margin-top: 20px;
-  background-color: none;
+  background-color: #14c6a4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .primaryButton:hover {
   cursor: pointer;
-  background-color: rgb(37, 135, 240);
+  background-color: #0eb092;
 }
 
 .header-popup {
   font-weight: 700;
-  font-size: 22px;
-  color: black;
+  font-size: 20px;
+  color: #049a7e;
 }
 </style>

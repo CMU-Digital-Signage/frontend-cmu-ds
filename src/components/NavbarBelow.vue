@@ -49,11 +49,7 @@ const del = async () => {
       },
       header: {
         style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
-      },
-      mask: {
-        style:
-          'backdrop-filter:  brightness(50%) grayscale(100%) contrast(150%) blur(3px)',
-      },
+      }
     }"
   >
     <template #header>
@@ -62,7 +58,7 @@ const del = async () => {
         {{ `"${poster?.title}" Poster` }}?
       </div>
     </template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 text-[14px]">
       <div>
         Deleting this poster or collection will be permenently deleted from all
         devices.
@@ -198,8 +194,8 @@ const del = async () => {
 <style scoped>
 .header-popup {
   font-weight: 700;
-  font-size: 22px;
-  color: rgb(255, 0, 0);
+  font-size: 18px;
+  color: rgb(255, 91, 91);
 }
 
 .primaryButtonDel {
@@ -211,15 +207,15 @@ const del = async () => {
   margin-left: 10px;
   margin-top: 20px;
   background-color: white;
-  color: rgb(255, 0, 0);
+  color: rgb(255, 91, 91);
   font-weight: 800;
   cursor: pointer;
   margin-left: 10px;
+  font-size: 14px;
 }
 
 .primaryButtonDel:hover {
-  background-color: rgb(224, 77, 77);
-  color: white;
+  background-color: rgb(255, 235, 235);
 }
 
 .secondaryButton {
@@ -233,6 +229,7 @@ const del = async () => {
   color: black;
   cursor: pointer;
   margin-right: 10px;
+  font-size: 14px;
 }
 
 .secondaryButton:hover {
