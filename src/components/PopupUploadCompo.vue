@@ -482,8 +482,8 @@ const nextStepPreview = () => {
     err = `${
       selectedContentType.value.code === "NP" ? "Image" : "Video"
     } selected not found.`;
-  } else if (!formPoster.value.image[0].image.length) {
-    err = "Url is empty";
+  } else if (formPoster.value.type == TYPE.WEBVIEW && !formPoster.value.image[0].image.length) {
+    err = "URL is empty";
   }
   if (!err.length) {
     selectRotate.value = {
@@ -603,9 +603,12 @@ const nextStepPreview = () => {
             ></Button>
             <Button
               label="Next"
-              :class="'primaryButton'"
+              icon="pi pi-arrow-right"
               type="submit"
               :disabled="isNextButtonDisabled"
+              :class="'primaryButton  justify-center '"
+              iconPos="right"
+          :pt="{ label: { class: 'flex-none mr-2' } }"
               @click="showDifferentDialog"
             ></Button>
           </div>
@@ -751,13 +754,18 @@ const nextStepPreview = () => {
             <Button
               text
               label="Add Schedule"
-              :class="'secondaryButton'"
+              icon="pi pi-plus"
+              :class="'secondaryButton justify-center'"
               @click="addSchedule"
+               :pt="{ label: { class: 'flex-none ml-2' } }"
             ></Button>
             <Button
               label="Next"
+              icon="pi pi-arrow-right"
               @click="nextStepUpload()"
-              :class="'primaryButton'"
+              :class="'primaryButton  justify-center '"
+              iconPos="right"
+              :pt="{ label: { class: 'flex-none mr-2' } }"
             ></Button>
           </div>
         </div>
@@ -793,7 +801,7 @@ const nextStepPreview = () => {
           >
             <div class="inline-flex items-center">
               <label
-                class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
+                class="text-black font-semibold text-[14px] flex justify-start mt-2 mb-2"
               >
                 Upload URL
               </label>
@@ -802,8 +810,8 @@ const nextStepPreview = () => {
             <InputText
               v-model="formPoster.image[0].image"
               type="url"
-              placeholder="https://www.cpe.eng.cmu.ac.th/"
-              class="h-8 w-full mb-3 rounded-[8px] text-[12px] bg-[#EDEDED] border-none"
+              placeholder="Ex.https://www.cpe.eng.cmu.ac.th/"
+              class="h-8 w-full mb-3 rounded-[8px] text-[12px]"
             />
           </div>
           <div class="flex flex-row gap-4 pt-3">
@@ -815,7 +823,10 @@ const nextStepPreview = () => {
             ></Button>
             <Button
               label="Next"
-              :class="'primaryButton'"
+              icon="pi pi-arrow-right "
+              :class="'primaryButton  justify-center '"
+              iconPos="right"
+            :pt="{ label: { class: 'flex-none mr-2' } }"
               @click="nextStepPreview()"
             ></Button>
           </div>
@@ -1001,19 +1012,20 @@ const nextStepPreview = () => {
             </div>
           </div>
           <!-- Review -->
-          <div
-            class="flex flex-col gap-5 bg-white rounded-lg p-[30px] items-start justify-start my-6"
-            style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
-          >
-            <label
-              class="text-[#282828] font-semibold text-[14px] flex justify-start -mb-2"
+          <label
+              class="text-[#282828] font-semibold mt-3 text-[14px] flex justify-start "
             >
               Review
             </label>
+          <div
+            class="flex flex-col gap-5 bg-white rounded-lg p-[16px] items-start justify-start mt-2 mb-6"
+            style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+          >
+            
             <div class="bg-[#e9f2fd] rounded-xl px-9 py-5 w-full">
-              <div class="font-notoThai text-black-500 flex flex-col gap-1">
-                <p class="text-[18px] font-semibold">{{ formPoster.title }}</p>
-                <p class="text-[12px] font">
+              <div class="font-sf-pro text-black-500 flex flex-col gap-1">
+                <p class="text-[16px] font-semibold">{{ formPoster.title }}</p>
+                <p class="text-[12px]">
                   Description:
                   <span class="font-normal">{{
                     formPoster.description || "-"
@@ -1024,11 +1036,11 @@ const nextStepPreview = () => {
 
             <DataTable
               :value="formDisplay"
-              class="border-[1px] border-gray rounded-xl w-full"
+              class="border-[1px] border-gray rounded-lg text w-full"
               :pt="{
                 column: {
-                  headerContent: { class: `!text-[14px]` },
-                  bodyCell: { class: `!text-[14px]` },
+                  headerContent: { class: `!text-[12px]` },
+                  bodyCell: { class: `!text-[12px]` },
                 },
                 bodyRow: {
                   class: `!h-[10px]`,
@@ -1107,8 +1119,10 @@ const nextStepPreview = () => {
             ></Button>
             <Button
               label="Upload"
-              :class="'primaryButton'"
+              icon="pi pi-upload"
+              :class="'primaryButton justify-center'"
               :loading="loading"
+               :pt="{ label: { class: 'flex-none ml-2' } }"
               @click="uploadPoster"
             ></Button>
           </div>
@@ -1189,12 +1203,12 @@ const nextStepPreview = () => {
   border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-right: 10px;
+  font-size: 14px;
   margin-top: 20px;
   background-color: none;
   color: black;
   cursor: pointer;
-  margin-right: 10px;
+  
 }
 
 .secondaryButton:hover {
@@ -1207,13 +1221,13 @@ const nextStepPreview = () => {
   border-width: 0;
   border-radius: 8px;
   padding-top: 10px;
-  margin-left: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
   background-color: #14c6a4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .primaryButton:hover {
@@ -1232,6 +1246,7 @@ const nextStepPreview = () => {
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .primaryButtonEmer:hover {

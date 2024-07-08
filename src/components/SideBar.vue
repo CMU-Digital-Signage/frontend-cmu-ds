@@ -9,6 +9,7 @@ import { ref, computed, watchEffect, onMounted } from "vue";
 import store from "@/store";
 import { signOut, setPassword, changePassword, sendEmail } from "@/services";
 import { useToast } from "primevue/usetoast";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const loading = ref(false);
 const user = computed(() => store.state.userInfo);
@@ -201,7 +202,7 @@ const handleChangePassword = async () => {
         </div>
       </template>
 
-      <div class="flex flex-col gap-1  w-full">
+      <div class="flex flex-col gap-1 w-full">
         <FloatLabel class="mt-6">
           <Password
             id="currentPassword"
@@ -216,17 +217,15 @@ const handleChangePassword = async () => {
               },
             }"
           />
-          <label
-            for="currentPassword"
-            class="text-[12px] flex  text-center"
+          <label for="currentPassword" class="text-[12px] flex text-center"
             >Current Password</label
           >
-      </FloatLabel>
+        </FloatLabel>
         <FloatLabel class="mt-6">
           <Password
             id="newPassword"
             v-model="password"
-           input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
+            input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
             class="w-full"
             :feedback="false"
             toggle-mask
@@ -236,12 +235,14 @@ const handleChangePassword = async () => {
               },
             }"
           />
-          <label  class="text-[12px] flex  text-center" for="newPassword">New Password</label>
+          <label class="text-[12px] flex text-center" for="newPassword"
+            >New Password</label
+          >
         </FloatLabel>
         <FloatLabel class="mt-6">
           <Password
             id="reTypeNewPassword"
-           input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
+            input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
             class="w-full"
             v-model="cfPassword"
             :feedback="false"
@@ -252,13 +253,15 @@ const handleChangePassword = async () => {
               },
             }"
           />
-          <label  class="text-[12px] flex  text-center" for="reTypeNewPassword">Re-type new password</label>
+          <label class="text-[12px] flex text-center" for="reTypeNewPassword"
+            >Re-type new password</label
+          >
         </FloatLabel>
         <Button
           text
           link
           @click="showSecondDialog"
-          class="-ml-3 w-fit  font-normal text-[12px] text-[#1b7be8] bg-none"
+          class="-ml-3 w-fit font-normal text-[12px] text-[#1b7be8] bg-none"
           >Forget your password?</Button
         >
         <Button
@@ -266,6 +269,7 @@ const handleChangePassword = async () => {
           text
           :class="'primaryButton'"
           @click="handleChangePassword"
+             :pt="{ label: {class: 'text-[14px]'}}"
         ></Button></div
     ></Dialog>
 
@@ -293,9 +297,7 @@ const handleChangePassword = async () => {
       </template>
       <p v-if="user" class="text-[14px]">
         We'll send a password reset confirmation to
-        <span class="text-[#1b7be8] font-extrabold ">{{
-          user.email
-        }}</span>
+        <span class="text-[#1b7be8] font-extrabold">{{ user.email }}</span>
         Check your inbox (including Spam and Junk) to reset your emergency
         password.
       </p>
@@ -305,6 +307,7 @@ const handleChangePassword = async () => {
         text
         @click="sendEmailDialog"
         :class="'primaryButton'"
+        :pt="{ label: {class: 'text-[14px]'}}"
       ></Button>
     </Dialog>
 
@@ -333,7 +336,7 @@ const handleChangePassword = async () => {
       <template #header>
         <div class="header-popup">Set Your Emergency Password</div>
       </template>
-      <div class="mb-6 gap-7  rounded-xl h-fit p-4">
+      <div class="mb-6 gap-7 rounded-xl h-fit p-4">
         <div class="inline-flex">
           <i class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"></i>
           <p v-if="user" class="text-xl mb-2 font-bold text-[#0067A0]">
@@ -440,7 +443,7 @@ const handleChangePassword = async () => {
 
         <Button
           @click="$router.back"
-          class=" bg-[#f6f6f600] rounded-full h-6 w-6 flex -mt-1 text-[#575757] items-center justify-center menu-ho outline-none"
+          class="bg-[#f6f6f600] rounded-full h-6 w-6 flex -mt-1 text-[#575757] items-center justify-center menu-ho outline-none"
           v-else
           :style="{
             transform: openSidebar ? '' : 'translateX(8px) ',
@@ -456,14 +459,76 @@ const handleChangePassword = async () => {
       <div :class="openSidebar == true ? '' : ' flex justify-center '">
         <Button
           v-if="openSidebar"
-          class="upload-button mt-[37px] items-center justify-center "
+          label="Upload content"
+          class="upload-button mt-[37px] items-center justify-center"
           @click="store.state.showUpload = true"
+          :pt="{ label: { class: 'flex-none ml-3 text-white' } }"
         >
-          <div class="flex items-center h-5 justify-between">
+          <template #icon>
+            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+  <rect fill="none" height="256" width="256" />
+
+
+              <path
+                d="M138.7,175.5l-19.2,52.1a8,8,0,0,1-15,0L85.3,175.5a8.1,8.1,0,0,0-4.8-4.8L28.4,151.5a8,8,0,0,1,0-15l52.1-19.2a8.1,8.1,0,0,0,4.8-4.8l19.2-52.1a8,8,0,0,1,15,0l19.2,52.1a8.1,8.1,0,0,0,4.8,4.8l52.1,19.2a8,8,0,0,1,0,15l-52.1,19.2A8.1,8.1,0,0,0,138.7,175.5Z"
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="176"
+                x2="176"
+                y1="16"
+                y2="64"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="200"
+                x2="152"
+                y1="40"
+                y2="40"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="224"
+                x2="224"
+                y1="72"
+                y2="104"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="240"
+                x2="208"
+                y1="88"
+                y2="88"
+              />
+            </svg>
+          </template>
+
+          <!-- <div class="flex items-center h-5 justify-between">
             <span class="text-[#ffffff] font-extrabold text-[14px]"
               >Upload Content</span
             >
-          </div>
+          </div> -->
         </Button>
 
         <Button
@@ -478,9 +543,68 @@ const handleChangePassword = async () => {
             );
           "
           @click="store.state.showUpload = true"
-          icon="pi pi-plus"
-          ><i class="pi pi-plus text-white"></i
-        ></Button>
+ 
+          >
+          <template #icon>
+            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+  <rect fill="none" height="256" width="256" />
+
+
+              <path
+                d="M138.7,175.5l-19.2,52.1a8,8,0,0,1-15,0L85.3,175.5a8.1,8.1,0,0,0-4.8-4.8L28.4,151.5a8,8,0,0,1,0-15l52.1-19.2a8.1,8.1,0,0,0,4.8-4.8l19.2-52.1a8,8,0,0,1,15,0l19.2,52.1a8.1,8.1,0,0,0,4.8,4.8l52.1,19.2a8,8,0,0,1,0,15l-52.1,19.2A8.1,8.1,0,0,0,138.7,175.5Z"
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="176"
+                x2="176"
+                y1="16"
+                y2="64"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="200"
+                x2="152"
+                y1="40"
+                y2="40"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="224"
+                x2="224"
+                y1="72"
+                y2="104"
+              />
+              <line
+                fill="none"
+                stroke="#fff"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="14"
+                x1="240"
+                x2="208"
+                y1="88"
+                y2="88"
+              />
+            </svg>
+          </template>
+        </Button>
       </div>
 
       <div
@@ -502,7 +626,7 @@ const handleChangePassword = async () => {
         >
           <router-link to="/">
             <Button
-              class="bg-none menu-ho w-full   space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-xl"
+              class="bg-none menu-ho w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-xl"
               v-if="openSidebar"
               link
               :style="{
@@ -683,7 +807,10 @@ const handleChangePassword = async () => {
           :key="index"
           class="flex align-items-center text-[15px] ml-4"
         >
-          <div v-if="item.deviceName" class="flex items-center text-[12px] gap-4 pb-3">
+          <div
+            v-if="item.deviceName"
+            class="flex items-center text-[12px] gap-4 pb-3"
+          >
             <Checkbox
               v-model="filterDevice"
               :value="item.MACaddress"
@@ -829,7 +956,7 @@ Button {
   padding-bottom: 10px;
   margin-top: 30px;
   margin-left: 10px;
-  background-color: #14C6A4;
+  background-color: #14c6a4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
@@ -851,7 +978,6 @@ Button {
 .primaryButton1:hover {
   cursor: pointer;
   background-color: #0eb092;
-
 }
 
 .secondaryButton1:hover {
@@ -866,7 +992,7 @@ Button {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 30px;
-  background-color: #14C6A4;
+  background-color: #14c6a4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;

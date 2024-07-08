@@ -86,7 +86,9 @@ const del = async () => {
           <Button
             :loading="loading"
             label="Delete admin"
-            :class="'primaryButtonDel'"
+            icon="pi pi-trash" 
+                :class="'primaryButtonDel justify-center'" 
+                :pt="{ label: { class: 'flex-none ml-2' } }"
             type="submit"
             @click="del()"
           ></Button>
@@ -179,7 +181,7 @@ const del = async () => {
   background-color: none;
   color: black;
   cursor: pointer;
-  margin-right: 10px;
+  font-size: 14px;
 }
 
 .secondaryButton:hover {
@@ -193,13 +195,12 @@ const del = async () => {
   border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-left: 10px;
   margin-top: 20px;
   background-color: none;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
-  margin-left: 10px;
+  font-size: 14px;
 }
 
 .primaryButtonDel {
@@ -208,13 +209,12 @@ const del = async () => {
   border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-left: 10px;
   margin-top: 20px;
   background-color: white;
   color: rgb(255, 91, 91);
   font-weight: 800;
   cursor: pointer;
-  margin-left: 10px;
+  font-size: 14px;
 }
 
 .primaryButtonDel:hover {

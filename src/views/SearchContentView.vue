@@ -93,7 +93,7 @@ watch(filterDevice, () => {
       >
         <Column
           field="date"
-          class="w-fit text-[#575757] border-r-[#dddddd] border-r-[1px] px-4"
+          class="w-fit text-[#575757]  border-r-[#dddddd] border-r-[1px] px-4"
         >
           <template #body="item">
             <div class="flex flex-row gap-1 items-center">

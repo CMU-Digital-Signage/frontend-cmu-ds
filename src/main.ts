@@ -34,63 +34,54 @@ import TieredMenu from "primevue/tieredmenu";
 import Menu from "primevue/menu";
 import Password from "primevue/password";
 import ProgressSpinner from "primevue/progressspinner";
+import { text } from "@fortawesome/fontawesome-svg-core";
 
 createApp(App)
   .use(store)
   .use(router)
   .use(PrimeVue, {
-    // pt: {
-    //   Toast: {
-    //     container: (slotProps: any) => ({
-    //       class: [
-    //         "rounded-lg w-full border-solid border-0 border-l-[6px] shadow-md",
-    //         {
-    //           "border-blue-500": slotProps.props.message.severity == "info",
-    //           "border-green-500": slotProps.props.message.severity == "success",
-    //           "border-orange-500": slotProps.props.message.severity == "warn",
-    //           "border-red-500": slotProps.props.message.severity == "error",
-    //         },
-    //           {
-    //             "bg-blue-300": slotProps.props.message.severity == "info",
-    //             "bg-green-300": slotProps.props.message.severity == "success",
-    //             "bg-orange-300": slotProps.props.message.severity == "warn",
-    //             "bg-red-300": slotProps.props.message.severity == "error",
-    //           },
-    //           {
-    //             "text-blue-500": slotProps.props.message.severity == "info",
-    //             "text-green-500": slotProps.props.message.severity == "success",
-    //             "text-orange-500": slotProps.props.message.severity == "warn",
-    //             "text-red-500": slotProps.props.message.severity == "error",
-    //           },
-    //         ],
-    //       }),
-    //       content: (slotProps: any) => ({
-    //         class: ["border-none rounded-lg"],
-    //       }),
-    //       detail: () => ({
-    //         class: ["m-0"],
-    //       }),
-    //       icon: (slotProps: any) => ({
-    //         class: [
-    //           {
-    //             "text-blue-500": slotProps.props.message.severity == "info",
-    //             "text-green-500": slotProps.props.message.severity == "success",
-    //             "text-orange-500": slotProps.props.message.severity == "warn",
-    //             "text-red-500": slotProps.props.message.severity == "error",
-    //           },
-    //         ],
-    //       }),
-    //       closeIcon: (slotProps: any) => ({
-    //         class: [
-    //           {
-    //             "text-blue-500 ": slotProps.props.message.severity == "info",
-    //             "text-green-500": slotProps.props.message.severity == "success",
-    //             "text-orange-500": slotProps.props.message.severity == "warn",
-    //             "text-red-500": slotProps.props.message.severity == "error",
-    //           },
-    //         ],
-    //       }),
-    //     },
+    pt: {
+      Toast: {
+        text: () => ({ class: ["text-[14px]"] }),
+        container: (slotProps: any) => ({
+          class: [
+            "rounded-md h-fit w-fit right-0 absolute items-center pb-2 border-solid border-0 border-l-[4px] shadow-sm",
+            {
+              "border-blue-600 bg-blue-100 bg-opacity-60 text-blue-600": slotProps.props.message.severity == "info",
+              "border-green-600 bg-green-100 bg-opacity-60 text-green-600": slotProps.props.message.severity == "success",
+              "border-orange-600 bg-orange-100 bg-opacity-60 text-orange-600": slotProps.props.message.severity == "warn",
+              "border-red-600 bg-red-100 bg-opacity-60 text-red-600": slotProps.props.message.severity == "error",
+            }
+          ],
+        }),
+        content: (slotProps: any) => ({
+          class: ["border-none rounded-lg"],
+        }),
+        detail: () => ({
+          class: ["m-0"],
+        }),
+        icon: (slotProps: any) => ({
+          class: [
+            {
+              "text-blue-700": slotProps.props.message.severity == "info",
+              "text-green-700": slotProps.props.message.severity == "success",
+              "text-orange-700": slotProps.props.message.severity == "warn",
+              "text-red-700": slotProps.props.message.severity == "error",
+            },
+          ],
+        }),
+        closeIcon: (slotProps: any) => ({
+          class: [
+            {
+              "text-blue-500 ": slotProps.props.message.severity == "info",
+              "text-green-500": slotProps.props.message.severity == "success",
+              "text-orange-500": slotProps.props.message.severity == "warn",
+              "text-red-500": slotProps.props.message.severity == "error",
+            },
+          ],
+        }),
+      },
+    },
   })
   .use(ToastService)
   .component("font-awesome-icon", FontAwesomeIcon)
