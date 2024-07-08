@@ -807,6 +807,7 @@ const nextStepPreview = () => {
               </label>
               <label class="font-medium text-red-500"> * </label>
             </div>
+            <div class="text-[10px] text-blue-500 -mt-1 mb-3">pixelParade Beta Feature - This is an unfinished development. It may contain errors or inaccuracies and may not function properly.</div>
             <InputText
               v-model="formPoster.image[0].image"
               type="url"
