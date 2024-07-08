@@ -333,7 +333,7 @@ const handleChangePassword = async () => {
       <template #header>
         <div class="header-popup">Set Your Emergency Password</div>
       </template>
-      <div class="mb-6 gap-7  rounded-lg h-fit p-4">
+      <div class="mb-6 gap-7  rounded-xl h-fit p-4">
         <div class="inline-flex">
           <i class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"></i>
           <p v-if="user" class="text-xl mb-2 font-bold text-[#0067A0]">
@@ -502,11 +502,11 @@ const handleChangePassword = async () => {
         >
           <router-link to="/">
             <Button
-              class="bg-none menu-ho w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-lg"
+              class="bg-none menu-ho w-full   space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-xl"
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/' ? '#11cfff6a' : '',
+                'background-color': $route.path === '/' ? '#4bdbff4d' : '',
                 color: $route.path === '/' ? '#297dbe' : '',
               }"
             >
@@ -515,12 +515,12 @@ const handleChangePassword = async () => {
             </Button>
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-              :class="{ 'bg-[#11cfff6a] text-[#FFFFFF]': $route.path === '/' }"
+              :class="{ 'bg-[#4bdbff4d] text-[#FFFFFF]': $route.path === '/' }"
               v-else
               link
               icon="pi pi-microsoft"
               :style="{
-                'background-color': $route.path === '/' ? '#11cfff6a' : '',
+                'background-color': $route.path === '/' ? '#4bdbff4d' : '',
                 color: $route.path === '/' ? '#297dbe' : '',
               }"
             >
@@ -530,12 +530,12 @@ const handleChangePassword = async () => {
           <router-link to="/content">
             <div>
               <Button
-                class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+                class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-xl"
                 v-if="openSidebar"
                 link
                 :style="{
                   'background-color':
-                    $route.path === '/content' ? '#11cfff6a' : '',
+                    $route.path === '/content' ? '#4bdbff4d' : '',
                   color: $route.path === '/content' ? '#297dbe' : '',
                 }"
               >
@@ -545,14 +545,14 @@ const handleChangePassword = async () => {
               <Button
                 class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
                 :class="{
-                  'bg-[#11cfff6a] text-[#297dbe]': $route.path === '/content',
+                  'bg-[#4bdbff4d] text-[#297dbe]': $route.path === '/content',
                 }"
                 v-else
                 icon="pi pi-file"
                 link
                 :style="{
                   'background-color':
-                    $route.path === '/content' ? '#11cfff6a' : '',
+                    $route.path === '/content' ? '#4bdbff4d' : '',
                   color: $route.path === '/content' ? '#297dbe' : '',
                 }"
               >
@@ -562,12 +562,12 @@ const handleChangePassword = async () => {
 
           <router-link to="/deviceManage">
             <Button
-              class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-lg"
+              class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-xl"
               v-if="openSidebar"
               link
               :style="{
                 'background-color':
-                  $route.path === '/deviceManage' ? '#11cfff6a' : '',
+                  $route.path === '/deviceManage' ? '#4bdbff4d' : '',
                 color: $route.path === '/deviceManage' ? '#297dbe' : '',
               }"
             >
@@ -577,7 +577,7 @@ const handleChangePassword = async () => {
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
               :class="{
-                'bg-[#11cfff6a] text-[#297dbe]':
+                'bg-[#4bdbff4d] text-[#297dbe]':
                   $route.path === '/deviceManage',
               }"
               v-else
@@ -585,7 +585,7 @@ const handleChangePassword = async () => {
               link
               :style="{
                 'background-color':
-                  $route.path === '/deviceManage' ? '#11cfff6a' : '',
+                  $route.path === '/deviceManage' ? '#4bdbff4d' : '',
                 color: $route.path === '/deviceManage' ? '#297dbeF' : '',
               }"
             >
@@ -593,7 +593,7 @@ const handleChangePassword = async () => {
           </router-link>
           <router-link to="/emergency">
             <Button
-              class="bg-none space-x-2 -mb-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 menu-ho-emergency rounded-lg"
+              class="bg-none space-x-2 -mb-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 menu-ho-emergency rounded-xl"
               v-if="openSidebar"
               link
               :style="{
@@ -645,11 +645,11 @@ const handleChangePassword = async () => {
         >
           <router-link to="/admin">
             <Button
-              class="bg-none space-x-2 -mb-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-lg"
+              class="bg-none space-x-2 -mb-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-xl"
               v-if="openSidebar"
               link
               :style="{
-                'background-color': $route.path === '/admin' ? '#11cfff6a' : '',
+                'background-color': $route.path === '/admin' ? '#4bdbff4d' : '',
                 color: $route.path === '/admin' ? '#297dbe' : '',
               }"
             >
@@ -659,13 +659,13 @@ const handleChangePassword = async () => {
             <Button
               class="text-[#282828] rounded-full h-10 w-10 flex items-center justify-center menu-ho"
               :class="{
-                'bg-[#11cfff6a] text-[#297dbe]': $route.path === '/admin',
+                'bg-[#4bdbff4d] text-[#297dbe]': $route.path === '/admin',
               }"
               v-else
               icon="pi pi-user"
               link
               :style="{
-                'background-color': $route.path === '/admin' ? '#11cfff6a' : '',
+                'background-color': $route.path === '/admin' ? '#4bdbff4d' : '',
                 color: $route.path === '/admin' ? '#297dbe' : '',
               }"
             >
@@ -726,7 +726,7 @@ const handleChangePassword = async () => {
         id="overlay_menu"
         :model="items"
         :popup="true"
-        class="rounded-lg text-[14px]"
+        class="rounded-xl text-[14px]"
       />
       <div class="flex items-center">
         <div class="flex flex-row gap-2 items-center fixed">
