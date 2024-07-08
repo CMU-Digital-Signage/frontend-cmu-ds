@@ -40,7 +40,7 @@ const contentType = ref([
   { header: "Poster", code: "NP", icon: "images", disabled: false },
   { header: "Video (Coming soon)", code: "VDO", icon: "video", disabled: true },
   {
-    header: "Webview",
+    header: "Webview (Beta)",
     code: "WV",
     icon: "link",
     disabled: false,
