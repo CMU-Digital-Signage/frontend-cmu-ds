@@ -7,7 +7,7 @@ const date = new Date();
 
 export default createStore({
   state: {
-    currentImage: { key: "", image: null },
+    currentImage: { key: "", image: null, type: "" },
     openSidebar: true,
     loading: false,
     showUpload: false,
@@ -25,7 +25,7 @@ export default createStore({
     emerPosters: <Emergency[] | undefined>undefined,
     uniquePosters: <Poster[] | undefined>undefined,
     searchPosters: <Poster[] | undefined>undefined,
-    editPoster: { title: "", type: "" },
+    editPoster: { title: "", code: "" },
     filterInputPosters: {
       title: "",
       uploader: "",

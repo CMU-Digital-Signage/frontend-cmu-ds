@@ -30,8 +30,10 @@ import {
 } from "./emergency";
 import { getPosterEachDevice, turnOnOffDevice } from "./pi";
 import { sendEmail } from "./email";
+import { getIframe } from "./proxy";
 
 export {
+  getIframe,
   getUserInfo,
   getAllUser,
   signOut,
