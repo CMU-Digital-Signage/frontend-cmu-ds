@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-
 export default defineComponent({
   name: "PopupUpload",
 });
@@ -25,6 +24,7 @@ import {
 import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
+import Skeleton from "primevue/skeleton";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Panel from "primevue/panel";
@@ -73,6 +73,7 @@ const selectRotate = ref({ image: "", priority: 1 });
 const selectSchedule = ref({ header: `Schedule 1`, index: 0 });
 const showSecondDialog = ref(false);
 const loading = ref(false);
+const loadingWebview = ref(false);
 
 const createScheduleTabs = () => {
   formDisplay.value.forEach((e, i) => {
@@ -108,6 +109,10 @@ watch([showUpload, showSecondDialog, editcontentType.value], () => {
   }
   currentState.value = 0;
 });
+
+const onIframeLoad = () => {
+  loadingWebview.value = false;
+};
 
 const validateForm = () => {
   if (
@@ -501,6 +506,7 @@ const nextStepPreview = async () => {
     if (selectedContentType.value.code === "WV") {
       const res = await getIframe(formPoster.value.image[0].image);
       if (res.ok) {
+        loadingWebview.value = true;
         selectRotate.value.image = formPoster.value.image[0].image;
       } else {
         toast.add({
@@ -524,11 +530,6 @@ const nextStepPreview = async () => {
     });
   }
 };
-// const webview = ref<IframeHTMLAttributes>();
-
-// watch([webview], () => {
-//   console.log(webview);
-// });
 </script>
 
 <template>
@@ -895,14 +896,20 @@ const nextStepPreview = async () => {
                           v-if="selectedContentType.code === 'WV'"
                           class="flex-1 overflow-hidden relative"
                         >
+                          <Skeleton
+                            v-if="loadingWebview"
+                            width="100%"
+                            height="100%"
+                          />
                           <iframe
-                            ref="webview"
+                            v-show="!loadingWebview"
                             :title="formPoster.title"
                             :src="`${formPoster.image[0].image}`"
                             :width="`${2160 / 2}px`"
                             :height="`${3840 / 2}px`"
                             scrolling="no"
                             fullScreen="true"
+                            @load="onIframeLoad"
                             class="absolute top-0 left-0 overflow-hidden pointer-events-none"
                             style="
                               transform: scale(0.167);
