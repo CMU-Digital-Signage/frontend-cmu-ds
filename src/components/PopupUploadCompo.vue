@@ -1,6 +1,5 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-
 export default defineComponent({
   name: "PopupUpload",
 });
@@ -8,7 +7,13 @@ export default defineComponent({
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import store from "@/store";
-import { addEmergency, addPoster, editEmergency, editPoster } from "@/services";
+import {
+  addEmergency,
+  addPoster,
+  editEmergency,
+  editPoster,
+  getIframe,
+} from "@/services";
 import { Poster } from "@/types";
 import {
   dateFormatter,
@@ -19,6 +24,7 @@ import {
 import { useToast } from "primevue/usetoast";
 import ScheduleForm from "@/components/ScheduleForm.vue";
 import UploadImage from "@/components/UploadImageCompo.vue";
+import Skeleton from "primevue/skeleton";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Panel from "primevue/panel";
@@ -67,6 +73,7 @@ const selectRotate = ref({ image: "", priority: 1 });
 const selectSchedule = ref({ header: `Schedule 1`, index: 0 });
 const showSecondDialog = ref(false);
 const loading = ref(false);
+const loadingWebview = ref(false);
 
 const createScheduleTabs = () => {
   formDisplay.value.forEach((e, i) => {
@@ -102,6 +109,10 @@ watch([showUpload, showSecondDialog, editcontentType.value], () => {
   }
   currentState.value = 0;
 });
+
+const onIframeLoad = () => {
+  loadingWebview.value = false;
+};
 
 const validateForm = () => {
   if (
@@ -476,24 +487,39 @@ const nextStepUpload = () => {
   }
 };
 
-const nextStepPreview = () => {
+const nextStepPreview = async () => {
   let err = "";
   if (!formPoster.value.image.length) {
     err = `${
       selectedContentType.value.code === "NP" ? "Image" : "Video"
     } selected not found.`;
-  } else if (formPoster.value.type == TYPE.WEBVIEW && !formPoster.value.image[0].image.length) {
+  } else if (
+    formPoster.value.type == TYPE.WEBVIEW &&
+    !formPoster.value.image[0].image.length
+  ) {
     err = "URL is empty";
   }
   if (!err.length) {
     selectRotate.value = {
-      image:
-        selectedContentType.value.code === "WV"
-          ? formPoster.value.image[0].image
-          : formPoster.value.image[0].image.dataURL,
       priority: formPoster.value.image[0].priority,
-    };
-
+    } as any;
+    if (selectedContentType.value.code === "WV") {
+      const res = await getIframe(formPoster.value.image[0].image);
+      if (res.ok) {
+        loadingWebview.value = true;
+        selectRotate.value.image = formPoster.value.image[0].image;
+      } else {
+        toast.add({
+          severity: "error",
+          summary: "Invalid",
+          detail: res.message,
+          life: 3000,
+        });
+        return;
+      }
+    } else {
+      selectRotate.value.image = formPoster.value.image[0].image.dataURL;
+    }
     currentState.value = 2;
   } else {
     toast.add({
@@ -504,11 +530,6 @@ const nextStepPreview = () => {
     });
   }
 };
-// const webview = ref<IframeHTMLAttributes>();
-
-// watch([webview], () => {
-//   console.log(webview);
-// });
 </script>
 
 <template>
@@ -608,7 +629,7 @@ const nextStepPreview = () => {
               :disabled="isNextButtonDisabled"
               :class="'primaryButton  justify-center '"
               iconPos="right"
-          :pt="{ label: { class: 'flex-none mr-2' } }"
+              :pt="{ label: { class: 'flex-none mr-2' } }"
               @click="showDifferentDialog"
             ></Button>
           </div>
@@ -757,7 +778,7 @@ const nextStepPreview = () => {
               icon="pi pi-plus"
               :class="'secondaryButton justify-center'"
               @click="addSchedule"
-               :pt="{ label: { class: 'flex-none ml-2' } }"
+              :pt="{ label: { class: 'flex-none ml-2' } }"
             ></Button>
             <Button
               label="Next"
@@ -807,7 +828,10 @@ const nextStepPreview = () => {
               </label>
               <label class="font-medium text-red-500"> * </label>
             </div>
-            <div class="text-[10px] text-blue-500 -mt-1 mb-3">pixelParade Beta Feature - This is an unfinished development. It may contain errors or inaccuracies and may not function properly.</div>
+            <div class="text-[10px] text-blue-500 -mt-1 mb-3">
+              pixelParade Beta Feature - This is an unfinished development. It
+              may contain errors or inaccuracies and may not function properly.
+            </div>
             <InputText
               v-model="formPoster.image[0].image"
               type="url"
@@ -827,7 +851,7 @@ const nextStepPreview = () => {
               icon="pi pi-arrow-right "
               :class="'primaryButton  justify-center '"
               iconPos="right"
-            :pt="{ label: { class: 'flex-none mr-2' } }"
+              :pt="{ label: { class: 'flex-none mr-2' } }"
               @click="nextStepPreview()"
             ></Button>
           </div>
@@ -872,14 +896,20 @@ const nextStepPreview = () => {
                           v-if="selectedContentType.code === 'WV'"
                           class="flex-1 overflow-hidden relative"
                         >
+                          <Skeleton
+                            v-if="loadingWebview"
+                            width="100%"
+                            height="100%"
+                          />
                           <iframe
-                            ref="webview"
+                            v-show="!loadingWebview"
                             :title="formPoster.title"
                             :src="`${formPoster.image[0].image}`"
                             :width="`${2160 / 2}px`"
                             :height="`${3840 / 2}px`"
                             scrolling="no"
                             fullScreen="true"
+                            @load="onIframeLoad"
                             class="absolute top-0 left-0 overflow-hidden pointer-events-none"
                             style="
                               transform: scale(0.167);
@@ -1014,15 +1044,14 @@ const nextStepPreview = () => {
           </div>
           <!-- Review -->
           <label
-              class="text-[#282828] font-semibold mt-3 text-[14px] flex justify-start "
-            >
-              Review
-            </label>
+            class="text-[#282828] font-semibold mt-3 text-[14px] flex justify-start"
+          >
+            Review
+          </label>
           <div
             class="flex flex-col gap-5 bg-white rounded-lg p-[16px] items-start justify-start mt-2 mb-6"
             style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
           >
-            
             <div class="bg-[#e9f2fd] rounded-xl px-9 py-5 w-full">
               <div class="font-sf-pro text-black-500 flex flex-col gap-1">
                 <p class="text-[16px] font-semibold">{{ formPoster.title }}</p>
@@ -1123,7 +1152,7 @@ const nextStepPreview = () => {
               icon="pi pi-upload"
               :class="'primaryButton justify-center'"
               :loading="loading"
-               :pt="{ label: { class: 'flex-none ml-2' } }"
+              :pt="{ label: { class: 'flex-none ml-2' } }"
               @click="uploadPoster"
             ></Button>
           </div>
@@ -1209,7 +1238,6 @@ const nextStepPreview = () => {
   background-color: none;
   color: black;
   cursor: pointer;
-  
 }
 
 .secondaryButton:hover {

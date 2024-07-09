@@ -275,12 +275,9 @@ onUnmounted(() => {
           v-if="image.type == TYPE.WEBVIEW && image.image"
           title="webview"
           :src="`${image.image}`"
-          :width="`${2160 / 2}px`"
-          :height="`${3840 / 2}px`"
           scrolling="no"
           fullScreen="true"
-          class="absolute top-full left-0 overflow-hidden pointer-events-none duration-500 transition-opacity"
-          style="transform: rotate(-90deg) scale(0.735); transform-origin: 0 0"
+          class="absolute overflow-hidden pointer-events-none duration-500 transition-opacity"
         ></iframe>
         <img
           v-else-if="image.image"
@@ -295,6 +292,15 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+iframe {
+  width: 100vh;
+  height: 90vw;
+  transform: rotate(-90deg);
+  top: 100%;
+  left: 0;
+  transform-origin: 0 0;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
