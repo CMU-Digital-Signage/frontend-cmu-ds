@@ -411,7 +411,10 @@ const del = async (posterId: string) => {
           ></i>
           <i
             class="pi pi-trash cursor-pointer rounded-full p-2 hover:bg-gray-200"
-            @click="deletePopup = true"
+            @click="
+              showInfo = false;
+              deletePopup = true;
+            "
           ></i>
         </div>
 

@@ -284,14 +284,14 @@ export const setFieldPoster = (data: Poster[]) => {
 };
 
 export const typePoster = [
-  { type: TYPE.POSTER, severity: "info" },
-  { type: TYPE.VIDEO, severity: "warning" },
-  { type: TYPE.WEBVIEW, severity: "secondary" },
+  { type: TYPE.POSTER, severity: "poster" },
+  { type: TYPE.VIDEO, severity: "video" },
+  { type: TYPE.WEBVIEW, severity: "webview" },
 ];
 export const statusPoster = [
   { status: "Displayed", severity: "success" },
   { status: "Awaited", severity: "info" },
-  { status: "Expired", severity: "danger" },
+  { status: "Expired", severity: "secondary" },
 ];
 export const statusEmer = [
   { status: "Inactive", severity: "secondary" },
@@ -299,7 +299,7 @@ export const statusEmer = [
 ];
 
 export const createUnique = (data: Poster[]) => {
-  store.state.uniquePosters = data.reduce((acc: any[], e: Poster) => {
+  store.state.uniquePosters = data.reduce((acc: any[], e: Poster, i:number) => {
     // Check if the title is not already in the accumulator
     if (!acc.some((poster) => poster.title === e.title)) {
       const currentDate = new Date(new Date().setHours(23, 59, 59, 0));
@@ -336,7 +336,8 @@ export const createUnique = (data: Poster[]) => {
         posterId: e.posterId,
         uploader: e.uploader,
         createdAt: e.createdAt,
-        type: e.type,
+        // type: e.type,
+        type: i%3 == 0 ? TYPE.POSTER : i%3 == 1 ? TYPE.VIDEO : TYPE.WEBVIEW,
         status,
       });
     }

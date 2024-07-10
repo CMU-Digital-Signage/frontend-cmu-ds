@@ -41,17 +41,32 @@ createApp(App)
   .use(router)
   .use(PrimeVue, {
     pt: {
+      Tag: {
+        root: (slotProps: any) => ({
+          class: [
+            {
+              "bg-yellow-400 bg-opacity-30 text-yellow-800": slotProps.props.severity == "poster",
+              "bg-fuchsia-400 bg-opacity-30 text-fuchsia-800": slotProps.props.severity == "video",
+              "bg-blue-400 bg-opacity-30 text-blue-800": slotProps.props.severity == "webview",
+            },
+          ],
+        }),
+      },
       Toast: {
         text: () => ({ class: ["text-[14px]"] }),
         container: (slotProps: any) => ({
           class: [
             "rounded-md h-fit w-96 right-0 absolute items-center pb-2 border-solid border-0 border-l-[4px] shadow-sm",
             {
-              "border-blue-600 bg-blue-100 bg-opacity-60 text-blue-600": slotProps.props.message.severity == "info",
-              "border-green-600 bg-green-100 bg-opacity-60 text-green-600": slotProps.props.message.severity == "success",
-              "border-orange-600 bg-orange-100 bg-opacity-60 text-orange-600": slotProps.props.message.severity == "warn",
-              "border-red-600 bg-red-100 bg-opacity-60 text-red-600": slotProps.props.message.severity == "error",
-            }
+              "border-blue-600 bg-blue-100 bg-opacity-60 text-blue-600":
+                slotProps.props.message.severity == "info",
+              "border-green-600 bg-green-100 bg-opacity-60 text-green-600":
+                slotProps.props.message.severity == "success",
+              "border-orange-600 bg-orange-100 bg-opacity-60 text-orange-600":
+                slotProps.props.message.severity == "warn",
+              "border-red-600 bg-red-100 bg-opacity-60 text-red-600":
+                slotProps.props.message.severity == "error",
+            },
           ],
         }),
         content: (slotProps: any) => ({
