@@ -36,6 +36,7 @@ const posters = computed(() => store.state.posters);
 const postersView = ref<any[]>([]);
 const deletePopup = ref(false);
 const loading = ref(false);
+let isNext = true; // Default direction
 const calOptions = reactive<CalendarOptions>({
   timeZone: "Asia/Bangkok",
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -108,6 +109,23 @@ const calOptions = reactive<CalendarOptions>({
       store.state.currentViewDate = info.view.title;
       store.state.viewType = false;
     }
+  },
+  datesSet: function () {
+    const viewHarness = document.querySelector(".fc-view-harness");
+    const enterClass = isNext
+      ? "calendar-transition-enter-right"
+      : "calendar-transition-enter-left";
+    const activeClass = isNext
+      ? "calendar-transition-enter-right-active"
+      : "calendar-transition-enter-left-active";
+
+    viewHarness?.classList.add(enterClass);
+    setTimeout(() => {
+      viewHarness?.classList.add(activeClass);
+    }, 10);
+    setTimeout(() => {
+      viewHarness?.classList.remove(enterClass, activeClass);
+    }, 310);
   },
 });
 
@@ -219,10 +237,12 @@ const resizeCalendar = () => {
   }, 290);
 };
 const prevMonth = () => {
+  isNext = false;
   calendar.value?.prev();
   store.state.currentViewDate = calendar.value?.view.title || "";
 };
 const nextMonth = () => {
+  isNext = true;
   calendar.value?.next();
   store.state.currentViewDate = calendar.value?.view.title || "";
 };
@@ -321,7 +341,7 @@ const del = async (posterId: string) => {
       },
       header: {
         style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
-      }
+      },
     }"
   >
     <template #header>
@@ -351,9 +371,9 @@ const del = async (posterId: string) => {
           <Button
             :loading="loading"
             label="Delete Poster"
-            icon="pi pi-trash" 
-                :class="'primaryButtonDel justify-center'" 
-                :pt="{ label: { class: 'flex-none ml-2' } }"
+            icon="pi pi-trash"
+            :class="'primaryButtonDel justify-center'"
+            :pt="{ label: { class: 'flex-none ml-2' } }"
             type="submit"
             @click="del(selectedEvent.posterId)"
           ></Button>
@@ -621,10 +641,8 @@ const del = async (posterId: string) => {
   z-index: 10;
 }
 
-.fc-col-header-cell
-{
+.fc-col-header-cell {
   font-size: 13px;
-  
 }
 .fc-scrollgrid-sync-table,
 .fc-timegrid-body,
@@ -669,5 +687,33 @@ const del = async (posterId: string) => {
 .fc .fc-daygrid-day-number:hover {
   background-color: #d1d5db;
   cursor: pointer;
+}
+
+.calendar-transition-enter-right {
+  opacity: 0;
+  transform: translateX(100%);
+}
+.calendar-transition-enter-right-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.calendar-transition-enter-left {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+.calendar-transition-enter-left-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.calendar-transition-leave {
+  opacity: 1;
+  transform: translateX(0);
+}
+.calendar-transition-leave-active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 </style>

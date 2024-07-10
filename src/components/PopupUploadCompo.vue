@@ -46,7 +46,7 @@ const contentType = ref([
   { header: "Poster", code: "NP", icon: "images", disabled: false },
   { header: "Video (Coming soon)", code: "VDO", icon: "video", disabled: true },
   {
-    header: "Webview (Beta)",
+    header: "Website URL",
     code: "WV",
     icon: "link",
     disabled: false,
@@ -504,6 +504,7 @@ const nextStepPreview = async () => {
       priority: formPoster.value.image[0].priority,
     } as any;
     if (selectedContentType.value.code === "WV") {
+      loading.value = true
       const res = await getIframe(formPoster.value.image[0].image);
       if (res.ok) {
         loadingWebview.value = true;
@@ -511,12 +512,14 @@ const nextStepPreview = async () => {
       } else {
         toast.add({
           severity: "error",
-          summary: "Invalid",
+          summary: "Not allowed",
           detail: res.message,
           life: 3000,
         });
+        loading.value = false
         return;
       }
+      loading.value = false
     } else {
       selectRotate.value.image = formPoster.value.image[0].image.dataURL;
     }
@@ -549,9 +552,6 @@ const nextStepPreview = async () => {
         header: {
           style:
             'border-top-left-radius: 20px; border-top-right-radius: 20px;   ',
-        },
-        mask: {
-          style: 'backdrop-filter: blur(2px)',
         },
       }"
     >
@@ -652,9 +652,6 @@ const nextStepPreview = async () => {
         header: {
           style:
             'border-top-left-radius: 20px; border-top-right-radius: 20px;   z-index: 10; ',
-        },
-        mask: {
-          style: 'backdrop-filter: blur(2px); z-index: 10  ',
         },
       }"
     >
@@ -824,18 +821,17 @@ const nextStepPreview = async () => {
               <label
                 class="text-black font-semibold text-[14px] flex justify-start mt-2 mb-2"
               >
-                Upload URL
+                Upload Website URL
               </label>
               <label class="font-medium text-red-500"> * </label>
             </div>
-            <div class="text-[10px] text-blue-500 -mt-1 mb-3">
-              pixelParade Beta Feature - This is an unfinished development. It
-              may contain errors or inaccuracies and may not function properly.
+            <div class="text-[12px] text-[#14c6a4] -mt-1 mb-3">
+            Note: Some websites may not be displayed due to security restrictions.
             </div>
             <InputText
               v-model="formPoster.image[0].image"
               type="url"
-              placeholder="Ex.https://www.cpe.eng.cmu.ac.th/"
+              placeholder="https://"
               class="h-8 w-full mb-3 rounded-[8px] text-[12px]"
             />
           </div>
@@ -847,6 +843,7 @@ const nextStepPreview = async () => {
               @click="currentState = 0"
             ></Button>
             <Button
+            :loading="loading"
               label="Next"
               icon="pi pi-arrow-right "
               :class="'primaryButton  justify-center '"
@@ -1148,8 +1145,8 @@ const nextStepPreview = async () => {
               @click="currentState = 1"
             ></Button>
             <Button
-              label="Upload"
-              icon="pi pi-upload"
+              :label="editcontentType.code ? 'Done' : 'Upload'"
+              :icon="editcontentType.code  ? '' : 'pi pi-upload'"
               :class="'primaryButton justify-center'"
               :loading="loading"
               :pt="{ label: { class: 'flex-none ml-2' } }"

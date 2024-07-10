@@ -15,6 +15,7 @@ import {
   calculateScreenHeight,
 } from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
+import ModalAddEditDevice from "@/components/Modal/ModalAddEditDevice.vue";
 
 const form = reactive({ ...initialFormDevice });
 const device = computed(() => store.state.devices);
@@ -23,61 +24,9 @@ const toast = useToast();
 const loading = ref(false);
 const deletePopup = ref(false);
 const selectDelDevice = ref<Device>();
-const limitCharRoom = ref(false);
-const limitCharDevice = ref(false);
-const isNumber = ref(true);
-
-const errorSelectFile = () => {
-  toast.add({
-    severity: "error",
-    summary: "Invalid file type",
-    detail: "Allowed file types: image/*.",
-    life: 3000,
-  });
-};
 
 const toggleOverlay = (e: any, panel: any) => {
   panel.toggle(e);
-};
-
-const edit = async () => {
-  loading.value = true;
-  const check =
-    !form.deviceName?.replace(" ", "").length ||
-    !form.room?.replace(" ", "").length;
-  if (check) {
-    toast.add({
-      severity: "error",
-      summary: "Invalid Input",
-      detail: "Device Name or Room Invalid",
-      life: 3000,
-    });
-    return;
-  }
-  if (form.location)
-    form.location.name = `${form.MACaddress}.${form.location.name
-      .split(".")
-      .pop()}`;
-
-  const res = await editDevice(form);
-  loading.value = true;
-  if (res.ok) {
-    showPopup.value = false;
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: res.message,
-      life: 3000,
-    });
-  } else {
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: res.message,
-      life: 3000,
-    });
-  }
-  loading.value = false;
 };
 
 const del = async () => {
@@ -94,12 +43,8 @@ const del = async () => {
   selectDelDevice.value = undefined;
 };
 
-const checkValidRoomNumber = () => {
-  const value = form.room;
-  if (!Number.isInteger(Number(value))) {
-    form.room = "";
-    return false;
-  }
+const closeModalAddEditDevice = () => {
+  showPopup.value = false;
 };
 </script>
 
@@ -120,7 +65,6 @@ const checkValidRoomNumber = () => {
       header: {
         style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
       },
-    
     }"
   >
     <template #header>
@@ -146,9 +90,9 @@ const checkValidRoomNumber = () => {
           <Button
             :loading="loading"
             label="Delete device"
-            icon="pi pi-trash" 
-                :class="'primaryButtonDel justify-center'" 
-                :pt="{ label: { class: 'flex-none ml-2' } }"
+            icon="pi pi-trash"
+            :class="'primaryButtonDel justify-center'"
+            :pt="{ label: { class: 'flex-none ml-2' } }"
             type="submit"
             @click="del()"
           ></Button>
@@ -162,7 +106,7 @@ const checkValidRoomNumber = () => {
       scrollDirection="vertical"
       scrollable
       :scrollHeight="calculateScreenHeight(0.75)"
-      class="mt-2 text-[14px]"
+      class="mt-2 text-[12px] lg:text-[14px]"
     >
       <Column
         field="deviceName"
@@ -243,8 +187,8 @@ const checkValidRoomNumber = () => {
               class="w-7 h-7"
               severity="warning"
               @click="
-                showPopup = true;
                 Object.assign(form, rowData.data);
+                showPopup = true;
               "
             />
             <Button
@@ -262,7 +206,13 @@ const checkValidRoomNumber = () => {
       </Column>
     </DataTable>
   </div>
-  <Dialog
+  <ModalAddEditDevice
+    :show="showPopup"
+    :isEdit="true"
+    :dataEdit="form"
+    :onClose="closeModalAddEditDevice"
+  />
+  <!-- <Dialog
     v-model:visible="showPopup"
     header="Edit Device"
     class="w-[600px] h-auto"
@@ -278,10 +228,7 @@ const checkValidRoomNumber = () => {
       },
       header: {
         style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-      },
-      mask: {
-        style: 'backdrop-filter: blur(2px)',
-      },
+      }
     }"
   >
     <div class="flex flex-col gap-2 h-[90px]">
@@ -456,7 +403,7 @@ const checkValidRoomNumber = () => {
         :disabled="!form.deviceName || !form.room"
       ></Button>
     </div>
-  </Dialog>
+  </Dialog> -->
 </template>
 
 <style scoped>
@@ -528,7 +475,6 @@ const checkValidRoomNumber = () => {
 
 .primaryButton:hover {
   background-color: rgb(37, 135, 240);
-
 }
 
 .header-popup {

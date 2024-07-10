@@ -115,7 +115,7 @@ const del = async () => {
       scrollDirection="vertical"
       scrollable
       scrollHeight="flex"
-      :virtualScrollerOptions="{ itemSize: 46 }"
+      :virtualScrollerOptions="{ itemSize: (admin?.length || 1)+35 }"
       :class="`text-[12px] lg:text-[14px] flex-1 mt-2`"
     >
       <Column
