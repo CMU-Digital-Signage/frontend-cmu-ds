@@ -255,11 +255,10 @@ const del = async () => {
     scrollDirection="vertical"
     scrollable
     scrollHeight="flex"
-    :virtualScrollerOptions="{ itemSize: 50 }"
+    :virtualScrollerOptions="{ itemSize: (uniquePosters?.length || 1)+35 }"
     :class="`text-[12px] lg:text-[14px] flex-1 ${user.isAdmin ? '' : 'py-2'}`"
   >
     <Column
-      class="text-[14px]"
       :field="(e) => (props.types === 'NP' ? e.title : e.incidentName)"
       header="Title"
       sortable
@@ -281,7 +280,7 @@ const del = async () => {
       field="uploader"
       header="Uploader"
       sortable
-      class="w-1/5 text-[14px]"
+      class="w-1/5 "
     >
       <template #sorticon="slotProps">
         <i
@@ -299,7 +298,7 @@ const del = async () => {
       :field="(e) => dateFormatter(e.createdAt)"
       header="Upload Date"
       sortable
-      class="w-1/5 text-[14px]"
+      class="w-1/5 "
     >
       <template #sorticon="slotProps">
         <i
@@ -314,7 +313,6 @@ const del = async () => {
     </Column>
 
     <Column
-      class="text-[14px]"
       v-if="props.types !== 'EP'"
       sortable
       header="Type"
@@ -352,7 +350,6 @@ const del = async () => {
       </template>
     </Column>
     <Column
-      class="text-[14px]"
       field="status"
       :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"
     >
@@ -426,7 +423,6 @@ const del = async () => {
     </Column>
 
     <Column
-      class="text-[14px]"
       field="management"
       header="Action"
       :class="`${props.types === 'NP' ? 'w-1/6' : 'w-1/3'}`"

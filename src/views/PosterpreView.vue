@@ -127,7 +127,7 @@ const rowStyle = (rowData: any) => {
           scrollDirection="vertical"
           scrollable
           scrollHeight="flex"
-          :virtualScrollerOptions="{ itemSize: 46 }"
+          :virtualScrollerOptions="{ itemSize: (posters?.length || 1)+35 }"
           class="text-[14px] lg:text-[14px] w-full"
           v-model:selection="selectPoster"
           :value="posters"

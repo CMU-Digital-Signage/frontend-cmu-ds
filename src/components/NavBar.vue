@@ -8,25 +8,15 @@ export default defineComponent({
 import store from "@/store";
 import { computed, reactive, ref, watchEffect, defineProps } from "vue";
 import { useToast } from "primevue/usetoast";
-import InputMask from "primevue/inputmask";
 import router from "@/router";
-import { addDeviceTV, addDevicePi, addAdmin, searchPoster } from "@/services";
-import {
-  initialFormDevice,
-  onUpload,
-  typePoster,
-  statusPoster,
-  statusEmer,
-} from "@/utils/constant";
+import { addAdmin, searchPoster } from "@/services";
+import { typePoster, statusPoster, statusEmer } from "@/utils/constant";
 import { TYPE } from "@/utils/enum";
 import { Poster } from "@/types";
-import { filesize } from "filesize";
+import ModalAddEditDevice from "@/components/Modal/ModalAddEditDevice.vue";
 
-const manualMac = ref(false);
-const form = reactive({ ...initialFormDevice });
 const filterInput = computed(() => store.state.filterInputPosters);
 const user = computed(() => store.state.userInfo);
-const macNotUse = computed(() => store.state.macNotUse);
 const devices = computed(() => store.state.devices);
 const showPopup = ref(false);
 const showPopupAddDevice = ref(false);
@@ -36,9 +26,7 @@ const clickSearch = ref(false);
 const searchP = ref<string>("");
 const loading = ref(false);
 const toast = useToast();
-const limitCharRoom = ref(false);
-const limitCharDevice = ref(false);
-const isNumber = ref(true);
+
 const selectDevice = computed({
   get: () => store.state.selectDevice,
   set: (val) => (store.state.selectDevice = val),
@@ -63,19 +51,6 @@ watchEffect(() => {
     store.state.viewType = true;
   }
 });
-
-const errorSelectFile = () => {
-  toast.add({
-    severity: "error",
-    summary: "Invalid file type",
-    detail: "Allowed file types: image/*.",
-    life: 3000,
-  });
-};
-
-const resetForm = () => {
-  Object.assign(form, initialFormDevice);
-};
 
 const goToSearch = () => {
   store.state.openSidebar = true;
@@ -102,39 +77,6 @@ const search = async () => {
     store.state.searchPosters = res.poster;
   }
   store.state.loading = false;
-};
-
-const add = async () => {
-  if (form.location?.dataURL) {
-    const fileExtension = form.location.type.split("/")[1];
-    form.location.name = `${form.MACaddress}.${fileExtension}`;
-  }
-
-  loading.value = true;
-  let res;
-  if (manualMac.value) {
-    res = await addDeviceTV(form);
-  } else {
-    res = await addDevicePi(form);
-  }
-  if (res.ok) {
-    showPopupAddDevice.value = false;
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Add device successfully.",
-      life: 3000,
-    });
-    resetForm();
-  } else {
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: res.message,
-      life: 3000,
-    });
-  }
-  loading.value = false;
 };
 
 const addEmailAdmin = async () => {
@@ -170,12 +112,8 @@ const toggleOverlay = (e: any) => {
   panel.value.toggle(e);
 };
 
-const checkValidRoomNumber = () => {
-  const value = form.room;
-  if (!Number.isInteger(Number(value))) {
-    form.room = "";
-    return false;
-  }
+const closeModalAddEditDevice = () => {
+  showPopupAddDevice.value = false;
 };
 </script>
 
@@ -185,256 +123,10 @@ const checkValidRoomNumber = () => {
   >
     <Toast />
     <!-- Popup Add Device -->
-    <Dialog
-      v-model:visible="showPopupAddDevice"
-      class="w-[600px] h-auto"
-      modal
-      close-on-escape
-      :draggable="false"
-      :closable="!loading"
-      @after-hide="resetForm()"
-      :pt="{
-        content: {
-          style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
-        },
-        header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        },
-        mask: {
-          style: 'backdrop-filter: blur(2px)',
-        },
-      }"
-    >
-      <template #header>
-        <div class="header-popup">Add Device</div>
-      </template>
-      <div class="text-[14px]">About device</div>
-      <div
-              class="bg-white p-4 mt-2 mb-4  gap-5 flex flex-col h-full w-full rounded-lg items-start justify-start"
-              style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
-            >
-      <div class="flex w-full flex-col gap-2 text-[14px] h-fit">
-        <div class="inline-block">
-          <label for="deviceName" class="text-primary-50 font-medium">
-            Device Name
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
-        </div>
-        <InputText
-          v-model:model-value="form.deviceName"
-          @keydown="
-            (e) => {
-              limitCharDevice = form.deviceName?.length === 8;
-            }
-          "
-            class="h-8 w-full mb-3  rounded-[8px] text-[12px]"
-          placeholder="Max 8 Character Ex.CPE01 "
-          maxlength="8"
-          :class="{
-            'border-red-500 shadow-none':
-              form.deviceName?.length === 8 && limitCharDevice,
-          }"
-          id="deviceName"
-        ></InputText>
-        <div class="text-red-500 -mt-5 text-[12px]" tyle="min-height: 1rem;">
-          <div v-if="form.deviceName?.length === 8 && limitCharDevice">
-            You have reached the character limit.
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-col w-full text-[14px] gap-2 h-fit">
-        <div class="inline-flex">
-          <label for="deviceName" class="text-primary-50 font-medium">
-            Device type
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
-        </div>
-        <Dropdown
-          v-model:model-value="manualMac"
-          :options="[
-            { label: 'Smart TV', value: true },
-            { label: 'Raspberry Pi', value: false },
-          ]"
-          optionLabel="label"
-          optionValue="value"
-          :placeholder="'Select a MAC Address Type'"
-          class="-mt-1"
-        />
-      </div>
-      <div class="flex text-[14px] w-full flex-col gap-2 h-fit">
-        <div class="inline-flex">
-          <label for="deviceName" class="text-primary-50 text-[14px] font-medium">
-            {{ manualMac ? "MAC Address TV" : "MAC Address Raspberry Pi" }}
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
-        </div>
-        <InputMask
-          v-if="manualMac"
-          mask="**:**:**:**:**:**"
-          v-model="form.MACaddress"
-            class="h-8 w-96  rounded-[8px] text-[12px]"
-          placeholder="Ex.ff:ff:ff:ff:ff:ff"
-          id="MACaddress"
-        />
-        <Dropdown
-          v-else
-          v-model:model-value="form.MACaddress"
-          :options="macNotUse"
-          :placeholder="
-            macNotUse.length
-              ? 'Select a MAC Address'
-              : 'All Raspberry Pi has already been added'
-          "
-          :disabled="!macNotUse.length"
-                class="-mt-1"
-        />
-      </div>
-      </div>
-      <div class="text-[14px]">Device location</div>
-      <div
-              class="bg-white p-4 mt-2   gap-7 flex flex-col h-full w-full rounded-lg items-start justify-start"
-              style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
-            >
-      <div class="flex flex-col w-full text-[14px] gap-2 h-fit ">
-        <div class="inline-block">
-          <label for="macAddress" class="text-primary-50 font-medium">
-            Room
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
-        </div>
-        <InputText
-          v-model:model-value="form.room"
-          @keydown="
-            (e) => {
-              limitCharRoom = form?.room?.length === 3;
-              if (e.key !== 'Backspace' && !/^\d$/.test(e.key)) {
-                isNumber = false;
-                e.preventDefault();
-              } else {
-                isNumber = true;
-              }
-            }
-          "
-          class="h-8 w-full   rounded-[8px] text-[12px]"
-          placeholder="Number only Ex.516"
-          maxlength="3"
-          :class="{
-            'border-red-500 shadow-none':
-              (form?.room?.length && form.room.length >= 3 && limitCharRoom) ||
-              !isNumber,
-          }"
-        ></InputText>
-        <div class="text-red-500 -mt-5 text-[12px]" tyle="min-height: 1rem;">
-          <div
-            v-if="form?.room?.length && form.room.length >= 3 && limitCharRoom"
-          >
-            You have reached the character limit.
-          </div>
-          <div v-else-if="!isNumber">
-            Type the number using digits 0-9 only.
-          </div>
-        </div>
-      </div>
-
-      <div class="flex flex-col w-full gap-1 fix text-[14px] h-fit">
-        <label for="macAddress" class="text-primary-50 font-medium">
-          Location Description
-        </label>
-        <InputText
-          v-model:model-value="form.description"
-          class="h-8 w-full  rounded-[8px] text-[12px]"
-          placeholder="(Optional)"
-        ></InputText>
-      </div>
-      <div class="flex flex-col w-full text-[14px] -mt-2 h-fit gap-1">
-        <label for="macAddress" class="text-primary-50 font-medium">
-          Location Photo (Optional)
-        </label>
-        <FileUpload
-          accept="image/*"
-          customUpload
-          :show-upload-button="false"
-          :show-cancel-button="false"
-          :multiple="false"
-          @select="
-            async (e) => {
-              if (e.files[0]) form.location = await onUpload(e.files[0]);
-              else errorSelectFile();
-            }
-          "
-        >
-          <template #header="{ chooseCallback, clearCallback }">
-            <div class="flex items-center">
-              <Button
-                @click="
-                  clearCallback();
-                  chooseCallback();
-                "
-                icon="pi pi-plus"
-                label="Choose File"
-                rounded
-                outlined
-              ></Button>
-            </div>
-          </template>
-          <template #content="{ removeFileCallback }">
-            <div
-              v-if="form.location"
-              class="flex justify-between items-center w-full"
-            >
-              <img
-                alt="locationImage"
-                :src="form.location.dataURL"
-                class="w-2/4 h-2/4"
-              />
-              <div class="w-fit">{{ filesize(form.location.size) }}</div>
-              <Button
-                icon="pi pi-times"
-                @click="removeFileCallback(0)"
-                outlined
-                rounded
-                severity="danger"
-              />
-            </div>
-            <div v-else></div>
-          </template>
-          <template #empty>
-            <div class="flex flex-col text-center items-center">
-              <i
-                class="pi pi-cloud-upload border-2 rounded-full text-8xl w-fit p-5"
-              />
-              <p class="mt-4 mb-0 text-[14px]">Drag and drop files to here to upload.</p>
-            </div>
-          </template>
-        </FileUpload>
-      </div>
-      </div>
-      <div class="flex flex-row gap-4 pt-3">
-        <Button
-          :loading="loading"
-          label="Cancel"
-          text
-          @click="
-            showPopupAddDevice = false;
-            resetForm();
-          "
-          :class="'secondaryButton'"
-        ></Button>
-        <Button
-          :loading="loading"
-          label="Add"
-          icon="pi pi-plus" 
-                :class="'primaryButton justify-center'" 
-                :pt="{ label: { class: 'flex-none mr-2' } }"
-          @click="add"
-          :disabled="
-            !form.MACaddress || !form.deviceName || !form.room || !isNumber
-          "
-        ></Button>
-      </div>
-    </Dialog>
+    <ModalAddEditDevice
+      :show="showPopupAddDevice"
+      :onClose="closeModalAddEditDevice"
+    />
     <!-- "Management" -->
     <ul v-if="$route.path === '/admin'">
       <p>Management</p>
@@ -458,7 +150,7 @@ const checkValidRoomNumber = () => {
           modal
           close-on-escape
           :draggable="false"
-          @after-hide="resetForm()"
+          @after-hide="email = ''"
           :pt="{
             content: {
               style:
@@ -467,7 +159,7 @@ const checkValidRoomNumber = () => {
             header: {
               style:
                 'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-            }
+            },
           }"
         >
           <template #header>
@@ -479,7 +171,7 @@ const checkValidRoomNumber = () => {
                 >CMU account
               </label>
               <InputText
-                class="h-8 w-96  rounded-[8px] text-[12px]"
+                class="h-8 w-96 rounded-[8px] text-[12px]"
                 placeholder="example@cmu.ac.th"
                 type="text"
                 v-model="email"
@@ -493,14 +185,12 @@ const checkValidRoomNumber = () => {
                   :class="'secondaryButton'"
                 ></Button>
                 <Button
-                icon="pi pi-plus" 
-                :class="'primaryButton justify-center'" 
-                :pt="{ label: { class: 'flex-none mr-2' } }"
+                  icon="pi pi-plus"
+                  :class="'primaryButton justify-center'"
+                  :pt="{ label: { class: 'flex-none mr-2' } }"
                   label="Add"
-                 
                   type="submit"
                   :disabled="!email.length || !validateEmail()"
-                  
                 ></Button>
               </div>
             </div>

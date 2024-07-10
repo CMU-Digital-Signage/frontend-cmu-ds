@@ -187,10 +187,7 @@ const handleChangePassword = async () => {
         header: {
           style:
             'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        },
-        mask: {
-          style: 'backdrop-filter: blur(2px)',
-        },
+        }
       }"
     >
       <template #header>
@@ -287,10 +284,7 @@ const handleChangePassword = async () => {
         header: {
           style:
             'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        },
-        mask: {
-          style: 'backdrop-filter: blur(2px)',
-        },
+        }
       }"
       ><template #header>
         <div class="header-popup">Forget Emergency Password</div>
@@ -326,10 +320,7 @@ const handleChangePassword = async () => {
         header: {
           style:
             'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
-        },
-        mask: {
-          style: 'backdrop-filter: blur(2px)',
-        },
+        }
       }"
       :closable="false"
     >

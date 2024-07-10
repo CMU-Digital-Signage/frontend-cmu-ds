@@ -45,7 +45,7 @@ createApp(App)
         text: () => ({ class: ["text-[14px]"] }),
         container: (slotProps: any) => ({
           class: [
-            "rounded-md h-fit w-fit right-0 absolute items-center pb-2 border-solid border-0 border-l-[4px] shadow-sm",
+            "rounded-md h-fit w-96 right-0 absolute items-center pb-2 border-solid border-0 border-l-[4px] shadow-sm",
             {
               "border-blue-600 bg-blue-100 bg-opacity-60 text-blue-600": slotProps.props.message.severity == "info",
               "border-green-600 bg-green-100 bg-opacity-60 text-green-600": slotProps.props.message.severity == "success",
@@ -56,6 +56,9 @@ createApp(App)
         }),
         content: (slotProps: any) => ({
           class: ["border-none rounded-lg"],
+        }),
+        summary: () => ({
+          class: ["text-[16px] font-semibold"],
         }),
         detail: () => ({
           class: ["m-0"],
