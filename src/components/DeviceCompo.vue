@@ -34,8 +34,8 @@ const del = async () => {
   const res = await deleteDevice(selectDelDevice.value?.MACaddress || "");
   toast.add({
     severity: "success",
-    summary: "Success",
-    detail: res.message,
+    summary: "Delete success",
+    detail: `Delete ${selectDelDevice.value?.deviceName} success`,
     life: 3000,
   });
   loading.value = false;

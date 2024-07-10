@@ -84,7 +84,7 @@ const del = async () => {
       toast.add({
         severity: "success",
         summary: "Success",
-        detail: "Delete Poster successful.",
+        detail: "Delete Poster success",
         life: 3000,
       });
     } else {

@@ -36,8 +36,8 @@ const del = async () => {
   if (res.ok) {
     toast.add({
       severity: "success",
-      summary: "Success",
-      detail: "Delete admin successfully.",
+      summary: "Delete success",
+      detail: `Delete ${res.user.email} from admin`,
       life: 3000,
     });
   }
