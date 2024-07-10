@@ -170,7 +170,7 @@ const handleAddEmergency = async () => {
   if (res.ok) {
     toast.add({
       severity: "success",
-      summary: "Success",
+      summary: "Upload success",
       detail: "Emergency has been add successfully.",
       life: 3000,
     });
@@ -179,7 +179,7 @@ const handleAddEmergency = async () => {
   } else {
     toast.add({
       severity: "error",
-      summary: "Error",
+      summary: "Upload failed",
       detail: res.message,
       life: 3000,
     });
@@ -194,8 +194,8 @@ const handleAddPoster = async () => {
     store.commit("resetForm");
     toast.add({
       severity: "success",
-      summary: "Success",
-      detail: "Poster has been add successfully.",
+      summary: "Upload success",
+      detail:  `${formPoster.value.type} has been add successfully.`,
       life: 3000,
     });
   } else {
@@ -215,7 +215,7 @@ const handleEditEmergency = async () => {
     toast.add({
       severity: "success",
       summary: "Success",
-      detail: "Emergency has been add successfully.",
+      detail: "Emergency content has been add successfully.",
       life: 3000,
     });
     showSecondDialog.value = false;
@@ -223,7 +223,7 @@ const handleEditEmergency = async () => {
   } else {
     toast.add({
       severity: "error",
-      summary: "Error",
+      summary: "Upload failed",
       detail: res.message,
       life: 3000,
     });
@@ -238,14 +238,14 @@ const handleEditPoster = async () => {
     store.commit("resetForm");
     toast.add({
       severity: "success",
-      summary: "Success",
-      detail: "Poster has been add successfully.",
+      summary: "Edit success",
+      detail: `${formPoster.value.type} has been add successfully.`,
       life: 3000,
     });
   } else {
     toast.add({
       severity: "error",
-      summary: "Error",
+      summary: "Edit failed",
       detail: res.message,
       life: 3000,
     });
@@ -826,7 +826,7 @@ const nextStepPreview = async () => {
               <label class="font-medium text-red-500"> * </label>
             </div>
             <div class="text-[12px] text-[#14c6a4] -mt-1 mb-3">
-            Note: Some websites may not be displayed due to security restrictions.
+            Note: Some websites may not be displayed due to website security restrictions.
             </div>
             <InputText
               v-model="formPoster.image[0].image"

@@ -81,26 +81,29 @@ const search = async () => {
 
 const addEmailAdmin = async () => {
   loading.value = true;
-  if (store.state.allUser?.find((e) => e.email === email.value)?.isAdmin) {
+  const alreadyAdmin = store.state.allUser?.find(
+    (e) => e.email === email.value
+  );
+  if (alreadyAdmin?.isAdmin) {
     toast.add({
       severity: "error",
-      summary: "Invalid",
-      detail: "User already an Admin.",
+      summary: "Already admin",
+      detail: `${alreadyAdmin.email} is already an admin`,
       life: 3000,
     });
     return;
   }
   const newAdmin = await addAdmin(email.value);
   if (newAdmin.ok) {
-    email.value = "";
     showPopup.value = false;
     toast.add({
       severity: "success",
-      summary: "Success",
-      detail: "Add admin successfully.",
+      summary: "Add success",
+      detail: `${email.value} is an admin`,
       life: 3000,
     });
   }
+  email.value = "";
   loading.value = false;
 };
 
