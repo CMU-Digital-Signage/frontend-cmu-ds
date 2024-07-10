@@ -299,7 +299,7 @@ export const statusEmer = [
 ];
 
 export const createUnique = (data: Poster[]) => {
-  store.state.uniquePosters = data.reduce((acc: any[], e: Poster, i:number) => {
+  store.state.uniquePosters = data.reduce((acc: any[], e: Poster) => {
     // Check if the title is not already in the accumulator
     if (!acc.some((poster) => poster.title === e.title)) {
       const currentDate = new Date(new Date().setHours(23, 59, 59, 0));
@@ -336,8 +336,7 @@ export const createUnique = (data: Poster[]) => {
         posterId: e.posterId,
         uploader: e.uploader,
         createdAt: e.createdAt,
-        // type: e.type,
-        type: i%3 == 0 ? TYPE.POSTER : i%3 == 1 ? TYPE.VIDEO : TYPE.WEBVIEW,
+        type: e.type,
         status,
       });
     }
