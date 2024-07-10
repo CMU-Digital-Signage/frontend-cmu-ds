@@ -32,8 +32,9 @@ const toast = useToast();
 
 watch(props, () => {
   showPopup.value = props.show;
-
-  Object.assign(form, props.dataEdit || initialFormDevice);
+  if (props.dataEdit) {
+    Object.assign(form, props.dataEdit);
+  }
 });
 
 const resetForm = () => {
@@ -41,15 +42,33 @@ const resetForm = () => {
   Object.assign(form, initialFormDevice);
 };
 
-const add = async () => {
-  if (form.location?.dataURL) {
-    const fileExtension = form.location.type.split("/")[1];
-    form.location.name = `${form.MACaddress}.${fileExtension}`;
+const addOrEdit = async () => {
+  const invalidName = !form.deviceName?.replace(" ", "").length;
+  const invalidRoom = !form.room?.replace(" ", "").length;
+  if (invalidName || invalidRoom) {
+    toast.add({
+      severity: "error",
+      summary: "Invalid Input",
+      detail: `${invalidName ? "Device Name" : "Room"} Invalid"`,
+      life: 3000,
+    });
+    return;
   }
 
   loading.value = true;
+  if (form.location?.dataURL) {
+    const fileExtension = form.location.type.split("/")[1];
+    form.location.name = `${form.MACaddress}.${fileExtension}`;
+  } else if (form.location) {
+    form.location.name = `${form.MACaddress}.${form.location.name
+      .split(".")
+      .pop()}`;
+  }
+
   let res;
-  if (manualMac.value) {
+  if (props.isEdit) {
+    res = await editDevice(form);
+  } else if (manualMac.value) {
     res = await addDeviceTV(form);
   } else {
     res = await addDevicePi(form);
@@ -59,7 +78,7 @@ const add = async () => {
     toast.add({
       severity: "success",
       summary: "Success",
-      detail: "Add device successfully.",
+      detail: res.message,
       life: 3000,
     });
     resetForm();
@@ -72,54 +91,6 @@ const add = async () => {
     });
   }
   loading.value = false;
-};
-
-const edit = async () => {
-  loading.value = true;
-  const check =
-    !form.deviceName?.replace(" ", "").length ||
-    !form.room?.replace(" ", "").length;
-  if (check) {
-    toast.add({
-      severity: "error",
-      summary: "Invalid Input",
-      detail: "Device Name or Room Invalid",
-      life: 3000,
-    });
-    return;
-  }
-  if (form.location)
-    form.location.name = `${form.MACaddress}.${form.location.name
-      .split(".")
-      .pop()}`;
-
-  const res = await editDevice(form);
-  loading.value = true;
-  if (res.ok) {
-    showPopup.value = false;
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: res.message,
-      life: 3000,
-    });
-  } else {
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: res.message,
-      life: 3000,
-    });
-  }
-  loading.value = false;
-};
-
-const checkValidRoomNumber = () => {
-  const value = form.room;
-  if (!Number.isInteger(Number(value))) {
-    form.room = "";
-    return false;
-  }
 };
 
 const errorSelectFile = () => {
@@ -162,18 +133,11 @@ const errorSelectFile = () => {
     >
       <div class="flex w-full flex-col gap-2 text-[14px] h-fit">
         <div class="inline-block">
-          <label for="deviceName" class="text-primary-50 font-medium">
-            Device Name
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+          <label class="text-primary-50 font-medium"> Device Name </label>
+          <label class="text-[#FF0000] font-medium"> * </label>
         </div>
         <InputText
           v-model:model-value="form.deviceName"
-          @keydown="
-            (e) => {
-              limitCharDevice = form.deviceName?.length === 8;
-            }
-          "
           class="h-8 w-full mb-3 rounded-[8px] text-[12px]"
           placeholder="Limit 8 characters Ex.CPE01 "
           maxlength="8"
@@ -181,7 +145,6 @@ const errorSelectFile = () => {
             'border-red-500 shadow-none':
               form.deviceName?.length === 8 && limitCharDevice,
           }"
-          id="deviceName"
         ></InputText>
         <div class="text-red-500 -mt-5 text-[12px]" tyle="min-height: 1rem;">
           <div v-if="form.deviceName?.length === 8 && limitCharDevice">
@@ -189,12 +152,10 @@ const errorSelectFile = () => {
           </div>
         </div>
       </div>
-      <div class="flex flex-col w-full text-[14px] gap-2 h-fit">
+      <div v-if="!isEdit" class="flex flex-col w-full text-[14px] gap-2 h-fit">
         <div class="inline-flex">
-          <label for="deviceName" class="text-primary-50 font-medium">
-            Device type
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+          <label class="text-primary-50 font-medium"> Device type </label>
+          <label class="text-[#FF0000] font-medium"> * </label>
         </div>
         <Dropdown
           v-model:model-value="manualMac"
@@ -210,21 +171,29 @@ const errorSelectFile = () => {
       </div>
       <div class="flex text-[14px] w-full flex-col gap-2 h-fit">
         <div class="inline-flex">
-          <label
-            for="deviceName"
-            class="text-primary-50 text-[14px] font-medium"
-          >
-            {{ manualMac ? "MAC Address TV" : "MAC Address Raspberry Pi" }}
+          <label class="text-primary-50 text-[14px] font-medium">
+            {{
+              isEdit
+                ? "MAC Address"
+                : manualMac
+                ? "MAC Address TV"
+                : "MAC Address Raspberry Pi"
+            }}
           </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+          <label class="text-[#FF0000] font-medium"> * </label>
         </div>
+        <InputText
+          v-if="isEdit"
+          v-model="form.MACaddress"
+          class="h-8 w-full rounded-[8px] text-[12px] !text-[#a1a1a1] cursor-not-allowed"
+          disabled
+        ></InputText>
         <InputMask
-          v-if="manualMac"
+          v-else-if="manualMac"
           mask="**:**:**:**:**:**"
           v-model="form.MACaddress"
-          class="h-8 w-96 rounded-[8px] text-[12px]"
+          class="h-8 w-full rounded-[8px] text-[12px]"
           placeholder="Ex.ff:ff:ff:ff:ff:ff"
-          id="MACaddress"
         />
         <Dropdown
           v-else
@@ -247,10 +216,8 @@ const errorSelectFile = () => {
     >
       <div class="flex flex-col w-full text-[14px] gap-2 h-fit">
         <div class="inline-block">
-          <label for="macAddress" class="text-primary-50 font-medium">
-            Room
-          </label>
-          <label for="deviceName" class="text-[#FF0000] font-medium"> * </label>
+          <label class="text-primary-50 font-medium"> Room </label>
+          <label class="text-[#FF0000] font-medium"> * </label>
         </div>
         <InputText
           v-model:model-value="form.room"
@@ -259,15 +226,17 @@ const errorSelectFile = () => {
           maxlength="5"
           :class="{
             'border-red-500 shadow-none':
-              (form?.room?.length && form.room.length > 5 && limitCharRoom) 
+              form?.room?.length && form.room.length > 5 && limitCharRoom,
           }"
         ></InputText>
-        <div class="text-red-500 -mt-5 text-[12px]" tyle="min-height: 1rem;">
-        </div>
+        <div
+          class="text-red-500 -mt-5 text-[12px]"
+          tyle="min-height: 1rem;"
+        ></div>
       </div>
 
       <div class="flex flex-col w-full gap-1 fix text-[14px] h-fit">
-        <label for="macAddress" class="text-primary-50 font-medium">
+        <label class="text-primary-50 font-medium">
           Location Description
         </label>
         <InputText
@@ -277,7 +246,7 @@ const errorSelectFile = () => {
         ></InputText>
       </div>
       <div class="flex flex-col w-full text-[14px] -mt-2 h-fit gap-1">
-        <label for="macAddress" class="text-primary-50 font-medium">
+        <label class="text-primary-50 font-medium">
           Location Photo (Optional)
         </label>
         <FileUpload
@@ -349,7 +318,6 @@ const errorSelectFile = () => {
     </div>
     <div class="flex flex-row gap-4 pt-3">
       <Button
-        :loading="loading"
         label="Cancel"
         text
         @click="resetForm()"
@@ -357,14 +325,12 @@ const errorSelectFile = () => {
       ></Button>
       <Button
         :loading="loading"
-        :label= "isEdit ? 'Done' : 'Add'"
+        :label="isEdit ? 'Done' : 'Add'"
         :icon="isEdit ? '' : 'pi pi-plus'"
         :class="'primaryButton justify-center'"
         :pt="{ label: { class: 'flex-none mr-2' } }"
-        @click="add"
-        :disabled="
-          !form.MACaddress || !form.deviceName || !form.room 
-        "
+        @click="addOrEdit"
+        :disabled="!form.MACaddress || !form.deviceName || !form.room"
       ></Button>
     </div>
   </Dialog>
