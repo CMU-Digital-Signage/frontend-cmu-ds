@@ -1,4 +1,4 @@
-import { TYPE } from "@/utils/enum";
+import { MAP_TYPE } from "@/utils/enum";
 
 export interface User {
   id: string;
@@ -36,7 +36,7 @@ export interface Poster {
   duration: number;
   uploader: string;
   status: string;
-  type: TYPE;
+  type: MAP_TYPE;
 }
 
 export interface ImageCollection {

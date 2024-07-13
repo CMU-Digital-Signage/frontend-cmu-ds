@@ -1,17 +1,11 @@
 <script setup lang="ts">
 import NavbarBelow from "@/components/NavbarBelow.vue";
-import { computed, ref, watch, onUnmounted, onMounted } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import store from "@/store";
 import { useRoute } from "vue-router";
-import {
-  apiBaseUrl,
-  dateFormatter,
-  loopPoster,
-  calculateScreenHeight,
-  convertUrlToFile,
-} from "@/utils/constant";
+import { dateFormatter } from "@/utils/constant";
 import { Poster } from "@/types";
-import { TYPE } from "@/utils/enum";
+import { MAP_TYPE } from "@/utils/enum";
 
 const route = useRoute();
 const mac = route.params.mac as string;
@@ -127,7 +121,7 @@ const rowStyle = (rowData: any) => {
           scrollDirection="vertical"
           scrollable
           scrollHeight="flex"
-          :virtualScrollerOptions="{ itemSize: (posters?.length || 1)+35 }"
+          :virtualScrollerOptions="{ itemSize: (posters?.length || 1) + 35 }"
           class="text-[14px] lg:text-[14px] w-full"
           v-model:selection="selectPoster"
           :value="posters"
@@ -171,7 +165,7 @@ const rowStyle = (rowData: any) => {
           v-else
           class="flex justify-center items-center"
           :class="{
-            'overflow-hidden relative': selectPoster?.type == TYPE.WEBVIEW,
+            'overflow-hidden relative': selectPoster?.type == MAP_TYPE.WEBVIEW,
           }"
           :style="{
             width: `${2160 / 6.5}px`,
@@ -215,7 +209,7 @@ const rowStyle = (rowData: any) => {
             leave-to-class="opacity-0"
           >
             <iframe
-              v-if="selectPoster?.type == TYPE.WEBVIEW"
+              v-if="selectPoster?.type == MAP_TYPE.WEBVIEW"
               title="webview"
               :src="`${selectImage}`"
               :width="`${2160 / 2}px`"

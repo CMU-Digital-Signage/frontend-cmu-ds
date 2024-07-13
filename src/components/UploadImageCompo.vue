@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+
 export default defineComponent({
   name: "UploadImage",
 });
@@ -9,6 +10,7 @@ export default defineComponent({
 import { computed, ref, toRefs, defineProps, onMounted } from "vue";
 import { convertUrlToFile, onUpload, rotate } from "@/utils/constant";
 import store from "@/store";
+import { CONTENT_CODE } from "@/utils/enum";
 import { useToast } from "primevue/usetoast";
 
 const props = defineProps<{ posType: string; maxImage: number | undefined }>();
@@ -98,7 +100,7 @@ const removeImage = (i: number) => {
     class="mt-12"
     accept="image/*"
     :show-upload-button="false"
-    :multiple="posType === 'NP'"
+    :multiple="[CONTENT_CODE.Poster, CONTENT_CODE.Video].includes(posType as CONTENT_CODE)"
     :fileLimit="maxImage"
     :maxFileSize="52428800"
     :pt="{

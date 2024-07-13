@@ -3,7 +3,7 @@ import store from "./store";
 import { computed, onMounted, onUnmounted, watch } from "vue";
 import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
-import PopupUpload from "@/components/PopupUploadCompo.vue";
+import ModalUpload from "@/components/Modal/ModalUpload.vue";
 import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
@@ -80,7 +80,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <PopupUpload />
+  <ModalUpload />
   <div
     class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-sf-pro font-weight:100;"
     v-if="!$route.meta.hideSidebar && user.id"
@@ -299,7 +299,8 @@ Button:focus {
   background: #909090;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
