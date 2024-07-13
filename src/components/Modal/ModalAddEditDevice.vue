@@ -11,7 +11,7 @@ import store from "@/store";
 import { onUpload, initialFormDevice } from "@/utils/constant";
 import InputMask from "primevue/inputmask";
 import { useToast } from "primevue/usetoast";
-import { computed, reactive, ref, defineProps, onMounted, watch } from "vue";
+import { computed, reactive, ref, defineProps, watch } from "vue";
 import { filesize } from "filesize";
 import { Device } from "@/types";
 type Props = {

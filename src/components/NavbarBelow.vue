@@ -6,83 +6,34 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { Poster } from "@/types";
-import { computed, ref, defineModel } from "vue";
-import { useToast } from "primevue/usetoast";
-import { dateFormatter, setNorForm } from "@/utils/constant";
-import { deletePoster } from "@/services";
+import { computed, ref, defineModel, watch } from "vue";
+import { setNorForm } from "@/utils/constant";
+import ModalInfoContent from "@/components/Modal/ModalInfoContent.vue";
 
-const poster = defineModel<Poster | undefined>({ default: undefined });
-const toast = useToast();
+const poster = defineModel<any>({ default: undefined });
 const user = computed(() => store.state.userInfo);
 const showInfo = ref(false);
 const deletePopup = ref(false);
-const loading = ref(false);
 
-const del = async () => {
-  loading.value = true;
-  await deletePoster(poster.value!.posterId);
-  toast.add({
-    severity: "success",
-    summary: "Success",
-    detail: "Delete Poster successful.",
-    life: 3000,
-  });
-  loading.value = false;
+watch(poster, () => {
+  if (poster.value) {
+    const onDevice = store.state.posters
+      ?.filter((e) => e.posterId == poster.value.posterId)
+      .map((e) => e.MACaddress);
+    poster.value.onDevice = store.state.devices
+      ?.filter((e) => onDevice?.includes(e.MACaddress!))
+      .map((e) => e.deviceName);
+  }
+});
+
+const closeModalInfoContent = () => {
+  showInfo.value = false;
   deletePopup.value = false;
 };
 </script>
 
 <template>
   <Toast />
-  <Dialog
-    v-model:visible="deletePopup"
-    modal
-    :closable="!loading"
-    close-on-escape
-    :draggable="false"
-    class="w-[425px]"
-    :pt="{
-      content: {
-        style:
-          'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
-      },
-      header: {
-        style: 'border-top-left-radius: 20px; border-top-right-radius: 20px; ',
-      }
-    }"
-  >
-    <template #header>
-      <div class="header-popup">
-        Delete
-        {{ `"${poster?.title}" Poster` }}?
-      </div>
-    </template>
-    <div class="flex flex-col gap-2 text-[14px]">
-      <div>
-        Deleting this poster or collection will be permenently deleted from all
-        devices.
-      </div>
-      <div class="inline-block">
-        <div class="flex flex-row gap-4 pt-3">
-          <Button
-            text
-            :loading="loading"
-            label="Cancel"
-            @click="deletePopup = false"
-            :class="'secondaryButton'"
-          ></Button>
-          <Button
-            :loading="loading"
-            label="Delete Poster"
-            :class="'primaryButtonDel'"
-            type="submit"
-            @click="del()"
-          ></Button>
-        </div>
-      </div>
-    </div>
-  </Dialog>
   <div
     class="bg-none border-t-[1px] border-neutral-300 h-14 py-[26px] px-6 flex items-center"
   >
@@ -98,15 +49,14 @@ const del = async () => {
           store.commit('resetFilter');
         "
       />
-
       <div class="flex items-center justify-end w-full gap-3">
-        <Button
+        <!-- <Button
           label="About"
           severity="primary"
           icon="pi pi-info  rounded-full text-white p-[4px]"
           class="border-none text-white font-semibold gap-1 w-fit h-10 rounded-lg flex items-center justify-center hover:bg-blue-600"
           @click="showInfo = true"
-        />
+        /> -->
         <Button
           v-if="user.isAdmin || user.id === poster?.id"
           label="Edit"
@@ -125,70 +75,13 @@ const del = async () => {
       </div>
     </ul>
   </div>
-  <Dialog
+  <ModalInfoContent
     v-if="poster"
-    v-model:visible="showInfo"
-    modal
-    :draggable="false"
-    class="w-[500px] z-[100]"
-  >
-    <template #header>
-      <div class="inline-flex font-bold text-2xl gap-3 items-start">
-        <div class="flex flex-col">
-          <p>{{ poster.title }}</p>
-          <!-- Start Date to End Date -->
-          <p class="text-[14px] text-[#8d8d8d] -mt-1">
-            <span>{{ dateFormatter(poster.startDate, 3) }} - </span>
-            <span>{{ dateFormatter(poster.endDate, 3) }}</span>
-          </p>
-        </div>
-      </div>
-    </template>
-    <div class="flex flex-col gap-2">
-      <!-- Number of Poster -->
-      <div class="posterDetail">
-        <p>Number of Poster</p>
-        <p>{{ poster.image.length }} Posters</p>
-      </div>
-      <!-- Running Time -->
-      <div class="posterDetail">
-        <p>Running Time</p>
-        <p
-          v-if="
-            poster.startTime.getHours() === 0 &&
-            poster.endTime.getHours() === 23 &&
-            poster.endTime.getMinutes() === 59
-          "
-        >
-          All Day
-        </p>
-        <p v-else>
-          {{ poster.startTime.toTimeString().slice(0, 5) }} -
-          {{ poster.endTime.toTimeString().slice(0, 5) }}
-        </p>
-      </div>
-      <!-- Duration -->
-      <div class="posterDetail">
-        <p>Display Duration</p>
-        <p>{{ poster.duration * poster.image.length }} sec</p>
-      </div>
-
-      <!-- Uploader -->
-      <div class="posterDetail">
-        <p>Uploader</p>
-        <p>{{ poster.uploader }}</p>
-      </div>
-
-      <!-- Description -->
-      <div class="posterDetail flex-col gap-1">
-        <p class="font-[800px] text-[#535353]">Description</p>
-        <div class="bg-[#e9f2fd] rounded-lg p-3 px-5">
-          <p class="font-notoThai">{{ poster.description }}</p>
-          <p v-if="!poster.description">-</p>
-        </div>
-      </div>
-    </div>
-  </Dialog>
+    :show="showInfo"
+    :data="poster"
+    :onClose="closeModalInfoContent"
+    :deletecontent="deletePopup"
+  />
 </template>
 
 <style scoped>

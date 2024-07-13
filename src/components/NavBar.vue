@@ -6,13 +6,13 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import store from "@/store";
-import { computed, reactive, ref, watchEffect, defineProps } from "vue";
+import { computed, ref, watchEffect, defineProps } from "vue";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { addAdmin, searchPoster } from "@/services";
 import { typePoster, statusPoster, statusEmer } from "@/utils/constant";
-import { TYPE } from "@/utils/enum";
 import { Poster } from "@/types";
+import { TYPE, MAP_TYPE } from "@/utils/enum";
 import ModalAddEditDevice from "@/components/Modal/ModalAddEditDevice.vue";
 
 const filterInput = computed(() => store.state.filterInputPosters);
@@ -377,13 +377,9 @@ const closeModalAddEditDevice = () => {
             <Tag
               rounded
               :icon="`pi pi-${
-                slotProps.option.type === TYPE.POSTER
-                  ? 'images'
-                  : slotProps.option.type === TYPE.VIDEO
-                  ? 'video'
-                  : 'link'
+                typePoster.find((e) => e.type == slotProps.option.type)?.icon
               }`"
-              :value="slotProps.option.type"
+              :value="TYPE[slotProps.option.type as MAP_TYPE]"
               :severity="slotProps.option.severity"
               :pt="{
                 value: 'text-[12px]',

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
-  name: "PopupUpload",
+  name: "ModalUpload",
 });
 </script>
 <script setup lang="ts">
@@ -28,7 +28,7 @@ import Skeleton from "primevue/skeleton";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Panel from "primevue/panel";
-import { TYPE } from "@/utils/enum";
+import { CONTENT_CODE, MAP_TYPE } from "@/utils/enum";
 
 const toast = useToast();
 const limitCharTitle = ref(false);
@@ -43,11 +43,21 @@ const uploadState = ref([
   { label: "Orientation & Review" },
 ]);
 const contentType = ref([
-  { header: "Poster", code: "NP", icon: "images", disabled: false },
-  { header: "Video (Coming soon)", code: "VDO", icon: "video", disabled: true },
+  {
+    header: "Poster",
+    code: CONTENT_CODE.Poster,
+    icon: "images",
+    disabled: false,
+  },
+  {
+    header: "Video (Coming soon)",
+    code: CONTENT_CODE.Video,
+    icon: "video",
+    disabled: true,
+  },
   {
     header: "Website URL",
-    code: "WV",
+    code: CONTENT_CODE.Webview,
     icon: "link",
     disabled: false,
   },
@@ -293,13 +303,13 @@ const isNextButtonDisabled = computed(() => {
 const showDifferentDialog = () => {
   showUpload.value = false;
   if (selectedContentType.value.code === "NP") {
-    store.state.formPoster.type = TYPE.POSTER;
+    store.state.formPoster.type = MAP_TYPE.POSTER;
     selectedContentType.value = contentType.value[0];
   } else if (selectedContentType.value.code === "VDO") {
-    store.state.formPoster.type = TYPE.VIDEO;
+    store.state.formPoster.type = MAP_TYPE.VIDEO;
     selectedContentType.value = contentType.value[1];
   } else if (selectedContentType.value.code === "WV") {
-    store.state.formPoster.type = TYPE.WEBVIEW;
+    store.state.formPoster.type = MAP_TYPE.WEBVIEW;
     selectedContentType.value = contentType.value[2];
   } else if (selectedContentType.value.code === "EP") {
     selectedContentType.value = contentType.value[3];
@@ -494,7 +504,7 @@ const nextStepPreview = async () => {
       selectedContentType.value.code === "NP" ? "Image" : "Video"
     } selected not found.`;
   } else if (
-    formPoster.value.type == TYPE.WEBVIEW &&
+    formPoster.value.type == MAP_TYPE.WEBVIEW &&
     !formPoster.value.image[0].image.length
   ) {
     err = "URL is empty";
@@ -504,7 +514,7 @@ const nextStepPreview = async () => {
       priority: formPoster.value.image[0].priority,
     } as any;
     if (selectedContentType.value.code === "WV") {
-      loading.value = true
+      loading.value = true;
       const res = await getIframe(formPoster.value.image[0].image);
       if (res.ok) {
         loadingWebview.value = true;
@@ -516,10 +526,10 @@ const nextStepPreview = async () => {
           detail: res.message,
           life: 3000,
         });
-        loading.value = false
+        loading.value = false;
         return;
       }
-      loading.value = false
+      loading.value = false;
     } else {
       selectRotate.value.image = formPoster.value.image[0].image.dataURL;
     }
@@ -789,7 +799,13 @@ const nextStepPreview = async () => {
         </div>
 
         <div v-if="currentState === 1">
-          <div v-if="selectedContentType.code === 'NP'">
+          <div
+            v-if="
+              [CONTENT_CODE.Poster, CONTENT_CODE.Video].includes(
+                selectedContentType.code as CONTENT_CODE
+              )
+            "
+          >
             <div class="bg-[#f2f2f2] p-2 px-4 rounded-lg justify-center mb-3">
               <div class="text-[14px] text-center mt-2 text-red-500">
                 Upload limit: {{ maxImage }} contents
@@ -813,7 +829,7 @@ const nextStepPreview = async () => {
           </div>
 
           <div
-            v-else-if="selectedContentType.code === 'WV'"
+            v-else-if="selectedContentType.code === CONTENT_CODE.Webview"
             class="bg-white p-2 px-4 rounded-lg items-start justify-start"
             style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
           >
@@ -843,7 +859,7 @@ const nextStepPreview = async () => {
               @click="currentState = 0"
             ></Button>
             <Button
-            :loading="loading"
+              :loading="loading"
               label="Next"
               icon="pi pi-arrow-right "
               :class="'primaryButton  justify-center '"
@@ -1012,7 +1028,7 @@ const nextStepPreview = async () => {
               </div>
 
               <div
-                v-if="selectedContentType.code === 'NP'"
+                v-if="selectedContentType.code !== 'EP'"
                 class="border-[2px] border-[#D9D9D9] grid grid-cols-3 gap-2 p-2 justify-center rounded-xl w-full max-h-full min-h-full overflow-auto"
               >
                 <div
@@ -1146,7 +1162,7 @@ const nextStepPreview = async () => {
             ></Button>
             <Button
               :label="editcontentType.code ? 'Done' : 'Upload'"
-              :icon="editcontentType.code  ? '' : 'pi pi-upload'"
+              :icon="editcontentType.code ? '' : 'pi pi-upload'"
               :class="'primaryButton justify-center'"
               :loading="loading"
               :pt="{ label: { class: 'flex-none ml-2' } }"

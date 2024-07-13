@@ -71,14 +71,14 @@ watch(filterDevice, () => {
     <div class="h-full overflow-y-auto p-4">
       <DataTable v-if="loading" :value="new Array(10)">
         <Column class="w-[170px] text-[12px] border-r-[#dddddd] border-r-[1px]">
-          <template #body
-            ><Skeleton width="100%" height="30px"></Skeleton
-          ></template>
+          <template #body>
+            <Skeleton width="100%" height="30px"></Skeleton>
+          </template>
         </Column>
         <Column>
-          <template #body
-            ><Skeleton width="100%" height="30px"></Skeleton
-          ></template>
+          <template #body>
+            <Skeleton width="100%" height="30px"></Skeleton>
+          </template>
         </Column>
       </DataTable>
       <DataTable
@@ -93,7 +93,7 @@ watch(filterDevice, () => {
       >
         <Column
           field="date"
-          class="w-fit text-[#575757]  border-r-[#dddddd] border-r-[1px] px-4"
+          class="w-fit text-[#575757] border-r-[#dddddd] border-r-[1px] px-4"
         >
           <template #body="item">
             <div class="flex flex-row gap-1 items-center">
@@ -103,7 +103,6 @@ watch(filterDevice, () => {
               <p>{{ dayOfWeek[item.data.day] }},</p>
               <p>{{ month[item.data.month] }}</p>
               <p>{{ item.data.year }}</p>
-             
             </div>
           </template>
         </Column>

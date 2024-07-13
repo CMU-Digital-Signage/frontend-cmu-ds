@@ -4,7 +4,7 @@ import { Device, Display, Emergency, Poster } from "@/types";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { Ref } from "vue";
-import { CONTENT_CODE, TYPE } from "./enum";
+import { CONTENT_CODE, MAP_TYPE, TYPE } from "./enum";
 
 export const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export const checkTokenExpired = async (token: string) => {
@@ -284,9 +284,9 @@ export const setFieldPoster = (data: Poster[]) => {
 };
 
 export const typePoster = [
-  { type: TYPE.POSTER, severity: "poster" },
-  { type: TYPE.VIDEO, severity: "video" },
-  { type: TYPE.WEBVIEW, severity: "webview" },
+  { type: MAP_TYPE.POSTER, severity: "poster", icon: "images" },
+  { type: MAP_TYPE.VIDEO, severity: "video", icon: "video" },
+  { type: MAP_TYPE.WEBVIEW, severity: "webview", icon: "link" },
 ];
 export const statusPoster = [
   { status: "Displayed", severity: "success" },
