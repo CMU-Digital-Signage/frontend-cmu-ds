@@ -147,6 +147,7 @@ const resetSelect = () => {
       :field="(e) => dateFormatter(e.createdAt)"
       header="Upload Date"
       sortable
+      :sortField="(e) => e.createdAt.getTime()"
       class="w-1/5"
     >
       <template #sorticon="slotProps">
@@ -160,7 +161,6 @@ const resetSelect = () => {
         ></i>
       </template>
     </Column>
-
     <Column
       v-if="props.types !== 'EP'"
       sortable
@@ -266,7 +266,6 @@ const resetSelect = () => {
         />
       </template>
     </Column>
-
     <Column
       field="management"
       header="Action"
