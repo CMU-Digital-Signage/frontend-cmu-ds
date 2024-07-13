@@ -6,7 +6,7 @@
       class="w-full rounded-none md:w-4/5 h-full relative md:h-3/4 bg-[rgba(255,255,255,0.55)] drop-shadow-xl md:rounded-[15px] flex lg:flex-col items-center text-center"
     >
       <img
-        class="absolute md:mt-6 md:ml-6 w-24 h-7 mt-4 ml-4 top-0 left-0 md:w-36 md:h-fit lg:mt-8 lg:ml-20"
+        class="absolute md:mt-6 md:ml-6 w-24 h-7 mt-4 ml-4 top-0 left-0 md:w-36 md:h-11 lg:mt-8 lg:ml-20"
         alt="cpelogo"
         src="../assets/images/cpe-logo.png"
       />

@@ -207,7 +207,7 @@ const resetSelect = () => {
           @mouseleave="(e) => toggleShowStatus(e)"
         ></i>
         <OverlayPanel
-          class="w-fit h-fit max-w-full max-h-full text-[12px] p-2 rounded-lg"
+          class="w-fit bg h-fit max-w-full max-h-full text-[12px] p-2 rounded-lg"
           ref="isOverlayPanelVisible"
         >
           <div class="flex flex-col gap-3">

@@ -284,14 +284,14 @@ export const setFieldPoster = (data: Poster[]) => {
 };
 
 export const typePoster = [
-  { type: MAP_TYPE.POSTER, severity: "info", icon: "images" },
-  { type: MAP_TYPE.VIDEO, severity: "warning", icon: "video" },
-  { type: MAP_TYPE.WEBVIEW, severity: "secondary", icon: "link" },
+  { type: MAP_TYPE.POSTER, severity: "poster", icon: "images" },
+  { type: MAP_TYPE.VIDEO, severity: "video", icon: "video" },
+  { type: MAP_TYPE.WEBVIEW, severity: "webview", icon: "link" },
 ];
 export const statusPoster = [
   { status: "Displayed", severity: "success" },
   { status: "Awaited", severity: "info" },
-  { status: "Expired", severity: "danger" },
+  { status: "Expired", severity: "secondary" },
 ];
 export const statusEmer = [
   { status: "Inactive", severity: "secondary" },
