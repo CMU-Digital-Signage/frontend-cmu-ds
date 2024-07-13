@@ -291,7 +291,7 @@ export const typePoster = [
 export const statusPoster = [
   { status: "Displayed", severity: "success" },
   { status: "Awaited", severity: "info" },
-  { status: "Expired", severity: "secondary" },
+  { status: "Expired", severity: "danger" },
 ];
 export const statusEmer = [
   { status: "Inactive", severity: "secondary" },
