@@ -15,12 +15,14 @@
   src: url("~@/assets/fonts/SF-Pro.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  -webkit-font-smoothing: antialiased;
 }
 
 @font-face {
   font-family: "SF Pro";
   src: url("~@/assets/fonts/SF-Pro-Italic.ttf") format("truetype");
   font-weight: normal;
+  -webkit-font-smoothing: antialiased;
   font-style: italic;
 }
 
@@ -29,6 +31,7 @@
   src: url("~@/assets/fonts/SF-Pro-Rounded-Medium.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
+  -webkit-font-smoothing: antialiased;
 }
 
 @font-face {
@@ -36,5 +39,6 @@
   src: url("~@/assets/fonts/NotoSansThai.ttf") format("opentype");
   font-weight: normal;
   font-style: normal;
+  -webkit-font-smoothing: antialiased;
 }
 

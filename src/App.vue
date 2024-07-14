@@ -128,12 +128,18 @@ onUnmounted(() => {
   -webkit-font-smoothing: subpixel-antialiased !important;
   text-rendering: optimizeLegibility !important;
   text-align: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body * {
   -webkit-font-smoothing: subpixel-antialiased !important;
   text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
 }
+
+
 
 .rectangle {
   // width: 100%;
