@@ -53,15 +53,18 @@ const showDialog = () => {
 const sendEmailDialog = async () => {
   loading.value = true;
   const res = await sendEmail();
+
   if (res.ok) {
-    toast.add({
-      severity: "success",
-      summary: "Success",
-      detail: "Send email successfull.",
-      life: 3000,
-    });
-    loading.value = false;
-    secondDialogVisible.value = false;
+    setTimeout(() => {
+      toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Email sent successfully.",
+        life: 3000,
+      });
+      loading.value = false;
+      secondDialogVisible.value = false;
+    }, 10000);
   } else {
     toast.add({
       severity: "error",
@@ -72,6 +75,8 @@ const sendEmailDialog = async () => {
     loading.value = false;
   }
 };
+
+
 
 const showSecondDialog = () => {
   dialogVisible.value = false;
@@ -187,78 +192,77 @@ const handleChangePassword = async () => {
         header: {
           style:
             'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        }
+        },
       }"
     >
       <template #header>
-        <div class="flex flex-col">
-          <div class="header-popup">Change Emergency Password</div>
-          <p v-if="user" class="text-[14px] mt-2 font-thin text-[#14C6A4]">
-            {{ user.firstName }} {{ user.lastName }}
-          </p>
-        </div>
-      </template>
 
+          <div class="header-popup">Change Emergency Password</div>
+          
+       
+      </template>
+      <div class="text-[14px] mb-8 text-[#049a7e] font-semibold">
+          Pixelparade | {{ user.firstName }} {{ user.lastName }}
+        </div>
       <div class="flex flex-col gap-1 w-full">
-        <FloatLabel class="mt-6">
-          <Password
-            id="currentPassword"
-            v-model="oldPassword"
-            input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
-            class="w-full"
-            :feedback="false"
-            toggle-mask
-            :pt="{
-              input: {
-                class: ` text-[12px] font-sf-pro`,
-              },
-            }"
-          />
-          <label for="currentPassword" class="text-[12px] flex text-center"
-            >Current Password</label
-          >
-        </FloatLabel>
-        <FloatLabel class="mt-6">
-          <Password
-            id="newPassword"
-            v-model="password"
-            input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
-            class="w-full"
-            :feedback="false"
-            toggle-mask
-            :pt="{
-              input: {
-                class: ` text-[12px] font-sf-pro`,
-              },
-            }"
-          />
-          <label class="text-[12px] flex text-center" for="newPassword"
-            >New Password</label
-          >
-        </FloatLabel>
-        <FloatLabel class="mt-6">
-          <Password
-            id="reTypeNewPassword"
-            input-class="w-screen h-9 text-[12px] rounded-[6px] border-1"
-            class="w-full"
-            v-model="cfPassword"
-            :feedback="false"
-            toggle-mask
-            :pt="{
-              input: {
-                class: ` text-[12px] font-sf-pro`,
-              },
-            }"
-          />
-          <label class="text-[12px] flex text-center" for="reTypeNewPassword"
-            >Re-type new password</label
-          >
-        </FloatLabel>
+        <label for="currentPassword" class="text-[12px] flex text-center"
+          >Current Password</label
+        >
+        <Password
+          id="currentPassword"
+           placeholder="••••••••••"
+          v-model="oldPassword"
+                   input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full mb-3 h-9"
+          :feedback="false"
+          toggle-mask
+          :pt="{
+            input: {
+              class: ` text-[12px] font-sf-pro`,
+            },
+          }"
+        />
+
+        <label class="text-[12px] flex text-center" for="newPassword"
+          >New Password</label
+        >
+        <Password
+          id="newPassword"
+          v-model="password"
+                   input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full mb-3 h-9"
+          :feedback="false"
+           placeholder="••••••••••"
+          toggle-mask
+          :pt="{
+            input: {
+              class: ` text-[12px] font-sf-pro`,
+            },
+          }"
+        />
+        <label class="text-[12px] flex text-center" for="reTypeNewPassword"
+          >Re-type new password</label
+        >
+        <Password
+          id="reTypeNewPassword"
+            placeholder="••••••••••"
+          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full  h-9"
+          v-model="cfPassword"
+          :feedback="false"
+          toggle-mask
+          :pt="{
+            input: {
+              class: ` text-[12px] font-sf-pro`,
+            },
+          }"
+        />
+
         <Button
           text
           link
           @click="showSecondDialog"
-          class="-ml-3 w-fit font-normal text-[12px] text-[#1b7be8] bg-none"
+          class="-ml-3 mb-8 w-fit font-normal text-[12px] text-[#049a7e] bg-none"
           >Forget your password?</Button
         >
         <Button
@@ -266,7 +270,7 @@ const handleChangePassword = async () => {
           text
           :class="'primaryButton'"
           @click="handleChangePassword"
-             :pt="{ label: {class: 'text-[14px]'}}"
+          :pt="{ label: { class: 'text-[14px]' } }"
         ></Button></div
     ></Dialog>
 
@@ -284,16 +288,15 @@ const handleChangePassword = async () => {
         header: {
           style:
             'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        }
+        },
       }"
       ><template #header>
         <div class="header-popup">Forget Emergency Password</div>
       </template>
-      <p v-if="user" class="text-[14px]">
+      <p v-if="user" class="text-[14px] mb-8">
         We'll send a password reset confirmation to
-        <span class="text-[#1b7be8] font-extrabold">{{ user.email }}</span>
-        Check your inbox (including Spam and Junk) to reset your emergency
-        password.
+        <span class="text-[#049a7e] font-extrabold">{{ user.email }}</span>
+        Check your inbox (including Spam and Junk).  It may take 1-2 minutes for the email to arrive.
       </p>
       <Button
         label="Send Email"
@@ -301,87 +304,91 @@ const handleChangePassword = async () => {
         text
         @click="sendEmailDialog"
         :class="'primaryButton'"
-        :pt="{ label: {class: 'text-[14px]'}}"
+        :pt="{ label: { class: 'text-[14px]' } }"
       ></Button>
     </Dialog>
 
     <!-- //dialog Set Password -->
     <Dialog
       v-model:visible="dialogSetPassword"
-      class="w-[550px]"
+      class="w-[500px]"
       modal
       :close-on-escape="false"
       :draggable="false"
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7);',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;',
         },
         header: {
           style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px; background-image: linear-gradient(to right, #f4feff, #F6FDF7); ',
-        }
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
+        },
       }"
       :closable="false"
     >
       <template #header>
-        <div class="header-popup">Set Your Emergency Password</div>
-      </template>
-      <div class="mb-6 gap-7 rounded-xl h-fit p-4">
-        <div class="inline-flex">
-          <i class="pi pi-info-circle mb-1 mr-2 text-[#0067A0] text-3xl"></i>
-          <p v-if="user" class="text-xl mb-2 font-bold text-[#0067A0]">
-            Hello! {{ user.firstName }} {{ user.lastName }}
-          </p>
+        <div class="flex flex-col">
+          <div class="header-popup">Set your emergency password</div>
         </div>
-        <p class="ml-9">
-          pixelParade provides an Emergency Activation feature, as shown on the
-          login page, to display emergency posters on all screens.
+      </template>
+
+      <div class="mb-4 gap-7 rounded-xl h-fit">
+        <div class="text-[14px] text-[#049a7e] font-semibold">
+          Pixelparade | {{ user.firstName }} {{ user.lastName }}
+        </div>
+        <div class="text-[12px] mt-2 mb-8 font-thin text-[#828282]">
+          Pixelparade includes an Emergency Activation feature to display
+          emergency posters on all screens.
           <span class="font-bold text-black">
-            Before using this website, please set your Emergency Password. This
-            password is used to activate the emergency poster during an
-            incident.</span
-          >
-        </p>
+            Set your Emergency Password to activate this feature during an
+            incident.
+          </span>
+        </div>
       </div>
 
-      <label class="text-[17px] w- font-semibold pt-2 w-32"> </label>
+      <label class="text-[17px] font-semibold pt-2 w-32"> </label>
       <div class="flex flex-col gap-2 w-full">
-        <FloatLabel class="mt-4">
-          <Password
-            id="Password"
-            v-model="password"
-            input-class="w-screen rounded-[12px] border-1"
-            class="w-full"
-            :feedback="false"
-            toggle-mask
-          />
-          <label for="newPassword">Password</label>
-        </FloatLabel>
-        <FloatLabel class="mt-6">
-          <Password
-            id="confirmPassword"
-            input-class="w-screen rounded-[12px] border-1"
-            class="w-full"
-            v-model="cfPassword"
-            :feedback="false"
-            toggle-mask
-          />
-          <label for="reTypeNewPassword">Confirm password</label>
-        </FloatLabel>
-        <div class="inline-flex">
+        <label
+          class="text-[12px] flex font-semibold text-center"
+          for="newPassword"
+          >Password</label
+        >
+        <Password
+          id="Password"
+          v-model="password"
+          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full mb-3 h-9"
+          :feedback="false"
+          toggle-mask
+            placeholder="••••••••••"
+        />
+        <label class="text-[12px] flex text-center" for="reTypeNewPassword"
+          >Confirm password</label
+        >
+        <Password
+          id="confirmPassword"
+          input-class="w-screen rounded-[8px] text-[12px] bg-[#eeeeee] border-none"
+          class="w-full mb-5 h-9"
+          v-model="cfPassword"
+          :feedback="false"
+          toggle-mask
+             placeholder="••••••••••"
+        />
+
+        <div class="flex flex-inline gap-4 pt-3">
           <Button
             label="Later, Log Out"
             text
             @click="signOut()"
-            :class="'secondaryButton1'"
+            :class="'primaryButtonDel'"
             type="submit"
           ></Button>
           <Button
             label="Confirm"
             text
             @click="checkMatchPassword"
-            :class="'primaryButton1'"
+            :class="'primaryButton1 justify-center'"
             type="submit"
           ></Button>
         </div></div
@@ -456,9 +463,13 @@ const handleChangePassword = async () => {
           :pt="{ label: { class: 'flex-none ml-3 text-white' } }"
         >
           <template #icon>
-            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-  <rect fill="none" height="256" width="256" />
-
+            <svg
+              viewBox="0 0 256 256"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+            >
+              <rect fill="none" height="256" width="256" />
 
               <path
                 d="M138.7,175.5l-19.2,52.1a8,8,0,0,1-15,0L85.3,175.5a8.1,8.1,0,0,0-4.8-4.8L28.4,151.5a8,8,0,0,1,0-15l52.1-19.2a8.1,8.1,0,0,0,4.8-4.8l19.2-52.1a8,8,0,0,1,15,0l19.2,52.1a8.1,8.1,0,0,0,4.8,4.8l52.1,19.2a8,8,0,0,1,0,15l-52.1,19.2A8.1,8.1,0,0,0,138.7,175.5Z"
@@ -534,12 +545,15 @@ const handleChangePassword = async () => {
             );
           "
           @click="store.state.showUpload = true"
- 
-          >
+        >
           <template #icon>
-            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
-  <rect fill="none" height="256" width="256" />
-
+            <svg
+              viewBox="0 0 256 256"
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+            >
+              <rect fill="none" height="256" width="256" />
 
               <path
                 d="M138.7,175.5l-19.2,52.1a8,8,0,0,1-15,0L85.3,175.5a8.1,8.1,0,0,0-4.8-4.8L28.4,151.5a8,8,0,0,1,0-15l52.1-19.2a8.1,8.1,0,0,0,4.8-4.8l19.2-52.1a8,8,0,0,1,15,0l19.2,52.1a8.1,8.1,0,0,0,4.8,4.8l52.1,19.2a8,8,0,0,1,0,15l-52.1,19.2A8.1,8.1,0,0,0,138.7,175.5Z"
@@ -945,10 +959,10 @@ Button {
   border-radius: 12px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 30px;
   margin-left: 10px;
   background-color: #14c6a4;
   color: rgb(255, 255, 255);
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
 }
@@ -979,14 +993,37 @@ Button {
 .primaryButton {
   width: 100%;
   border-width: 0;
-  border-radius: 12px;
+  border-radius: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
-  margin-top: 30px;
   background-color: #14c6a4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
+  font-size: 12px;
+}
+
+.primaryButton:hover {
+  cursor: pointer;
+  background-color: #0eb092;
+}
+
+.primaryButtonDel {
+  width: 50%;
+  border-width: 0;
+  border-radius: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-left: 10px;
+  background-color: white;
+  color: rgb(255, 91, 91);
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.primaryButtonDel:hover {
+  background-color: rgb(255, 235, 235);
 }
 
 .secondaryButton {
@@ -1002,11 +1039,6 @@ Button {
   cursor: pointer;
 }
 
-.primaryButton:hover {
-  cursor: pointer;
-  background-color: #0eb092;
-}
-
 .secondaryButton:hover {
   cursor: pointer;
   background-color: rgb(230, 230, 230);
@@ -1015,7 +1047,7 @@ Button {
 .header-popup {
   font-weight: 700;
   font-size: 18px;
-  color: black;
+  color: #049a7e;
 }
 
 .upload-button {
