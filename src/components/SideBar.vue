@@ -797,11 +797,10 @@ const handleChangePassword = async () => {
 
           <!-- <router-link to="/deviceManage"> -->
           <Button
-            class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[12px] flex gap-1 menu-ho rounded-xl"
+          disabled
+            class="bg-white border-white w-full space-x-2 text-[#282828] h-9 font-semibold text-[12px] flex gap-1  rounded-xl"
             v-if="openSidebar"
-            link
-            label="Glimpse bar"
-            disabled
+            label="Glance bar"
             :pt="{ label: { class: 'flex-none flex translate-x-[-3px]' } }"
           >
             <template #icon>
@@ -837,8 +836,8 @@ const handleChangePassword = async () => {
           </Button>
           <Button
             disabled
-            link
-            class="text-[#282828] bg-none rounded-full h-10 w-10 flex items-center justify-center menu-ho"
+           
+            class="text-[#282828] bg-white border-white bg-none rounded-full h-10 w-10 flex items-center justify-center menu-ho"
             :class="{
               'bg-[#4bdbff4d] text-[#297dbe]': $route.path === '/deviceManage',
             }"
