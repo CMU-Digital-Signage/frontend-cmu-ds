@@ -105,7 +105,7 @@ const resetSelect = () => {
     scrollable
     scrollHeight="flex"
     :virtualScrollerOptions="{ itemSize: (uniquePosters?.length || 1) + 35 }"
-    :class="`text-[12px] lg:text-[14px] flex-1 ${user.isAdmin ? '' : 'py-2'}`"
+    :class="`text-[12px]  lg:text-[14px] flex-1 ${user.isAdmin ? '' : 'py-2'}`"
   >
     <Column
       :field="(e) => (props.types !== 'EP' ? e.title : e.incidentName)"

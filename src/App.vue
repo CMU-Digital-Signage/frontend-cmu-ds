@@ -103,17 +103,17 @@ onUnmounted(() => {
     <router-view />
   </div>
   <div
-    class="min-h-2 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed font-sf-pro"
+    class="min-h-2  px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed font-sf-pro"
     v-if="
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "
   >
-    <span class="pb-2 text-[9px] font-light text-stone-400 hide-on-mobile">
-      <span class="pb-3 font-normal text-stone-600">
+    <span class="pb-2 text-[7px] font-light text-stone-400 hide-on-mobile">
+      <span class="pb-3 font-normal text-stone-500">
         © 2024 Department of Computer Engineering
       </span>
       , Chiang Mai University by 404 Brain not Found Group
-      <span class="pb-3 font-normal text-stone-600">
+      <span class="pb-3 font-normal text-stone-500">
         | All Rights Reserved | Powered by
       </span>
       CPE #30
@@ -194,7 +194,7 @@ Button:focus {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   border-width: 1px;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 .p-row-odd {
   background-color: #fafafa;

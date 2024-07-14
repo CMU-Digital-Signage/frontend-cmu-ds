@@ -1236,7 +1236,7 @@ const nextStepPreview = async () => {
 
 .header-popup {
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   color: #049a7e;
 }
 
