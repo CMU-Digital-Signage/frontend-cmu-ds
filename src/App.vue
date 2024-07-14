@@ -133,7 +133,6 @@ onUnmounted(() => {
 }
 
 body * {
-  -webkit-font-smoothing: subpixel-antialiased !important;
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;

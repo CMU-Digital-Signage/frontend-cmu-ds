@@ -10,28 +10,25 @@
   @tailwind variants;
 }
 
+
+
 @font-face {
   font-family: "SF Pro";
   src: url("~@/assets/fonts/SF-Pro.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased !important;
 }
 
-@font-face {
-  font-family: "SF Pro";
-  src: url("~@/assets/fonts/SF-Pro-Italic.ttf") format("truetype");
-  font-weight: normal;
-  -webkit-font-smoothing: antialiased;
-  font-style: italic;
-}
+
+
 
 @font-face {
   font-family: "SF Pro Rounded";
   src: url("~@/assets/fonts/SF-Pro-Rounded-Medium.otf") format("opentype");
   font-weight: normal;
   font-style: normal;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased !important;
 }
 
 @font-face {
@@ -39,6 +36,14 @@
   src: url("~@/assets/fonts/NotoSansThai.ttf") format("opentype");
   font-weight: normal;
   font-style: normal;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased !important;
 }
 
+* body {
+  font-family: "SF Pro", sans-serif;
+}
+
+* p {
+  font-weight: normal; /* or bold */
+  font-style: normal; /* or italic */
+}
