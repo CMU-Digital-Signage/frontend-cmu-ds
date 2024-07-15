@@ -15,13 +15,12 @@
       Dynamic content
       <span class="!font-medium">starts with pixelParade</span>
       <p class="text-xl font-normal mt-3 hide-on-mobile">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        Every pixel counts. Tell your story, one tiny block at a time.
       </p>
     </span>
 
     <Button
-      class="flex items-center hide-on-mobile bg-[#6869AE] border-none md:mb-4 py-5 justify-center w-auto md:px-4 md:h-11 h-fit relative rounded-[10px] text-white text-lg button-container"
+      class="flex items-center hide-on-mobile bg-[#6869AE]  border-none md:mb-4 py-5 justify-center w-auto md:px-4 md:h-11 h-fit relative rounded-[10px] text-white text-lg button-container"
       @click="redirectToOAuth()"
       style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
     >
@@ -30,7 +29,7 @@
         alt="cmulogo"
         src="../assets/images/cmu-logo-th-white.png"
       />
-      <span class="md:text-[14px] text-sm font-medium">
+      <span class="md:text-[14px] text-sm font-semibold">
         Login with CMU Account
       </span>
     </Button>
@@ -55,86 +54,86 @@
 
     <!-- card -->
     <div
-      class="hide-on-mobile flex flex-row overflow-x-auto w-full h-full px-20 mt-5 gap-5"
+      class="hide-on-mobile grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 overflow-x-auto  w-full h-full px-14 mt-5 gap-5"
     >
       <div
-        class="relative bg-white min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative  bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden "
       >
         <div class="flex flex-col text-start gap-1">
-          <span class="text-sm font-normal">Type header</span>
-          <span class="flex flex-col text-xl font-medium break-words w-full">
-            Project & issue tracking
+          <span class="text-sm font-normal">UPLOAD & DISPLAY</span>
+          <span class="flex  flex-col text-xl font-semibold break-words w-full">
+            Digital Signage
           </span>
         </div>
 
         <img
-          class="absolute bottom-0 right-0 pl-7 pt-5 w-full h-4/5"
+          class="  h-full rounded-xl object-left scale-90 translate-x-3  object-cover mt-5" 
           alt="cmulogo"
-          src="../assets/images/bg-test.jpg"
+          src="../assets/images/upload.png"
         />
       </div>
       <div
-        class="relative bg-white min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative  bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
       >
         <div class="flex flex-col text-start gap-1">
-          <span class="text-sm font-normal">Type header</span>
-          <span class="flex flex-col text-xl font-medium break-words w-full">
-            Project & issue tracking
+          <span class="text-sm font-normal">SCHEDULING</span>
+          <span class="flex flex-col text-xl font-semibold break-words w-full">
+            Intuitive Calendar
           </span>
         </div>
 
         <img
-          class="absolute bottom-0 right-0 pl-7 pt-5 w-full h-4/5"
+        class="  h-full rounded-xl object-left scale-90 translate-x-3  object-cover mt-5" 
           alt="cmulogo"
-          src="../assets/images/bg-test.jpg"
+          src="../assets/images/calendar.png"
         />
       </div>
       <div
-        class="relative bg-white min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
       >
         <div class="flex flex-col text-start gap-1">
-          <span class="text-sm font-normal">Type header</span>
-          <span class="flex flex-col text-xl font-medium break-words w-full">
-            Project & issue tracking
+          <span class="text-sm font-normal">SHARE INFOMATION</span>
+          <span class="flex flex-col text-xl font-semibold break-words w-full">
+            Glance Bar
           </span>
         </div>
 
         <img
-          class="absolute bottom-0 right-0 pl-7 pt-5 w-full h-4/5"
+        class=" absolute rounded-xl  h-full object-left scale-150 translate-x-8 right-0 object-cover mt-[180px]" 
           alt="cmulogo"
-          src="../assets/images/bg-test.jpg"
+          src="../assets/images/glance.png"
         />
       </div>
       <div
-        class="relative bg-white min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
       >
         <div class="flex flex-col text-start gap-1">
-          <span class="text-sm font-normal">Type header</span>
-          <span class="flex flex-col text-xl font-medium break-words w-full">
-            Project & issue tracking
+          <span class="text-sm font-normal">ACT SWIFTLY</span>
+          <span class="flex flex-col text-xl font-semibold break-words w-full">
+            Emergency
           </span>
         </div>
 
         <img
-          class="absolute bottom-0 right-0 pl-7 pt-5 w-full h-4/5"
+        class="  h-full object-left rounded-xl scale-90 translate-x-3  object-cover mt-3" 
           alt="cmulogo"
-          src="../assets/images/bg-test.jpg"
+          src="../assets/images/emergency.png"
         />
       </div>
       <div
-        class="relative bg-white min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
       >
         <div class="flex flex-col text-start gap-1">
-          <span class="text-sm font-normal">Type header</span>
-          <span class="flex flex-col text-xl font-medium break-words w-full">
-            Project & issue tracking
+          <span class="text-sm font-normal">EASE TO MANGAE</span>
+          <span class="flex flex-col text-xl font-semibold break-words w-full">
+            User & Device
           </span>
         </div>
 
         <img
-          class="absolute bottom-0 right-0 pl-7 pt-5 w-full h-4/5"
+        class="  h-full object-left scale-90 rounded-xl translate-x-3  object-cover mt-3" 
           alt="cmulogo"
-          src="../assets/images/bg-test.jpg"
+          src="../assets/images/user.png"
         />
       </div>
     </div>

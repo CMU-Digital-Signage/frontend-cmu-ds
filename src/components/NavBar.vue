@@ -231,21 +231,21 @@ const closeModalAddEditDevice = () => {
     <ul v-if="$route.path === '/login'">
       <div class="flex flex-row h-full items-center">
         <img
-          class="mr-2 w-9 -mt-1"
+          class=" w-8 "
           alt="cmulogo"
           src="../assets/images/logo close.png"
         />
-        <label class="text-[#00000] text-[20px] font-normal"
+        <label class="text-[#00000] text-[18px] font-normal"
           >pixelParade</label
         >
       </div>
       <div class="ml-auto justify-between">
         <router-link to="/emergency">
           <button
-            class="w-auto h-9 px-3 border-[1px] border-[#ff6961] text-[#ff6961] relative rounded-[8px] text-sm md:text-lg button-containerEmer flex flex-row items-center justify-center"
+            class="w-auto h-9 px-3 border-[1px] border-none text-[#ff6961] relative rounded-[8px] text-sm md:text-lg button-containerEmer flex flex-row items-center justify-center"
           >
             <i class="pi pi-exclamation-triangle"></i>
-            <p class="ml-2 font-medium text-[14px]">Emergency</p>
+            <p class="ml-2 font-semibold text-[14px]">Emergency</p>
           </button>
         </router-link>
       </div>
@@ -567,8 +567,7 @@ const closeModalAddEditDevice = () => {
 }
 
 .button-containerEmer:hover {
-  background-color: #ed5c55;
-  color: white;
+  background-color: #ffe4e3;
 }
 
 ul {
