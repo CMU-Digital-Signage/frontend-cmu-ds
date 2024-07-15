@@ -205,7 +205,7 @@ const handleAddPoster = async () => {
     toast.add({
       severity: "success",
       summary: "Upload success",
-      detail:  `${formPoster.value.type} has been add successfully.`,
+      detail: `${formPoster.value.type} has been add successfully.`,
       life: 3000,
     });
   } else {
@@ -553,15 +553,14 @@ const nextStepPreview = async () => {
       modal
       close-on-escape
       :draggable="false"
-      class="w-96 font-sf-pro"
+      class="w-[500px] h-fit font-sf-pro"
       :pt="{
         content: {
           style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;',
         },
         header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;   ',
+          style: 'border-top-left-radius: 20px; border-top-right-radius: 20px;',
         },
       }"
     >
@@ -569,16 +568,15 @@ const nextStepPreview = async () => {
         <div class="header-popup text-[#049A7E]">Upload Content</div>
       </template>
       <div class="flex flex-col gap-2">
-        <div class="inline-block">
-          <div>
+        <!-- <div>
             <label
               for="deviceName"
               class="flex justify-start font-semibold text-[14px] text-[#282828]"
             >
               Type of content
             </label>
-          </div>
-          <Dropdown
+          </div> -->
+        <!-- <Dropdown
             v-model="selectedContentType"
             :options="contentType"
             optionLabel="header"
@@ -622,27 +620,110 @@ const nextStepPreview = async () => {
                 <div>{{ slotProps.option.header }}</div>
               </div>
             </template>
-          </Dropdown>
-
-          <div class="flex flex-row gap-4 pt-3">
-            <Button
-              color=""
-              text
-              label="Cancel"
-              @click="showUpload = false"
-              :class="'secondaryButton'"
-            ></Button>
-            <Button
-              label="Next"
-              icon="pi pi-arrow-right"
-              type="submit"
-              :disabled="isNextButtonDisabled"
-              :class="'primaryButton  justify-center '"
-              iconPos="right"
-              :pt="{ label: { class: 'flex-none mr-2' } }"
-              @click="showDifferentDialog"
-            ></Button>
+          </Dropdown> -->
+        <div
+          v-for="type in contentType"
+          :key="type.code"
+          class="flex gap-4 items-center cursor-pointer px-4 py-2 rounded-xl"
+          :class="{
+            'bg-[#e5e5e5] text-[#a1a1a1] !cursor-not-allowed': type.disabled,
+            'bg-[#FFEDD2] text-[#856F00]': type.code == CONTENT_CODE.Poster,
+            'bg-[#E9E7FF] text-[#7054C1]': type.code == CONTENT_CODE.Video,
+            'bg-[#C6EBFF] text-[#2E7DC5]': type.code == CONTENT_CODE.Webview,
+            'bg-[#FFD7D7] text-[#D04A4A]': type.code == 'EP',
+          }"
+          @click="
+            if (!type.disabled) {
+              selectedContentType = type;
+              showDifferentDialog();
+            }
+          "
+        >
+          <svg
+            v-if="type.code == CONTENT_CODE.Poster"
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="45"
+            viewBox="0 0 35 32"
+          >
+            <g fill="currentColor">
+              <path
+                d="M1.5 28h26c.827 0 1.5-.673 1.5-1.5v-25c0-.827-.673-1.5-1.5-1.5h-26C.673 0 0 .673 0 1.5v25c0 .827.673 1.5 1.5 1.5M1 1.5a.5.5 0 0 1 .5-.5h26a.5.5 0 0 1 .5.5v25a.5.5 0 0 1-.5.5h-26a.5.5 0 0 1-.5-.5z"
+              />
+              <path
+                d="M18 11c1.103 0 2-.897 2-2s-.897-2-2-2s-2 .897-2 2s.897 2 2 2m0-3a1.001 1.001 0 1 1-1 1c0-.551.448-1 1-1"
+              />
+              <path
+                d="M3.5 23h22a.5.5 0 0 0 .5-.5v-19a.5.5 0 0 0-.5-.5h-22a.5.5 0 0 0-.5.5v19a.5.5 0 0 0 .5.5m.5-1v-4.638c.022-.016.047-.025.067-.045l5.116-5.116a.704.704 0 0 1 .972 0l7.521 7.521a.498.498 0 0 0 .699.008l3.866-3.672a.684.684 0 0 1 .486-.202c.184 0 .355.072.464.178L25 18.093V22zM25 4v12.581l-1.081-1.228a1.67 1.67 0 0 0-1.191-.495h-.001a1.67 1.67 0 0 0-1.185.486l-3.504 3.328l-7.176-7.177c-.639-.638-1.749-.637-2.386 0L4 15.971V4z"
+              />
+              <path
+                d="M4.5 29.083a.5.5 0 0 0-.5.5v.917c0 .827.673 1.5 1.5 1.5h26c.827 0 1.5-.673 1.5-1.5v-26c0-.827-.673-1.5-1.5-1.5h-.917a.5.5 0 0 0 0 1h.917a.5.5 0 0 1 .5.5v26a.5.5 0 0 1-.5.5h-26a.5.5 0 0 1-.5-.5v-.917a.5.5 0 0 0-.5-.5"
+              />
+            </g>
+          </svg>
+          <svg
+            v-else-if="type.code == CONTENT_CODE.Video"
+            xmlns="http://www.w3.org/2000/svg"
+            width="45"
+            height="40"
+            viewBox="0 0 37 32"
+          >
+            <g fill="currentColor">
+              <path
+                d="M7.5 0h-6C.631 0 0 .631 0 1.5v29c0 .869.631 1.5 1.5 1.5h34c.869 0 1.5-.631 1.5-1.5v-29c0-.869-.631-1.5-1.5-1.5zM1 30.5v-29c0-.313.187-.5.5-.5H7v30H1.5c-.313 0-.5-.187-.5-.5m7 .5V1h21v30zM36 1.5v29c0 .313-.187.5-.5.5H30V1h5.5c.313 0 .5.187.5.5"
+              />
+              <path
+                d="M14.777 10.084a.502.502 0 0 0-.514-.025a.502.502 0 0 0-.263.441v12a.5.5 0 0 0 .777.416l9-6a.501.501 0 0 0 0-.832zM15 21.566V11.434l7.599 5.066zM5 8H3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1M3 5h2a.5.5 0 0 0 0-1H3a.5.5 0 0 0 0 1m2 7H3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1m0 4H3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1m0 4H3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1m0 4H3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1m0 4H3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1M32 9h2a.5.5 0 0 0 0-1h-2a.5.5 0 0 0 0 1m0-4h2a.5.5 0 0 0 0-1h-2a.5.5 0 0 0 0 1m0 8h2a.5.5 0 0 0 0-1h-2a.5.5 0 0 0 0 1m0 4h2a.5.5 0 0 0 0-1h-2a.5.5 0 0 0 0 1m0 4h2a.5.5 0 0 0 0-1h-2a.5.5 0 0 0 0 1m0 4h2a.5.5 0 0 0 0-1h-2a.5.5 0 0 0 0 1m2 3h-2a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1"
+              />
+            </g>
+          </svg>
+          <svg
+            v-else-if="type.code == CONTENT_CODE.Webview"
+            xmlns="http://www.w3.org/2000/svg"
+            width="33"
+            height="32"
+            viewBox="0 0 33 32"
+          >
+            <g fill="currentColor">
+              <path
+                d="M18.986 16.471a4.596 4.596 0 0 0 3.748-1.331l7.405-7.405a4.585 4.585 0 0 0 1.356-3.231a4.478 4.478 0 0 0-1.316-3.222a4.473 4.473 0 0 0-3.188-1.317h-.033a4.587 4.587 0 0 0-3.23 1.356l-7.405 7.405a4.601 4.601 0 0 0-1.269 4.157a.536.536 0 0 0 1.049-.209a3.53 3.53 0 0 1 .976-3.192l7.405-7.405a3.521 3.521 0 0 1 2.482-1.043c.975 0 1.805.35 2.458 1.003s1.01 1.527 1.004 2.458a3.525 3.525 0 0 1-1.044 2.482l-7.405 7.405a3.546 3.546 0 0 1-2.879 1.024a.538.538 0 0 0-.588.475a.534.534 0 0 0 .474.59m-3.846 6.802a4.57 4.57 0 0 0 1.229-4.334a.53.53 0 0 0-.646-.394a.534.534 0 0 0-.394.645a3.51 3.51 0 0 1-.946 3.328l-7.405 7.405a3.521 3.521 0 0 1-2.482 1.043a3.373 3.373 0 0 1-2.458-1.003a3.413 3.413 0 0 1-1.003-2.458a3.528 3.528 0 0 1 1.043-2.483l7.405-7.405a3.516 3.516 0 0 1 2.906-1.021a.546.546 0 0 0 .592-.471a.536.536 0 0 0-.471-.592a4.592 4.592 0 0 0-3.783 1.327l-7.405 7.405a4.589 4.589 0 0 0-1.356 3.231a4.478 4.478 0 0 0 1.316 3.222c.85.85 1.98 1.317 3.188 1.317h.033a4.587 4.587 0 0 0 3.23-1.356z"
+              />
+              <path
+                d="M22.734 8.872a.534.534 0 0 0-.756 0l-13.5 13.5a.534.534 0 1 0 .756.756l13.5-13.5a.534.534 0 0 0 0-.756"
+              />
+            </g>
+          </svg>
+          <svg
+            v-else
+            xmlns="http://www.w3.org/2000/svg"
+            width="43"
+            height="40"
+            viewBox="0 0 35 32"
+          >
+            <g fill="currentColor">
+              <path
+                d="M21.799 2.954C20.694 1.05 19.19 0 17.564 0c-1.626 0-3.131 1.05-4.236 2.954L1.059 24.087c-1.12 1.947-1.24 3.969-.33 5.546c.866 1.5 2.565 2.363 4.664 2.367h24.342c2.102-.004 3.804-.864 4.667-2.361c.905-1.567.783-3.581-.335-5.525zm11.738 26.185c-.681 1.18-2.067 1.858-3.804 1.861H5.394c-1.731-.003-3.115-.684-3.799-1.867c-.727-1.26-.606-2.917.33-4.546L14.193 3.456C15.112 1.872 16.309 1 17.564 1s2.452.872 3.37 2.456l12.268 21.157c.935 1.626 1.057 3.276.335 4.526"
+              />
+              <path
+                d="M17.564 20a.5.5 0 0 0 .5-.5v-10a.5.5 0 0 0-1 0v10a.5.5 0 0 0 .5.5m-.064 2.5c-1.103 0-2 .897-2 2s.897 2 2 2s2-.897 2-2s-.897-2-2-2m0 3a1.001 1.001 0 0 1 0-2a1.001 1.001 0 0 1 0 2"
+              />
+            </g>
+          </svg>
+          <div>
+            <p class="text-[12px] font-semibold">{{ type.header }}</p>
+            <p class="text-[10px]">
+              {{
+                type.code == CONTENT_CODE.Poster
+                  ? "Static image to display as a poster. Ideal for event announcements, advertisements, or informational content."
+                  : type.code == CONTENT_CODE.Video
+                  ? "Video file to play on the screen. Suitable for promotional videos, tutorials, or engaging visual content."
+                  : type.code == CONTENT_CODE.Webview
+                  ? "Enter a URL to display a webpage. Perfect for live content or interactive websites."
+                  : "Emergency file or provide content to be displayed immediately on all screens in case of an emergency situation."
+              }}
+            </p>
           </div>
+          <i class="pi pi-chevron-right"></i>
         </div>
       </div>
     </Dialog>
@@ -842,7 +923,8 @@ const nextStepPreview = async () => {
               <label class="font-medium text-red-500"> * </label>
             </div>
             <div class="text-[12px] text-[#14c6a4] -mt-1 mb-3">
-            Note: Some websites may not be displayed due to website security restrictions.
+              Note: Some websites may not be displayed due to website security
+              restrictions.
             </div>
             <InputText
               v-model="formPoster.image[0].image"
