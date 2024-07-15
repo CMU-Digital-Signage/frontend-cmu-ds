@@ -553,7 +553,7 @@ const nextStepPreview = async () => {
       modal
       close-on-escape
       :draggable="false"
-      class="w-[500px] h-fit font-sf-pro"
+      class="w-[525px] h-fit font-sf-pro"
       :pt="{
         content: {
           style:
@@ -567,7 +567,7 @@ const nextStepPreview = async () => {
       <template #header>
         <div class="header-popup text-[#049A7E]">Upload Content</div>
       </template>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-5">
         <!-- <div>
             <label
               for="deviceName"
@@ -621,10 +621,11 @@ const nextStepPreview = async () => {
               </div>
             </template>
           </Dropdown> -->
+        <p class="font-semibold text-[14px]">Select content</p>
         <div
           v-for="type in contentType"
           :key="type.code"
-          class="flex gap-4 items-center cursor-pointer px-4 py-2 rounded-xl"
+          class="flex -mt-2 gap-5 items-center cursor-pointer px-4 py-3 rounded-xl"
           :class="{
             'bg-[#e5e5e5] text-[#a1a1a1] !cursor-not-allowed': type.disabled,
             'bg-[#FFEDD2] text-[#856F00]': type.code == CONTENT_CODE.Poster,
@@ -710,8 +711,11 @@ const nextStepPreview = async () => {
             </g>
           </svg>
           <div>
-            <p class="text-[12px] font-semibold">{{ type.header }}</p>
-            <p class="text-[10px]">
+            <p class="text-[14px] font-semibold">
+              {{ type.header
+              }}{{ type.code == "EP" ? " (Upload for stored file)" : "" }}
+            </p>
+            <p class="text-[12px]">
               {{
                 type.code == CONTENT_CODE.Poster
                   ? "Static image to display as a poster. Ideal for event announcements, advertisements, or informational content."
@@ -1256,41 +1260,55 @@ const nextStepPreview = async () => {
 
       <div v-else-if="selectedContentType.code === 'EP'">
         <div class="flex flex-row justify-between gap-3 mx-1">
-          <div class="flex flex-col justify-start w-full max-w-4xl">
-            <div class="inline-flex items-center">
-              <label
-                class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
+          <div class="flex flex-col gap-5 justify-start w-full max-w-4xl">
+            <div
+              class="bg-white p-2 mt-1  px-4 rounded-lg items-start justify-start"
+              style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
+            >
+              <div class="inline-flex items-center">
+                <label
+                  class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
+                >
+                  Title
+                </label>
+                <label class="font-medium text-red-500"> * </label>
+              </div>
+              <InputText
+                v-model="formEmer.incidentName"
+                @keydown="limitCharTitle = formEmer?.incidentName?.length >= 28"
+                type="text"
+                placeholder="Max 28 Character Ex.Gas leakage"
+                maxlength="28"
+                class="h-8 w-full mb-3 rounded-[8px] text-[12px]"
+                :class="{
+                  'border-red-500 shadow-none':
+                    formEmer?.incidentName?.length >= 28 && limitCharTitle,
+                }"
+              />
+              <div
+                v-if="formEmer?.incidentName?.length >= 28 && limitCharTitle"
+                class="text-red-500 -mt-2"
               >
-                Title
+                You have reached the character limit.
+              </div>
+              <label
+                class="text-black font-semibold text-[14px] flex justify-start mb-1"
+              >
+                Description
               </label>
-              <label class="font-medium text-red-500"> * </label>
+              <InputText
+                v-model="formEmer.description"
+                class="h-8 w-full mb-3 rounded-[8px] text-[12px]"
+                placeholder="(Optional)"
+              />
             </div>
-            <InputText
-              v-model="formEmer.incidentName"
-              type="text"
-              placeholder="Ex. Gas leakage"
-              class="title-input mb-3 text-[12px]"
-            />
             <!-- File Upload -->
             <UploadImage
+       
               :posType="selectedContentType.code"
               :maxImage="undefined"
             />
 
-            <!-- Description -->
-            <div class="flex flex-col gap-1 w-full">
-              <label
-                for="Description"
-                class="text-black font-semibold text-[14px] flex justify-start mt-4 mb-1"
-                >Description</label
-              >
-              <InputText
-                v-model="formEmer.description"
-                type="text"
-                placeholder="(optional)"
-                class="description-input h-full font-notoThai text-[12px]"
-              ></InputText>
-            </div>
             <Button
               label="Upload"
               :class="'primaryButtonEmer'"
@@ -1366,7 +1384,7 @@ const nextStepPreview = async () => {
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 20px;
-  background-color: #0eb092;
+  background-color: #14c6a4;
   color: rgb(255, 255, 255);
   font-weight: 800;
   cursor: pointer;
@@ -1375,7 +1393,7 @@ const nextStepPreview = async () => {
 
 .primaryButtonEmer:hover {
   cursor: pointer;
-  background-color: rgb(255, 233, 228);
+  background-color: #0eb092;
 }
 
 .orientOut {

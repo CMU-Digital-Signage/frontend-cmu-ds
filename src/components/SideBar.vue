@@ -197,7 +197,7 @@ const handleChangePassword = async () => {
         <div class="header-popup">Change Emergency Password</div>
       </template>
       <div class="text-[14px] mb-8 text-[#049a7e] font-semibold">
-        Pixelparade | {{ user.firstName }} {{ user.lastName }}
+        pixelParade | {{ user.firstName }} {{ user.lastName }}
       </div>
       <div class="flex flex-col gap-1 w-full">
         <label for="currentPassword" class="text-[12px] flex text-center"
@@ -331,10 +331,10 @@ const handleChangePassword = async () => {
 
       <div class="mb-4 gap-7 rounded-xl h-fit">
         <div class="text-[14px] text-[#049a7e] font-semibold">
-          Pixelparade | {{ user.firstName }} {{ user.lastName }}
+          pixelParade | {{ user.firstName }} {{ user.lastName }}
         </div>
         <div class="text-[12px] mt-2 mb-8 font-thin text-[#828282]">
-          Pixelparade includes an Emergency Activation feature to display
+          pixelParade includes an Emergency Activation feature to display
           emergency posters on all screens.
           <span class="font-bold text-black">
             Set your Emergency Password to activate this feature during an
@@ -917,7 +917,7 @@ const handleChangePassword = async () => {
         aria-controls="overlay_menu"
         :class="
           openSidebar
-            ? 'flex h-12 left-0 -bottom-5 rounded-xl w-[94%] hover:bg-gray-300 items-center justify-between border-[1px] border-[#c2c2c2] '
+            ? 'flex h-12 ml-1  -bottom-5 rounded-xl w-[94%] hover:bg-gray-300 items-center justify-between border-[1px] border-[#c2c2c2] '
             : 'text-[#282828] rounded-full h-10 w-10 flex items-center justify-center hover:bg-gray-300 translate-y-3'
         "
       >
@@ -938,7 +938,7 @@ const handleChangePassword = async () => {
             <div v-show="openSidebar">
               <div
                 v-if="user"
-                class="flex flex-col items-start text-[12px] left-14"
+                class="flex flex-col items-start text-[12px] "
               >
                 <label class="font-bold text-black whitespace-nowrap">
                   {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
