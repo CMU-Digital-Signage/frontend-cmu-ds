@@ -91,24 +91,24 @@ onUnmounted(() => {
       <router-view class="bg-[#ffffff] mb-8 mt-1" />
     </div>
   </div>
-  <div
-    v-else
-    class="flex flex-col w-screen h-full bg-[#ffffff] md:fixed font-sf-pro"
-  >
+  <div v-else class="flex flex-col w-screen h-full md:fixed font-sf-pro">
     <NavBar
-      v-if="$route.path === '/emergency'"
+      v-if="['/emergency', '/login'].includes($route.path)"
       class="bg-white"
       :types="'Outside'"
     />
     <router-view />
   </div>
   <div
-    class="min-h-2  px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed font-sf-pro"
+    class="min-h-2 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed font-sf-pro"
     v-if="
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "
   >
-    <span class="pb-2 text-[7px] font-light text-stone-400 hide-on-mobile">
+    <span
+      v-if="$route.path !== '/login'"
+      class="pb-2 text-[7px] font-light text-stone-400 hide-on-mobile"
+    >
       <span class="pb-3 font-normal text-stone-500">
         © 2024 Department of Computer Engineering
       </span>
@@ -137,8 +137,6 @@ body * {
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
 }
-
-
 
 .rectangle {
   // width: 100%;
