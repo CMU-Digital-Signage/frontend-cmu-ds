@@ -24,7 +24,7 @@ const posters = computed(() =>
 );
 const loading = ref(false);
 const image = computed(() => store.state.currentImage);
-const stopLoop = ref();
+// const stopLoop = ref();
 const selectPoster = ref<Poster>();
 const selectImage = ref("");
 let currentindex = 0;
@@ -115,7 +115,7 @@ const rowStyle = (rowData: any) => {
 
 <template>
   <div class="rectangle">
-    <div class="flex flex-1 flex-wrap h-full gap-3">
+    <div class="flex flex-1 h-full gap-3">
       <div class="flex flex-1 w-full md:w-1/2">
         <DataTable
           scrollDirection="vertical"
