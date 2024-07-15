@@ -10,8 +10,6 @@
   @tailwind variants;
 }
 
-
-
 @font-face {
   font-family: "SF Pro";
   src: url("~@/assets/fonts/SF-Pro.ttf") format("truetype");
@@ -19,9 +17,6 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased !important;
 }
-
-
-
 
 @font-face {
   font-family: "SF Pro Rounded";
@@ -41,9 +36,4 @@
 
 * body {
   font-family: "SF Pro", sans-serif;
-}
-
-* p {
-  font-weight: normal; /* or bold */
-  font-style: normal; /* or italic */
 }
