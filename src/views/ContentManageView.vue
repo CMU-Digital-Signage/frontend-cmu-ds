@@ -38,7 +38,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="rectangle flex flex-col flex-1 font-sf-pro">
+  <div class="rectangle flex flex-col flex-1">
     <Skeleton
       v-if="loading"
       class="bg-gray-200 rounded-xl flex-1 my-3"

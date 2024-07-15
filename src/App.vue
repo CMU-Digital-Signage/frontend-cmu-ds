@@ -82,7 +82,7 @@ onUnmounted(() => {
 <template>
   <ModalUpload />
   <div
-    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-sf-pro font-weight:100;"
+    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-weight:100;"
     v-if="!$route.meta.hideSidebar && user.id"
   >
     <SideBar class="font-weight:100" />
@@ -91,7 +91,7 @@ onUnmounted(() => {
       <router-view class="bg-[#ffffff] mb-8 mt-1" />
     </div>
   </div>
-  <div v-else class="flex flex-col w-screen h-full md:fixed font-sf-pro">
+  <div v-else class="flex flex-col w-screen h-full md:fixed">
     <NavBar
       v-if="['/emergency', '/login'].includes($route.path)"
       class="bg-white"
@@ -100,7 +100,7 @@ onUnmounted(() => {
     <router-view />
   </div>
   <div
-    class="min-h-2 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed font-sf-pro"
+    class="min-h-2 px-4 justify-end inline-flex flex-wrap items-center z-10 right-0 bottom-0 fixed"
     v-if="
       !$route.path.includes('/preview') && !$route.path.includes('/device/')
     "

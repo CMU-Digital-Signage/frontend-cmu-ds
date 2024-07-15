@@ -172,7 +172,7 @@ const handleChangePassword = async () => {
 
 <template>
   <div
-    class="flex flex-col justify-between h-screen side-bar border-r-[1px] border-[#dddddd] z-10 sticky font-sf-pro"
+    class="flex flex-col justify-between h-screen side-bar border-r-[1px] border-[#dddddd] z-10 sticky"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
     <!-- //dialog reset password -->
@@ -213,7 +213,7 @@ const handleChangePassword = async () => {
           toggle-mask
           :pt="{
             input: {
-              class: ` text-[12px] font-sf-pro`,
+              class: ` text-[12px]`,
             },
           }"
         />
@@ -231,7 +231,7 @@ const handleChangePassword = async () => {
           toggle-mask
           :pt="{
             input: {
-              class: ` text-[12px] font-sf-pro`,
+              class: ` text-[12px]`,
             },
           }"
         />
@@ -248,7 +248,7 @@ const handleChangePassword = async () => {
           toggle-mask
           :pt="{
             input: {
-              class: ` text-[12px] font-sf-pro`,
+              class: ` text-[12px]`,
             },
           }"
         />

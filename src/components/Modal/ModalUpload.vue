@@ -553,7 +553,7 @@ const nextStepPreview = async () => {
       modal
       close-on-escape
       :draggable="false"
-      class="w-[525px] h-fit font-sf-pro"
+      class="w-[525px] h-fit"
       :pt="{
         content: {
           style:
@@ -835,7 +835,7 @@ const nextStepPreview = async () => {
                   class="w-full hover:border-[#14C6A4] focus:border-[#14C6A4] md:w-14rem mt-3 h-10 rounded-md drop-shadow-sm border-2 text-black font-medium"
                   :pt="{
                     input: {
-                      class: ` text-[14px] font-sf-pro`,
+                      class: ` text-[14px]`,
                     },
                     item: {
                       class: `text-[14px] focus-visible:color-white`, //แก้ให้เป็น color white
@@ -1152,7 +1152,7 @@ const nextStepPreview = async () => {
             style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
           >
             <div class="bg-[#e9f2fd] rounded-xl px-9 py-5 w-full">
-              <div class="font-sf-pro text-black-500 flex flex-col gap-1">
+              <div class="text-black-500 flex flex-col gap-1">
                 <p class="text-[16px] font-semibold">{{ formPoster.title }}</p>
                 <p class="text-[12px]">
                   Description:
