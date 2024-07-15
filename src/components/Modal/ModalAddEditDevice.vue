@@ -263,18 +263,16 @@ const errorSelectFile = () => {
           "
         >
           <template #header="{ chooseCallback, clearCallback }">
-            <div class="flex items-center">
-              <Button
-                @click="
-                  clearCallback();
-                  chooseCallback();
-                "
-                icon="pi pi-plus"
-                label="Choose File"
-                rounded
-                outlined
-              ></Button>
-            </div>
+            <Button
+              @click="
+                clearCallback();
+                chooseCallback();
+              "
+              icon="pi pi-plus text-[14px]"
+              label="Choose File"
+              class="rounded-2xl h-fit w-fit text-[14px] border-[#14C6A4] text-[#14C6A4] font-bold hover:bg-[#14C6A433]"
+              outlined
+            />
           </template>
           <template #content="{ removeFileCallback }">
             <div

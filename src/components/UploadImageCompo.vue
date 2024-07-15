@@ -103,16 +103,6 @@ const removeImage = (i: number) => {
     :multiple="[CONTENT_CODE.Poster, CONTENT_CODE.Video].includes(posType as CONTENT_CODE)"
     :fileLimit="maxImage"
     :maxFileSize="52428800"
-    :pt="{
-      buttonbar: {
-        class: ` p-2 ${
-          posType === 'EP' ? 'border-[#FF4D4D] bg-[#FF4D4D] bg-opacity-10' : ''
-        }`,
-      },
-      content: {
-        class: `${posType === 'EP' ? 'border-[#FF4D4D]' : ''}`,
-      },
-    }"
     @select="
       async (e) => {
         if (posType === 'EP' && e.files[0]) {
@@ -129,17 +119,13 @@ const removeImage = (i: number) => {
     "
   >
     <template #header="{ chooseCallback }">
-      <div class="flex w-full gap-3 items-center justify-between">
-        <div class="flex gap-3 items-center">
-          <Button
-            @click="chooseCallback()"
-            icon="pi pi-plus text-[14px]"
-            label="Choose File"
-            class="rounded-2xl h-fit w-fit text-[14px] border-[#14C6A4] text-[#14C6A4] font-bold hover:bg-[#14C6A433]"
-            outlined
-          />
-        </div>
-      </div>
+      <Button
+        @click="chooseCallback()"
+        icon="pi pi-plus text-[14px]"
+        label="Choose File"
+        class="rounded-2xl h-fit w-fit text-[14px] border-[#14C6A4] text-[#14C6A4] font-bold hover:bg-[#14C6A433]"
+        outlined
+      />
     </template>
     <template #content="{ removeFileCallback }">
       <ProgressSpinner
