@@ -132,7 +132,7 @@ const closeModalAddEditDevice = () => {
     />
     <!-- "Management" -->
     <ul v-if="$route.path === '/admin'">
-      <p>Management</p>
+      <label class="font-semibold">Management</label>
       <div
         class="ml-auto cursor-pointer justify-between"
         v-if="store.state.selectTabview === 0"
@@ -223,12 +223,12 @@ const closeModalAddEditDevice = () => {
         >
         </Button>
       </router-link>
-      <p class="text-[#FF0000]">Emergency Activation</p>
+      <label class="text-[#FF0000] font-semibold">Emergency Activation</label>
     </ul>
 
     <!-- "Device" -->
     <ul v-if="$route.path === '/deviceManage'">
-      <p>Device</p>
+      <label class="font-semibold">Device</label>
       <div class="ml-auto justify-between">
         <Button
           v-if="user.isAdmin"
@@ -250,7 +250,7 @@ const closeModalAddEditDevice = () => {
       class="justify-between"
     >
       <div class="inline-flex gap-3 items-center justify-center">
-        <p>{{ devicePreview.deviceName }}</p>
+        <label class="font-semibold">{{ devicePreview.deviceName }}</label>
         <i
           class="pi pi-info-circle cursor-pointer text-[14px]"
           @mouseover="toggleOverlay"
