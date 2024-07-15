@@ -36,7 +36,7 @@ const routes: Array<RouteRecordRaw> = [
     name: "Login",
     component: Login,
     meta: {
-      hideSidebar: true,
+      hideSidebar: false,
     },
   },
   {
@@ -97,11 +97,11 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const token = await checkTokenExpired(localStorage.getItem("token")!);  
+  const token = await checkTokenExpired(localStorage.getItem("token")!);
   if (token == "Link Expired.") {
     localStorage.removeItem("token");
   }
-  if (to.path.includes("/emergency")) {
+  if (["/emergency", "/login"].includes(to.path)) {
     next();
     return;
   }

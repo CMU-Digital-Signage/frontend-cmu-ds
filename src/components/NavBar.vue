@@ -122,7 +122,8 @@ const closeModalAddEditDevice = () => {
 
 <template>
   <div
-    class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px] border-[#dddddd] py-3 font-semibold font-sf-pro text-[#575757] text-[16px]"
+    class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px] border-[#dddddd] font-semibold font-sf-pro text-[#575757] text-[16px]"
+    :class="{ 'shadow-navbar': $route.path === '/login' }"
   >
     <Toast />
     <!-- Popup Add Device -->
@@ -224,6 +225,30 @@ const closeModalAddEditDevice = () => {
         </Button>
       </router-link>
       <label class="text-[#FF0000] font-semibold">Emergency Activation</label>
+    </ul>
+
+    <!-- "login" -->
+    <ul v-if="$route.path === '/login'">
+      <div class="flex flex-row h-full items-center">
+        <img
+          class="mr-2 w-9 -mt-1"
+          alt="cmulogo"
+          src="../assets/images/logo close.png"
+        />
+        <label class="font-sf-pro text-[#00000] text-[20px] font-normal"
+          >pixelParade</label
+        >
+      </div>
+      <div class="ml-auto justify-between">
+        <router-link to="/emergency">
+          <button
+            class="w-auto h-9 px-3 border-[1px] border-[#ff6961] text-[#ff6961] relative rounded-[8px] text-sm md:text-lg button-containerEmer flex flex-row items-center justify-center"
+          >
+            <i class="pi pi-exclamation-triangle"></i>
+            <p class="font-sf-pro ml-2 font-medium text-[14px]">Emergency</p>
+          </button>
+        </router-link>
+      </div>
     </ul>
 
     <!-- "Device" -->
@@ -537,6 +562,15 @@ const closeModalAddEditDevice = () => {
 </template>
 
 <style scoped>
+.shadow-navbar {
+  box-shadow: 0 2px 6px 2px rgb(159, 159, 159);
+}
+
+.button-containerEmer:hover {
+  background-color: #ed5c55;
+  color: white;
+}
+
 ul {
   display: inline-flex;
   align-items: center;
