@@ -141,7 +141,7 @@ const handleEmergency = async () => {
 </script>
 
 <template>
-  <div class="rectangle flex md:flex-row !overflow-auto flex-col md:gap-6 font-sf-pro">
+  <div class="rectangle flex md:flex-row !overflow-auto flex-col md:gap-6">
     <Toast />
     <Skeleton
       v-if="loading1st"

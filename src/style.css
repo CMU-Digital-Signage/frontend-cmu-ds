@@ -33,9 +33,10 @@
   src: url("~@/assets/fonts/NotoSansThai.ttf") format("opentype");
   font-weight: normal;
   font-style: normal;
+  unicode-range: U+0E00-U+0E7F;
   -webkit-font-smoothing: antialiased !important;
 }
 
-* body {
-  font-family: "SF Pro", sans-serif;
+* {
+  font-family: "SF Pro", "NotoSansThai";
 }

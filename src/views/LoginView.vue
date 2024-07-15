@@ -10,7 +10,7 @@
       /> -->
 
     <span
-      class="px-5 font-sf-pro md:!text-6xl md:mt-16 text-4xl lg:mb-8 cursor-default mb-7 font-bold text-[#2a2a2a]"
+      class="px-5 md:!text-6xl md:mt-16 text-4xl lg:mb-8 cursor-default mb-7 font-bold text-[#2a2a2a]"
     >
       Dynamic content
       <span class="!font-medium">starts with pixelParade</span>
@@ -30,7 +30,7 @@
         alt="cmulogo"
         src="../assets/images/cmu-logo-th-white.png"
       />
-      <span class="font-sf-pro md:text-[14px] text-sm font-medium">
+      <span class="md:text-[14px] text-sm font-medium">
         Login with CMU Account
       </span>
     </Button>

@@ -19,8 +19,8 @@ const cfPassword = ref("");
 
 const toast = useToast();
 
-watchEffect(() => {
-  message.value = checkTokenExpired(token);
+watchEffect(async () => {
+  message.value = await checkTokenExpired(token);
 });
 
 const resetPassword = async () => {

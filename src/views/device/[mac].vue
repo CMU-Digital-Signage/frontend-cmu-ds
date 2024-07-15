@@ -19,7 +19,7 @@ import {
 } from "@/utils/constant";
 import { getActivateEmerPoster } from "@/services/pi";
 import axios from "axios";
-import { TYPE } from "@/utils/enum";
+import { MAP_TYPE } from "@/utils/enum";
 
 const route = useRoute();
 const mac = route.params.mac as string;
@@ -129,7 +129,7 @@ onUnmounted(() => {
 <template>
   <div
     v-if="error.status"
-    class="font-sf-pro flex flex-col h-screen w-screen justify-center items-center"
+    class="flex flex-col h-screen w-screen justify-center items-center"
   >
     <p class="text-6xl font-bold">{{ error.status }}</p>
     <p class="text-xl">{{ error.message }}</p>
@@ -268,11 +268,11 @@ onUnmounted(() => {
     <div
       v-else
       class="flex-1"
-      :class="{ 'overflow-hidden relative': image.type == TYPE.WEBVIEW }"
+      :class="{ 'overflow-hidden relative': image.type == MAP_TYPE.WEBVIEW }"
     >
       <transition v-if="image.image" name="fade" mode="out-in">
         <iframe
-          v-if="image.type == TYPE.WEBVIEW && image.image"
+          v-if="image.type == MAP_TYPE.WEBVIEW && image.image"
           title="webview"
           :src="`${image.image}`"
           scrolling="no"

@@ -122,7 +122,7 @@ const closeModalAddEditDevice = () => {
 
 <template>
   <div
-    class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px] border-[#dddddd] font-semibold font-sf-pro text-[#575757] text-[16px]"
+    class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px] border-[#dddddd] font-semibold text-[#575757] text-[16px]"
     :class="{ 'shadow-navbar': $route.path === '/login' }"
   >
     <Toast />
@@ -235,7 +235,7 @@ const closeModalAddEditDevice = () => {
           alt="cmulogo"
           src="../assets/images/logo close.png"
         />
-        <label class="font-sf-pro text-[#00000] text-[20px] font-normal"
+        <label class="text-[#00000] text-[20px] font-normal"
           >pixelParade</label
         >
       </div>
@@ -245,7 +245,7 @@ const closeModalAddEditDevice = () => {
             class="w-auto h-9 px-3 border-[1px] border-[#ff6961] text-[#ff6961] relative rounded-[8px] text-sm md:text-lg button-containerEmer flex flex-row items-center justify-center"
           >
             <i class="pi pi-exclamation-triangle"></i>
-            <p class="font-sf-pro ml-2 font-medium text-[14px]">Emergency</p>
+            <p class="ml-2 font-medium text-[14px]">Emergency</p>
           </button>
         </router-link>
       </div>
