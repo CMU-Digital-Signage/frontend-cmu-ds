@@ -389,6 +389,7 @@ const handleChangePassword = async () => {
           ></Button>
         </div></div
     ></Dialog>
+
     <div class="space-y-5" :class="{ 'p-4 py-6': openSidebar }">
       <div
         class="flex justify-between items-start"
@@ -521,12 +522,6 @@ const handleChangePassword = async () => {
               />
             </svg>
           </template>
-
-          <!-- <div class="flex items-center h-5 justify-between">
-            <span class="text-[#ffffff] font-extrabold text-[14px]"
-              >Upload Content</span
-            >
-          </div> -->
         </Button>
 
         <Button
@@ -751,7 +746,6 @@ const handleChangePassword = async () => {
       </div>
 
       <!-- admin management-->
-
       <div
         v-if="user?.isAdmin && $route.path !== '/search-content'"
         :class="openSidebar == true ? '' : ' flex justify-center '"
@@ -797,15 +791,15 @@ const handleChangePassword = async () => {
 
           <!-- <router-link to="/deviceManage"> -->
           <Button
-          disabled
-            class="bg-white border-white w-full space-x-2 text-[#282828] h-9 font-semibold text-[12px] flex gap-1  rounded-xl"
+            disabled
+            class="bg-white border-white w-full space-x-2 text-[#282828] h-9 font-semibold text-[12px] flex gap-1 rounded-xl"
             v-if="openSidebar"
             label="Glance bar"
             :pt="{ label: { class: 'flex-none flex translate-x-[-3px]' } }"
           >
             <template #icon>
               <svg
-              class="flex -ml-[4px]"
+                class="flex -ml-[4px]"
                 width="24px"
                 height="24px"
                 viewBox="0 0 24 24"
@@ -836,16 +830,13 @@ const handleChangePassword = async () => {
           </Button>
           <Button
             disabled
-           
             class="text-[#282828] bg-white border-white bg-none rounded-full h-10 w-10 flex items-center justify-center menu-ho"
             :class="{
               'bg-[#4bdbff4d] text-[#297dbe]': $route.path === '/deviceManage',
             }"
             v-else
-          
-            
           >
-          <template #icon>
+            <template #icon>
               <svg
                 width="24px"
                 height="24px"
@@ -918,60 +909,62 @@ const handleChangePassword = async () => {
     </div>
 
     <!-- <UserInfo /> -->
-    <Button
-      @click="toggle"
-      link
-      aria-haspopup="true"
-      aria-controls="overlay_menu"
-      :class="
-        openSidebar
-          ? 'flex h-12 left-0 -bottom-5 rounded-xl w-[94%] hover:bg-gray-300  ml-1 pl-2 pr-4 items-center justify-between border-[1px]  border-[#c2c2c2] '
-          : 'text-[#282828]   ml-5 rounded-full h-10 w-10 flex items-center justify-center hover:bg-gray-300 translate-y-3'
-      "
-    >
-      <Menu
-        ref="menu"
-        id="overlay_menu"
-        :model="items"
-        :popup="true"
-        class="rounded-xl text-[14px]"
-      />
-      <div class="flex items-center">
-        <div class="flex flex-row gap-2 items-center fixed">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 39 39"
-            fill="none"
-            :style="{
-              transform: openSidebar ? 'translateX(3px)' : 'translateX(-18px)',
-            }"
-          >
-            <path
-              d="M10.0685 28.4131C11.4498 27.4186 12.9155 26.6327 14.4658 26.0553C16.0149 25.4768 17.693 25.1875 19.5 25.1875C21.3059 25.1875 22.984 25.4768 24.5342 26.0553C26.0834 26.6327 27.5492 27.4181 28.9315 28.4115C30.004 27.3022 30.8669 25.9913 31.5201 24.479C32.1734 22.9645 32.5 21.3048 32.5 19.5C32.5 15.8979 31.2341 12.8305 28.7024 10.2976C26.1706 7.76479 23.1032 6.49892 19.5 6.5C15.8979 6.5 12.8305 7.76642 10.2976 10.2992C7.76479 12.8321 6.49892 15.899 6.5 19.5C6.5 21.3059 6.82663 22.965 7.47988 24.4774C8.13313 25.9908 8.996 27.3027 10.0685 28.4131ZM19.5016 20.3125C18.1323 20.3125 16.9769 19.8423 16.0355 18.902C15.0952 17.9627 14.625 16.8085 14.625 15.4391C14.625 14.0698 15.0952 12.9144 16.0355 11.973C16.9748 11.0327 18.129 10.5625 19.4984 10.5625C20.8677 10.5625 22.0231 11.0327 22.9645 11.973C23.9048 12.9123 24.375 14.0665 24.375 15.4359C24.375 16.8052 23.9048 17.9606 22.9645 18.902C22.0252 19.8423 20.871 20.3125 19.5016 20.3125ZM19.5 34.125C17.4601 34.125 15.5507 33.7453 13.7719 32.9859C11.993 32.2275 10.445 31.1897 9.12763 29.8724C7.81138 28.555 6.77354 27.007 6.01412 25.2281C5.25471 23.4493 4.875 21.5399 4.875 19.5C4.875 17.4601 5.25471 15.5507 6.01412 13.7719C6.77246 11.993 7.81029 10.445 9.12763 9.12763C10.445 7.81138 11.993 6.77354 13.7719 6.01412C15.5507 5.25471 17.4601 4.875 19.5 4.875C21.5399 4.875 23.4493 5.25471 25.2281 6.01412C27.007 6.77246 28.555 7.81029 29.8724 9.12763C31.1886 10.445 32.2265 11.993 32.9859 13.7719C33.7453 15.5507 34.125 17.4601 34.125 19.5C34.125 21.5399 33.7453 23.4493 32.9859 25.2281C32.2275 27.007 31.1897 28.555 29.8724 29.8724C28.555 31.1886 27.007 32.2265 25.2281 32.9859C23.4493 33.7453 21.5399 34.125 19.5 34.125ZM19.5 32.5C20.9982 32.5 22.4721 32.2378 23.9216 31.7135C25.3722 31.1903 26.6256 30.4731 27.6819 29.562C26.6256 28.7148 25.4036 28.0448 24.0159 27.5519C22.6292 27.059 21.1239 26.8125 19.5 26.8125C17.8772 26.8125 16.367 27.0535 14.9695 27.5356C13.572 28.0177 12.3549 28.6932 11.3181 29.562C12.3744 30.472 13.6278 31.1892 15.0784 31.7135C16.5279 32.2378 18.0018 32.5 19.5 32.5ZM19.5 18.6875C20.4122 18.6875 21.1819 18.3739 21.8091 17.7466C22.4364 17.1194 22.75 16.3497 22.75 15.4375C22.75 14.5253 22.4364 13.7556 21.8091 13.1284C21.1819 12.5011 20.4122 12.1875 19.5 12.1875C18.5878 12.1875 17.8181 12.5011 17.1909 13.1284C16.5636 13.7556 16.25 14.5253 16.25 15.4375C16.25 16.3497 16.5636 17.1194 17.1909 17.7466C17.8181 18.3739 18.5878 18.6875 19.5 18.6875Z"
-              fill="black"
-            />
-          </svg>
-          <div v-show="openSidebar">
-            <div class="flex flex-col items-start text-[12px] left-14">
-              <p v-if="user" class="font-bold text-black">
-                {{ user.firstName }}
-                {{ (user?.lastName || "").charAt(0) }}.
-              </p>
-              <div class="-mt-1 text-[#0094ff] text-[12px] font-700">
-                <p v-if="user?.isAdmin" class="pt-0.5 font-semibold">Admin</p>
-              </div>
-              <div class="text-[#2b8a85] text-[12px] font-700">
-                <p v-if="!user?.isAdmin" class="pt-0.5 font-semibold">
-                  Instructor
-                </p>
+    <div :class="openSidebar == true ? '' : ' flex justify-center '">
+      <Button
+        @click="toggle"
+        link
+        aria-haspopup="true"
+        aria-controls="overlay_menu"
+        :class="
+          openSidebar
+            ? 'flex h-12 left-0 -bottom-5 rounded-xl w-[94%] hover:bg-gray-300 items-center justify-between border-[1px] border-[#c2c2c2] '
+            : 'text-[#282828] rounded-full h-10 w-10 flex items-center justify-center hover:bg-gray-300 translate-y-3'
+        "
+      >
+        <div class="flex items-center">
+          <div class="flex flex-row gap-2 items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="32"
+              height="32"
+              viewBox="0 0 39 39"
+              fill="none"
+            >
+              <path
+                d="M10.0685 28.4131C11.4498 27.4186 12.9155 26.6327 14.4658 26.0553C16.0149 25.4768 17.693 25.1875 19.5 25.1875C21.3059 25.1875 22.984 25.4768 24.5342 26.0553C26.0834 26.6327 27.5492 27.4181 28.9315 28.4115C30.004 27.3022 30.8669 25.9913 31.5201 24.479C32.1734 22.9645 32.5 21.3048 32.5 19.5C32.5 15.8979 31.2341 12.8305 28.7024 10.2976C26.1706 7.76479 23.1032 6.49892 19.5 6.5C15.8979 6.5 12.8305 7.76642 10.2976 10.2992C7.76479 12.8321 6.49892 15.899 6.5 19.5C6.5 21.3059 6.82663 22.965 7.47988 24.4774C8.13313 25.9908 8.996 27.3027 10.0685 28.4131ZM19.5016 20.3125C18.1323 20.3125 16.9769 19.8423 16.0355 18.902C15.0952 17.9627 14.625 16.8085 14.625 15.4391C14.625 14.0698 15.0952 12.9144 16.0355 11.973C16.9748 11.0327 18.129 10.5625 19.4984 10.5625C20.8677 10.5625 22.0231 11.0327 22.9645 11.973C23.9048 12.9123 24.375 14.0665 24.375 15.4359C24.375 16.8052 23.9048 17.9606 22.9645 18.902C22.0252 19.8423 20.871 20.3125 19.5016 20.3125ZM19.5 34.125C17.4601 34.125 15.5507 33.7453 13.7719 32.9859C11.993 32.2275 10.445 31.1897 9.12763 29.8724C7.81138 28.555 6.77354 27.007 6.01412 25.2281C5.25471 23.4493 4.875 21.5399 4.875 19.5C4.875 17.4601 5.25471 15.5507 6.01412 13.7719C6.77246 11.993 7.81029 10.445 9.12763 9.12763C10.445 7.81138 11.993 6.77354 13.7719 6.01412C15.5507 5.25471 17.4601 4.875 19.5 4.875C21.5399 4.875 23.4493 5.25471 25.2281 6.01412C27.007 6.77246 28.555 7.81029 29.8724 9.12763C31.1886 10.445 32.2265 11.993 32.9859 13.7719C33.7453 15.5507 34.125 17.4601 34.125 19.5C34.125 21.5399 33.7453 23.4493 32.9859 25.2281C32.2275 27.007 31.1897 28.555 29.8724 29.8724C28.555 31.1886 27.007 32.2265 25.2281 32.9859C23.4493 33.7453 21.5399 34.125 19.5 34.125ZM19.5 32.5C20.9982 32.5 22.4721 32.2378 23.9216 31.7135C25.3722 31.1903 26.6256 30.4731 27.6819 29.562C26.6256 28.7148 25.4036 28.0448 24.0159 27.5519C22.6292 27.059 21.1239 26.8125 19.5 26.8125C17.8772 26.8125 16.367 27.0535 14.9695 27.5356C13.572 28.0177 12.3549 28.6932 11.3181 29.562C12.3744 30.472 13.6278 31.1892 15.0784 31.7135C16.5279 32.2378 18.0018 32.5 19.5 32.5ZM19.5 18.6875C20.4122 18.6875 21.1819 18.3739 21.8091 17.7466C22.4364 17.1194 22.75 16.3497 22.75 15.4375C22.75 14.5253 22.4364 13.7556 21.8091 13.1284C21.1819 12.5011 20.4122 12.1875 19.5 12.1875C18.5878 12.1875 17.8181 12.5011 17.1909 13.1284C16.5636 13.7556 16.25 14.5253 16.25 15.4375C16.25 16.3497 16.5636 17.1194 17.1909 17.7466C17.8181 18.3739 18.5878 18.6875 19.5 18.6875Z"
+                fill="black"
+              />
+            </svg>
+            <div v-show="openSidebar">
+              <div
+                v-if="user"
+                class="flex flex-col items-start text-[12px] left-14"
+              >
+                <label class="font-bold text-black whitespace-nowrap">
+                  {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
+                </label>
+                <label
+                  class="font-semibold"
+                  :class="{
+                    'text-[#0094ff]': user?.isAdmin,
+                    'text-[#2b8a85]': !user?.isAdmin,
+                  }"
+                >
+                  {{ user?.isAdmin ? "Admin" : "Instructor" }}
+                </label>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </Button>
+        <Menu
+          ref="menu"
+          id="overlay_menu"
+          :model="items"
+          :popup="true"
+          class="rounded-xl text-[14px]"
+        />
+      </Button>
+    </div>
   </div>
 </template>
 
