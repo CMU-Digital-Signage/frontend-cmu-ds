@@ -302,13 +302,13 @@ const isNextButtonDisabled = computed(() => {
 });
 const showDifferentDialog = () => {
   showUpload.value = false;
-  if (selectedContentType.value.code === "NP") {
+  if (selectedContentType.value.code === CONTENT_CODE.Poster) {
     store.state.formPoster.type = MAP_TYPE.POSTER;
     selectedContentType.value = contentType.value[0];
-  } else if (selectedContentType.value.code === "VDO") {
+  } else if (selectedContentType.value.code === CONTENT_CODE.Video) {
     store.state.formPoster.type = MAP_TYPE.VIDEO;
     selectedContentType.value = contentType.value[1];
-  } else if (selectedContentType.value.code === "WV") {
+  } else if (selectedContentType.value.code === CONTENT_CODE.Webview) {
     store.state.formPoster.type = MAP_TYPE.WEBVIEW;
     selectedContentType.value = contentType.value[2];
   } else if (selectedContentType.value.code === "EP") {
@@ -501,7 +501,7 @@ const nextStepPreview = async () => {
   let err = "";
   if (!formPoster.value.image.length) {
     err = `${
-      selectedContentType.value.code === "NP" ? "Image" : "Video"
+      selectedContentType.value.code === CONTENT_CODE.Poster ? "Image" : "Video"
     } selected not found.`;
   } else if (
     formPoster.value.type == MAP_TYPE.WEBVIEW &&
@@ -1034,7 +1034,7 @@ const nextStepPreview = async () => {
                   </div>
 
                   <div
-                    v-if="selectedContentType.code === 'NP'"
+                    v-if="selectedContentType.code === CONTENT_CODE.Poster"
                     class="inline-flex gap-4 justify-center w-[196px]"
                   >
                     <Button
@@ -1114,7 +1114,7 @@ const nextStepPreview = async () => {
               </div>
 
               <div
-                v-if="selectedContentType.code !== 'EP'"
+                v-if="selectedContentType.code === CONTENT_CODE.Poster"
                 class="border-[2px] border-[#D9D9D9] grid grid-cols-3 gap-2 p-2 justify-center rounded-xl w-full max-h-full min-h-full overflow-auto"
               >
                 <div
@@ -1262,7 +1262,7 @@ const nextStepPreview = async () => {
         <div class="flex flex-row justify-between gap-3 mx-1">
           <div class="flex flex-col gap-5 justify-start w-full max-w-4xl">
             <div
-              class="bg-white p-2 mt-1  px-4 rounded-lg items-start justify-start"
+              class="bg-white p-2 mt-1 px-4 rounded-lg items-start justify-start"
               style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
             >
               <div class="inline-flex items-center">
@@ -1304,7 +1304,6 @@ const nextStepPreview = async () => {
             </div>
             <!-- File Upload -->
             <UploadImage
-       
               :posType="selectedContentType.code"
               :maxImage="undefined"
             />
