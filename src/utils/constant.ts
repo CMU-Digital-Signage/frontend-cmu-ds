@@ -3,8 +3,7 @@ import store from "@/store";
 import { Device, Display, Emergency, Poster } from "@/types";
 import axios from "axios";
 import Compressor from "compressorjs";
-import { Ref } from "vue";
-import { CONTENT_CODE, MAP_TYPE, TYPE } from "./enum";
+import { CONTENT_CODE, MAP_TYPE } from "./enum";
 
 export const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export const checkTokenExpired = async (token: string) => {
@@ -117,6 +116,8 @@ export const dateFormatter = (
       return `${day} ${monthFullStr} ${year}`; //22 November 2023
     case 3:
       return `${dayName} ${day} ${monthStr}`; //Mon 22 Nov
+    case 4:
+      return `${dayName}, ${day} ${monthStr} ${year}`; // Tue, 14 Jul 2024
     default:
       return `${day} ${monthStr} ${year}`; //22 Nov 2023;
   }
@@ -271,9 +272,7 @@ export const setFieldPoster = (data: Poster[]) => {
     if (!router.currentRoute.value.path.includes("/device/")) {
       if (e.id) {
         const users = store.getters.getUserById(e.id);
-        const uploader = `${users.firstName} ${
-          users?.lastName?.charAt(0) || ""
-        }.`;
+        const uploader = `${users.firstName} ${users.lastName}`;
         e.uploader = uploader;
       }
     }

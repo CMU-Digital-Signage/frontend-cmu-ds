@@ -34,7 +34,7 @@ import TieredMenu from "primevue/tieredmenu";
 import Menu from "primevue/menu";
 import Password from "primevue/password";
 import ProgressSpinner from "primevue/progressspinner";
-import { text } from "@fortawesome/fontawesome-svg-core";
+import "vue3-carousel-3d/dist/index.css"
 
 createApp(App)
   .use(store)
