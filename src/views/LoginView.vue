@@ -10,11 +10,17 @@
       /> -->
 
     <span
-      class="px-5 md:!text-6xl md:mt-16 text-4xl lg:mb-8 cursor-default mb-7 font-bold text-[#2a2a2a]"
+      class="px-5 md:!text-6xl md:mt-16 text-4xl lg:mb-8 cursor-default mb-7 font-bold text-[#575757]"
     >
       Dynamic content
-      <span class="!font-medium">starts with pixelParade</span>
-      <p class="text-xl font-normal mt-3 hide-on-mobile">
+      <span class="!font-medium"
+        >starts with
+        <span
+          class=" bg-gradient-to-r from-blue-500 via-green-500 to-indigo-400 text-transparent bg-clip-text"
+          >pixelParade</span
+        ></span
+      >
+      <p class="text-xl text-[#575757] font-medium mt-3 hide-on-mobile">
         Every pixel counts. Tell your story, one tiny block at a time.
       </p>
     </span>
@@ -39,6 +45,7 @@
     >
       <div class="show-on-mobile flex flex-col gap-7">
         <span class="text-[#000000]">
+          pixelParade unavailable in your screen device <br />
           To login, go to pixelParade <br />on your tablet or desktop
         </span>
 
@@ -54,10 +61,10 @@
     </div>
     <!-- card -->
     <div
-      class="hide-on-mobile grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 overflow-x-auto w-full h-full px-14 py-3 mt-5 gap-5"
+      class="hide-on-mobile ipad-landscape:overflow-x-auto ipad-landscape:grid ipad-landscape:grid-cols-5 ipad-portrait:overflow-y-auto ipad-portrait:overflow-x-auto ipad-portrait:flex  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 overflow-x-auto w-full h-full px-14 py-3 mt-5 gap-5"
     >
       <div
-        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff] min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">UPLOAD & DISPLAY</span>
@@ -74,7 +81,7 @@
       </div>
 
       <div
-        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">SCHEDULING</span>
@@ -91,7 +98,7 @@
       </div>
 
       <div
-        class="relative bg-[#f4f4f4] min-w-44 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">SHARE INFOMATION</span>
@@ -108,7 +115,7 @@
       </div>
 
       <div
-        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">ACT SWIFTLY</span>
@@ -124,7 +131,7 @@
         />
       </div>
       <div
-        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">EASE TO MANGAE</span>
@@ -177,13 +184,16 @@ export default defineComponent({
 }
 
 .bgImages {
-  background-image: url("../assets/images/bg-test-1.png");
   background-size: cover;
   background-position: center;
+  background-color: #f0f0f0;
 }
 
 .show-on-mobile {
   display: none;
+}
+.shadow {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 @media (max-width: 790px) or (max-height: 600px) {
