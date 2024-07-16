@@ -97,6 +97,12 @@ watch(
   { deep: true }
 );
 
+const onAfterSlideChange = (index: number) => {
+  selectPoster.value = posters.value?.find(
+    (e) => e.posterId == contents.value.at(index).posterId
+  );
+};
+
 const closeModalInfoContent = () => {
   showInfo.value = false;
   deletePopup.value = false;
@@ -210,6 +216,7 @@ const closeModalInfoContent = () => {
       :perspective="0"
       :controls-visible="true"
       class="!h-full flex items-center"
+      @before-slide-change="onAfterSlideChange"
     >
       <Slide
         v-for="(image, imageIndex) in contents"
