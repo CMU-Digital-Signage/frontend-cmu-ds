@@ -20,7 +20,7 @@
     </span>
 
     <Button
-      class="flex items-center hide-on-mobile bg-[#6869AE]  border-none md:mb-4 py-5 justify-center w-auto md:px-4 md:h-11 h-fit relative rounded-[10px] text-white text-lg button-container"
+      class="flex items-center hide-on-mobile bg-[#6869AE] border-none md:mb-4 py-5 justify-center w-auto md:px-4 md:h-11 h-fit relative rounded-[10px] text-white text-lg button-container"
       @click="redirectToOAuth()"
       style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
     >
@@ -37,43 +37,44 @@
     <div
       class="lg:absolute h-fit lg:top-40 sm:left-0 w-auto lg:px-14 lg:ml-32 md:w-fit rounded-[15px] flex flex-row items-center justify-center md:text-center"
     >
-      <!-- <span
-            class="md:text-lg text-sm cursor-default mb-1 mt-2 font-notoThai hide-on-mobile"
-          >
-            ลงชื่อเข้าสู่ระบบ
-          </span> -->
-      <span class="show-on-mobile text-[#000000]">
-        To login, go to pixelParade <br />on your tablet or desktop
-      </span>
-    </div>
-    <!-- <img
-          class="lg:absolute lg:top-16 lg:right-0 w-64 md:w-72 lg:w-1/2"
-          alt="picLogin"
-          src="../assets/images/picLogin.png"
-        /> -->
+      <div class="show-on-mobile flex flex-col gap-7">
+        <span class="text-[#000000]">
+          To login, go to pixelParade <br />on your tablet or desktop
+        </span>
 
+        <router-link to="/emergency">
+          <button
+            class="w-auto h-9 px-3 border-[1px] border-none bg-[#ff6961] text-white relative rounded-[8px] text-sm md:text-lg button-containerEmer flex flex-row items-center justify-center"
+          >
+            <i class="pi pi-exclamation-triangle"></i>
+            <p class="ml-2 font-semibold text-[14px]">Emergency</p>
+          </button>
+        </router-link>
+      </div>
+    </div>
     <!-- card -->
     <div
-      class="hide-on-mobile grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 overflow-x-auto  w-full h-full px-14 mt-5 gap-5"
+      class="hide-on-mobile grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 overflow-x-auto w-full h-full px-14 py-3 mt-5 gap-5"
     >
       <div
-        class="relative  bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden "
+        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">UPLOAD & DISPLAY</span>
-          <span class="flex  flex-col text-xl font-semibold break-words w-full">
+          <span class="flex flex-col text-xl font-semibold break-words w-full">
             Digital Signage
           </span>
         </div>
 
         <img
-          class="  h-full rounded-xl object-left scale-90 translate-x-3  object-cover mt-5" 
+          class="h-full rounded-xl rounded-r-none object-left scale-90 translate-x-3 object-cover mt-5"
           alt="cmulogo"
           src="../assets/images/upload.png"
         />
       </div>
+
       <div
-        class="relative  bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">SCHEDULING</span>
@@ -83,13 +84,14 @@
         </div>
 
         <img
-        class="  h-full rounded-xl object-left scale-90 translate-x-3  object-cover mt-5" 
+          class="h-full rounded-xl rounded-r-none object-left scale-90 translate-x-3 object-cover mt-5 shadow-md"
           alt="cmulogo"
           src="../assets/images/calendar.png"
         />
       </div>
+
       <div
-        class="relative bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative bg-[#f4f4f4] min-w-44 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">SHARE INFOMATION</span>
@@ -99,13 +101,14 @@
         </div>
 
         <img
-        class=" absolute rounded-xl  h-full object-left scale-150 translate-x-8 right-0 object-cover mt-[180px]" 
+          class="h-full rounded-xl rounded-r-none object-left scale-90 translate-x-3 object-cover mt-5 shadow-md"
           alt="cmulogo"
           src="../assets/images/glance.png"
         />
       </div>
+
       <div
-        class="relative bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">ACT SWIFTLY</span>
@@ -115,13 +118,13 @@
         </div>
 
         <img
-        class="  h-full object-left rounded-xl scale-90 translate-x-3  object-cover mt-3" 
+          class="h-full object-cover object-left rounded-xl rounded-r-none scale-90 translate-x-3 mt-5 shadow-md"
           alt="cmulogo"
-          src="../assets/images/emergency.png"
+          src="../assets/images/emergency2.png"
         />
       </div>
       <div
-        class="relative bg-[#f4f4f4] min-w-64 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden"
+        class="relative bg-[#f4f4f4] min-w-48 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">EASE TO MANGAE</span>
@@ -131,7 +134,7 @@
         </div>
 
         <img
-        class="  h-full object-left scale-90 rounded-xl translate-x-3  object-cover mt-3" 
+          class="h-full object-left scale-90 rounded-xl translate-x-3 object-cover mt-5 shadow-md"
           alt="cmulogo"
           src="../assets/images/user.png"
         />
