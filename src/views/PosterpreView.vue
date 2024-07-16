@@ -105,8 +105,8 @@ const closeModalInfoContent = () => {
 
 <template>
   <div class="rectangle flex flex-col">
-    <!-- <Skeleton v-if="loading" class="mt-3 !h-full rounded-lg" /> -->
-    <div v-if="!posters?.length">No Content to Preview.</div>
+    <Skeleton v-if="loading" class="mt-3 !h-full rounded-lg" />
+    <div v-else-if="!posters?.length">No Content to Preview.</div>
     <div v-else class="flex flex-col gap-3">
       <div
         class="flex overflow-auto justify-between text-start border-[#C4C4C4] border-[1px] px-6 rounded-lg"
