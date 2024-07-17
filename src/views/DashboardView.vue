@@ -324,7 +324,7 @@ const closeModalInfoContent = () => {
 <style scoped>
 .rectangle {
   margin-top: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding: 0;
 }
 </style>

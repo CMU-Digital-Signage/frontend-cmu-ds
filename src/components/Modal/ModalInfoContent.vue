@@ -172,7 +172,7 @@ const goToLink = () => {
           <div class="flex flex-col">
             <p>{{ data.title }}</p>
             <!-- Start Date to End Date -->
-            <p class="text-[14px] font-thin text-[#575757]">
+            <p class="text-[14px] font-medium text-[#575757]">
               <span
                 >{{ dateFormatter(new Date(data.start ?? data.startDate), 3) }}
                 -

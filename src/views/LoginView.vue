@@ -10,23 +10,23 @@
       /> -->
 
     <span
-      class="px-5 md:!text-6xl md:mt-16 text-4xl lg:mb-8 cursor-default mb-7 font-bold text-[#575757]"
+      class="px-5 md:!text-6xl md:mt-16 text-4xl lg:mb-8 cursor-default mb-7 font-semibold text-[#000000]"
     >
       Dynamic content
-      <span class="!font-medium"
+      <span class="!font-normal"
         >starts with
         <span
           class=" bg-gradient-to-r from-blue-500 via-green-500 to-indigo-400 text-transparent bg-clip-text"
           >pixelParade</span
         ></span
       >
-      <p class="text-xl text-[#575757] font-medium mt-3 hide-on-mobile">
+      <p class="text-xl text-[#000000] font-medium mt-3 hide-on-mobile">
         Every pixel counts. Tell your story, one tiny block at a time.
       </p>
     </span>
 
     <Button
-      class="flex items-center hide-on-mobile bg-[#6869AE] border-none md:mb-4 py-5 justify-center w-auto md:px-4 md:h-11 h-fit relative rounded-[10px] text-white text-lg button-container"
+      class="flex items-center hide-on-mobile bg-[#6869AE] border-none md:mb-4 py-6 justify-center w-auto md:px-4 md:h-11 h-fit relative rounded-[15px] text-white text-lg button-container"
       @click="redirectToOAuth()"
       style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
     >
@@ -186,7 +186,7 @@ export default defineComponent({
 .bgImages {
   background-size: cover;
   background-position: center;
-  background-color: #f0f0f0;
+  background-color: #f9f9f9;
 }
 
 .show-on-mobile {
