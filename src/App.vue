@@ -82,10 +82,10 @@ onUnmounted(() => {
 <template>
   <ModalUpload />
   <div
-    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig font-weight:100;"
+    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig "
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar class="font-weight:100" />
+    <SideBar  />
     <div class="flex flex-col w-full h-full bg-[#fefefe] overflow-hidden">
       <NavBar class="bg-[#fefefe]" />
       <router-view class="bg-[#ffffff] mb-8 mt-1" />
@@ -123,7 +123,7 @@ onUnmounted(() => {
 
 <style lang="scss">
 #app {
-  font-family: "Roboto", "SF Pro", "NotoSansThai" Helvetica, Arial, sans-serif !important;
+  font-family: "Lato", "NotoSansThai" Helvetica, Arial, sans-serif !important;
   -moz-osx-font-smoothing: grayscale !important; /* Firefox */
   -webkit-font-smoothing: subpixel-antialiased !important;
   text-rendering: optimizeLegibility !important;
@@ -165,9 +165,6 @@ Button:focus {
   color: #dbdbdb;
 }
 
-.p-component {
-  font-family: "SF Pro";
-}
 
 .p-sortable-column {
   height: 20px;

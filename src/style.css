@@ -10,22 +10,17 @@
   @tailwind variants;
 }
 
-/* @import url(./assets/images/bg-test.jpg); */
+* {
+  font-family: "Lato", "NotoSansThai";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 @font-face {
   font-family: "SF Pro";
   src: url("~@/assets/fonts/SF-Pro.ttf") format("truetype");
-  font-weight: normal;
   font-style: normal;
-  -webkit-font-smoothing: antialiased !important;
-}
-
-@font-face {
-  font-family: "SF Pro Rounded";
-  src: url("~@/assets/fonts/SF-Pro-Rounded-Medium.otf") format("opentype");
   font-weight: normal;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased !important;
 }
 
 @font-face {
@@ -33,10 +28,5 @@
   src: url("~@/assets/fonts/NotoSansThai.ttf") format("opentype");
   font-weight: normal;
   font-style: normal;
-  unicode-range: U+0E00-U+0E7F;
-  -webkit-font-smoothing: antialiased !important;
-}
-
-* {
-  font-family: "SF Pro", "NotoSansThai";
+  unicode-range: U+0E00- U+0E7F;
 }

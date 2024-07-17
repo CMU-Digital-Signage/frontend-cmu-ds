@@ -759,7 +759,7 @@ const nextStepPreview = async () => {
           >
             {{ editcontentType.code ? "Edit Content" : "Upload Content" }}
           </div>
-          <div class="text-[14px] font-thin text-[#828282]">
+          <div class="text-[14px] font-medium text-[#828282]">
             {{ selectedContentType.header }} Content
           </div>
         </div>

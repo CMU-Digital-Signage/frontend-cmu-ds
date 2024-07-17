@@ -122,7 +122,7 @@ const del = async () => {
         </template>
         <template #body="rowData">
           <div class="flex items-center gap-3">
-            <p class="font-light">{{ rowData.data.deviceName }}</p>
+            <p class="font-normal">{{ rowData.data.deviceName }}</p>
             <i
               class="pi pi-info-circle cursor-pointer"
               @mouseover="
@@ -168,7 +168,7 @@ const del = async () => {
         </template>
         <template #body="rowData">
           <div class="flex items-center gap-3">
-            <p class="font-light">
+            <p class="font-normal">
               {{ rowData.data.room }}
             </p>
           </div>

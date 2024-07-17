@@ -333,7 +333,7 @@ const handleChangePassword = async () => {
         <div class="text-[14px] text-[#049a7e] font-semibold">
           pixelParade | {{ user.firstName }} {{ user.lastName }}
         </div>
-        <div class="text-[12px] mt-2 mb-8 font-thin text-[#828282]">
+        <div class="text-[12px] mt-2 mb-8 font-medium text-[#828282]">
           pixelParade includes an Emergency Activation feature to display
           emergency posters on all screens.
           <span class="font-bold text-black">
@@ -343,7 +343,6 @@ const handleChangePassword = async () => {
         </div>
       </div>
 
-      <label class="text-[17px] font-semibold pt-2 w-32"> </label>
       <div class="flex flex-col gap-2 w-full">
         <label
           class="text-[12px] flex font-semibold text-center"

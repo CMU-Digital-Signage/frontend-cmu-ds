@@ -55,6 +55,7 @@ const loadContents = async () => {
     );
     contents.value = loadedContents.flat();
   }
+  selectPoster.value = posters.value[0];
   loading.value = false;
 };
 const loading = ref(false);
@@ -65,7 +66,6 @@ const deletePopup = ref(false);
 
 onMounted(async () => {
   if (posters.value?.length) {
-    selectPoster.value = posters.value[0];
     await loadContents();
   }
 });
@@ -75,24 +75,18 @@ watch([filterDate, filterTime], async () => {
   image.value.image = null;
 
   if (posters.value?.length) {
-    selectPoster.value = posters.value[0];
+    await loadContents();
   } else {
     selectPoster.value = undefined;
   }
-  await loadContents();
 });
 
 watch(
   posters,
   async () => {
-    if (
-      posters.value &&
-      selectPoster.value &&
-      !posters.value.find((e) => e.posterId === selectPoster.value?.posterId)
-    ) {
-      selectPoster.value = posters.value[0];
+    if (posters.value.length) {
+      await loadContents();
     }
-    await loadContents();
   },
   { deep: true }
 );
@@ -191,7 +185,6 @@ const closeModalInfoContent = () => {
         </div>
       </div>
       <div
-        v-if="selectPoster?.description?.length"
         class="flex gap-3 text-start text-[14px] border-[#C4C4C4] border-[1px] py-3 px-6 rounded-lg"
       >
         <svg
@@ -207,7 +200,7 @@ const closeModalInfoContent = () => {
         </svg>
         <div class="flex flex-col">
           <p class="font-semibold">Description</p>
-          <p>{{ selectPoster.description }}</p>
+          <p>{{ selectPoster?.description ?? "-" }}</p>
         </div>
       </div>
     </div>
