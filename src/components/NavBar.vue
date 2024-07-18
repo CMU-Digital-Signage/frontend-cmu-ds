@@ -14,6 +14,7 @@ import { typePoster, statusPoster, statusEmer } from "@/utils/constant";
 import { Poster } from "@/types";
 import { TYPE, MAP_TYPE } from "@/utils/enum";
 import ModalAddEditDevice from "@/components/Modal/ModalAddEditDevice.vue";
+import Checkbox from "primevue/checkbox";
 
 const filterInput = computed(() => store.state.filterInputPosters);
 const user = computed(() => store.state.userInfo);
@@ -25,6 +26,10 @@ const viewType = computed(() => store.state.viewType);
 const clickSearch = ref(false);
 const searchP = ref<string>("");
 const loading = ref(false);
+const menu = ref();
+const toggle = (event: any) => {
+  menu.value.toggle(event);
+};
 const toast = useToast();
 
 const selectDevice = computed({
@@ -41,6 +46,8 @@ const devicePreview = computed(() =>
 const panel = ref();
 
 watchEffect(() => {
+  console.log(filterInput.value.type);
+
   if (router.currentRoute.value.path === "/search-content") {
     clickSearch.value = true;
   } else {
@@ -117,6 +124,10 @@ const toggleOverlay = (e: any) => {
 
 const closeModalAddEditDevice = () => {
   showPopupAddDevice.value = false;
+};
+
+const handleDialogClick = (event: any) => {
+  event.stopPropagation();
 };
 </script>
 
@@ -328,125 +339,154 @@ const closeModalAddEditDevice = () => {
     </ul>
 
     <!-- "Content Manage" -->
-    <ul
-      v-if="$route.path === '/content'"
-      class="flex-wrap xl:gap-2 md:gap-2 text-[14px] xl:text-[16px] md:text-[15px]"
-    >
-      <li>
-        <label
-          class="text-[12px] md:ml-[7px] mr-1 xl:text-[14px] md:text-[10px]"
-          >Title</label
-        >
-        <InputText
-          id="title"
-          v-model="filterInput.title"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-28 xl:w-32 rounded-lg"
-          placeholder="Ex.CPE Music"
-        ></InputText>
-      </li>
-      <li v-if="store.state.selectTabview !== 1">
-        <label
-          class="text-[12px] md:ml-[7px] ml-[12px] mr-1 xl:text-[14px] md:text-[10px]"
-          >Uploader</label
-        >
-        <InputText
-          id="uploader"
-          v-model="filterInput.uploader"
-          class="border text-[13px] font-normal border-[#C6C6C6] pl-3 ml-1 h-7 py-4 md:w-28 xl:w-32 rounded-lg"
-          placeholder="Ex.Navadon"
-        ></InputText>
-      </li>
-
-      <li v-if="store.state.selectTabview !== 1">
-        <label
-          class="text-[12px] md:ml-[7px] ml-[12px] mr-1 xl:text-[14px] md:text-[10px]"
-          >Upload Date
-        </label>
-        <Calendar
-          v-model="filterInput.uploadDate"
-          showButtonBar
-          :manualInput="false"
-          showIcon
-          iconDisplay="input"
-          inputId="icondisplay"
-          dateFormat="dd M yy"
-          inputClass="text-[13px] lg:text-[16px]"
-          class="w-[90px] md:w-[100px] xl:w-[120px] h-8 rounded-lg align-middle"
-          :pt="{
-            input: { class: ` text-[10px] ` },
-          }"
-        />
-      </li>
-      <li v-if="store.state.selectTabview === 0">
-        <label
-          class="text-[12px] ml-[12px] md:ml-[7px] mr-1 xl:text-[14px] md:text-[10px]"
-        >
-          Type
-        </label>
-        <Dropdown
-          v-model="filterInput.type"
-          :options="typePoster"
-          optionLabel="type"
-          optionValue="type"
-          inputClass="text-[13px] lg:text-[16px] text-left"
-          :showClear="filterInput.status !== null"
-          class="rounded-lg items-center h-8 w-24 md:w-38 xl:w-32"
-        >
-          <template #option="slotProps">
-            <Tag
-              rounded
-              :icon="`pi pi-${
-                typePoster.find((e) => e.type == slotProps.option.type)?.icon
-              }`"
-              :value="TYPE[slotProps.option.type as MAP_TYPE]"
-              :severity="slotProps.option.severity"
-              :pt="{
-                value: 'text-[12px]',
-              }"
-            />
-          </template>
-        </Dropdown>
-      </li>
-      <li>
-        <label
-          class="text-[12px] ml-[12px] md:ml-[7px] mr-1 xl:text-[14px] md:text-[10px]"
-        >
-          Status
-        </label>
-        <Dropdown
-          v-model="filterInput.status"
-          :options="store.state.selectTabview === 0 ? statusPoster : statusEmer"
-          optionLabel="status"
-          optionValue="status"
-          inputClass="text-[13px] lg:text-[16px] text-left"
-          :showClear="filterInput.status !== ''"
-          class="rounded-lg items-center h-8 w-24 md:w-38 xl:w-32"
-        >
-          <template #option="slotProps">
-            <Tag
-              :value="slotProps.option.status"
-              :severity="slotProps.option.severity"
-              :pt="{
-                value: 'text-[12px]',
-              }"
-            />
-          </template>
-        </Dropdown>
-      </li>
-      <li>
+    <ul v-if="$route.path === '/content'" class="justify-between">
+      <label class="font-semibold">Content</label>
+      <div class="inline-flex md:gap-2 lg:gap-3 items-center justify-center">
         <div>
-          <!-- Button for md screens -->
-          <li>
-            <div class="md:hidden xl:block">
-              <Button
-                label="Clear"
-                @click="store.commit('resetFilter')"
-                class="flex justify-end ml-3 right-0 font-bold rounded-[8px] h-8 border-0 bg-red-500 text-right hover:bg-red-600"
-              />
-            </div>
-          </li>
+          <InputText
+            id="title"
+            v-model="filterInput.title"
+            class="border md:text-[12px] lg:text-[14px] font-normal border-[#C6C6C6] pl-3 h-7 py-4 md:w-32 lg:w-48 rounded-lg"
+            placeholder="Content title"
+          ></InputText>
         </div>
-      </li>
+        <div v-if="store.state.selectTabview !== 1">
+          <InputText
+            id="uploader"
+            v-model="filterInput.uploader"
+            class="border md:text-[12px] lg:text-[14px] font-normal border-[#C6C6C6] pl-3 h-7 py-4 md:w-32 lg:w-48 rounded-lg"
+            placeholder="Uploader name"
+          ></InputText>
+        </div>
+        <div v-if="store.state.selectTabview !== 1">
+          <Calendar
+            v-model="filterInput.uploadDate"
+            showButtonBar
+            placeholder="Upload date"
+            :manualInput="false"
+            showIcon
+            iconDisplay="input"
+            inputId="icondisplay"
+            dateFormat="dd M yy"
+            class="w-[90px] md:w-32 lg:w-48 h-8 align-middle"
+            :pt="{
+              input: {
+                class: ` md:text-[12px] lg:text-[14px] rounded-lg pl-3 shadow-none `,
+              },
+            }"
+          />
+        </div>
+
+        <div class="relative flex flex-col items-end justify-end">
+          <Button
+            @click="toggle"
+            aria-haspopup="true"
+            aria-controls="overlay_menu"
+            class="flex justify-end text-sm text-white right-0 font-medium rounded-[8px] h-8 border-0 bg-[#45B9B3] text-right hover:bg-[#2f8e89]"
+          >
+            <div class="flex gap-2 items-center font-medium text-[14px]">
+              <i
+                class="pi pi-filter text-white rounded-full"
+                style="font-size: 14px"
+              ></i>
+              <p>Filter</p>
+            </div>
+            <Menu
+              ref="menu"
+              id="overlay_menu"
+              :popup="true"
+              class="rounded-xl text-[14px]"
+            >
+              <template #start>
+                <div class="flex flex-col items-start gap-4 py-2 px-4">
+                  <label
+                    class="text-[12px] xl:text-[14px] font-semibold md:text-[10px]"
+                  >
+                    Add Filter
+                  </label>
+
+                  <div
+                    v-if="store.state.selectTabview === 0"
+                    class="flex flex-col items-start gap-2"
+                  >
+                    <!-- Type Filter -->
+                    <div
+                      v-if="store.state.selectTabview === 0"
+                      class="flex flex-col items-start gap-2"
+                    >
+                      <label class="text-[12px] xl:text-[14px] md:text-[10px]"
+                        >Type</label
+                      >
+                      <!-- Checkbox for Type -->
+                      <div
+                        v-for="type in typePoster"
+                        :key="type.type"
+                        class="flex items-center"
+                      >
+                        <Checkbox
+                          v-model="filterInput.type"
+                          :showClear="filterInput.status !== null"
+                          :value="type.type"
+                          class="mr-3"
+                        />
+                        <Tag
+                          rounded
+                          :icon="`pi pi-${type.icon}`"
+                          :value="TYPE[type.type as MAP_TYPE]"
+                          :severity="type.severity"
+                          :pt="{ value: 'text-[14px]' }"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-col items-start gap-2">
+                    <!-- Status Filter -->
+                    <div class="flex flex-col items-start gap-2">
+                      <label class="text-[12px] xl:text-[14px] md:text-[10px]"
+                        >Status</label
+                      >
+                      <!-- Checkbox for Status-->
+                      <div
+                        v-for="status in store.state.selectTabview === 0
+                          ? statusPoster
+                          : statusEmer"
+                        :key="status.status"
+                        class="flex items-center"
+                      >
+                        <Checkbox
+                          v-model="filterInput.status"
+                          :showClear="filterInput.status !== null"
+                          :value="status.status"
+                          class="mr-3"
+                        />
+                        <Tag
+                          rounded
+                          :value="status.status"
+                          :severity="status.severity"
+                          :pt="{ value: 'text-[14px]' }"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Button Clear-->
+                  <div class="w-full flex items-center justify-center">
+                    <Button
+                      label="Clear"
+                      @click="store.commit('resetFilter')"
+                      class="text-sm text-[#6869AD] font-medium rounded-[8px] h-8 w-44 border-1 border-[#6869AD] bg-white text-right hover:bg-[#6869AD] hover:text-white"
+                      :pt="{
+                        label: 'flex justify-center items-center',
+                      }"
+                    />
+                  </div>
+                </div>
+              </template>
+            </Menu>
+          </Button>
+        </div>
+      </div>
     </ul>
 
     <!-- "calendar dashboard"-->
@@ -557,7 +597,8 @@ const closeModalAddEditDevice = () => {
 
 <style scoped>
 .shadow-navbar {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+    rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
 .button-containerEmer:hover {
@@ -567,7 +608,7 @@ const closeModalAddEditDevice = () => {
 ul {
   display: inline-flex;
   align-items: center;
-  
+
   width: 100%;
 }
 

@@ -30,8 +30,8 @@ export default createStore({
       title: "",
       uploader: "",
       uploadDate: undefined as Date | undefined,
-      type: null as MAP_TYPE | null,
-      status: "" as string,
+      type: [] as MAP_TYPE[] | null,
+      status: [] as string[] | null,
       date: new Date(new Date().setHours(23, 59, 59, 0)) as Date,
       time: new Date(
         1970,
@@ -63,11 +63,9 @@ export default createStore({
     },
     resetFilter(state) {
       state.filterInputPosters = {
-        title: "",
-        uploader: "",
-        uploadDate: undefined,
+        ...state.filterInputPosters,
         type: null,
-        status: "",
+        status: null,
         date: new Date(new Date().setHours(23, 59, 59, 0)),
         time: new Date(
           1970,
