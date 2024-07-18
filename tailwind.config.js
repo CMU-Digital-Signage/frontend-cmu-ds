@@ -4,15 +4,15 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        'ipad-landscape': '1024px',
-        'ipad-portrait': '768px',
+        "ipad-landscape": "1024px",
+        "ipad-portrait": "768px",
       },
     },
     fontFamily: {
-      'sf-pro': ['SF Pro'],
-      'sf-pro-rounded': ['SF Pro Rounded'],
-      notoThai: ['NotoSansThai'],
-      lato: ['Lato'],
+      "sf-pro": ["SF Pro"],
+      "sf-pro-rounded": ["SF Pro Rounded"],
+      notoThai: ["NotoSansThai"],
+      lato: ["Lato"],
     },
   },
   plugins: [],

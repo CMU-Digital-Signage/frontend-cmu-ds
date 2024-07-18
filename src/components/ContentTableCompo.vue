@@ -42,7 +42,8 @@ const emerPosters = computed(() =>
         e.incidentName
           .toLowerCase()
           .includes(filterInput.value.title.toLowerCase())) &&
-      (!filterInput.value.status || e.status === filterInput.value.status)
+      (!filterInput.value.status?.length ||
+        filterInput.value.status.includes(e.status as string))
     );
   })
 );
@@ -60,8 +61,10 @@ const uniquePosters = computed(() =>
       (!filterInput.value.uploadDate ||
         dateFormatter(e.createdAt) ===
           dateFormatter(filterInput.value.uploadDate)) &&
-      (!filterInput.value.type || e.type === filterInput.value.type) &&
-      (!filterInput.value.status || e.status === filterInput.value.status)
+      (!filterInput.value.type?.length ||
+        filterInput.value.type.includes(e.type)) &&
+      (!filterInput.value.status?.length ||
+        filterInput.value.status.includes(e.status))
     );
   })
 );

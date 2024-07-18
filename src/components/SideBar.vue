@@ -407,11 +407,10 @@ const handleChangePassword = async () => {
               }"
               v-show="openSidebar"
             >
-              <img
-                class="w-28 items-center"
-                alt="textlogo"
-                src="../assets/images/text_logo_v2.png"
-              />
+              <span
+                class="bg-gradient-to-r from-blue-500 via-green-500 to-indigo-400 text-transparent bg-clip-text"
+                >pixelParade</span
+              >
             </div>
           </div>
         </div>
@@ -456,7 +455,7 @@ const handleChangePassword = async () => {
           label="Upload content"
           class="upload-button mt-[37px] items-center justify-center"
           @click="store.state.showUpload = true"
-          :pt="{ label: { class: 'flex-none ml-3 text-white' } }"
+          :pt="{ label: { class: 'flex-none ml-3 text-white font-semibold' } }"
         >
           <template #icon>
             <svg
@@ -705,7 +704,7 @@ const handleChangePassword = async () => {
               :style="{
                 'background-color':
                   $route.path === '/deviceManage' ? '#4bdbff4d' : '',
-                color: $route.path === '/deviceManage' ? '#297dbeF' : '',
+                color: $route.path === '/deviceManage' ? '#297dbe' : '',
               }"
             >
             </Button>
@@ -935,10 +934,7 @@ const handleChangePassword = async () => {
               />
             </svg>
             <div v-show="openSidebar">
-              <div
-                v-if="user"
-                class="flex flex-col items-start text-[12px] "
-              >
+              <div v-if="user" class="flex flex-col items-start text-[12px]">
                 <label class="font-bold text-black whitespace-nowrap">
                   {{ user.firstName }} {{ (user?.lastName || "").charAt(0) }}.
                 </label>

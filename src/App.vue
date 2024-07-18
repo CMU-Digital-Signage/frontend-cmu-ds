@@ -82,10 +82,10 @@ onUnmounted(() => {
 <template>
   <ModalUpload />
   <div
-    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig "
+    class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig"
     v-if="!$route.meta.hideSidebar && user.id"
   >
-    <SideBar  />
+    <SideBar />
     <div class="flex flex-col w-full h-full bg-[#fefefe] overflow-hidden">
       <NavBar class="bg-[#fefefe]" />
       <router-view class="bg-[#ffffff] mb-8 mt-1" />
@@ -164,7 +164,6 @@ Button:focus {
 .p-component:disabled {
   color: #dbdbdb;
 }
-
 
 .p-sortable-column {
   height: 20px;
@@ -272,9 +271,10 @@ Button:focus {
   color: #475569;
 }
 
-.p-inputtext:focus {
+.p-inputtext:focus,
+.p-inputtext:hover {
   box-shadow: none !important;
-  border-color: #ced4da;
+  border-color: #c6c6c6 !important;
 }
 
 /* Scroll bar stylings */
