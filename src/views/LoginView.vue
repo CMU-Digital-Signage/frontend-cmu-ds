@@ -134,7 +134,7 @@
         class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
-          <span class="text-sm font-normal">EASE TO MANGAE</span>
+          <span class="text-sm font-normal">EASE TO MANAGE</span>
           <span class="flex flex-col text-xl font-semibold break-words w-full">
             User & Device
           </span>
