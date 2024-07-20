@@ -480,7 +480,6 @@ export const loopPoster = (posters: Poster[], emerPoster?: Emergency) => {
       if (!currentPoster) {
         currentIndexImage = 0;
         currentIndexPoster = (currentIndexPoster + 1) % posters.length;
-        posters[currentIndexPoster + 1];
       }
       currentIndexPoster = findNextValidPosterIndex();
       updatePosterInterval();
