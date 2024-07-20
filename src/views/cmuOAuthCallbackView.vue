@@ -1,11 +1,20 @@
 <template>
-  <div class="py-32 flex flex-col gap-10">
-    <h1 class="text-3xl font-bold whitespace-break-spaces">{{ message }}</h1>
-    <div class="justify-center flex flex-row gap-10 text-xl">
+  <div class="flex  h-full  justify-center items-center flex-col ">
+    <img
+              class=" w-[500px] mb-10 "
+              alt="cmulogo"
+              src="../assets/images/403.png"
+            />
+            <p class=" text-[36px] text-teal-500 font-semibold mb-4">Access Denied</p>
+            <p class=" text-[18px] text-[#575757] font-normal">Look like your CMU account don't have permission to access this page.  </p>
+            <p class=" text-[18px] text-[#575757] font-normal mb-14 mt-[2px]">Reach out to system adminstrator to gain access </p>
+    <div class="justify-center flex flex-row items-center text-xl">
+   
       <Button
-        class="bg-[#ED3838] border-0 text-xl rounded-xl"
+        class=" text-cyan-600 bg-none border-none font-normal  text-xl hover:underline "
+        link
         @click="$router.push('/login')"
-        >Back</Button
+        >Back to login</Button
       >
     </div>
   </div>
