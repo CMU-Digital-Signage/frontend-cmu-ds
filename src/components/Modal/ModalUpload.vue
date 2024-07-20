@@ -46,10 +46,10 @@ const contentType = ref([
     disabled: false,
   },
   {
-    header: "Video (Coming soon)",
+    header: "Video (Beta)",
     code: CONTENT_CODE.Video,
     icon: "video",
-    disabled: true,
+    disabled: false,
   },
   {
     header: "Website URL",

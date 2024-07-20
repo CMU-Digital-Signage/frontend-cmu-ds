@@ -30,6 +30,7 @@ const emerPoster = computed(() =>
   store.state.emerPosters ? store.state.emerPosters[0] : undefined
 );
 const image = computed(() => store.state.currentImage);
+const videoEl = ref<HTMLVideoElement | null>();
 const stopLoop = ref();
 const dateTime = ref(new Date());
 let intervalPoster: any = null;
@@ -100,6 +101,17 @@ onMounted(async () => {
     intervalPoster = setInterval(async () => {
       await fetchData();
     }, 1000 * 16); // fetch every 16 sec
+  }
+});
+
+watch(posters, (newPosters, oldPosters) => {
+  if (
+    newPosters?.length !== oldPosters?.length &&
+    posters.value &&
+    stopLoop.value
+  ) {
+    stopLoop.value();
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
   }
 });
 
@@ -268,17 +280,25 @@ onUnmounted(() => {
     <div
       v-else
       class="flex-1"
-      :class="{ 'overflow-hidden relative': image.type == MAP_TYPE.WEBVIEW }"
+      :class="{ 'overflow-hidden relative': image.type !== MAP_TYPE.POSTER }"
     >
       <transition v-if="image.image" name="fade" mode="out-in">
         <iframe
           v-if="image.type == MAP_TYPE.WEBVIEW && image.image"
           title="webview"
-          :src="`${image.image}`"
+          :src="image.image"
           scrolling="no"
           fullScreen="true"
           class="absolute overflow-hidden pointer-events-none duration-500 transition-opacity"
         ></iframe>
+        <video
+          v-else-if="image.type == MAP_TYPE.VIDEO && image.image"
+          ref="videoEl"
+          muted
+          autoplay
+          :src="image.image"
+          class="absolute m-auto duration-500 transition-opacity"
+        ></video>
         <img
           v-else-if="image.image"
           class="max-w-screen h-screen m-auto duration-500 transition-opacity"
@@ -293,6 +313,15 @@ onUnmounted(() => {
 
 <style scoped>
 iframe {
+  width: 100vh;
+  height: 90vw;
+  transform: rotate(-90deg);
+  top: 100%;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+video {
   width: 100vh;
   height: 90vw;
   transform: rotate(-90deg);

@@ -244,6 +244,7 @@ const closeModalInfoContent = () => {
         <video
           v-else-if="image.type == MAP_TYPE.VIDEO"
           :controls="image.posterId == selectPoster?.posterId"
+          muted
           :src="image.image"
         ></video>
         <img

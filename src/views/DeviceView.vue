@@ -3,7 +3,13 @@ import store from "@/store";
 import DeviceBlock from "@/components/DeviceBlock.vue";
 import { computed, onMounted, ref, watch } from "vue";
 
-const devices = computed(() => store.state.devices);
+const devices = computed(() =>
+  store.state.devices?.sort((a, b) => {
+    if (a.room! < b.room!) return -1;
+    else if (a.room! > b.room!) return 1;
+    else return 1;
+  })
+);
 const loading = ref(false);
 const floors = ref<string[] | any>([]);
 onMounted(() => {

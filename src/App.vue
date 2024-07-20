@@ -277,6 +277,20 @@ Button:focus {
   border-color: #c6c6c6 !important;
 }
 
+/* Hide the default volume control */
+video::-webkit-media-controls-mute-button,
+video::-webkit-media-controls-volume-slider {
+  display: none !important;
+}
+video::-moz-media-controls-mute-button,
+video::-moz-media-controls-volume-slider {
+  display: none !important;
+}
+video::-ms-media-controls-mute-button,
+video::-ms-media-controls-volume-slider {
+  display: none !important;
+}
+
 /* Scroll bar stylings */
 ::-webkit-scrollbar {
   width: 8px;

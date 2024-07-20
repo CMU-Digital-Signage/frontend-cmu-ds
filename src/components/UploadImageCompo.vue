@@ -278,6 +278,7 @@ const removeContent = (i: number) => {
           ref="videoEl"
           :src="formPoster.image[0].image.dataURL"
           controls
+          muted
           @loadedmetadata="checkVideoDuration"
           @play="playing = true"
           @pause="playing = false"
