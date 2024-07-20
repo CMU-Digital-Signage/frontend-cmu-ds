@@ -1,11 +1,9 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-
 export default defineComponent({
   name: "UploadImage",
 });
 </script>
-
 <script setup lang="ts">
 import { computed, ref, toRefs, defineProps, onMounted } from "vue";
 import { convertUrlToFile, onUpload, rotate } from "@/utils/constant";
@@ -13,13 +11,19 @@ import store from "@/store";
 import { CONTENT_CODE } from "@/utils/enum";
 import { useToast } from "primevue/usetoast";
 
-const props = defineProps<{ posType: string; maxImage: number | undefined }>();
-const { posType, maxImage } = toRefs(props);
+const props = defineProps<{
+  posType: string;
+  maxContent: number | undefined;
+}>();
+const { posType, maxContent } = toRefs(props);
 const formPoster = computed(() => store.state.formPoster);
 const formEmer = computed(() => store.state.formEmer);
 const toast = useToast();
 const fileUpload = ref();
 const loading = ref(false);
+const videoEl = ref<HTMLVideoElement | null>();
+const playing = ref(false);
+const isHoveredVideo = ref(false);
 
 onMounted(async () => {
   if (formPoster.value.image) {
@@ -34,19 +38,28 @@ onMounted(async () => {
   }
 });
 
-const errorSelectFile = async () => {
-  if (
-    maxImage.value &&
-    formPoster.value.image?.length + fileUpload.value.files.length >=
-      maxImage.value
-  ) {
-    toast.add({
-      severity: "error",
-      summary: "Invalid file limit",
-      detail: `File limit : ${maxImage.value}`,
-      life: 3000,
-    });
+const checkVideoDuration = () => {
+  if (videoEl.value) {
+    const duration = videoEl.value.duration;
+    if (maxContent.value && duration > maxContent.value) {
+      removeContent(0);
+      errorSelectFile();
+    } else {
+      store.state.formDisplay.forEach((e) => (e.duration = duration));
+    }
+  }
+};
+
+const togglePlay = () => {
+  if (playing.value) {
+    videoEl.value?.pause();
   } else {
+    videoEl.value?.play();
+  }
+};
+
+const errorSelectFile = async (isFromComp = false) => {
+  if (isFromComp) {
     const message = fileUpload.value.messages[0]
       .split(": ")
       .slice(1)
@@ -59,17 +72,39 @@ const errorSelectFile = async () => {
       life: 3000,
     });
   }
+  //  if (
+  //   maxContent.value &&
+  //   (formPoster.value.image?.length + fileUpload.value.files.length >=
+  //     maxContent.value ||
+  //     (videoEl.value && videoEl.value?.duration > maxContent.value))
+  // )
+  else {
+    toast.add({
+      severity: "error",
+      summary: "Invalid file limit",
+      detail: `File limit : ${maxContent.value} ${
+        posType.value === CONTENT_CODE.Video ? "seconds" : "images"
+      }`,
+      life: 3000,
+    });
+  }
 };
 
-const selectImage = async (event: any) => {
+const selectContent = async (event: any) => {
   loading.value = true;
   if (!store.state.formPoster.image) {
     store.state.formPoster.image = [];
   }
+  if (
+    posType.value === CONTENT_CODE.Video &&
+    store.state.formPoster.image.length
+  ) {
+    removeContent(0);
+  }
   const initialLength = store.state.formPoster.image.length;
   const filePromises = event.files.map(async (e: any, i: number) => {
     const priority = initialLength + i + 1;
-    const file = await onUpload(e);
+    const file = await onUpload(e, posType.value);
     file.name = `${formPoster.value.title}-${priority}.${e.name
       .split(".")
       .pop()}`;
@@ -83,7 +118,7 @@ const selectImage = async (event: any) => {
   loading.value = false;
 };
 
-const removeImage = (i: number) => {
+const removeContent = (i: number) => {
   store.state.formPoster.image.splice(i, 1);
   store.state.formPoster.image.forEach((e, index) => {
     e.priority = index + 1;
@@ -98,22 +133,22 @@ const removeImage = (i: number) => {
   <FileUpload
     ref="fileUpload"
     class="mt-12"
-    accept="image/*"
+    :accept="posType === CONTENT_CODE.Video ? 'video/mp4' : 'image/*'"
     :show-upload-button="false"
-    :multiple="[CONTENT_CODE.Poster, CONTENT_CODE.Video].includes(posType as CONTENT_CODE)"
-    :fileLimit="maxImage"
+    :multiple="[CONTENT_CODE.Poster].includes(posType as CONTENT_CODE)"
+    :fileLimit="posType === CONTENT_CODE.Poster ? maxContent : 1"
     :maxFileSize="52428800"
     @select="
       async (e) => {
         if (posType === 'EP' && e.files[0]) {
-          formEmer.emergencyImage = await onUpload(e.files[0]);
+          formEmer.emergencyImage = await onUpload(e.files[0], posType);
         } else if (
           e.files[0] &&
-          maxImage &&
-          formPoster.image.length + e.files.length <= maxImage
+          maxContent &&
+          formPoster.image.length + e.files.length <= maxContent
         ) {
-          selectImage(e);
-        } else errorSelectFile();
+          selectContent(e);
+        } else errorSelectFile(true);
         if (e.files.length) e.files.splice(0, e.files.length);
       }
     "
@@ -233,30 +268,29 @@ const removeImage = (i: number) => {
           </div>
         </div>
       </div>
-
-      <!-- <div
-        v-else-if="posType === 'EP' && formEmer.emergencyImage"
-        class="flex flex-row justify-center text-center items-center gap-3"
+      <div
+        v-else-if="posType === CONTENT_CODE.Video && formPoster.image?.length"
+        @mouseover="isHoveredVideo = true"
+        @mouseleave="isHoveredVideo = false"
+        class="flex flex-col text-center justify-center items-center relative"
       >
-        <i class="pi pi-power-off"></i>
+        <video
+          ref="videoEl"
+          :src="formPoster.image[0].image.dataURL"
+          controls
+          @loadedmetadata="checkVideoDuration"
+          @play="playing = true"
+          @pause="playing = false"
+        ></video>
         <div
-          class="flex justify-center bg-black"
-          :style="{
-            width: `${2160 / 20}px`,
-            height: `${3840 / 20}px`,
-          }"
+          v-show="!playing || (playing && isHoveredVideo)"
+          class="absolute cursor-pointer rounded-full w-10 h-10 flex items-center justify-center bg-transparent text-white border-white border-2"
+          @click="togglePlay"
         >
-          <img
-            :alt="formEmer.incidentName"
-            :src="formEmer.emergencyImage.dataURL"
-            class="max-w-full max-h-full m-auto rotate-90"
-            :style="{
-              maxWidth: `${3840 / 20}px`,
-              maxHeight: `${2160 / 20}px`,
-            }"
-          />
+          <font-awesome-icon v-if="!playing" icon="play" />
+          <i v-else class="pi pi-pause"></i>
         </div>
-      </div> -->
+      </div>
       <div v-else class="grid grid-cols-5 gap-2">
         <div
           v-for="(image, index) in formPoster.image"
@@ -265,7 +299,7 @@ const removeImage = (i: number) => {
           @click="
             () => {
               removeFileCallback(index);
-              removeImage(index);
+              removeContent(index);
             }
           "
         >
@@ -290,6 +324,9 @@ const removeImage = (i: number) => {
         />
         <p class="mt-4 text-[14px] mb-0">
           Drag and drop files to here to upload.
+        </p>
+        <p v-if="posType === CONTENT_CODE.Video" class="text-[#14c6a4]">
+          Support .mp4 only
         </p>
       </div>
     </template>

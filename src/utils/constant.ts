@@ -193,7 +193,7 @@ export const convertUrlToFile = async (url: string): Promise<any> => {
   };
 };
 
-export const onUpload = (e: any): Promise<any> => {
+export const onUpload = (e: any, posType: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     if (!e) reject("No file selected");
 
@@ -216,11 +216,13 @@ export const onUpload = (e: any): Promise<any> => {
 
     const compressLoop = async () => {
       quality *= 0.4;
-      try {
-        e = await compressFile(quality);
-      } catch (error) {
-        reject(error);
-        return;
+      if (posType !== CONTENT_CODE.Video) {
+        try {
+          e = await compressFile(quality);
+        } catch (error) {
+          reject(error);
+          return;
+        }
       }
       const reader = new FileReader();
       reader.onload = () => {

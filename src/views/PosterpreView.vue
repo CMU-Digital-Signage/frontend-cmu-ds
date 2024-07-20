@@ -30,6 +30,7 @@ const posters = computed(() =>
   })
 );
 const contents = ref<any>([]);
+const currentIndex = ref(0);
 const loadContents = async () => {
   loading.value = true;
   if (posters.value) {
@@ -54,8 +55,9 @@ const loadContents = async () => {
       )
     );
     contents.value = loadedContents.flat();
+    selectPoster.value = posters.value[0];
+    currentIndex.value = 0;
   }
-  selectPoster.value = posters.value[0];
   loading.value = false;
 };
 const loading = ref(false);
@@ -84,7 +86,7 @@ watch([filterDate, filterTime], async () => {
 watch(
   posters,
   async () => {
-    if (posters.value.length) {
+    if (posters.value?.length) {
       await loadContents();
     }
   },
@@ -95,6 +97,7 @@ const onAfterSlideChange = (index: number) => {
   selectPoster.value = posters.value?.find(
     (e) => e.posterId == contents.value.at(index).posterId
   );
+  currentIndex.value = index;
 };
 
 const closeModalInfoContent = () => {
@@ -215,16 +218,16 @@ const closeModalInfoContent = () => {
         v-for="(image, imageIndex) in contents"
         :key="`${image.title}-${image.priority}`"
         :index="imageIndex"
-        class="border-none cursor-pointer"
+        :class="[
+          'border-none !bg-black !flex !m-auto',
+          {
+            'cursor-pointer': imageIndex != currentIndex,
+          },
+        ]"
         :style="{
           width: `${2160 / 10}px`,
           height: `${3840 / 10}px`,
         }"
-        @click="
-          selectPoster = posters?.find(
-            (poster) => poster.posterId === image.posterId
-          )
-        "
       >
         <iframe
           v-if="image.type == MAP_TYPE.WEBVIEW"
@@ -237,6 +240,13 @@ const closeModalInfoContent = () => {
           class="overflow-hidden top-full left-0 pointer-events-none"
           style="transform: scale(0.2); transform-origin: 0 0"
         />
+
+        <video
+          v-else-if="image.type == MAP_TYPE.VIDEO"
+          :controls="image.posterId == selectPoster?.posterId"
+          :src="image.image"
+        ></video>
+
         <img
           v-else
           alt="poster"
