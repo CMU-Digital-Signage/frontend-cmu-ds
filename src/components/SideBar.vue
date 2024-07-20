@@ -9,7 +9,6 @@ import { ref, computed, watchEffect, onMounted } from "vue";
 import store from "@/store";
 import { signOut, setPassword, changePassword, sendEmail } from "@/services";
 import { useToast } from "primevue/usetoast";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const loading = ref(false);
 const user = computed(() => store.state.userInfo);
@@ -257,7 +256,7 @@ const handleChangePassword = async () => {
           text
           link
           @click="showSecondDialog"
-          class="-ml-3 mb-8 w-fit font-normal text-[12px] text-[#049a7e] bg-none"
+          class="-ml-3 mb-8 w-fit font-normal text-[12px] text-[#049a7e] bg-none hover:underline"
           >Forget your password?</Button
         >
         <Button

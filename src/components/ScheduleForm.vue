@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { CONTENT_CODE } from "@/utils/enum";
 export default defineComponent({
   name: "ScheduleForm",
 });
@@ -8,7 +9,7 @@ export default defineComponent({
 import { computed, defineProps, toRefs, watch } from "vue";
 import store from "@/store";
 
-const props = defineProps<{ index: number }>();
+const props = defineProps<{ index: number; code: string }>();
 const { index } = toRefs(props);
 const device = computed(() => store.state.devices);
 const formDisplay = computed(() => store.state.formDisplay[index.value]);
@@ -274,7 +275,7 @@ const minEndTime = (i: number) => {
       </div>
 
       <!-- Display Duration-->
-      <div class="flex flex-col -mt-4 gap-2">
+      <div v-if="code !== CONTENT_CODE.Video" class="flex flex-col -mt-4 gap-2">
         <div class="inline-flex items-center">
           <label
             for="duration"

@@ -22,7 +22,6 @@ import Row from "primevue/row"; // optional
 import FileUpload from "primevue/fileupload";
 import ToastService from "primevue/toastservice";
 import OverlayPanel from "primevue/overlaypanel";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import RadioButton from "primevue/radiobutton";
 import Checkbox from "primevue/checkbox";
 import InputNumber from "primevue/inputnumber";
@@ -34,7 +33,12 @@ import TieredMenu from "primevue/tieredmenu";
 import Menu from "primevue/menu";
 import Password from "primevue/password";
 import ProgressSpinner from "primevue/progressspinner";
-import "vue3-carousel-3d/dist/index.css"
+import "vue3-carousel-3d/dist/index.css";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+
+library.add(faPlay);
 
 createApp(App)
   .use(store)

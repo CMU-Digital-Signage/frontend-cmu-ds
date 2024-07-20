@@ -46,8 +46,6 @@ const devicePreview = computed(() =>
 const panel = ref();
 
 watchEffect(() => {
-  console.log(filterInput.value.type);
-
   if (router.currentRoute.value.path === "/search-content") {
     clickSearch.value = true;
   } else {
