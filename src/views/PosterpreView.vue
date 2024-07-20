@@ -219,9 +219,10 @@ const closeModalInfoContent = () => {
         :key="`${image.title}-${image.priority}`"
         :index="imageIndex"
         :class="[
-          'border-none !bg-black !flex !m-auto',
+          'border-none !bg-black',
           {
             'cursor-pointer': imageIndex != currentIndex,
+            '!flex !m-auto': image.type != MAP_TYPE.WEBVIEW,
           },
         ]"
         :style="{
@@ -240,21 +241,16 @@ const closeModalInfoContent = () => {
           class="overflow-hidden top-full left-0 pointer-events-none"
           style="transform: scale(0.2); transform-origin: 0 0"
         />
-
         <video
           v-else-if="image.type == MAP_TYPE.VIDEO"
           :controls="image.posterId == selectPoster?.posterId"
           :src="image.image"
         ></video>
-
         <img
           v-else
           alt="poster"
+          class="max-w-full max-h-full w-fit h-fit m-auto"
           :src="image.image"
-          :style="{
-            width: `${2160 / 10}px`,
-            height: `${3840 / 10}px`,
-          }"
         />
       </Slide>
     </Carousel3d>
