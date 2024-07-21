@@ -114,11 +114,7 @@ const resetPassword = async () => {
           <p class="font-sf-pro-rounded ml-2 font-medium">Reset Password</p>
         </Button>
       </div>
-      <img
-        class="absolute top-28 lg:right-0 w-72 md:w-80 lg:w-1/2"
-        alt="picLogin"
-        src="../../assets/images/picLogin.png"
-      />
+
     </div>
   </div>
 </template>

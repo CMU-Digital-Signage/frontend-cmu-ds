@@ -15,7 +15,7 @@
           Look like your CMU account don't have permission to access this page.
         </p>
         <p class="text-[18px] text-[#575757] font-normal mb-14 ">
-          Reach out to system administartor to gain access.
+          Reach out to system administrator to gain access.
         </p>
 
         <Button
