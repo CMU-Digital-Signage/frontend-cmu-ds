@@ -1,68 +1,97 @@
 <template>
-  <div v-if="status != 0" class="flex h-full justify-center items-center flex-col">
-    <div v-if="[403, 401].includes(status)">
-      <img
-        class="w-[500px] mb-10"
-        alt="cmulogo"
-        src="../assets/images/403.png"
-      />
-      <p class="text-[36px] text-teal-500 font-semibold mb-4">Access Denied</p>
-      <p class="text-[18px] text-[#575757] font-normal">
-        Look like your CMU account don't have permission to access this page.
-      </p>
-      <p class="text-[18px] text-[#575757] font-normal mb-14 mt-[2px]">
-        Reach out to system adminstrator to gain access
-      </p>
+  <div
+    v-if="status != 0"
+    class="flex h-full w-full bg-[#f1f9ff] justify-center items-center"
+  >
+  <div
+      v-if="[403].includes(status)"
+      class="flex h-full w-full items-center px-[160px]"
+    >
+      <div class="flex flex-col items-start">
+        <p class="text-[44px] text-blue-700 font-light mb-10">Hold on...</p>
+        <p class="text-[32px] text-blue-700 font-normal">Error 403</p>
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">ACCESS DENIED</p>
+        <p class="text-[18px] text-[#575757] font-normal ">
+          Look like your CMU account don't have permission to access this page.
+        </p>
+        <p class="text-[18px] text-[#575757] font-normal mb-14 ">
+          Reach out to system administartor to gain access.
+        </p>
+
+        <Button
+          class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
+          link
+          @click="$router.push('/login')"
+          >Back to login</Button
+        >
+      </div>
     </div>
-    <div v-else-if="[400].includes(status)">
-      <img
-        class="w-[500px] mb-10"
-        alt="cmulogo"
-        src="../assets/images/403.png"
-      />
-      <p class="text-[36px] text-teal-500 font-semibold mb-4">Bad Request</p>
-      <p class="text-[18px] text-[#575757] font-normal">
-        Look like your CMU account don't have permission to access this page.
-      </p>
-      <p class="text-[18px] text-[#575757] font-normal mb-14 mt-[2px]">
-        Reach out to system adminstrator to gain access
-      </p>
-    </div>
-    <div v-else-if="[500].includes(status)">
-      <img
-        class="w-[500px] mb-10"
-        alt="cmulogo"
-        src="../assets/images/403.png"
-      />
-      <p class="text-[36px] text-teal-500 font-semibold mb-4">Internal server error</p>
-      <p class="text-[18px] text-[#575757] font-normal">
-        Look like your CMU account don't have permission to access this page.
-      </p>
-      <p class="text-[18px] text-[#575757] font-normal mb-14 mt-[2px]">
-        Reach out to system adminstrator to gain access
-      </p>
-    </div>
-    <div v-else-if="[401].includes(status)">
-      <img
-        class="w-[500px] mb-10"
-        alt="cmulogo"
-        src="../assets/images/403.png"
-      />
-      <p class="text-[36px] text-teal-500 font-semibold mb-4">Unauthorized</p>
-      <p class="text-[18px] text-[#575757] font-normal">
-        Look like your CMU account don't have permission to access this page.
-      </p>
-      <p class="text-[18px] text-[#575757] font-normal mb-14 mt-[2px]">
-        Reach out to system adminstrator to gain access
-      </p>
+    <div
+      v-else-if="[400].includes(status)"
+      class="flex h-full w-full items-center px-[160px]"
+    >
+      <div class="flex flex-col items-start">
+        <p class="text-[44px] text-blue-700 font-light mb-10">Whoops!</p>
+        <p class="text-[32px] text-blue-700 font-normal">Error 400</p>
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">BAD REQUEST</p>
+        <p class="text-[18px] text-[#575757] font-normal mb-14 ">
+          Something went wrong. We encountered an issue processing your request.
+        </p>
+
+        <Button
+          class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
+          link
+          @click="$router.push('/login')"
+          >Back to login</Button
+        >
+      </div>
     </div>
 
-    <Button
-      class="text-cyan-600 bg-none border-none font-normal text-xl hover:underline"
-      link
-      @click="$router.push('/login')"
-      >Back to login</Button
+    <div
+      v-else-if="[500].includes(status)"
+      class="flex h-full w-full items-center px-[160px]"
     >
+      <div class="flex flex-col items-start">
+        <p class="text-[44px] text-blue-700 font-light mb-10">Sorry, this is unexpected...</p>
+        <p class="text-[32px] text-blue-700 font-normal">Error 500</p>
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8"><span class="bg-gradient-to-r text-transparent bg-clip-text from-blue-500 via-green-500 to-indigo-400">pixelParade</span> LOST</p>
+        <p class="text-[18px] text-[#575757] font-normal">
+          We are facing an internal server error.   Our team are trying to fix the problem.
+        </p>
+        <p class="text-[18px] text-[#575757] font-normal mb-14">
+          Please be patient or try again later.
+        </p>
+
+        <Button
+          class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
+          link
+          @click="$router.push('/login')"
+          >Back to login</Button
+        >
+      </div>
+    </div>
+    <div
+      v-else-if="[401].includes(status)"
+      class="flex h-full w-full items-center px-[160px]"
+    >
+      <div class="flex flex-col items-start">
+        <p class="text-[44px] text-blue-700 font-light mb-10">Oh No!</p>
+        <p class="text-[32px] text-blue-700 font-normal">Error 401</p>
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">UNAUTHORIZED</p>
+        <p class="text-[18px] text-[#575757] font-normal">
+          We couldn't validate or support your credentials.
+        </p>
+        <p class="text-[18px] text-[#575757] font-normal mb-14">
+          Please try again.
+        </p>
+        <Button
+          class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
+          link
+          @click="$router.push('/login')"
+          >Back to login</Button
+        >
+      </div>
+    </div>
   </div>
 </template>
 
