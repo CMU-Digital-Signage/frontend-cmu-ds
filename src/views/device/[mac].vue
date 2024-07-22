@@ -44,7 +44,7 @@ const error = reactive({ status: 0, message: "" });
 const fetchWeather = async () => {
   const res = await axios.get("https://api.airvisual.com/v2/nearest_city", {
     params: {
-      key: "9288827d-21b4-4cb6-91f0-0d306ca02831",
+      key: "4f6af6ef-9045-4d4e-b95e-7a125bb11db8",
       lat: "18.79",
       lon: "98.95",
     },
