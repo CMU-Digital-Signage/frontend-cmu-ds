@@ -6,6 +6,7 @@ import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
 import ContentManage from "../views/ContentManageView.vue";
 import DeviceManage from "../views/DeviceView.vue";
+import GlanceBarManage from "../views/GlanceBarView.vue";
 import EmergencyManage from "../views/EmergencyView.vue";
 import SearchPage from "../views/SearchContentView.vue";
 import AdminDashboard from "../views/AdminView.vue";
@@ -80,7 +81,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Emergency",
     component: EmergencyManage,
   },
-
+  {
+    path: "/glanceBarManage",
+    name: "GlanceBar",
+    component: GlanceBarManage,
+  },
   {
     path: "/preview/:mac",
     name: "Preview",
