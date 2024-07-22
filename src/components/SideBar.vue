@@ -174,220 +174,6 @@ const handleChangePassword = async () => {
     class="flex flex-col justify-between h-screen side-bar border-r-[1px] border-[#dddddd] z-10 sticky"
     :class="openSidebar == true ? 'side-bar-open pl-[4px]' : 'side-bar-close'"
   >
-    <!-- //dialog reset password -->
-    <Dialog
-      v-model:visible="dialogVisible"
-      class="h-auto w-[500px]"
-      modal
-      :close-on-escape="false"
-      :draggable="false"
-      :pt="{
-        content: {
-          style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;  ',
-        },
-        header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        },
-      }"
-    >
-      <template #header>
-        <div class="header-popup">Change Emergency Password</div>
-      </template>
-      <div class="text-[14px] mb-8 text-[#049a7e] font-semibold">
-        pixelParade | {{ user.firstName }} {{ user.lastName }}
-      </div>
-      <div class="flex flex-col gap-1 w-full">
-        <label for="currentPassword" class="text-[12px] flex text-center"
-          >Current Password</label
-        >
-        <Password
-          id="currentPassword"
-          placeholder="••••••••••"
-          v-model="oldPassword"
-          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
-          class="w-full mb-3 h-9"
-          :feedback="false"
-          toggle-mask
-          :pt="{
-            input: {
-              class: ` text-[12px]`,
-            },
-          }"
-        />
-
-        <label class="text-[12px] flex text-center" for="newPassword"
-          >New Password</label
-        >
-        <Password
-          id="newPassword"
-          v-model="password"
-          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
-          class="w-full mb-3 h-9"
-          :feedback="false"
-          placeholder="••••••••••"
-          toggle-mask
-          :pt="{
-            input: {
-              class: ` text-[12px]`,
-            },
-          }"
-        />
-        <label class="text-[12px] flex text-center" for="reTypeNewPassword"
-          >Re-type new password</label
-        >
-        <Password
-          id="reTypeNewPassword"
-          placeholder="••••••••••"
-          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
-          class="w-full h-9"
-          v-model="cfPassword"
-          :feedback="false"
-          toggle-mask
-          :pt="{
-            input: {
-              class: ` text-[12px]`,
-            },
-          }"
-        />
-
-        <Button
-          text
-          link
-          @click="showSecondDialog"
-          class="-ml-3 mb-8 w-fit font-normal text-[12px] text-[#049a7e] bg-none hover:underline"
-          >Forget your password?</Button
-        >
-        <Button
-          label="Change Password"
-          text
-          :class="'primaryButton'"
-          @click="handleChangePassword"
-          :pt="{ label: { class: 'text-[14px]' } }"
-        ></Button></div
-    ></Dialog>
-
-    <Dialog
-      modal
-      v-model:visible="secondDialogVisible"
-      :draggable="false"
-      :close-on-escape="false"
-      class="h-auto w-[550px]"
-      :pt="{
-        content: {
-          style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
-        },
-        header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        },
-      }"
-      ><template #header>
-        <div class="header-popup">Forget Emergency Password</div>
-      </template>
-      <p v-if="user" class="text-[14px] mb-8">
-        We'll send a password reset confirmation to
-        <span class="text-[#049a7e] font-extrabold">{{ user.email }}</span>
-        Check your inbox (including Spam and Junk). It may take 1-2 minutes for
-        the email to arrive.
-      </p>
-      <Button
-        label="Send Email"
-        :loading="loading"
-        text
-        @click="sendEmailDialog"
-        :class="'primaryButton'"
-        :pt="{ label: { class: 'text-[14px]' } }"
-      ></Button>
-    </Dialog>
-
-    <!-- //dialog Set Password -->
-    <Dialog
-      v-model:visible="dialogSetPassword"
-      class="w-[500px]"
-      modal
-      :close-on-escape="false"
-      :draggable="false"
-      :pt="{
-        content: {
-          style:
-            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;',
-        },
-        header: {
-          style:
-            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
-        },
-      }"
-      :closable="false"
-    >
-      <template #header>
-        <div class="flex flex-col">
-          <div class="header-popup">Set your emergency password</div>
-        </div>
-      </template>
-
-      <div class="mb-4 gap-7 rounded-xl h-fit">
-        <div class="text-[14px] text-[#049a7e] font-semibold">
-          pixelParade | {{ user.firstName }} {{ user.lastName }}
-        </div>
-        <div class="text-[12px] mt-2 mb-8 font-medium text-[#828282]">
-          pixelParade includes an Emergency Activation feature to display
-          emergency posters on all screens.
-          <span class="font-bold text-black">
-            Set your Emergency Password to activate this feature during an
-            incident.
-          </span>
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-2 w-full">
-        <label
-          class="text-[12px] flex font-semibold text-center"
-          for="newPassword"
-          >Password</label
-        >
-        <Password
-          id="Password"
-          v-model="password"
-          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
-          class="w-full mb-3 h-9"
-          :feedback="false"
-          toggle-mask
-          placeholder="••••••••••"
-        />
-        <label class="text-[12px] flex text-center" for="reTypeNewPassword"
-          >Confirm password</label
-        >
-        <Password
-          id="confirmPassword"
-          input-class="w-screen rounded-[8px] text-[12px] bg-[#eeeeee] border-none"
-          class="w-full mb-5 h-9"
-          v-model="cfPassword"
-          :feedback="false"
-          toggle-mask
-          placeholder="••••••••••"
-        />
-
-        <div class="flex flex-inline gap-4 pt-3">
-          <Button
-            label="Later, Log Out"
-            text
-            @click="signOut()"
-            :class="'primaryButtonDel'"
-            type="submit"
-          ></Button>
-          <Button
-            label="Confirm"
-            text
-            @click="checkMatchPassword"
-            :class="'primaryButton1 justify-center'"
-            type="submit"
-          ></Button>
-        </div></div
-    ></Dialog>
-
     <div class="space-y-5" :class="{ 'p-4 py-6': openSidebar }">
       <div
         class="flex justify-between items-start"
@@ -619,7 +405,7 @@ const handleChangePassword = async () => {
         >
           <router-link to="/">
             <Button
-              class="bg-none menu-ho w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-xl"
+              class="bg-transparent menu-ho w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 side-bar rounded-xl"
               v-if="openSidebar"
               link
               :style="{
@@ -647,7 +433,7 @@ const handleChangePassword = async () => {
           <router-link to="/content">
             <div>
               <Button
-                class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-xl"
+                class="bg-transparent w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-xl"
                 v-if="openSidebar"
                 link
                 :style="{
@@ -679,7 +465,7 @@ const handleChangePassword = async () => {
 
           <router-link to="/deviceManage">
             <Button
-              class="bg-none w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-xl"
+              class="bg-transparent w-full space-x-2 text-[#282828] font-semibold text-[14px] flex gap-1 menu-ho rounded-xl"
               v-if="openSidebar"
               link
               :style="{
@@ -711,7 +497,7 @@ const handleChangePassword = async () => {
 
           <router-link to="/emergency">
             <Button
-              class="bg-none space-x-2 -mb-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 menu-ho-emergency rounded-xl"
+              class="bg-transparent space-x-2 -mb-2 w-full text-[#f00] font-semibold text-[14px] flex gap-1 menu-ho-emergency rounded-xl"
               v-if="openSidebar"
               link
               :style="{
@@ -759,7 +545,7 @@ const handleChangePassword = async () => {
         >
           <router-link to="/admin">
             <Button
-              class="bg-none space-x-2 -mb-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-xl"
+              class="bg-transparent space-x-2 -mb-2 w-full text-[#282828] font-semibold text-[14px] flex gap-1 outline-none menu-ho rounded-xl"
               v-if="openSidebar"
               link
               :style="{
@@ -786,83 +572,58 @@ const handleChangePassword = async () => {
             </Button>
           </router-link>
 
-          <!-- <router-link to="/deviceManage"> -->
-          <Button
-            disabled
-            class="bg-white border-white w-full space-x-2 text-[#282828] h-9 font-semibold text-[12px] flex gap-1 rounded-xl"
-            v-if="openSidebar"
-            label="Glance bar"
-            :pt="{ label: { class: 'flex-none flex translate-x-[-3px]' } }"
-          >
-            <template #icon>
-              <svg
-                class="flex -ml-[4px]"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-              >
-                <g
-                  id="🔍-Product-Icons"
-                  stroke="none"
-                  stroke-width="1"
-                  fill="none"
-                  fill-rule="evenodd"
+          <!-- <router-link to="/glanceBarManage"> -->
+            <Button
+              disabled
+              :class="[
+                'bg-transparent border-white text-[#282828] menu-ho flex',
+                {
+                  'rounded-xl w-full h-9 space-x-2 font-semibold text-[12px] gap-1':
+                    openSidebar,
+                  'rounded-full w-10 h-10 items-center justify-center':
+                    !openSidebar,
+                  '!bg-[#4bdbff4d] !text-[#297dbe]':
+                    $route.path === '/glanceBarManage',
+                },
+              ]"
+              :label="openSidebar ? 'Glance bar' : undefined"
+              :pt="{
+                label: {
+                  class: { 'flex-none flex translate-x-[-3px]': openSidebar },
+                },
+              }"
+            >
+              <template #icon>
+                <svg
+                  :class="{ 'flex -ml-[4px]': openSidebar }"
+                  width="24px"
+                  height="24px"
+                  viewBox="0 0 24 24"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
                 >
                   <g
-                    id="ic_fluent_phone_page_header_24_regular"
-                    fill="#dddddd"
-                    fill-rule="nonzero"
+                    id="🔍-Product-Icons"
+                    stroke="none"
+                    stroke-width="1"
+                    fill="none"
+                    fill-rule="evenodd"
                   >
-                    <path
-                      d="M15.75,2 C16.9926407,2 18,3.00735931 18,4.25 L18,19.75 C18,20.9926407 16.9926407,22 15.75,22 L8.25,22 C7.00735931,22 6,20.9926407 6,19.75 L6,4.25 C6,3.00735931 7.00735931,2 8.25,2 L15.75,2 Z M16.5,5.005 L7.5,5.005 L7.5,19.75 C7.5,20.1642136 7.83578644,20.5 8.25,20.5 L15.75,20.5 C16.1642136,20.5 16.5,20.1642136 16.5,19.75 L16.5,5.005 Z"
-                      id="🎨Color"
-                    ></path>
+                    <g
+                      id="ic_fluent_phone_page_header_24_regular"
+                      fill="currentColor"
+                      fill-rule="nonzero"
+                    >
+                      <path
+                        d="M15.75,2 C16.9926407,2 18,3.00735931 18,4.25 L18,19.75 C18,20.9926407 16.9926407,22 15.75,22 L8.25,22 C7.00735931,22 6,20.9926407 6,19.75 L6,4.25 C6,3.00735931 7.00735931,2 8.25,2 L15.75,2 Z M16.5,5.005 L7.5,5.005 L7.5,19.75 C7.5,20.1642136 7.83578644,20.5 8.25,20.5 L15.75,20.5 C16.1642136,20.5 16.5,20.1642136 16.5,19.75 L16.5,5.005 Z"
+                        id="🎨Color"
+                      ></path>
+                    </g>
                   </g>
-                </g>
-              </svg>
-            </template>
-          </Button>
-          <Button
-            disabled
-            class="text-[#282828] bg-white border-white bg-none rounded-full h-10 w-10 flex items-center justify-center menu-ho"
-            :class="{
-              'bg-[#4bdbff4d] text-[#297dbe]': $route.path === '/deviceManage',
-            }"
-            v-else
-          >
-            <template #icon>
-              <svg
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-              >
-                <g
-                  id="🔍-Product-Icons"
-                  stroke="none"
-                  stroke-width="1"
-                  fill="none"
-                  fill-rule="evenodd"
-                >
-                  <g
-                    id="ic_fluent_phone_page_header_24_regular"
-                    fill="#dddddd"
-                    fill-rule="nonzero"
-                  >
-                    <path
-                      d="M15.75,2 C16.9926407,2 18,3.00735931 18,4.25 L18,19.75 C18,20.9926407 16.9926407,22 15.75,22 L8.25,22 C7.00735931,22 6,20.9926407 6,19.75 L6,4.25 C6,3.00735931 7.00735931,2 8.25,2 L15.75,2 Z M16.5,5.005 L7.5,5.005 L7.5,19.75 C7.5,20.1642136 7.83578644,20.5 8.25,20.5 L15.75,20.5 C16.1642136,20.5 16.5,20.1642136 16.5,19.75 L16.5,5.005 Z"
-                      id="🎨Color"
-                    ></path>
-                  </g>
-                </g>
-              </svg>
-            </template>
-          </Button>
+                </svg>
+              </template>
+            </Button>
           <!-- </router-link> -->
         </ul>
       </div>
@@ -959,6 +720,219 @@ const handleChangePassword = async () => {
         />
       </Button>
     </div>
+
+    <!-- //dialog reset password -->
+    <Dialog
+      v-model:visible="dialogVisible"
+      class="h-auto w-[500px]"
+      modal
+      :close-on-escape="false"
+      :draggable="false"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;  ',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
+        },
+      }"
+    >
+      <template #header>
+        <div class="header-popup">Change Emergency Password</div>
+      </template>
+      <div class="text-[14px] mb-8 text-[#049a7e] font-semibold">
+        pixelParade | {{ user.firstName }} {{ user.lastName }}
+      </div>
+      <div class="flex flex-col gap-1 w-full">
+        <label for="currentPassword" class="text-[12px] flex text-center"
+          >Current Password</label
+        >
+        <Password
+          id="currentPassword"
+          placeholder="••••••••••"
+          v-model="oldPassword"
+          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full mb-3 h-9"
+          :feedback="false"
+          toggle-mask
+          :pt="{
+            input: {
+              class: ` text-[12px]`,
+            },
+          }"
+        />
+
+        <label class="text-[12px] flex text-center" for="newPassword"
+          >New Password</label
+        >
+        <Password
+          id="newPassword"
+          v-model="password"
+          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full mb-3 h-9"
+          :feedback="false"
+          placeholder="••••••••••"
+          toggle-mask
+          :pt="{
+            input: {
+              class: ` text-[12px]`,
+            },
+          }"
+        />
+        <label class="text-[12px] flex text-center" for="reTypeNewPassword"
+          >Re-type new password</label
+        >
+        <Password
+          id="reTypeNewPassword"
+          placeholder="••••••••••"
+          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full h-9"
+          v-model="cfPassword"
+          :feedback="false"
+          toggle-mask
+          :pt="{
+            input: {
+              class: ` text-[12px]`,
+            },
+          }"
+        />
+
+        <Button
+          text
+          link
+          @click="showSecondDialog"
+          class="-ml-3 mb-8 w-fit font-normal text-[12px] text-[#049a7e] bg-transparent hover:underline"
+          >Forget your password?</Button
+        >
+        <Button
+          label="Change Password"
+          text
+          :class="'primaryButton'"
+          @click="handleChangePassword"
+          :pt="{ label: { class: 'text-[14px]' } }"
+        ></Button></div
+    ></Dialog>
+    <Dialog
+      modal
+      v-model:visible="secondDialogVisible"
+      :draggable="false"
+      :close-on-escape="false"
+      class="h-auto w-[550px]"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; ',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
+        },
+      }"
+      ><template #header>
+        <div class="header-popup">Forget Emergency Password</div>
+      </template>
+      <p v-if="user" class="text-[14px] mb-8">
+        We'll send a password reset confirmation to
+        <span class="text-[#049a7e] font-extrabold">{{ user.email }}</span>
+        Check your inbox (including Spam and Junk). It may take 1-2 minutes for
+        the email to arrive.
+      </p>
+      <Button
+        label="Send Email"
+        :loading="loading"
+        text
+        @click="sendEmailDialog"
+        :class="'primaryButton'"
+        :pt="{ label: { class: 'text-[14px]' } }"
+      ></Button>
+    </Dialog>
+
+    <!-- //dialog Set Password -->
+    <Dialog
+      v-model:visible="dialogSetPassword"
+      class="w-[500px]"
+      modal
+      :close-on-escape="false"
+      :draggable="false"
+      :pt="{
+        content: {
+          style:
+            'border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;',
+        },
+        header: {
+          style:
+            'border-top-left-radius: 20px; border-top-right-radius: 20px;  ',
+        },
+      }"
+      :closable="false"
+    >
+      <template #header>
+        <div class="flex flex-col">
+          <div class="header-popup">Set your emergency password</div>
+        </div>
+      </template>
+
+      <div class="mb-4 gap-7 rounded-xl h-fit">
+        <div class="text-[14px] text-[#049a7e] font-semibold">
+          pixelParade | {{ user.firstName }} {{ user.lastName }}
+        </div>
+        <div class="text-[12px] mt-2 mb-8 font-medium text-[#828282]">
+          pixelParade includes an Emergency Activation feature to display
+          emergency posters on all screens.
+          <span class="font-bold text-black">
+            Set your Emergency Password to activate this feature during an
+            incident.
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-2 w-full">
+        <label
+          class="text-[12px] flex font-semibold text-center"
+          for="newPassword"
+          >Password</label
+        >
+        <Password
+          id="Password"
+          v-model="password"
+          input-class="w-screen rounded-[8px] bg-[#eeeeee] border-none text-[12px] "
+          class="w-full mb-3 h-9"
+          :feedback="false"
+          toggle-mask
+          placeholder="••••••••••"
+        />
+        <label class="text-[12px] flex text-center" for="reTypeNewPassword"
+          >Confirm password</label
+        >
+        <Password
+          id="confirmPassword"
+          input-class="w-screen rounded-[8px] text-[12px] bg-[#eeeeee] border-none"
+          class="w-full mb-5 h-9"
+          v-model="cfPassword"
+          :feedback="false"
+          toggle-mask
+          placeholder="••••••••••"
+        />
+
+        <div class="flex flex-inline gap-4 pt-3">
+          <Button
+            label="Later, Log Out"
+            text
+            @click="signOut()"
+            :class="'primaryButtonDel'"
+            type="submit"
+          ></Button>
+          <Button
+            label="Confirm"
+            text
+            @click="checkMatchPassword"
+            :class="'primaryButton1 justify-center'"
+            type="submit"
+          ></Button>
+        </div></div
+    ></Dialog>
   </div>
 </template>
 
