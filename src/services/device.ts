@@ -156,3 +156,40 @@ export async function deleteDevice(MACaddress: string) {
     return err.response.data;
   }
 }
+
+export async function editGlanceBarByDevice(MACaddress: string, data: Device) {
+  try {
+    const res = await axios.put(
+      `${process.env.VUE_APP_API_BASE_URL}/device/bar`,
+      data,
+      {
+        params: { MACaddress },
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        withCredentials: true,
+      }
+    );
+
+    if (store.state.devices) {
+      res.data.device.location = data.location;
+      const index = store.state.devices.findIndex(
+        (e) => e.MACaddress === res.data.device.MACaddress
+      );
+      if (index !== -1) {
+        store.state.devices[index] = {
+          ...res.data.device,
+        };
+      }
+    }
+
+    return res.data;
+  } catch (err: any) {
+    if (!err.response) {
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
+    }
+    return err.response.data;
+  }
+}
