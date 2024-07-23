@@ -140,7 +140,7 @@ const del = async () => {
             >
               <img
                 v-if="rowData.data.location"
-                :src="rowData.data.location.dataURL"
+                :src="rowData.data.location"
                 alt="location"
                 class="object-cover"
               />
