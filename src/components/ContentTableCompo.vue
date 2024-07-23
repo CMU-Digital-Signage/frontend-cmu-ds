@@ -17,7 +17,6 @@ import {
 } from "@/utils/constant";
 import { TYPE, MAP_TYPE } from "@/utils/enum";
 import { User } from "@/types";
-import { useToast } from "primevue/usetoast";
 import ModalInfoContent from "@/components/Modal/ModalInfoContent.vue";
 
 const props = defineProps({ types: String });

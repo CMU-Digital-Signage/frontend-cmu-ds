@@ -337,7 +337,7 @@ export const createUnique = (data: Poster[]) => {
         posterId: e.posterId,
         uploader: e.uploader,
         createdAt: e.createdAt,
-        type: e.type,
+        type: e.type.charAt(0) + e.type.slice(1).toLowerCase(),
         status,
       });
     }
