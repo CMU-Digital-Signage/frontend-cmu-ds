@@ -187,7 +187,10 @@ const goToLink = () => {
     </template>
     <div class="flex flex-col text-[14px] gap-1 ml-4">
       <!-- Number of Poster -->
-      <div v-if="data.type != MAP_TYPE.VIDEO" class="posterDetail flex-row">
+      <div
+        v-if="[MAP_TYPE.POSTER, MAP_TYPE.WEBVIEW].includes(data.type)"
+        class="posterDetail flex-row"
+      >
         <i
           :class="`w-10 h-11 pi pi-${
             typePoster.find((e) => e.type == data.type)?.icon
