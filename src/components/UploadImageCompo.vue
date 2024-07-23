@@ -40,7 +40,7 @@ onMounted(async () => {
 
 const checkVideoDuration = () => {
   if (videoEl.value) {
-    const duration = videoEl.value.duration;
+    const duration = videoEl.value.duration + 0.5; // +0.5 for delay before transition
     if (maxContent.value && duration > maxContent.value) {
       removeContent(0);
       errorSelectFile();
