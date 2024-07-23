@@ -12,11 +12,6 @@ export async function getDevice() {
       withCredentials: true,
     });
 
-    res.data.data.forEach(async (e: Device) => {
-      if (e.location && typeof e.location === "string")
-        e.location = await convertUrlToFile(e.location);
-    });
-
     return res.data;
   } catch (err: any) {
     if (!err.response) {

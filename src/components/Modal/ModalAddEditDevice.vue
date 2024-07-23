@@ -8,7 +8,11 @@ export default defineComponent({
 <script setup lang="ts">
 import { addDevicePi, addDeviceTV, editDevice } from "@/services";
 import store from "@/store";
-import { onUpload, initialFormDevice } from "@/utils/constant";
+import {
+  onUpload,
+  initialFormDevice,
+  convertUrlToFile,
+} from "@/utils/constant";
 import InputMask from "primevue/inputmask";
 import { useToast } from "primevue/usetoast";
 import { computed, reactive, ref, defineProps, watch } from "vue";
@@ -30,10 +34,11 @@ const limitCharDevice = ref(false);
 const showPopup = ref(false);
 const toast = useToast();
 
-watch(props, () => {
+watch(props, async () => {
   showPopup.value = props.show;
   if (props.dataEdit) {
-    Object.assign(form, props.dataEdit);
+    const location = await convertUrlToFile(props.dataEdit.location);
+    Object.assign(form, { ...props.dataEdit, location });
   }
 });
 
@@ -257,7 +262,7 @@ const errorSelectFile = () => {
           :multiple="false"
           @select="
             async (e) => {
-              if (e.files[0]) form.location = await onUpload(e.files[0]);
+              if (e.files[0]) form.location = await onUpload(e.files[0], '');
               else errorSelectFile();
             }
           "
