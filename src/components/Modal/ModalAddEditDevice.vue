@@ -37,7 +37,10 @@ const toast = useToast();
 watch(props, async () => {
   showPopup.value = props.show;
   if (props.dataEdit) {
-    const location = await convertUrlToFile(props.dataEdit.location);
+    let location;
+    if (props.dataEdit.location) {
+      location = await convertUrlToFile(props.dataEdit.location);
+    }
     Object.assign(form, { ...props.dataEdit, location });
   }
 });
