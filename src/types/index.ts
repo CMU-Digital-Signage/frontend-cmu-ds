@@ -17,6 +17,10 @@ export interface Device {
   description: string | null;
   color: string;
   status: boolean;
+  arrow1: number;
+  desc1: string | null;
+  arrow2: number;
+  desc2: string | null;
 }
 
 export interface Poster {
