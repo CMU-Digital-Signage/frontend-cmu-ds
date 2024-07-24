@@ -46,6 +46,7 @@ const del = async () => {
 
 <template>
   <Toast />
+
   <Dialog
     :closable="!loading"
     v-model:visible="deletePopup"
@@ -96,112 +97,112 @@ const del = async () => {
       </div>
     </div>
   </Dialog>
-  <div class="rectangle2 flex flex-col">
-    <DataTable
-      :value="device"
-      scrollDirection="vertical"
-      scrollable
-      :scrollHeight="calculateScreenHeight(0.75)"
-      class="mt-2 text-[12px] lg:text-[14px]"
+
+  <DataTable
+    :value="device"
+    scrollDirection="vertical"
+    scrollable
+    :scrollHeight="calculateScreenHeight(0.75)"
+    class="mt-2 flex-1 text-[12px] lg:text-[14px]"
+  >
+    <Column
+      field="deviceName"
+      header="Device Name"
+      sortable
+      class="font-semibold"
     >
-      <Column
-        field="deviceName"
-        header="Device Name"
-        sortable
-        class="font-semibold"
-      >
-        <template #sorticon="slotProps">
+      <template #sorticon="slotProps">
+        <i
+          class="m-3 pi"
+          :class="{
+            'pi-sort-alt': slotProps.sortOrder === 0,
+            'pi-sort-alpha-down': slotProps.sortOrder === 1,
+            'pi-sort-alpha-up': slotProps.sortOrder === -1,
+          }"
+        ></i>
+      </template>
+      <template #body="rowData">
+        <div class="flex items-center gap-3">
+          <p class="font-normal">{{ rowData.data.deviceName }}</p>
           <i
-            class="m-3 pi"
-            :class="{
-              'pi-sort-alt': slotProps.sortOrder === 0,
-              'pi-sort-alpha-down': slotProps.sortOrder === 1,
-              'pi-sort-alpha-up': slotProps.sortOrder === -1,
-            }"
-          ></i>
-        </template>
-        <template #body="rowData">
-          <div class="flex items-center gap-3">
-            <p class="font-normal">{{ rowData.data.deviceName }}</p>
-            <i
-              class="pi pi-info-circle cursor-pointer"
-              @mouseover="
-                (e) =>
-                  toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])
-              "
-              @mouseleave="
-                (e) =>
-                  toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])
-              "
+            class="pi pi-info-circle cursor-pointer"
+            @mouseover="
+              (e) =>
+                toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])
+            "
+            @mouseleave="
+              (e) =>
+                toggleOverlay(e, $refs[`overlay_${rowData.data.MACaddress}`])
+            "
+          />
+          <OverlayPanel
+            :ref="`overlay_${rowData.data.MACaddress}`"
+            class="w-fit h-fit max-w-sm max-h-max text-[12px]"
+          >
+            <img
+              v-if="rowData.data.location"
+              :src="rowData.data.location"
+              alt="location"
+              class="object-cover"
             />
-            <OverlayPanel
-              :ref="`overlay_${rowData.data.MACaddress}`"
-              class="w-fit h-fit max-w-sm max-h-max text-[12px]"
-            >
-              <img
-                v-if="rowData.data.location"
-                :src="rowData.data.location"
-                alt="location"
-                class="object-cover"
-              />
-              <p>{{ rowData.data.description }}</p>
-            </OverlayPanel>
-          </div>
-        </template>
-      </Column>
-      <Column
-        field="room"
-        header="Room"
-        sortable
-        class="font-semibold"
-        headerStyle="font-bold"
-      >
-        <template #sorticon="slotProps">
-          <i
-            class="m-3 pi"
-            :class="{
-              'pi-sort-alt': slotProps.sortOrder === 0,
-              'pi-sort-numeric-down': slotProps.sortOrder === 1,
-              'pi-sort-numeric-up': slotProps.sortOrder === -1,
-            }"
-          ></i>
-        </template>
-        <template #body="rowData">
-          <div class="flex items-center gap-3">
-            <p class="font-normal">
-              {{ rowData.data.room }}
-            </p>
-          </div>
-        </template>
-      </Column>
-      <Column header="Action" :exportable="false">
-        <template #body="rowData">
-          <div class="inline-flex gap-3">
-            <Button
-              icon="pi pi-pencil"
-              rounded
-              class="w-7 h-7"
-              severity="warning"
-              @click="
-                Object.assign(form, rowData.data);
-                showPopup = true;
-              "
-            />
-            <Button
-              icon="pi pi-trash"
-              rounded
-              class="w-7 h-7"
-              severity="danger"
-              @click="
-                deletePopup = true;
-                selectDelDevice = rowData.data;
-              "
-            />
-          </div>
-        </template>
-      </Column>
-    </DataTable>
-  </div>
+            <p>{{ rowData.data.description }}</p>
+          </OverlayPanel>
+        </div>
+      </template>
+    </Column>
+    <Column
+      field="room"
+      header="Room"
+      sortable
+      class="font-semibold"
+      headerStyle="font-bold"
+    >
+      <template #sorticon="slotProps">
+        <i
+          class="m-3 pi"
+          :class="{
+            'pi-sort-alt': slotProps.sortOrder === 0,
+            'pi-sort-numeric-down': slotProps.sortOrder === 1,
+            'pi-sort-numeric-up': slotProps.sortOrder === -1,
+          }"
+        ></i>
+      </template>
+      <template #body="rowData">
+        <div class="flex items-center gap-3">
+          <p class="font-normal">
+            {{ rowData.data.room }}
+          </p>
+        </div>
+      </template>
+    </Column>
+    <Column header="Action" :exportable="false">
+      <template #body="rowData">
+        <div class="inline-flex gap-3">
+          <Button
+            icon="pi pi-pencil"
+            rounded
+            class="w-7 h-7"
+            severity="warning"
+            @click="
+              Object.assign(form, rowData.data);
+              showPopup = true;
+            "
+          />
+          <Button
+            icon="pi pi-trash"
+            rounded
+            class="w-7 h-7"
+            severity="danger"
+            @click="
+              deletePopup = true;
+              selectDelDevice = rowData.data;
+            "
+          />
+        </div>
+      </template>
+    </Column>
+  </DataTable>
+
   <ModalAddEditDevice
     :show="showPopup"
     :isEdit="true"
@@ -211,11 +212,6 @@ const del = async () => {
 </template>
 
 <style scoped>
-.rectangle2 {
-  width: 100%;
-  height: 100%;
-}
-
 .bold-ho:hover {
   font-weight: 600;
   background-color: #e2e2e2;

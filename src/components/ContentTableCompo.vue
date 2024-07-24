@@ -106,7 +106,7 @@ const resetSelect = () => {
     scrollDirection="vertical"
     scrollable
     scrollHeight="flex"
-    :virtualScrollerOptions="{ itemSize: (uniquePosters?.length || 1) + 35 }"
+    :virtualScrollerOptions="{ itemSize: (uniquePosters?.length || 1) + 40 }"
     :class="`text-[12px]  lg:text-[14px] flex-1 ${user.isAdmin ? '' : 'py-2'}`"
   >
     <Column

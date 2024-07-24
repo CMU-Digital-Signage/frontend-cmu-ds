@@ -86,9 +86,9 @@ const del = async () => {
           <Button
             :loading="loading"
             label="Delete admin"
-            icon="pi pi-trash" 
-                :class="'primaryButtonDel justify-center'" 
-                :pt="{ label: { class: 'flex-none ml-2' } }"
+            icon="pi pi-trash"
+            :class="'primaryButtonDel justify-center'"
+            :pt="{ label: { class: 'flex-none ml-2' } }"
             type="submit"
             @click="del()"
           ></Button>
@@ -96,7 +96,7 @@ const del = async () => {
       </div>
     </div>
   </Dialog>
-  <div class="rectangle2 flex flex-col">
+  <div class="flex flex-col flex-1">
     <div class="flex flex-row gap-2">
       <label
         for="macAddress"
@@ -115,7 +115,7 @@ const del = async () => {
       scrollDirection="vertical"
       scrollable
       scrollHeight="flex"
-      :virtualScrollerOptions="{ itemSize: (admin?.length || 1)+35 }"
+      :virtualScrollerOptions="{ itemSize: (admin?.length || 1) + 40 }"
       :class="`text-[12px] lg:text-[14px] flex-1 mt-2`"
     >
       <Column
@@ -166,11 +166,6 @@ const del = async () => {
 </template>
 
 <style scoped>
-.rectangle2 {
-  width: 100%;
-  height: 100%;
-}
-
 .secondaryButton {
   width: 50%;
   border-width: 0;
