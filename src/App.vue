@@ -59,7 +59,8 @@ onMounted(() => {
     if (
       !store.state.showUpload &&
       user.value.id &&
-      !["/", "/preview", "/emergency"].includes(router.currentRoute.value.path)
+      !["/", "/emergency"].includes(router.currentRoute.value.path) &&
+      !router.currentRoute.value.path.includes("/preview")
     ) {
       fetchData();
     }
