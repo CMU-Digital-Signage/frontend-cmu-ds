@@ -147,171 +147,68 @@ const editDest = async (isDelete = false, option?: string) => {
 </script>
 
 <template>
-  <div class="glance-bar-box">
-    <div
-      class="flex w-full h-full justify-between items-center bg-[#0e1235] text-white rounded-lg py-5"
-    >
-      <!-- Date -->
-      <div class="lg:ml-5 ml-3">
-        <p class="text-4xl md:text-5xl lg:text-6xl font-bold">
-          {{ timeFormatter(dateTime) }}
-        </p>
-        <p class="text-2xl md:text-3xl lg:text-4xl">
-          {{ dateFormatter(dateTime, 3) }}
-        </p>
-      </div>
-      <!-- AQI -->
-      <div class="flex flex-col h-full">
-        <div class="flex h-full justify-center">
-          <div
-            class="lg:px-4 px-3 items-center flex justify-center rounded-l-lg rounded-tr-none bg-[#228b25]"
-          >
-            <p class="lg:text-xl text-lg">28 °C</p>
-          </div>
-          <div
-            class="flex flex-row rounded-r-lg rounded-bl-none bg-[#43a027] px-4 md:px-6 gap-4"
-          >
-            <div class="flex flex-col pt-1 pb-3 md:py-5 justify-center">
-              <p class="lg:text-4xl text-3xl font-semibold">30</p>
-              <p class="lg:text-xl text-lg">US AQI</p>
-            </div>
-            <div
-              class="lg:text-xl text-lg items-center font-medium flex flex-1 justify-center"
-            >
-              Good
-            </div>
-          </div>
-        </div>
-        <div class="text-xs text-center font-medium text-white mr-3 mt-2">
-          Last updated:
-          {{ dateTime.getHours().toString().padStart(2, "0") }}:{{
-            dateTime.getMinutes().toString().padStart(2, "0")
-          }}
-          | IQAir
-        </div>
-      </div>
-      <!-- Direction -->
-      <div class="flex w-2/5 h-full gap-2.5 lg:text-[20px] text-[16px]">
-        <div v-if="isSmall" class="split-sections">
-          <div
-            :class="[
-              `extra-section ${
-                device.color1 === 'green' ? 'text-[#14C6A4]' : 'text-[#FFC008]'
-              }`,
-              { 'border-blink': isEdit && selectedPosition === 'left' },
-              { '!border-solid': device.arrow1 !== null },
-              { 'cursor-pointer': device.arrow1 === null },
-            ]"
-            @click="
-              if (device.arrow1 === null) {
-                isEdit = true;
-                selectedPosition = 'left';
-              }
-            "
-          >
-            <div
-              v-if="device.arrow1 !== null"
-              :class="[
-                'flex items-center',
-                { 'flex-row-reverse !text-end': device.arrow1 === 0 },
-              ]"
-            >
-              <i
-                class="absolute -top-2 -left-2 pi pi-minus rounded-full bg-white text-[#575757] p-1 cursor-pointer"
-                style="font-size: 10px"
-                @click="() => editDest(true, 'left')"
-              ></i>
-              <img
-                alt="arrow1"
-                :src="
-                  device.color1 === 'green'
-                    ? require('../assets/images/arrowGreen.png')
-                    : require('../assets/images/arrow.png')
-                "
-                :class="[
-                  'lg:size-12 size-8',
-                  {
-                    '-rotate-90': device.arrow1 === -90,
-                    'rotate-90': device.arrow1 === 90,
-                    'rotate-180': device.arrow1 === 180,
-                  },
-                ]"
-              />
-              <div class="flex flex-col whitespace-break-spaces">
-                {{ device.desc1?.replace(" ", "\n") }}
-              </div>
-            </div>
-            <i
-              v-else-if="!isEdit"
-              class="pi pi-plus rounded-full bg-white text-[#575757] p-2"
-            ></i>
-          </div>
-          <div
-            :class="[
-              `extra-section ${
-                device.color2 === 'green' ? 'text-[#14C6A4]' : 'text-[#FFC008]'
-              }`,
-              { 'border-blink': isEdit && selectedPosition === 'right' },
-              { '!border-solid': device.arrow2 !== null },
-              { 'cursor-pointer': device.arrow2 === null },
-              { 'flex-row-reverse !text-end': device.arrow2 === 0 },
-            ]"
-            @click="
-              if (device.arrow2 === null) {
-                isEdit = true;
-                selectedPosition = 'right';
-              }
-            "
-          >
-            <div
-              v-if="device.arrow2 !== null"
-              :class="[
-                'flex items-center',
-                { 'flex-row-reverse !text-end': device.arrow2 === 0 },
-              ]"
-            >
-              <i
-                class="absolute -top-2 -left-2 pi pi-minus rounded-full bg-white text-[#575757] p-1 cursor-pointer"
-                style="font-size: 10px"
-                @click="() => editDest(true, 'right')"
-              ></i>
-              <img
-                alt="arrow2"
-                :src="
-                  device.color2 === 'green'
-                    ? require('../assets/images/arrowGreen.png')
-                    : require('../assets/images/arrow.png')
-                "
-                :class="[
-                  'lg:size-12 size-8',
-                  {
-                    '-rotate-90': device.arrow2 === -90,
-                    'rotate-90': device.arrow2 === 90,
-                    'rotate-180': device.arrow2 === 180,
-                  },
-                ]"
-              />
-              <div class="flex flex-col whitespace-break-spaces">
-                {{ device.desc2?.replace(" ", "\n") }}
-              </div>
-            </div>
-            <i
-              v-else-if="!isEdit"
-              class="pi pi-plus rounded-full bg-white text-[#575757] p-2"
-            ></i>
-          </div>
+  <div
+    class="flex w-full h-full justify-between items-center bg-[#0e1235] text-white rounded-lg py-4"
+  >
+    <!-- Date -->
+    <div class="lg:ml-5 ml-3 flex flex-col items-start">
+      <p class="text-4xl md:text-2xl lg:text-4xl justify-start items-start">
+        {{ timeFormatter(dateTime) }}
+      </p>
+      <p class="text-4xl md:text-2xl lg:text-2xl">
+        {{ dateFormatter(dateTime, 3) }}
+      </p>
+    </div>
+    <!-- AQI -->
+    <div class="flex flex-col h-full">
+      <div class="flex h-24 justify-center">
+        <div
+          class="lg:px-4 px-3 items-center flex justify-center rounded-l-lg rounded-tr-none bg-[#228b25]"
+        >
+          <p class="lg:text-xl text-lg">28 °C</p>
         </div>
         <div
-          v-else
+          class="flex flex-row rounded-r-lg rounded-bl-none bg-[#43a027] px-4 md:px-6 gap-4"
+        >
+          <div class="flex flex-col pt-1 pb-3 md:py-5 justify-center">
+            <p class="lg:text-4xl text-3xl font-semibold">30</p>
+            <p class="lg:text-xl text-lg">US AQI</p>
+          </div>
+          <div
+            class="lg:text-xl text-lg items-center font-medium flex flex-1 justify-center"
+          >
+            Good
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-center font-medium text-white mr-3 mt-2">
+        Last updated:
+        {{ dateTime.getHours().toString().padStart(2, "0") }}:{{
+          dateTime.getMinutes().toString().padStart(2, "0")
+        }}
+        | IQAir
+      </div>
+    </div>
+    <!-- Direction -->
+    <div
+      class="flex w-2/5 h-full items-end justify-end pr-5 gap-2.5 lg:text-[22px] font-semibold text-[20px]"
+    >
+      <div v-if="isSmall" class="split-sections">
+        <div
           :class="[
             `extra-section ${
               device.color1 === 'green' ? 'text-[#14C6A4]' : 'text-[#FFC008]'
             }`,
-            { 'border-blink': isEdit },
+            { 'border-blink': isEdit && selectedPosition === 'left' },
             { '!border-solid': device.arrow1 !== null },
             { 'cursor-pointer': device.arrow1 === null },
           ]"
-          @click="isEdit = device.isSmall === null ? true : false"
+          @click="
+            if (device.arrow1 === null) {
+              isEdit = true;
+              selectedPosition = 'left';
+            }
+          "
         >
           <div
             v-if="device.arrow1 !== null"
@@ -321,9 +218,9 @@ const editDest = async (isDelete = false, option?: string) => {
             ]"
           >
             <i
-              class="absolute -top-2 -left-2 pi pi-minus rounded-full bg-white text-[#575757] p-1 cursor-pointer"
+              class="absolute -top-2 -left-2 pi pi-minus rounded-full bg-red-500 hover:bg-red-600 text-[#ffffff] p-1 cursor-pointer"
               style="font-size: 10px"
-              @click="() => editDest(true, 'large')"
+              @click="() => editDest(true, 'left')"
             ></i>
             <img
               alt="arrow1"
@@ -347,15 +244,118 @@ const editDest = async (isDelete = false, option?: string) => {
           </div>
           <i
             v-else-if="!isEdit"
-            class="pi pi-plus rounded-full bg-white text-[#575757] p-2"
+            class="pi pi-plus rounded-full bg-white text-[#575757] p-2 hover:bg-slate-100"
           ></i>
         </div>
+        <div
+          :class="[
+            `extra-section ${
+              device.color2 === 'green' ? 'text-[#87EFAC]' : 'text-[#FFC008]'
+            }`,
+            { 'border-blink': isEdit && selectedPosition === 'right' },
+            { '!border-solid': device.arrow2 !== null },
+            { 'cursor-pointer': device.arrow2 === null },
+            { 'flex-row-reverse !text-end': device.arrow2 === 0 },
+          ]"
+          @click="
+            if (device.arrow2 === null) {
+              isEdit = true;
+              selectedPosition = 'right';
+            }
+          "
+        >
+          <div
+            v-if="device.arrow2 !== null"
+            :class="[
+              'flex items-center',
+              { 'flex-row-reverse !text-end': device.arrow2 === 0 },
+            ]"
+          >
+            <i
+              class="absolute -top-2 -left-2 pi pi-minus rounded-full bg-red-500 hover:bg-red-600 text-[#ffffff] p-1 cursor-pointer"
+              style="font-size: 10px"
+              @click="() => editDest(true, 'right')"
+            ></i>
+            <img
+              alt="arrow2"
+              :src="
+                device.color2 === 'green'
+                  ? require('../assets/images/arrowGreen.png')
+                  : require('../assets/images/arrow.png')
+              "
+              :class="[
+                'lg:size-12 size-8',
+                {
+                  '-rotate-90': device.arrow2 === -90,
+                  'rotate-90': device.arrow2 === 90,
+                  'rotate-180': device.arrow2 === 180,
+                },
+              ]"
+            />
+            <div class="flex flex-col whitespace-break-spaces">
+              {{ device.desc2?.replace(" ", "\n") }}
+            </div>
+          </div>
+          <i
+            v-else-if="!isEdit"
+            class="pi pi-plus rounded-full bg-white text-[#575757] p-2 hover:bg-slate-200"
+          ></i>
+        </div>
+      </div>
+      <div
+        v-else
+        :class="[
+          `extra-section ${
+            device.color1 === 'green' ? 'text-[#14C6A4]' : 'text-[#FFC008]'
+          }`,
+          { 'border-blink': isEdit },
+          { '!border-solid': device.arrow1 !== null },
+          { 'cursor-pointer': device.arrow1 === null },
+        ]"
+        @click="isEdit = device.isSmall === null ? true : false"
+      >
+        <div
+          v-if="device.arrow1 !== null"
+          :class="[
+            'flex items-center',
+            { 'flex-row-reverse !text-end': device.arrow1 === 0 },
+          ]"
+        >
+          <i
+            class="absolute -top-2 -left-2 pi pi-minus hover:bg-red-600 rounded-full bg-red-500 text-[#ffffff] p-1 cursor-pointer"
+            style="font-size: 10px"
+            @click="() => editDest(true, 'large')"
+          ></i>
+          <img
+            alt="arrow1"
+            :src="
+              device.color1 === 'green'
+                ? require('../assets/images/arrowGreen.png')
+                : require('../assets/images/arrow.png')
+            "
+            :class="[
+              'lg:size-12 size-8',
+              {
+                '-rotate-90': device.arrow1 === -90,
+                'rotate-90': device.arrow1 === 90,
+                'rotate-180': device.arrow1 === 180,
+              },
+            ]"
+          />
+          <div class="flex flex-col whitespace-break-spaces">
+            {{ device.desc1?.replace(" ", "\n") }}
+          </div>
+        </div>
+        <i
+          v-else-if="!isEdit"
+          class="pi pi-plus rounded-full bg-white text-[#575757] p-2 hover:bg-slate-200"
+        ></i>
       </div>
     </div>
   </div>
 
   <!-- Bottom Panel -->
-  <div v-if="isEdit" class="bottom-panel absolute left-0 bottom-0 rounded-t-xl">
+  <div v-if="isEdit" class="bottom-panel absolute left-0 bottom-0">
     <!-- Action -->
     <div
       :class="[
@@ -366,9 +366,9 @@ const editDest = async (isDelete = false, option?: string) => {
     >
       <div v-if="device.isSmall === null" class="flex gap-3 text-center">
         <div>
-          <div class="button-group bg-[#E1E1E1] p-1 rounded-xl">
+          <div class="button-group bg-[#E1E1E1] text-[14px] p-1 rounded-lg">
             <button
-              class="rounded-xl"
+              class="rounded-md"
               v-for="size in sizes"
               :key="size.label"
               :class="{ active: form.isSmall === size.value }"
@@ -379,9 +379,9 @@ const editDest = async (isDelete = false, option?: string) => {
           </div>
         </div>
         <div v-if="isSmall">
-          <div class="button-group bg-[#E1E1E1] p-1 rounded-xl">
+          <div class="button-group bg-[#E1E1E1] text-[14px] p-1 rounded-lg">
             <button
-              class="rounded-xl flex flex-row items-center justify-center gap-2"
+              class="rounded-md flex flex-row items-center justify-center gap-2"
               v-for="position in positions"
               :key="position.value"
               :class="{ active: selectedPosition === position.value }"
@@ -394,10 +394,10 @@ const editDest = async (isDelete = false, option?: string) => {
         </div>
       </div>
       <div class="rounded-xl flex gap-3">
-        <button @click="isEdit = false" class="rounded-lg">Cancel</button>
+        <button @click="isEdit = false" class="rounded-lg text-[14px] hover:!bg-[#c9c9c9]">Cancel</button>
         <button
           @click="() => editDest()"
-          class="!text-white !bg-[#14c6a4] hover:!bg-[#109980] rounded-lg"
+          class="!text-white !bg-[#14c6a4] text-[14px] font-semibold hover:!bg-[#109980] rounded-lg"
         >
           Done
         </button>
@@ -406,7 +406,7 @@ const editDest = async (isDelete = false, option?: string) => {
 
     <div class="flex w-full">
       <!-- Radio -->
-      <div class="flex w-[55%]">
+      <div class="flex w-[55%] text-[12px]">
         <div :class="['flex', { 'flex-wrap': !isSmall }]">
           <div v-for="(dir, index) in directions" :key="dir.label">
             <div
@@ -442,8 +442,10 @@ const editDest = async (isDelete = false, option?: string) => {
                   name="radio"
                   :value="dir.value"
                   v-model="selectedDirection"
+                  style="width: 16px; height: 16px"
                 />
-                <span class="checkmark">{{ dir.label }}</span>
+
+                <span class="checkmark font-bold">{{ dir.label }}</span>
               </div>
             </div>
           </div>
@@ -549,15 +551,6 @@ const editDest = async (isDelete = false, option?: string) => {
   font-family: "Lato", "Sarabun";
 }
 
-.glance-bar-box {
-  border-color: #ffffff;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px -2px,
-    rgba(0, 0, 0, 0.2) 0px 0px 8px -2px;
-  border-width: 1px;
-  border-radius: 8px;
-  padding: 10px;
-}
-
 .extra-section {
   width: 90%;
   height: 100%;
@@ -589,14 +582,14 @@ const editDest = async (isDelete = false, option?: string) => {
 
 @keyframes blink {
   50% {
-    border-color: #faff5f;
-    box-shadow: #faff5f 0px 0px 8px -2px, #faff5f 0px 0px 8px -2px;
+    border-color: #87efac;
+    box-shadow: #87efac 0px 0px 8px -2px, #87efac 0px 0px 8px -2px;
   }
 }
 
 .bottom-panel {
   width: 100%;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   color: rgb(0, 0, 0);
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px -2px,
@@ -709,8 +702,6 @@ input[type="radio"]:checked::before {
 }
 
 .checkmark {
-  height: 20px;
-  line-height: 20px;
   display: inline-block;
   vertical-align: middle;
 }
