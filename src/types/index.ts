@@ -17,9 +17,12 @@ export interface Device {
   description: string | null;
   color: string;
   status: boolean;
-  arrow1: number;
+  isSmall: boolean | null;
+  color1: string | null;
+  arrow1: number | null;
   desc1: string | null;
-  arrow2: number;
+  color2: string | null;
+  arrow2: number | null;
   desc2: string | null;
 }
 

@@ -28,7 +28,12 @@ import {
   activateEmergency,
   deactivateEmergency,
 } from "./emergency";
-import { getPosterEachDevice, turnOnOffDevice } from "./pi";
+import {
+  getGlanceBarEachDevice,
+  getPosterEachDevice,
+  getActivateEmerPoster,
+  turnOnOffDevice,
+} from "./pi";
 import { sendEmail } from "./email";
 import { getIframe } from "./proxy";
 
@@ -55,7 +60,9 @@ export {
   deleteEmergency,
   activateEmergency,
   deactivateEmergency,
+  getGlanceBarEachDevice,
   getPosterEachDevice,
+  getActivateEmerPoster,
   setPassword,
   changePassword,
   sendEmail,

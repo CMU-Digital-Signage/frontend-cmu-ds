@@ -15,3 +15,12 @@ export enum CONTENT_CODE {
   Webview = "WV",
   Video = "VDO",
 }
+
+export enum AQI_STATUS {
+  GOOD = "Good",
+  MODERATE = "Moderate",
+  UNHEALTHY_SG = "Unhealthy (Sensitive Group)",
+  UNHEALTHY = "Unhealthy",
+  VERY_UNHEALTHY = "Very Unhealthy",
+  HAZARDOUS = "Hazardous",
+}

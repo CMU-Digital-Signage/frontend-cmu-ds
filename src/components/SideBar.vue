@@ -572,9 +572,8 @@ const handleChangePassword = async () => {
             </Button>
           </router-link>
 
-          <!-- <router-link to="/glanceBarManage"> -->
+          <router-link to="/glanceBarManage">
             <Button
-              disabled
               :class="[
                 'bg-transparent border-white text-[#282828] menu-ho flex',
                 {
@@ -624,7 +623,7 @@ const handleChangePassword = async () => {
                 </svg>
               </template>
             </Button>
-          <!-- </router-link> -->
+          </router-link>
         </ul>
       </div>
       <!-- search-content -->
