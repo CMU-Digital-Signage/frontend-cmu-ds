@@ -42,11 +42,11 @@ const handleEdit = (MACaddress: string | undefined) => {
         v-if="!deviceEdit || deviceEdit === device.MACaddress"
         class="flex flex-col h-full gap-2"
       >
-        <p class="text-[14px] text-start">
-          {{ device.deviceName }} ({{ device.room }})
+        <p class="text-[14px] font-semibold text-start">
+          {{ device.deviceName }} (Room: {{ device.room }})
         </p>
         <GlanceBarCompo
-          class="rounded-[12px]"
+        
           :device="device"
           :onEdit="handleEdit"
         />
