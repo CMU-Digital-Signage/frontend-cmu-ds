@@ -157,7 +157,10 @@ export async function deleteDevice(MACaddress: string) {
   }
 }
 
-export async function editGlanceBarByDevice(MACaddress: string, data: Device) {
+export async function editGlanceBarByDevice(
+  MACaddress: string,
+  data: Partial<Device>
+) {
   try {
     const res = await axios.put(
       `${process.env.VUE_APP_API_BASE_URL}/device/bar`,

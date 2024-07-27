@@ -50,7 +50,10 @@ const fetchData = async () => {
     devicePromise,
     posterPromise,
     emerPromise,
-  ]);
+  ]).catch(() => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  });
 };
 
 onMounted(() => {

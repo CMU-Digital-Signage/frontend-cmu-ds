@@ -1,6 +1,24 @@
 import store from "@/store";
 import axios from "axios";
 
+export async function getGlanceBarEachDevice(mac: string) {
+  try {
+    const res = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/pi/bar`, {
+      params: { mac },
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (err: any) {
+    if (!err.response) {
+      return {
+        message: "Cannot connect to API Server. Please try again later.",
+      };
+    }
+    return { ...err.response.data, status: err.response.status };
+  }
+}
+
 export async function getPosterEachDevice(mac: string) {
   try {
     const res = await axios.get(

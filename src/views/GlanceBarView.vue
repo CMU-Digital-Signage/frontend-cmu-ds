@@ -11,19 +11,44 @@ const devices = computed(() =>
   })
 );
 const loading = ref(false);
+const deviceEdit = ref();
+
 onMounted(() => {
   if (!devices.value) loading.value = true;
 });
+
+watch(devices, () => {
+  if (devices.value) loading.value = false;
+});
+
+const handleEdit = (MACaddress: string | undefined) => {
+  deviceEdit.value = MACaddress;
+};
 </script>
 
 <template>
-  <div class="scrollable-container">
-    <div class="device-container" v-for="(device, index) in devices" :key="index">
-      <p class="device-title">{{ device.deviceName }} ({{ device.room }})</p>
-      <div class="device-border">
-        <GlanceBarCompo class="rounded-[12px]"
-          :deviceName="device.deviceName"
-          :room="device.room"
+  <div class="rectangle flex flex-col relative">
+    <Skeleton
+      v-if="loading"
+      class="bg-gray-200 rounded-xl flex-1 my-[0.75rem]"
+    ></Skeleton>
+    <div
+      v-else-if="devices"
+      v-for="(device, index) in devices"
+      :key="index"
+      :class="{ 'mt-6 first:mt-0': !deviceEdit }"
+    >
+      <div
+        v-if="!deviceEdit || deviceEdit === device.MACaddress"
+        class="flex flex-col h-full gap-2"
+      >
+        <p class="text-[14px] text-start">
+          {{ device.deviceName }} ({{ device.room }})
+        </p>
+        <GlanceBarCompo
+          class="rounded-[12px]"
+          :device="device"
+          :onEdit="handleEdit"
         />
       </div>
     </div>
@@ -31,29 +56,11 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.scrollable-container {
-  height: 100vh; /* or any fixed height */
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.device-container {
-  margin-bottom: 20px;
-}
-
-.device-title {
-  font-size: 16px;
-  margin-top: 20px;
-  text-align: left;
-  margin-left: 20px;
-}
-
-.device-border {
-  border: 1px solid #e2e8f0;
-  border-radius: 5px;
-  overflow: hidden;
-  margin: 15px;
-  height: 100%; /* Set a fixed height for each device container */
-  padding: 10px;
+.rectangle {
+  padding-inline: 1.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-inline: 0;
+  overflow: auto;
 }
 </style>
