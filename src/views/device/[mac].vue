@@ -4,12 +4,16 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { getPosterEachDevice } from "@/services";
+import {
+  getPosterEachDevice,
+  getActivateEmerPoster,
+  getGlanceBarEachDevice,
+} from "@/services";
 import { computed, onMounted, ref, watch, onUnmounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import store from "@/store";
 import TextPoster from "@/components/TextPoster.vue";
-import { Poster } from "@/types";
+import { Device, Poster } from "@/types";
 import {
   loopPoster,
   setFieldPoster,
@@ -17,13 +21,11 @@ import {
   timeFormatter,
   month,
 } from "@/utils/constant";
-import { getActivateEmerPoster } from "@/services/pi";
 import axios from "axios";
-import { MAP_TYPE } from "@/utils/enum";
+import { AQI_STATUS, MAP_TYPE } from "@/utils/enum";
 
 const route = useRoute();
 const mac = route.params.mac as string;
-const roomCPE = ref("");
 const showEmer = ref(false);
 const posters = computed(() => store.state.posters);
 const emerPoster = computed(() =>
@@ -33,6 +35,7 @@ const image = computed(() => store.state.currentImage);
 const videoEl = ref<HTMLVideoElement | null>();
 const stopLoop = ref();
 const dateTime = ref(new Date());
+const device = ref<Partial<Device>>();
 let intervalPoster: any = null;
 let intervalEmer: any = null;
 let intervalWeather: any = null;
@@ -57,19 +60,19 @@ const fetchWeather = async () => {
 const aqiStatus = () => {
   if (weather.value?.current) {
     const aqiValue = weather.value.current.pollution.aqius;
-    if (aqiValue <= 50) return "Good";
-    else if (aqiValue <= 100) return "Moderate";
-    else if (aqiValue <= 150) return "Unhealthy (Sensitive Group)";
-    else if (aqiValue <= 200) return "Unhealthy";
-    else if (aqiValue <= 300) return "Very Unhealthy";
-    else return "Hazardous";
+    if (aqiValue <= 50) return AQI_STATUS.GOOD;
+    else if (aqiValue <= 100) return AQI_STATUS.MODERATE;
+    else if (aqiValue <= 150) return AQI_STATUS.UNHEALTHY_SG;
+    else if (aqiValue <= 200) return AQI_STATUS.UNHEALTHY;
+    else if (aqiValue <= 300) return AQI_STATUS.VERY_UNHEALTHY;
+    else return AQI_STATUS.HAZARDOUS;
   }
+  return AQI_STATUS.GOOD;
 };
 
 const fetchData = async () => {
-  const { ok, room, poster, message, status } = await getPosterEachDevice(mac);
+  const { ok, poster, message, status } = await getPosterEachDevice(mac);
   if (ok) {
-    roomCPE.value = room;
     setFieldPoster(poster);
     poster.sort((a: Poster, b: Poster) => {
       if (a.startTime < b.startTime) return -1;
@@ -83,6 +86,16 @@ const fetchData = async () => {
   }
 };
 
+const fetchGlanceBar = async () => {
+  const res = await getGlanceBarEachDevice(mac);
+  if (res.ok) {
+    device.value = res.device;
+  } else {
+    error.message = res.message;
+    error.status = res.status;
+  }
+};
+
 onMounted(async () => {
   await fetchData();
   if (posters.value) {
@@ -91,6 +104,7 @@ onMounted(async () => {
     stopLoop.value = loopPoster(posters.value, emerPoster.value);
     dateTimeInterval = setInterval(async () => {
       dateTime.value = new Date();
+      await fetchGlanceBar();
     }, 1000);
     intervalEmer = setInterval(async () => {
       await getActivateEmerPoster();
@@ -155,94 +169,124 @@ onUnmounted(() => {
     }"
   >
     <div
-      v-if="emerPoster?.incidentName !== 'banner'"
-      class="flex h-screen flex-col w-[11vw] items-center py-6 bg-[#0e1235] text-black"
+      v-if="!emerPoster"
+      class="flex justify-between h-screen flex-col w-[11vw] items-center py-6 bg-[#0e1235]"
     >
-      <div class="flex flex-col gap-6 justify-center items-center rotate-0">
+      <div
+        class="flex flex-col gap-6 justify-center items-center text-start rotate-0"
+      >
         <div
-          v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
-          class="bottomBlock gap-2"
+          v-if="device?.color2"
+          :class="[
+            'bottomBlock gap-2',
+            { 'flex-row-reverse !text-end': device.arrow2 === 0 },
+          ]"
         >
-          <div
-            class="flex bg-[#0e1235] text-green-300 font-sf-pro-rounded text-[48px] justify-center"
-          >
-            <p class="font-semibold">41X</p>
-          </div>
-          <div class="flex bg-[#0e1235] rotate-90 items-center">
+          <div class="flex justify-center items-center">
             <img
               class="w-[88px] h-[88px]"
-              alt="arrow"
-              src="../../assets/images/arrowGreen.png"
+              alt="arrow2"
+              :src="
+                device.color2 === 'green'
+                  ? require('../../assets/images/arrowGreen.png')
+                  : require('../../assets/images/arrow.png')
+              "
+              :class="{
+                'rotate-90': device.arrow2 === 0,
+                'rotate-180': device.arrow2 === 90,
+                '-rotate-90': device.arrow2 === 180,
+              }"
             />
+          </div>
+          <div
+            class="flex flex-col whitespace-break-spaces text-[52px] justify-center"
+            :class="`${
+              device.color2 === 'green' ? 'text-green-300' : 'text-yellow-400'
+            }`"
+          >
+            {{ device.desc2?.replace(" ", "\n") }}
           </div>
         </div>
         <div
-          v-if="roomCPE === '421' || roomCPE === '422' || roomCPE === '400'"
-          class="bottomBlock gap-2"
+          v-if="device?.color1"
+          :class="[
+            'bottomBlock gap-2',
+            { 'flex-row-reverse !text-end': device.arrow1 === 0 },
+          ]"
         >
-          <div class="bg-[#0e1235] justify-center items-center">
+          <div class="flex justify-center items-center">
             <img
               class="w-[88px] h-[88px]"
-              alt="arrow"
-              src="../../assets/images/arrow.png"
+              alt="arrow1"
+              :src="
+                device.color1 === 'green'
+                  ? require('../../assets/images/arrowGreen.png')
+                  : require('../../assets/images/arrow.png')
+              "
+              :class="{
+                'rotate-90': device.arrow1 === 0,
+                'rotate-180': device.arrow1 === 90,
+                '-rotate-90': device.arrow1 === 180,
+              }"
             />
           </div>
-          <div class="flex flex-col text-yellow-400 text-[52px] justify-center">
-            <p class="font-semibold font-sf-pro-rounded">401</p>
-            <p class="font-semibold font-sf-pro-rounded">402</p>
+          <div
+            class="flex flex-col whitespace-break-spaces text-[52px] justify-center"
+            :class="`${
+              device.color1 === 'green' ? 'text-green-300' : 'text-yellow-400'
+            }`"
+          >
+            {{ device.desc1?.replace(" ", "\n") }}
           </div>
         </div>
       </div>
-      <div
-        v-if="weather"
-        class="bottomBlock items-center justify-center py-3 mt-10 flex-col font-sf-pro-rounded"
-      >
+      <div class="bottomBlock items-center justify-center py-3 flex-col">
         <div class="flex flex-row h-full">
           <div
             class="items-center flex justify-center rounded-t-lg"
             :class="{
-              'bg-[#228b25]': aqiStatus() === 'Good',
-              'bg-[#F3BF10]': aqiStatus() === 'Moderate',
-              'bg-[#F89049]': aqiStatus() == 'Unhealthy (Sensitive Group)',
-              'bg-[#EE4547]': aqiStatus() === 'Unhealthy',
-              'bg-[#8A609D]': aqiStatus() === 'Very Unhealthy',
-              'bg-[#814C63]': aqiStatus() === 'Hazardous',
-              'text-[#0C6515]': aqiStatus() === 'Good',
-              'text-[#654E0C]': aqiStatus() === 'Moderate',
-              'text-[#571F00]': aqiStatus() === 'Unhealthy (Sensitive Group)',
+              'bg-[#228b25]': aqiStatus() === AQI_STATUS.GOOD,
+              'bg-[#F3BF10]': aqiStatus() === AQI_STATUS.MODERATE,
+              'bg-[#F89049]': aqiStatus() == AQI_STATUS.UNHEALTHY_SG,
+              'bg-[#EE4547]': aqiStatus() === AQI_STATUS.UNHEALTHY,
+              'bg-[#8A609D]': aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
+              'bg-[#814C63]': aqiStatus() === AQI_STATUS.HAZARDOUS,
+              'text-[#0C6515]': aqiStatus() === AQI_STATUS.GOOD,
+              'text-[#654E0C]': aqiStatus() === AQI_STATUS.MODERATE,
+              'text-[#571F00]': aqiStatus() === AQI_STATUS.UNHEALTHY_SG,
               'text-[#ffffff]':
-                aqiStatus() === 'Good' ||
-                aqiStatus() === 'Unhealthy' ||
-                aqiStatus() === 'Very Unhealthy' ||
-                aqiStatus() === 'Hazardous',
+                aqiStatus() === AQI_STATUS.GOOD ||
+                aqiStatus() === AQI_STATUS.UNHEALTHY ||
+                aqiStatus() === AQI_STATUS.VERY_UNHEALTHY ||
+                aqiStatus() === AQI_STATUS.HAZARDOUS,
             }"
           >
             <p class="text-2xl py-4 items-center px-2">
-              {{ weather?.current?.weather?.tp }} °C
+              {{ weather?.current?.weather?.tp ?? 35 }} °C
             </p>
           </div>
           <div
             class="flex flex-row rounded-b-lg"
             :class="{
-              'bg-[#43a027]': aqiStatus() === 'Good',
-              'bg-[#FDD64B]': aqiStatus() === 'Moderate',
-              'bg-[#faa166]': aqiStatus() == 'Unhealthy (Sensitive Group)',
-              'bg-[#fe5b5b]': aqiStatus() === 'Unhealthy',
-              'bg-[#A97ABC]': aqiStatus() === 'Very Unhealthy',
-              'bg-[#966B78]': aqiStatus() === 'Hazardous',
-              'text-[#0C6515]': aqiStatus() === 'Good',
-              'text-[#654E0C]': aqiStatus() === 'Moderate',
-              'text-[#571F00]': aqiStatus() === 'Unhealthy (Sensitive Group)',
+              'bg-[#43a027]': aqiStatus() === AQI_STATUS.GOOD,
+              'bg-[#FDD64B]': aqiStatus() === AQI_STATUS.MODERATE,
+              'bg-[#faa166]': aqiStatus() == AQI_STATUS.UNHEALTHY_SG,
+              'bg-[#fe5b5b]': aqiStatus() === AQI_STATUS.UNHEALTHY,
+              'bg-[#A97ABC]': aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
+              'bg-[#966B78]': aqiStatus() === AQI_STATUS.HAZARDOUS,
+              'text-[#0C6515]': aqiStatus() === AQI_STATUS.GOOD,
+              'text-[#654E0C]': aqiStatus() === AQI_STATUS.MODERATE,
+              'text-[#571F00]': aqiStatus() === AQI_STATUS.UNHEALTHY_SG,
               'text-[#ffffff]':
-                aqiStatus() === 'Good' ||
-                aqiStatus() === 'Unhealthy' ||
-                aqiStatus() === 'Very Unhealthy' ||
-                aqiStatus() === 'Hazardous',
+                aqiStatus() === AQI_STATUS.GOOD ||
+                aqiStatus() === AQI_STATUS.UNHEALTHY ||
+                aqiStatus() === AQI_STATUS.VERY_UNHEALTHY ||
+                aqiStatus() === AQI_STATUS.HAZARDOUS,
             }"
           >
             <div class="flex flex-col pt-5 pb-3">
               <p class="text-[55px] font-semibold -ml-3">
-                {{ weather?.current?.pollution?.aqius }}
+                {{ weather?.current?.pollution?.aqius ?? 30 }}
               </p>
               <p class="text-[24px] whitespace-nowrap ml-2">US AQI</p>
             </div>
@@ -253,9 +297,7 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
-        <div
-          class="text-[13px] font-medium text-white mr-3 font-sf-pro-rounded"
-        >
+        <div class="text-[13px] font-medium text-white mr-3">
           Last updated:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
@@ -264,7 +306,7 @@ onUnmounted(() => {
         </div>
       </div>
       <div
-        class="bottomBlockGroup h-fit flex-col font-medium text-[44px] font-sf-pro-rounded text-white"
+        class="bottomBlockGroup h-fit flex-col font-medium text-[44px] text-white"
       >
         <p class="text-[72px]">{{ timeFormatter(dateTime) }}</p>
         <p>{{ dateFormatter(dateTime, 3) }}</p>
@@ -312,6 +354,10 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+* {
+  font-family: "Lato", "Sarabun";
+}
+
 iframe {
   width: 100vh;
   height: 90vw;
@@ -346,7 +392,8 @@ video {
 .bottomBlock {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
-  flex: 1 1;
+  /* flex: 1 1; */
+  height: fit-content;
   display: flex;
   align-items: center;
   background-color: #0e1235;
@@ -356,7 +403,8 @@ video {
 .bottomBlockGroup {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
-  flex: 1 1;
+  /* flex: 1 1; */
+  height: fit-content;
   display: flex;
   align-items: start;
   background-color: #0e1235;

@@ -191,7 +191,7 @@ const editDest = async (isDelete = false, option?: string) => {
         </div>
       </div>
       <!-- Direction -->
-      <div class="flex w-2/5 h-full gap-2.5 lg:text-[35px] text-[26px]">
+      <div class="flex w-2/5 h-full gap-2.5 lg:text-[20px] text-[16px]">
         <div v-if="isSmall" class="split-sections">
           <div
             :class="[
@@ -213,7 +213,7 @@ const editDest = async (isDelete = false, option?: string) => {
               v-if="device.arrow1 !== null"
               :class="[
                 'flex items-center',
-                { 'flex-row-reverse': device.arrow1 === 0 },
+                { 'flex-row-reverse !text-end': device.arrow1 === 0 },
               ]"
             >
               <i
@@ -229,7 +229,7 @@ const editDest = async (isDelete = false, option?: string) => {
                     : require('../assets/images/arrow.png')
                 "
                 :class="[
-                  'lg:size-14 size-10',
+                  'lg:size-12 size-8',
                   {
                     '-rotate-90': device.arrow1 === -90,
                     'rotate-90': device.arrow1 === 90,
@@ -254,7 +254,7 @@ const editDest = async (isDelete = false, option?: string) => {
               { 'border-blink': isEdit && selectedPosition === 'right' },
               { '!border-solid': device.arrow2 !== null },
               { 'cursor-pointer': device.arrow2 === null },
-              { 'flex-row-reverse': device.arrow2 === 0 },
+              { 'flex-row-reverse !text-end': device.arrow2 === 0 },
             ]"
             @click="
               if (device.arrow2 === null) {
@@ -267,7 +267,7 @@ const editDest = async (isDelete = false, option?: string) => {
               v-if="device.arrow2 !== null"
               :class="[
                 'flex items-center',
-                { 'flex-row-reverse': device.arrow2 === 0 },
+                { 'flex-row-reverse !text-end': device.arrow2 === 0 },
               ]"
             >
               <i
@@ -283,7 +283,7 @@ const editDest = async (isDelete = false, option?: string) => {
                     : require('../assets/images/arrow.png')
                 "
                 :class="[
-                  'lg:size-14 size-10',
+                  'lg:size-12 size-8',
                   {
                     '-rotate-90': device.arrow2 === -90,
                     'rotate-90': device.arrow2 === 90,
@@ -317,7 +317,7 @@ const editDest = async (isDelete = false, option?: string) => {
             v-if="device.arrow1 !== null"
             :class="[
               'flex items-center',
-              { 'flex-row-reverse': device.arrow1 === 0 },
+              { 'flex-row-reverse !text-end': device.arrow1 === 0 },
             ]"
           >
             <i
@@ -333,7 +333,7 @@ const editDest = async (isDelete = false, option?: string) => {
                   : require('../assets/images/arrow.png')
               "
               :class="[
-                'lg:size-14 size-10',
+                'lg:size-12 size-8',
                 {
                   '-rotate-90': device.arrow1 === -90,
                   'rotate-90': device.arrow1 === 90,
@@ -419,18 +419,18 @@ const editDest = async (isDelete = false, option?: string) => {
               :class="[
                 isSmall ? 'small' : 'large',
                 selectedPosition,
-                { 'lg:mr-20 mr-5': isSmall && index !== directions.length - 1 },
+                { 'lg:mr-15 mr-5': isSmall && index !== directions.length - 1 },
                 {
-                  'lg:mr-15 mr-5': !isSmall && index !== directions.length - 1,
+                  'mr-5': !isSmall && index !== directions.length - 1,
                 },
               ]"
             >
               <div
-                class="img-wrapper lg:text-[35px] text-[26px]"
-                :class="{ 'flex-row-reverse': dir.value === 0 }"
+                class="img-wrapper lg:text-[20px] text-[16px]"
+                :class="{ 'flex-row-reverse !text-end': dir.value === 0 }"
               >
                 <img
-                  :class="`lg:size-14 size-10 ${dir.arrow}`"
+                  :class="`lg:size-12 size-8 ${dir.arrow}`"
                   alt="arrow"
                   src="../assets/images/arrow.png"
                 />
@@ -465,15 +465,15 @@ const editDest = async (isDelete = false, option?: string) => {
             :class="[isSmall ? 'w-1/2 small' : 'large']"
           >
             <div
-              class="img-wrapper !w-full lg:text-[35px] text-[26px]"
+              class="img-wrapper lg:text-[20px] text-[16px]"
               :class="[
                 { 'large-wrapper': !isSmall },
-                { 'flex-row-reverse': selectedDirection === 0 },
+                { 'flex-row-reverse !text-end': selectedDirection === 0 },
               ]"
             >
               <img
                 :class="[
-                  'lg:size-14 size-10',
+                  'lg:size-12 size-8',
                   directions.find((dir) => dir.value === selectedDirection)
                     ?.arrow,
                 ]"
@@ -545,6 +545,10 @@ const editDest = async (isDelete = false, option?: string) => {
 </template>
 
 <style scoped>
+* {
+  font-family: "Lato", "Sarabun";
+}
+
 .glance-bar-box {
   border-color: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px -2px,
@@ -622,7 +626,7 @@ button.active {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   gap: 10px;
 }
 
@@ -640,21 +644,21 @@ button.active {
 }
 
 .small.small .img-wrapper {
-  width: 203px;
-  height: 148px;
+  width: 180px;
+  height: 90px;
 }
 
 .large.large .img-wrapper {
-  width: 340px;
-  height: 108px;
+  width: 270px;
+  height: 90px;
 }
 
 .large-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 340px !important;
-  height: 108px !important;
+  width: 270px !important;
+  height: 90px !important;
 }
 
 .large .image-container {
