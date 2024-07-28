@@ -232,13 +232,7 @@ const editDest = async (isDelete = false, option?: string) => {
             }
           "
         >
-          <div
-            v-if="device.arrow1 !== null"
-            :class="[
-              'flex items-center',
-              { 'flex-row-reverse !text-end': device.arrow1 === 0 },
-            ]"
-          >
+          <div v-if="device.arrow1 !== null" :class="['flex items-center']">
             <i
               class="pi pi-minus remove-button"
               style="font-size: 10px"
@@ -268,11 +262,12 @@ const editDest = async (isDelete = false, option?: string) => {
         </div>
         <div
           :class="[
-            `extra-section ${getTextColor(device.color2)}`,
+            `extra-section flex-row-reverse !text-end ${getTextColor(
+              device.color2
+            )}`,
             { 'border-blink': isEdit && selectedPosition === 'right' },
             { '!border-solid': device.arrow2 !== null },
             { 'cursor-pointer': device.arrow2 === null },
-            { 'flex-row-reverse !text-end': device.arrow2 === 0 },
           ]"
           @click="
             if (device.arrow2 === null) {
@@ -283,10 +278,7 @@ const editDest = async (isDelete = false, option?: string) => {
         >
           <div
             v-if="device.arrow2 !== null"
-            :class="[
-              'flex items-center',
-              { 'flex-row-reverse !text-end': device.arrow2 === 0 },
-            ]"
+            :class="['flex items-center flex-row-reverse !text-end']"
           >
             <i
               class="pi pi-minus remove-button"
@@ -445,7 +437,10 @@ const editDest = async (isDelete = false, option?: string) => {
             >
               <div
                 class="img-wrapper lg:text-[20px] text-[16px]"
-                :class="{ 'flex-row-reverse !text-end': dir.value === 0 }"
+                :class="{
+                  'flex-row-reverse !text-end':
+                    dir.value === 0 || selectedPosition === 'right',
+                }"
               >
                 <img
                   :class="`lg:size-12 size-8 ${dir.arrow}`"
@@ -488,7 +483,10 @@ const editDest = async (isDelete = false, option?: string) => {
               class="img-wrapper lg:text-[20px] text-[16px]"
               :class="[
                 { 'large-wrapper': !isSmall },
-                { 'flex-row-reverse !text-end': selectedDirection === 0 },
+                {
+                  'flex-row-reverse !text-end':
+                    selectedDirection === 0 || selectedPosition === 'right',
+                },
               ]"
             >
               <img

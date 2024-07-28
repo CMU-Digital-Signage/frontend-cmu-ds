@@ -177,10 +177,7 @@ onUnmounted(() => {
       >
         <div
           v-if="device?.color2"
-          :class="[
-            'bottomBlock gap-2',
-            { 'flex-row-reverse !text-end': device.arrow2 === 0 },
-          ]"
+          :class="['bottomBlock gap-2 flex-row-reverse !text-end']"
         >
           <div class="flex justify-center items-center">
             <img
@@ -240,7 +237,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <div class="bottomBlock items-center justify-center py-3 flex-col">
+      <div v-if="weather" class="bottomBlock items-center justify-center py-3 flex-col">
         <div class="flex flex-row h-full">
           <div
             class="items-center flex justify-center rounded-t-lg"
@@ -262,7 +259,7 @@ onUnmounted(() => {
             }"
           >
             <p class="text-2xl py-4 items-center px-2">
-              {{ weather?.current?.weather?.tp ?? 35 }} °C
+              {{ weather?.current?.weather?.tp }} °C
             </p>
           </div>
           <div
@@ -286,7 +283,7 @@ onUnmounted(() => {
           >
             <div class="flex flex-col pt-5 pb-3">
               <p class="text-[55px] font-semibold -ml-3">
-                {{ weather?.current?.pollution?.aqius ?? 30 }}
+                {{ weather?.current?.pollution?.aqius }}
               </p>
               <p class="text-[24px] whitespace-nowrap ml-2">US AQI</p>
             </div>
