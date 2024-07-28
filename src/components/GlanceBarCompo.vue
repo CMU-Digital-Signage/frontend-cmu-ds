@@ -356,19 +356,23 @@ const editDest = async (isDelete = false, option?: string) => {
   </div>
 
   <!-- Bottom Panel -->
-  <div v-if="isEdit" class="bottom-panel absolute left-0 bottom-0">
+  <div
+    v-if="isEdit"
+    class="bottom-panel absolute left-0 bottom-0"
+    :class="`${isSmall ? 'h-[260px]' : 'h-[500px]'}`"
+  >
     <!-- Action -->
     <div
       :class="[
-        'flex mb-5',
+        'flex mb-2',
         { 'justify-between': device.isSmall === null },
         { 'justify-end': device.isSmall !== null },
       ]"
     >
-      <div v-if="device.isSmall === null" class="flex gap-3 text-center">
+      <div v-if="device.isSmall === null" class="flex gap-5 text-center">
         <div>
-          <div class="button-group bg-[#E1E1E1] text-[14px] p-1 rounded-lg">
-            <button
+          <div class="button-group bg-[#E1E1E1] text-[14px]  rounded-lg">
+            <Button
               class="rounded-md"
               v-for="size in sizes"
               :key="size.label"
@@ -376,12 +380,12 @@ const editDest = async (isDelete = false, option?: string) => {
               @click="form.isSmall = size.value"
             >
               {{ size.label }}
-            </button>
+            </Button>
           </div>
         </div>
         <div v-if="isSmall">
-          <div class="button-group bg-[#E1E1E1] text-[14px] p-1 rounded-lg">
-            <button
+          <div class="button-group bg-[#E1E1E1] text-[14px] rounded-lg">
+            <Button
               class="rounded-md flex flex-row items-center justify-center gap-2"
               v-for="position in positions"
               :key="position.value"
@@ -394,29 +398,29 @@ const editDest = async (isDelete = false, option?: string) => {
                 :class="{ 'rotate-180': position.value === 'left' }"
               />
               {{ position.label }}
-            </button>
+            </Button>
           </div>
         </div>
       </div>
       <div class="rounded-xl flex gap-3">
-        <button
+        <Button
           @click="isEdit = false"
-          class="rounded-lg text-[14px] hover:!bg-[#c9c9c9]"
+          class="rounded-lg text-[14px] w-[80px] items-center justify-center px-4 hover:!bg-[#c9c9c9]"
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           @click="() => editDest()"
-          class="!text-white !bg-[#14c6a4] text-[14px] font-semibold hover:!bg-[#109980] rounded-lg"
+          class="!text-white !bg-[#14c6a4] text-[14px] w-[72px] items-center justify-center font-semibold hover:!bg-[#109980] rounded-lg"
         >
           Done
-        </button>
+        </Button>
       </div>
     </div>
 
-    <div class="flex w-full">
+    <div class="flex bg-slate-200  h-[200px] items-center justify-start  w-full">
       <!-- Radio -->
-      <div class="flex w-[55%] text-[12px]">
+      <div class="flex w-[55%] text-[14px]">
         <div :class="['flex', { 'flex-wrap': !isSmall }]">
           <div v-for="(dir, index) in directions" :key="dir.label">
             <div
@@ -458,7 +462,7 @@ const editDest = async (isDelete = false, option?: string) => {
                   style="width: 16px; height: 16px"
                 />
 
-                <span class="checkmark font-bold">{{ dir.label }}</span>
+                <span class="checkmark ">{{ dir.label }}</span>
               </div>
             </div>
           </div>
@@ -468,7 +472,7 @@ const editDest = async (isDelete = false, option?: string) => {
       <!-- Form -->
       <template v-if="selectedDirection !== null">
         <div
-          :class="`border-l-2 border-l-[#c1c1c1] ml-5 ${
+          :class="`border-l-2 border-l-[#c1c1c1] translate-y-12 ml-5 ${
             isSmall ? 'mr-8' : 'mr-20'
           }`"
         ></div>
@@ -510,8 +514,8 @@ const editDest = async (isDelete = false, option?: string) => {
               </div>
             </div>
           </div>
-          <div class="flex flex-col w-1/2 text-start mx-auto">
-            <div class="flex flex-col mb-[32px]">
+          <div class="flex flex-col w-1/2 text-[14px] text-start mx-auto">
+            <div class="flex flex-col mb-[32px] ">
               <p>
                 Destination 1 <span class="text-[#FF0000] font-medium">*</span>
               </p>
@@ -533,10 +537,10 @@ const editDest = async (isDelete = false, option?: string) => {
               />
             </div>
             <div
-              class="button-group w-full justify-center bg-[#E1E1E1] p-1 rounded-xl"
+              class="button-group w-full justify-center bg-[#E1E1E1] rounded-md"
             >
               <button
-                class="rounded-xl w-full"
+                class="rounded-md w-full"
                 v-for="color in colors"
                 :key="color.label"
                 :class="{ active: selectedColor === color.value }"
@@ -631,20 +635,23 @@ const editDest = async (isDelete = false, option?: string) => {
 
 .button-group {
   display: flex;
-  gap: 1px;
 }
 
 button {
-  background-color: #e1e1e1;
+  background-color: #eaeaea;
   color: rgb(0, 0, 0);
   border: none;
-  padding: 3px 10px;
+  padding: 5px 10px;
   cursor: pointer;
 }
 
 button.active {
-  background-color: white;
-  color: black;
+  background-color: #BBFAE3;
+  color: #00A962;
+  font-weight: 700;
+  border-color: #00A962;
+  border-width: 1px; /* Ensure the border width is set */
+  border-style: solid; /* Ensure the border style is set */
 }
 
 .image-container {
@@ -652,7 +659,6 @@ button.active {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 30px;
   gap: 10px;
 }
 
@@ -670,8 +676,8 @@ button.active {
 }
 
 .small.small .img-wrapper {
-  width: 180px;
-  height: 90px;
+  width: 240px;
+  height: 140px;
 }
 
 .large.large .img-wrapper {
