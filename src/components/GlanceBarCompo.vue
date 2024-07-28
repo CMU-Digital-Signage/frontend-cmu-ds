@@ -88,6 +88,19 @@ watch(destination1, () => {
   }
 });
 
+const getTextColor = (color: string | null) => {
+  let style = "font-normal";
+  switch (color) {
+    case "green":
+      style += " text-green-300";
+      break;
+    default:
+      style += " text-yellow-400";
+      break;
+  }
+  return style;
+};
+
 const editDest = async (isDelete = false, option?: string) => {
   if (isDelete && option?.length) {
     Object.assign(form, {});
@@ -108,6 +121,17 @@ const editDest = async (isDelete = false, option?: string) => {
       }
     }
   } else {
+    if (selectedDirection.value === null || !destination1.value.length) {
+      return toast.add({
+        severity: "error",
+        summary: "Invalid",
+        detail:
+          selectedDirection.value === null
+            ? "Direction is empty"
+            : "Destination 1 is empty",
+        life: 3000,
+      });
+    }
     form.isSmall = selectedPosition.value === "center" ? false : true;
     if (["center", "left"].includes(selectedPosition.value)) {
       form.color1 = selectedColor.value;
@@ -196,9 +220,7 @@ const editDest = async (isDelete = false, option?: string) => {
       <div v-if="isSmall" class="split-sections">
         <div
           :class="[
-            `extra-section ${
-              device.color1 === 'green' ? 'text-[#14C6A4]' : 'text-[#FFC008]'
-            }`,
+            `extra-section ${getTextColor(device.color1)}`,
             { 'border-blink': isEdit && selectedPosition === 'left' },
             { '!border-solid': device.arrow1 !== null },
             { 'cursor-pointer': device.arrow1 === null },
@@ -218,7 +240,7 @@ const editDest = async (isDelete = false, option?: string) => {
             ]"
           >
             <i
-              class="absolute -top-2 -left-2 pi pi-minus rounded-full bg-red-500 hover:bg-red-600 text-[#ffffff] p-1 cursor-pointer"
+              class="pi pi-minus remove-button"
               style="font-size: 10px"
               @click="() => editDest(true, 'left')"
             ></i>
@@ -242,16 +264,11 @@ const editDest = async (isDelete = false, option?: string) => {
               {{ device.desc1?.replace(" ", "\n") }}
             </div>
           </div>
-          <i
-            v-else-if="!isEdit"
-            class="pi pi-plus rounded-full bg-white text-[#575757] p-2 hover:bg-slate-100"
-          ></i>
+          <i v-else-if="!isEdit" class="pi pi-plus add-button"></i>
         </div>
         <div
           :class="[
-            `extra-section ${
-              device.color2 === 'green' ? 'text-[#87EFAC]' : 'text-[#FFC008]'
-            }`,
+            `extra-section ${getTextColor(device.color2)}`,
             { 'border-blink': isEdit && selectedPosition === 'right' },
             { '!border-solid': device.arrow2 !== null },
             { 'cursor-pointer': device.arrow2 === null },
@@ -272,7 +289,7 @@ const editDest = async (isDelete = false, option?: string) => {
             ]"
           >
             <i
-              class="absolute -top-2 -left-2 pi pi-minus rounded-full bg-red-500 hover:bg-red-600 text-[#ffffff] p-1 cursor-pointer"
+              class="pi pi-minus remove-button"
               style="font-size: 10px"
               @click="() => editDest(true, 'right')"
             ></i>
@@ -296,18 +313,13 @@ const editDest = async (isDelete = false, option?: string) => {
               {{ device.desc2?.replace(" ", "\n") }}
             </div>
           </div>
-          <i
-            v-else-if="!isEdit"
-            class="pi pi-plus rounded-full bg-white text-[#575757] p-2 hover:bg-slate-200"
-          ></i>
+          <i v-else-if="!isEdit" class="pi pi-plus add-button"></i>
         </div>
       </div>
       <div
         v-else
         :class="[
-          `extra-section ${
-            device.color1 === 'green' ? 'text-[#14C6A4]' : 'text-[#FFC008]'
-          }`,
+          `extra-section ${getTextColor(device.color1)}`,
           { 'border-blink': isEdit },
           { '!border-solid': device.arrow1 !== null },
           { 'cursor-pointer': device.arrow1 === null },
@@ -346,10 +358,7 @@ const editDest = async (isDelete = false, option?: string) => {
             {{ device.desc1?.replace(" ", "\n") }}
           </div>
         </div>
-        <i
-          v-else-if="!isEdit"
-          class="pi pi-plus rounded-full bg-white text-[#575757] p-2 hover:bg-slate-200"
-        ></i>
+        <i v-else-if="!isEdit" class="pi pi-plus add-button"></i>
       </div>
     </div>
   </div>
@@ -387,14 +396,23 @@ const editDest = async (isDelete = false, option?: string) => {
               :class="{ active: selectedPosition === position.value }"
               @click="selectedPosition = position.value"
             >
-              <img alt="panel" src="../assets/images/Panel.png" />
+              <img
+                alt="panel"
+                src="../assets/images/Panel.png"
+                :class="{ 'rotate-180': position.value === 'left' }"
+              />
               {{ position.label }}
             </button>
           </div>
         </div>
       </div>
       <div class="rounded-xl flex gap-3">
-        <button @click="isEdit = false" class="rounded-lg text-[14px] hover:!bg-[#c9c9c9]">Cancel</button>
+        <button
+          @click="isEdit = false"
+          class="rounded-lg text-[14px] hover:!bg-[#c9c9c9]"
+        >
+          Cancel
+        </button>
         <button
           @click="() => editDest()"
           class="!text-white !bg-[#14c6a4] text-[14px] font-semibold hover:!bg-[#109980] rounded-lg"
@@ -434,7 +452,7 @@ const editDest = async (isDelete = false, option?: string) => {
                   alt="arrow"
                   src="../assets/images/arrow.png"
                 />
-                <p class="text-[#FFC107]">{{ textContent }}</p>
+                <p class="text-yellow-400">{{ textContent }}</p>
               </div>
               <div class="flex flex-row gap-2">
                 <input
@@ -486,13 +504,7 @@ const editDest = async (isDelete = false, option?: string) => {
                     : require('../assets/images/arrow.png')
                 "
               />
-              <div
-                :class="`flex flex-col ${
-                  selectedColor === 'green'
-                    ? 'text-[#14C6A4]'
-                    : 'text-[#FFC008]'
-                }`"
-              >
+              <div :class="`flex flex-col ${getTextColor(selectedColor)}`">
                 <p>
                   {{ !destination1.length ? textContent : destination1 }}
                 </p>
@@ -549,6 +561,29 @@ const editDest = async (isDelete = false, option?: string) => {
 <style scoped>
 * {
   font-family: "Lato", "Sarabun";
+}
+
+.add-button {
+  border-radius: 9999px;
+  background-color: #ffffff;
+  color: #575757;
+  padding: 8px;
+}
+.add-button:hover {
+  background-color: #e2e8f0;
+}
+.remove-button {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  cursor: pointer;
+  border-radius: 9999px;
+  background-color: #ef4444;
+  color: #ffffff;
+  padding: 4px;
+}
+.remove-button:hover {
+  background-color: #dc2626;
 }
 
 .extra-section {
