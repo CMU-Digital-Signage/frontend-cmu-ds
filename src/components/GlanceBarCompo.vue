@@ -357,7 +357,7 @@ const editDest = async (isDelete = false, option?: string) => {
   </div>
 
   <!-- Bottom Panel -->
-  <div v-if="isEdit" class="bottom-panel absolute left-0 bottom-0 h-fit">
+  <div v-if="isEdit" class="bottom-panel ipad-landscape:text-[12px] ipad-portrait:text-[12px] absolute left-0 bottom-0 h-fit">
     <!-- Action -->
     <div
       :class="[
@@ -368,10 +368,11 @@ const editDest = async (isDelete = false, option?: string) => {
     >
       <div v-if="device.isSmall === null" class="flex gap-6 text-center">
         <div>
-          <div class="button-group bg-[#E1E1E1] text-[14px] rounded-lg">
+          <div class="button-group ipad-landscape:text-[12px] ipad-portrait:text-[12px] bg-[#E1E1E1] text-[14px] rounded-lg">
             <Button
               v-for="size in sizes"
               :key="size.label"
+              class="ipad-landscape:text-[12px] ipad-portrait:text-[12px]"
               :class="[
                 `${
                   size.value
@@ -389,7 +390,7 @@ const editDest = async (isDelete = false, option?: string) => {
         <div v-if="isSmall">
           <div class="button-group bg-[#E1E1E1] text-[14px] rounded-lg">
             <Button
-              class="rounded-md flex flex-row items-center justify-center gap-2"
+              class="rounded-md flex flex-row items-center justify-center ipad-landscape:text-[12px] ipad-portrait:text-[12px] gap-2"
               v-for="position in positions"
               :key="position.value"
               :class="[
@@ -427,13 +428,13 @@ const editDest = async (isDelete = false, option?: string) => {
       <div class="rounded-xl flex gap-3">
         <Button
           @click="isEdit = false"
-          class="rounded-lg text-[14px] w-[80px] items-center justify-center px-4 hover:!bg-[#c9c9c9]"
+          class="rounded-lg text-[14px]  ipad-landscape:text-[12px] ipad-portrait:text-[12px] w-[80px] items-center justify-center px-4 hover:!bg-[#c9c9c9]"
         >
           Cancel
         </Button>
         <Button
           @click="() => editDest()"
-          class="!text-white !bg-[#14c6a4] text-[14px] w-[72px] items-center justify-center font-semibold hover:!bg-[#109980] rounded-lg"
+          class="!text-white !bg-[#14c6a4] ipad-landscape:text-[12px] ipad-portrait:text-[12px] text-[14px] w-[72px] items-center justify-center font-semibold hover:!bg-[#109980] rounded-lg"
         >
           Done
         </Button>
@@ -442,7 +443,7 @@ const editDest = async (isDelete = false, option?: string) => {
 
     <div class="flex items-center justify-between w-full">
       <!-- Radio -->
-      <div class="flex w-[55%] text-[14px]">
+      <div class="flex w-[55%] ipad-landscape:text-[12px] ipad-portrait:text-[12px] text-[14px]">
         <div :class="`${isSmall ? 'flex' : 'grid grid-cols-2 gap-6 '}`">
           <div v-for="(dir, index) in directions" :key="dir.label">
             <div
@@ -460,7 +461,7 @@ const editDest = async (isDelete = false, option?: string) => {
               @click="selectedDirection = dir.value"
             >
               <div
-                class="img-wrapper lg:text-[20px] text-[16px]"
+                class="img-wrapper lg:text-[16px] text-[14px]"
                 :class="{
                   'flex-row-reverse !text-end':
                     dir.value === 0 || selectedPosition === 'right',
@@ -497,7 +498,6 @@ const editDest = async (isDelete = false, option?: string) => {
 
       <!-- Form -->
       <template v-if="selectedDirection !== null">
-        
         <div
           :class="[
             'flex   flex-row gap-5 justify-end  ',
@@ -540,7 +540,7 @@ const editDest = async (isDelete = false, option?: string) => {
             </div>
           </div>
           <div class="flex flex-col w-1/2 text-[14px] text-start">
-            <div class="flex flex-col mb-[16px]">
+            <div class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[16px]">
               <p>
                 Destination 1 <span class="text-[#FF0000] font-medium">*</span>
               </p>
@@ -551,7 +551,7 @@ const editDest = async (isDelete = false, option?: string) => {
                 :placeholder="`Limit ${isSmall ? 3 : 10} characters Ex.41X`"
               />
             </div>
-            <div class="flex flex-col mb-[15px]">
+            <div class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[15px]">
               <p>Destination 2 (Optional)</p>
               <InputText
                 :disabled="!destination1.length"
@@ -562,10 +562,10 @@ const editDest = async (isDelete = false, option?: string) => {
               />
             </div>
             <div
-              class="button-group w-full justify-center bg-[#E1E1E1] rounded-md"
+              class="button-group ipad-landscape:text-[12px] ipad-portrait:text-[12px] w-full justify-center bg-[#E1E1E1] rounded-md"
             >
               <Button
-                class="rounded-md gap-2  justify-center w-full"
+                class="rounded-md ipad-landscape:text-[12px] ipad-portrait:text-[12px] gap-2 justify-center w-full"
                 v-for="color in colors"
                 :key="color.label"
                 :class="[
@@ -715,6 +715,18 @@ button.active {
 .large.large .img-wrapper {
   width: 290px;
   height: 120px;
+}
+
+@media (max-width: 1024px) or (max-height: 768px) {
+  .small.small .img-wrapper {
+    width: 170px;
+    height: 130px;
+  }
+
+  .large.large .img-wrapper {
+    width: 200px;
+    height: 100px;
+  }
 }
 
 .large-wrapper {
