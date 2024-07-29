@@ -927,7 +927,7 @@ const nextStepPreview = async () => {
           }}
           (Portrait, Logo TV the left side of the screen)
         </label>
-        <p>Preview Video xxxxxxxxxxxxxxxx</p>
+        <!-- <p>Preview Video xxxxxxxxxxxxxxxx</p> -->
         <div
           class="orientOut border-2 rounded-lg flex flex-col gap-5 bg-white"
           style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
