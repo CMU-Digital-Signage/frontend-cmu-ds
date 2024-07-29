@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { editGlanceBarByDevice } from "@/services/device";
+import RadioButton from "primevue/radiobutton";
 export default defineComponent({
   name: "GlanceBarCompo",
 });
@@ -326,7 +327,7 @@ const editDest = async (isDelete = false, option?: string) => {
           ]"
         >
           <i
-            class="absolute -top-2 -left-2 pi pi-minus hover:bg-red-600 rounded-full bg-red-500 text-[#ffffff] p-1 cursor-pointer"
+            class="absolute -top-2 -left-2 pi pi-minus hover:bg-red-400 rounded-full bg-red-300 text-[#ffffff] p-1 cursor-pointer"
             style="font-size: 10px"
             @click="() => editDest(true, 'large')"
           ></i>
@@ -356,27 +357,29 @@ const editDest = async (isDelete = false, option?: string) => {
   </div>
 
   <!-- Bottom Panel -->
-  <div
-    v-if="isEdit"
-    class="bottom-panel absolute left-0 bottom-0"
-    :class="`${isSmall ? 'h-[260px]' : 'h-[500px]'}`"
-  >
+  <div v-if="isEdit" class="bottom-panel absolute left-0 bottom-0 h-fit">
     <!-- Action -->
     <div
       :class="[
-        'flex mb-2',
+        'flex  mb-5',
         { 'justify-between': device.isSmall === null },
         { 'justify-end': device.isSmall !== null },
       ]"
     >
-      <div v-if="device.isSmall === null" class="flex gap-5 text-center">
+      <div v-if="device.isSmall === null" class="flex gap-6 text-center">
         <div>
-          <div class="button-group bg-[#E1E1E1] text-[14px]  rounded-lg">
+          <div class="button-group bg-[#E1E1E1] text-[14px] rounded-lg">
             <Button
-              class="rounded-md"
               v-for="size in sizes"
               :key="size.label"
-              :class="{ active: form.isSmall === size.value }"
+              :class="[
+                `${
+                  size.value
+                    ? ' rounded-r-none rounded-l-lg'
+                    : 'rounded-l-none rounded-r-lg'
+                }`,
+                { active: form.isSmall === size.value },
+              ]"
               @click="form.isSmall = size.value"
             >
               {{ size.label }}
@@ -389,14 +392,33 @@ const editDest = async (isDelete = false, option?: string) => {
               class="rounded-md flex flex-row items-center justify-center gap-2"
               v-for="position in positions"
               :key="position.value"
-              :class="{ active: selectedPosition === position.value }"
+              :class="[
+                `${
+                  position.value == 'left'
+                    ? ' rounded-r-none rounded-l-lg'
+                    : 'rounded-l-none rounded-r-lg'
+                }`,
+                { active: selectedPosition === position.value },
+              ]"
               @click="selectedPosition = position.value"
             >
-              <img
-                alt="panel"
-                src="../assets/images/Panel.png"
-                :class="{ 'rotate-180': position.value === 'left' }"
-              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="14"
+                viewBox="0 0 20 14"
+                fill="none"
+                :class="{
+                  'rotate-180': position.value === 'left',
+                  'text-[#129a8f]': selectedPosition == position.value,
+                }"
+              >
+                <path
+                  d="M19.9999 11.2368C19.9999 11.9697 19.6706 12.6725 19.0845 13.1907C18.4983 13.7089 17.7033 14 16.8744 14L3.12544 14C2.2965 14 1.50151 13.7089 0.915365 13.1907C0.329216 12.6725 -7.82944e-05 11.9697 -7.82944e-05 11.2368L-7.82944e-05 2.76316C-7.82944e-05 2.03032 0.329216 1.3275 0.915365 0.80931C1.50151 0.291117 2.2965 1.78814e-07 3.12544 1.78814e-07L16.8736 1.78814e-07C17.7025 1.78814e-07 18.4975 0.291117 19.0836 0.80931C19.6698 1.3275 19.9991 2.03032 19.9991 2.76316L19.9999 11.2368ZM3.12544 1.10526C2.62808 1.10526 2.15109 1.27993 1.7994 1.59085C1.44771 1.90177 1.25013 2.32346 1.25013 2.76316L1.25013 11.2368C1.25013 11.6765 1.44771 12.0982 1.7994 12.4092C2.15109 12.7201 2.62808 12.8947 3.12544 12.8947L9.58152 12.8947L9.58152 1.10526L3.12544 1.10526Z"
+                  fill="currentColor"
+                />
+              </svg>
+
               {{ position.label }}
             </Button>
           </div>
@@ -418,10 +440,10 @@ const editDest = async (isDelete = false, option?: string) => {
       </div>
     </div>
 
-    <div class="flex bg-slate-200  h-[200px] items-center justify-start  w-full">
+    <div class="flex items-center justify-between w-full">
       <!-- Radio -->
       <div class="flex w-[55%] text-[14px]">
-        <div :class="['flex', { 'flex-wrap': !isSmall }]">
+        <div :class="`${isSmall ? 'flex' : 'grid grid-cols-2 gap-6 '}`">
           <div v-for="(dir, index) in directions" :key="dir.label">
             <div
               v-if="
@@ -429,15 +451,13 @@ const editDest = async (isDelete = false, option?: string) => {
                   (!isSmall || selectedPosition !== 'right')) ||
                 (dir.value !== 180 && (!isSmall || selectedPosition !== 'left'))
               "
-              class="image-container"
+              class="image-container cursor-pointer"
               :class="[
                 isSmall ? 'small' : 'large',
                 selectedPosition,
                 { 'lg:mr-15 mr-5': isSmall && index !== directions.length - 1 },
-                {
-                  'mr-5': !isSmall && index !== directions.length - 1,
-                },
               ]"
+              @click="selectedDirection = dir.value"
             >
               <div
                 class="img-wrapper lg:text-[20px] text-[16px]"
@@ -453,16 +473,22 @@ const editDest = async (isDelete = false, option?: string) => {
                 />
                 <p class="text-yellow-400">{{ textContent }}</p>
               </div>
-              <div class="flex flex-row gap-2">
-                <input
-                  type="radio"
-                  name="radio"
+              <div class="flex items-center flex-row gap-2">
+                <RadioButton
                   :value="dir.value"
                   v-model="selectedDirection"
-                  style="width: 16px; height: 16px"
+                  :pt="{
+                    box: (slotProps) => ({
+                      class: [
+                        {
+                          'border-[#14C6A4] bg-[#14C6A4]':
+                            slotProps.context.checked,
+                        },
+                      ],
+                    }),
+                  }"
                 />
-
-                <span class="checkmark ">{{ dir.label }}</span>
+                <span>{{ dir.label }}</span>
               </div>
             </div>
           </div>
@@ -471,17 +497,16 @@ const editDest = async (isDelete = false, option?: string) => {
 
       <!-- Form -->
       <template v-if="selectedDirection !== null">
+        
         <div
-          :class="`border-l-2 border-l-[#c1c1c1] translate-y-12 ml-5 ${
-            isSmall ? 'mr-8' : 'mr-20'
-          }`"
-        ></div>
-        <div
-          :class="['flex w-[40%]', !isSmall ? 'flex-col' : 'flex-row gap-5']"
+          :class="[
+            'flex   flex-row gap-5 justify-end  ',
+            `${isSmall ? ' w-[40%]' : 'w-[50%]'}`,
+          ]"
         >
           <div
             class="image-container"
-            :class="[isSmall ? 'w-1/2 small' : 'large']"
+            :class="[isSmall ? 'w-1/2 small mb-[28px]' : 'large']"
           >
             <div
               class="img-wrapper lg:text-[20px] text-[16px]"
@@ -514,8 +539,8 @@ const editDest = async (isDelete = false, option?: string) => {
               </div>
             </div>
           </div>
-          <div class="flex flex-col w-1/2 text-[14px] text-start mx-auto">
-            <div class="flex flex-col mb-[32px] ">
+          <div class="flex flex-col w-1/2 text-[14px] text-start">
+            <div class="flex flex-col mb-[16px]">
               <p>
                 Destination 1 <span class="text-[#FF0000] font-medium">*</span>
               </p>
@@ -539,11 +564,18 @@ const editDest = async (isDelete = false, option?: string) => {
             <div
               class="button-group w-full justify-center bg-[#E1E1E1] rounded-md"
             >
-              <button
-                class="rounded-md w-full"
+              <Button
+                class="rounded-md gap-2  justify-center w-full"
                 v-for="color in colors"
                 :key="color.label"
-                :class="{ active: selectedColor === color.value }"
+                :class="[
+                  `${
+                    color.value === 'yellow'
+                      ? ' rounded-r-none rounded-l-lg'
+                      : 'rounded-l-none rounded-r-lg'
+                  }`,
+                  { active: selectedColor === color.value },
+                ]"
                 @click="selectedColor = color.value"
               >
                 <i
@@ -551,7 +583,7 @@ const editDest = async (isDelete = false, option?: string) => {
                   :style="{ color: color.color }"
                 ></i>
                 {{ color.label }}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -580,12 +612,12 @@ const editDest = async (isDelete = false, option?: string) => {
   left: -8px;
   cursor: pointer;
   border-radius: 9999px;
-  background-color: #ef4444;
+  background-color: #f55353;
   color: #ffffff;
   padding: 4px;
 }
 .remove-button:hover {
-  background-color: #dc2626;
+  background-color: #db4242;
 }
 
 .extra-section {
@@ -646,12 +678,12 @@ button {
 }
 
 button.active {
-  background-color: #BBFAE3;
-  color: #00A962;
+  background-color: #4bffed4d;
+  color: #129a8f;
   font-weight: 700;
-  border-color: #00A962;
-  border-width: 1px; /* Ensure the border width is set */
-  border-style: solid; /* Ensure the border style is set */
+  border-color: #129a8f;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .image-container {
@@ -681,16 +713,17 @@ button.active {
 }
 
 .large.large .img-wrapper {
-  width: 270px;
-  height: 90px;
+  width: 290px;
+  height: 120px;
 }
 
 .large-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 270px !important;
-  height: 90px !important;
+  margin-right: 10px;
+  width: 290px !important;
+  height: 120px !important;
 }
 
 .large .image-container {
@@ -709,39 +742,5 @@ button.active {
 .center input[type="radio"],
 .large input[type="radio"] {
   margin: 0 auto;
-}
-
-input[type="radio"] {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 1px solid black;
-  border-radius: 50%;
-  outline: none;
-  cursor: pointer;
-  margin: 0;
-}
-
-input[type="radio"]:checked {
-  background-color: #14c6a4;
-  position: relative;
-  border: 1px solid #14c6a4;
-}
-
-input[type="radio"]:checked::before {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background-color: white;
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.checkmark {
-  display: inline-block;
-  vertical-align: middle;
 }
 </style>
