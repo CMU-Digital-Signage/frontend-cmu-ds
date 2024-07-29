@@ -357,7 +357,10 @@ const editDest = async (isDelete = false, option?: string) => {
   </div>
 
   <!-- Bottom Panel -->
-  <div v-if="isEdit" class="bottom-panel ipad-landscape:text-[12px] ipad-portrait:text-[12px] absolute left-0 bottom-0 h-fit">
+  <div
+    v-if="isEdit"
+    class="bottom-panel ipad-landscape:text-[12px] ipad-portrait:text-[12px] absolute left-0 bottom-0 h-fit"
+  >
     <!-- Action -->
     <div
       :class="[
@@ -368,7 +371,9 @@ const editDest = async (isDelete = false, option?: string) => {
     >
       <div v-if="device.isSmall === null" class="flex gap-6 text-center">
         <div>
-          <div class="button-group ipad-landscape:text-[12px] ipad-portrait:text-[12px] bg-[#E1E1E1] text-[14px] rounded-lg">
+          <div
+            class="button-group ipad-landscape:text-[12px] ipad-portrait:text-[12px] bg-[#E1E1E1] text-[14px] rounded-lg"
+          >
             <Button
               v-for="size in sizes"
               :key="size.label"
@@ -428,7 +433,7 @@ const editDest = async (isDelete = false, option?: string) => {
       <div class="rounded-xl flex gap-3">
         <Button
           @click="isEdit = false"
-          class="rounded-lg text-[14px]  ipad-landscape:text-[12px] ipad-portrait:text-[12px] w-[80px] items-center justify-center px-4 hover:!bg-[#c9c9c9]"
+          class="rounded-lg text-[14px] ipad-landscape:text-[12px] ipad-portrait:text-[12px] w-[80px] items-center justify-center px-4 hover:!bg-[#c9c9c9]"
         >
           Cancel
         </Button>
@@ -443,7 +448,9 @@ const editDest = async (isDelete = false, option?: string) => {
 
     <div class="flex items-center justify-between w-full">
       <!-- Radio -->
-      <div class="flex w-[55%] ipad-landscape:text-[12px] ipad-portrait:text-[12px] text-[14px]">
+      <div
+        class="flex w-[55%] ipad-landscape:text-[12px] ipad-portrait:text-[12px] text-[14px]"
+      >
         <div :class="`${isSmall ? 'flex' : 'grid grid-cols-2 gap-6 '}`">
           <div v-for="(dir, index) in directions" :key="dir.label">
             <div
@@ -500,8 +507,8 @@ const editDest = async (isDelete = false, option?: string) => {
       <template v-if="selectedDirection !== null">
         <div
           :class="[
-            'flex   flex-row gap-5 justify-end  ',
-            `${isSmall ? ' w-[40%]' : 'w-[50%]'}`,
+            'flex   flex-row gap-5 justify-end ',
+          
           ]"
         >
           <div
@@ -539,24 +546,30 @@ const editDest = async (isDelete = false, option?: string) => {
               </div>
             </div>
           </div>
-          <div class="flex flex-col w-1/2 text-[14px] text-start">
-            <div class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[16px]">
+          <div class="flex flex-col w-[300px]  text-[14px] text-start">
+            <div
+              class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[16px]"
+            >
               <p>
                 Destination 1 <span class="text-[#FF0000] font-medium">*</span>
               </p>
               <InputText
                 v-model="destination1"
                 class="h-8 rounded-[8px] text-[12px]"
+
                 :maxlength="isSmall ? 3 : 10"
                 :placeholder="`Limit ${isSmall ? 3 : 10} characters Ex.41X`"
               />
             </div>
-            <div class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[15px]">
+            <div
+              class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[15px]"
+            >
               <p>Destination 2 (Optional)</p>
               <InputText
                 :disabled="!destination1.length"
                 v-model="destination2"
                 class="h-8 rounded-[8px] text-[12px]"
+
                 :maxlength="isSmall ? 3 : 10"
                 :placeholder="`Limit ${isSmall ? 3 : 10} characters Ex.41X`"
               />
