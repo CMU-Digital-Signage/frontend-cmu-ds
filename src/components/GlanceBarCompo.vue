@@ -539,7 +539,7 @@ const editDest = async (isDelete = false, option?: string) => {
               </div>
             </div>
           </div>
-          <div class="flex flex-col w-1/2 text-[14px] text-start">
+          <div class="flex  flex-col w-1/2 text-[14px] text-start">
             <div class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[16px]">
               <p>
                 Destination 1 <span class="text-[#FF0000] font-medium">*</span>
