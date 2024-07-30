@@ -173,50 +173,38 @@ const editDest = async (isDelete = false, option?: string) => {
 
 <template>
   <div
-    class="flex w-full h-full justify-between items-center bg-[#0e1235] text-white rounded-lg py-4"
+    class="flex w-full h-[130px] justify-between glance-bar-box items-center text-black rounded-lg"
   >
     <!-- Date -->
-    <div class="lg:ml-5 ml-3 flex flex-col items-start">
-      <p class="text-4xl md:text-2xl lg:text-4xl justify-start items-start">
+    <div class="lg:ml-5 ml-3 w-[10%] flex flex-col items-start bg-white py-4">
+      <p
+        class="text-4xl md:text-2xl ipad-landscape:text-2xl lg:text-4xl justify-start items-start"
+      >
         {{ timeFormatter(dateTime) }}
       </p>
-      <p class="text-4xl md:text-2xl lg:text-2xl">
+      <p class="text-4xl md:text-2xl ipad-landscape:text-xl lg:text-2xl">
         {{ dateFormatter(dateTime, 3) }}
       </p>
     </div>
+    <div
+      class="items-center w-[10%] flex-col bg-white text-[20px] ipad-landscape:text-[16px] flex font-semibold justify-center"
+    >
+      <img alt="weather" class="size-10" src="../assets/images/clearDay.png" />
+      <p>25 °C</p>
+    </div>
     <!-- AQI -->
-    <div class="flex flex-col h-full">
-      <div class="flex h-24 justify-center">
-        <div
-          class="lg:px-4 px-3 items-center flex justify-center rounded-l-lg rounded-tr-none bg-[#228b25]"
-        >
-          <p class="lg:text-xl text-lg">28 °C</p>
-        </div>
-        <div
-          class="flex flex-row rounded-r-lg rounded-bl-none bg-[#43a027] px-4 md:px-6 gap-4"
-        >
-          <div class="flex flex-col pt-1 pb-3 md:py-5 justify-center">
-            <p class="lg:text-4xl text-3xl font-semibold">30</p>
-            <p class="lg:text-xl text-lg">US AQI</p>
-          </div>
-          <div
-            class="lg:text-xl text-lg items-center font-medium flex flex-1 justify-center"
-          >
-            Good
-          </div>
-        </div>
-      </div>
-      <div class="text-xs text-center font-medium text-white mr-3 mt-2">
-        Last updated:
-        {{ dateTime.getHours().toString().padStart(2, "0") }}:{{
-          dateTime.getMinutes().toString().padStart(2, "0")
-        }}
-        | IQAir
+    <div class="flex w-[30%] items-center flex-col justify-center h-full">
+      <div
+        class="flex flex-col w-full bg-[#43a027] items-center justify-center text-white px-4 md:px-6 h-full"
+      >
+        <p class="lg:text-4xl text-3xl font-semibold">30</p>
+        <p class="lg:text-xl text-lg">US AQI</p>
+        <p class="lg:text-xl text-lg">Good</p>
       </div>
     </div>
     <!-- Direction -->
     <div
-      class="flex w-2/5 h-full items-end justify-end pr-5 gap-2.5 lg:text-[22px] font-semibold text-[20px]"
+      class="flex w-[50%] rounded-r-[8px] py-2 h-full items-end justify-center  gap-2.5 bg-[#0e1235] lg:text-[22px] font-semibold text-[20px]"
     >
       <div v-if="isSmall" class="split-sections">
         <div
@@ -486,7 +474,7 @@ const editDest = async (isDelete = false, option?: string) => {
                   :value="dir.value"
                   v-model="selectedDirection"
                   :pt="{
-                    box: (slotProps) => ({
+                    box: (slotProps:any) => ({
                       class: [
                         {
                           'border-[#14C6A4] bg-[#14C6A4]':
@@ -505,12 +493,7 @@ const editDest = async (isDelete = false, option?: string) => {
 
       <!-- Form -->
       <template v-if="selectedDirection !== null">
-        <div
-          :class="[
-            'flex   flex-row gap-5 justify-end ',
-          
-          ]"
-        >
+        <div :class="['flex   flex-row gap-2 justify-end ']">
           <div
             class="image-container"
             :class="[isSmall ? 'w-1/2 small mb-[28px]' : 'large']"
@@ -528,7 +511,7 @@ const editDest = async (isDelete = false, option?: string) => {
               <img
                 :class="[
                   'lg:size-12 size-8',
-                  directions.find((dir) => dir.value === selectedDirection)
+                  directions.find((dir:any) => dir.value === selectedDirection)
                     ?.arrow,
                 ]"
                 alt="arrow"
@@ -546,7 +529,7 @@ const editDest = async (isDelete = false, option?: string) => {
               </div>
             </div>
           </div>
-          <div class="flex flex-col w-[300px]  text-[14px] text-start">
+          <div class="flex flex-col w-[270px] text-[14px] text-start">
             <div
               class="flex ipad-landscape:text-[12px] ipad-portrait:text-[12px] flex-col mb-[16px]"
             >
@@ -556,7 +539,6 @@ const editDest = async (isDelete = false, option?: string) => {
               <InputText
                 v-model="destination1"
                 class="h-8 rounded-[8px] text-[12px]"
-
                 :maxlength="isSmall ? 3 : 10"
                 :placeholder="`Limit ${isSmall ? 3 : 10} characters Ex.41X`"
               />
@@ -569,7 +551,6 @@ const editDest = async (isDelete = false, option?: string) => {
                 :disabled="!destination1.length"
                 v-model="destination2"
                 class="h-8 rounded-[8px] text-[12px]"
-
                 :maxlength="isSmall ? 3 : 10"
                 :placeholder="`Limit ${isSmall ? 3 : 10} characters Ex.41X`"
               />
@@ -608,6 +589,12 @@ const editDest = async (isDelete = false, option?: string) => {
 <style scoped>
 * {
   font-family: "Lato", "Sarabun";
+}
+
+.glance-bar-box {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px -2px,
+    rgba(0, 0, 0, 0.2) 0px 0px 8px -2px;
+  border-radius: 8px;
 }
 
 .add-button {
@@ -704,7 +691,7 @@ button.active {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .img-wrapper {
@@ -713,7 +700,7 @@ button.active {
   align-items: center;
   background-color: #0e1235;
   border-radius: 10px;
-  gap: 10px;
+  gap: 5px;
   div {
     text-align: start;
     margin-inline: 10px;
@@ -721,33 +708,21 @@ button.active {
 }
 
 .small.small .img-wrapper {
-  width: 240px;
+  width: 200px;
   height: 140px;
 }
 
 .large.large .img-wrapper {
-  width: 290px;
+  width: 250px;
   height: 120px;
-}
-
-@media (max-width: 1024px) or (max-height: 768px) {
-  .small.small .img-wrapper {
-    width: 170px;
-    height: 130px;
-  }
-
-  .large.large .img-wrapper {
-    width: 200px;
-    height: 100px;
-  }
 }
 
 .large-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
-  width: 290px !important;
+  margin-right: 5px;
+  width: 250px !important;
   height: 120px !important;
 }
 
@@ -762,10 +737,25 @@ button.active {
   height: 176px;
 }
 
-.left.small input[type="radio"],
-.right.small input[type="radio"],
-.center input[type="radio"],
-.large input[type="radio"] {
-  margin: 0 auto;
+
+@media (max-width: 1024px) or (max-height: 768px) {
+  .small.small .img-wrapper {
+    width: 150px;
+    height: 135px;
+  }
+
+  .large.large .img-wrapper {
+    width: 180px;
+    height: 100px;
+  }
+
+  .large-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5px;
+    width: 180px !important;
+    height: 100px !important;
+  }
 }
 </style>

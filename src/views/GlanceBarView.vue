@@ -46,7 +46,6 @@ const handleEdit = (MACaddress: string | undefined) => {
           {{ device.deviceName }} (Room: {{ device.room }})
         </p>
         <GlanceBarCompo
-        
           :device="device"
           :onEdit="handleEdit"
         />

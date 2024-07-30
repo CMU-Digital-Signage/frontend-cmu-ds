@@ -19,7 +19,6 @@ import {
   setFieldPoster,
   dateFormatter,
   timeFormatter,
-  month,
 } from "@/utils/constant";
 import axios from "axios";
 import { AQI_STATUS, MAP_TYPE } from "@/utils/enum";
@@ -55,6 +54,59 @@ const fetchWeather = async () => {
   });
   updateWeather.value = new Date();
   weather.value = res.data.data;
+
+  const weatherValue = weather.value.current.weather.ic;
+  if (weatherValue === "01d") {
+    iconWeather.value = {
+      condition: "Clear",
+      image: require("../../assets/images/clearDay.png"),
+    };
+  } else if (weatherValue === "01n") {
+    iconWeather.value = {
+      condition: "Clear",
+      image: require("../../assets/images/clearNight.jpg"),
+    };
+  } else if (weatherValue === "02d") {
+    iconWeather.value = {
+      condition: "Mostly Clear",
+      image: require("../../assets/images/clearDay.png"),
+    };
+  } else if (weatherValue === "02n") {
+    iconWeather.value = {
+      condition: "Mostly Clear",
+      image: require("../../assets/images/clearNight.jpg"),
+    };
+  } else if (weatherValue === "03d") {
+    iconWeather.value = {
+      condition: "Partly Cloudy",
+      image: require("../../assets/images/partlyCloudy.png"),
+    };
+  } else if (weatherValue === "09d") {
+    iconWeather.value = {
+      condition: "Drizzle",
+      image: require("../../assets/images/drizzle.png"),
+    };
+  } else if (weatherValue === "10d" || weatherValue === "10n") {
+    iconWeather.value = {
+      condition: "Rain",
+      image: require("../../assets/images/rain.png"),
+    };
+  } else if (weatherValue === "11d" || weatherValue === "11n") {
+    iconWeather.value = {
+      condition: "Thunderstorm",
+      image: require("../../assets/images/thunderstorm.png"),
+    };
+  } else if (weatherValue === "13d") {
+    iconWeather.value = {
+      condition: "Snow",
+      image: require("../../assets/images/snow.png"),
+    };
+  } else {
+    iconWeather.value = {
+      condition: "Fog",
+      image: require("../../assets/images/fog.png"),
+    };
+  }
 };
 
 const aqiStatus = () => {
@@ -170,10 +222,10 @@ onUnmounted(() => {
   >
     <div
       v-if="!emerPoster"
-      class="flex justify-between h-screen flex-col w-[11vw] items-center py-6 bg-[#0e1235]"
+      class="flex justify-between h-screen flex-col w-[11vw] items-center pb-4 bg-[#ffffff]"
     >
       <div
-        class="flex flex-col gap-6 justify-center items-center text-start rotate-0"
+        class="flex flex-col gap-6 w-full bg-[#0e1235]  p-8 justify-center items-center text-start rotate-0"
       >
         <div
           v-if="device?.color2"
@@ -237,33 +289,16 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <div v-if="weather" class="bottomBlock items-center justify-center py-3 flex-col">
-        <div class="flex flex-row h-full">
+      <div class="bottomBlockAQI items-center justify-center flex-col">
+        <div class="flex flex-row h-full w-full">
           <div
-            class="items-center flex justify-center rounded-t-lg"
-            :class="{
-              'bg-[#228b25]': aqiStatus() === AQI_STATUS.GOOD,
-              'bg-[#F3BF10]': aqiStatus() === AQI_STATUS.MODERATE,
-              'bg-[#F89049]': aqiStatus() == AQI_STATUS.UNHEALTHY_SG,
-              'bg-[#EE4547]': aqiStatus() === AQI_STATUS.UNHEALTHY,
-              'bg-[#8A609D]': aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
-              'bg-[#814C63]': aqiStatus() === AQI_STATUS.HAZARDOUS,
-              'text-[#0C6515]': aqiStatus() === AQI_STATUS.GOOD,
-              'text-[#654E0C]': aqiStatus() === AQI_STATUS.MODERATE,
-              'text-[#571F00]': aqiStatus() === AQI_STATUS.UNHEALTHY_SG,
-              'text-[#ffffff]':
-                aqiStatus() === AQI_STATUS.GOOD ||
-                aqiStatus() === AQI_STATUS.UNHEALTHY ||
-                aqiStatus() === AQI_STATUS.VERY_UNHEALTHY ||
-                aqiStatus() === AQI_STATUS.HAZARDOUS,
-            }"
+            class="items-center flex-col bg-white text-[48px] h-1/2 flex font-semibold justify-center"
           >
-            <p class="text-2xl py-4 items-center px-2">
-              {{ weather?.current?.weather?.tp }} °C
-            </p>
+            <img alt="weather" class=" size-24" :src="iconWeather.image" />
+            <p>{{ weather?.current?.weather?.tp  }} °C</p>
           </div>
           <div
-            class="flex flex-row rounded-b-lg"
+            class="flex flex-row  items-center justify-center h-1/2"
             :class="{
               'bg-[#43a027]': aqiStatus() === AQI_STATUS.GOOD,
               'bg-[#FDD64B]': aqiStatus() === AQI_STATUS.MODERATE,
@@ -271,7 +306,6 @@ onUnmounted(() => {
               'bg-[#fe5b5b]': aqiStatus() === AQI_STATUS.UNHEALTHY,
               'bg-[#A97ABC]': aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
               'bg-[#966B78]': aqiStatus() === AQI_STATUS.HAZARDOUS,
-              'text-[#0C6515]': aqiStatus() === AQI_STATUS.GOOD,
               'text-[#654E0C]': aqiStatus() === AQI_STATUS.MODERATE,
               'text-[#571F00]': aqiStatus() === AQI_STATUS.UNHEALTHY_SG,
               'text-[#ffffff]':
@@ -281,32 +315,31 @@ onUnmounted(() => {
                 aqiStatus() === AQI_STATUS.HAZARDOUS,
             }"
           >
-            <div class="flex flex-col pt-5 pb-3">
-              <p class="text-[55px] font-semibold -ml-3">
-                {{ weather?.current?.pollution?.aqius }}
+            <div class="flex flex-col justify-center items-center">
+              <p class="text-[60px] font-semibold -ml-3">
+                {{ weather?.current?.pollution?.aqius  }}
               </p>
-              <p class="text-[24px] whitespace-nowrap ml-2">US AQI</p>
+              <p class="text-[20px] whitespace-nowrap ml-2">US AQI</p>
+              <p class="text-[30px] font-semibold text-wrap whitespace-wrap">{{ aqiStatus() }}</p>
             </div>
-            <div
+            <!-- <div
               class="pb-5 pt-4 text-2xl items-center font-medium flex flex-1 justify-center"
             >
-              {{ aqiStatus() }}
-            </div>
+             
+            </div> -->
           </div>
         </div>
-        <div class="text-[13px] font-medium text-white mr-3">
+        <!-- <div class="text-[13px] font-medium text-white mr-3">
           Last updated:
           {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
             updateWeather.getMinutes().toString().padStart(2, "0")
           }}
           | IQAir
-        </div>
+        </div> -->
       </div>
-      <div
-        class="bottomBlockGroup h-fit flex-col font-medium text-[44px] text-white"
-      >
-        <p class="text-[72px]">{{ timeFormatter(dateTime) }}</p>
-        <p>{{ dateFormatter(dateTime, 3) }}</p>
+      <div class="bottomBlockGroup h-fit flex-col text-[44px] text-black">
+        <p class="text-[72px] font-semibold">{{ timeFormatter(dateTime) }}</p>
+        <p class="font-medium text-[40px]">{{ dateFormatter(dateTime, 3) }}</p>
       </div>
     </div>
     <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
@@ -397,14 +430,27 @@ video {
   justify-content: center;
 }
 
+.bottomBlockAQI {
+  writing-mode: vertical-rl;
+  transform: scale(-1, -1);
+  /* flex: 1 1; */
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  justify-content: center;
+}
+
 .bottomBlockGroup {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
   /* flex: 1 1; */
   height: fit-content;
+  width: 100%;
   display: flex;
-  align-items: start;
-  background-color: #0e1235;
-  justify-content: start;
+  align-items: center;
+  background-color: #ffffff;
+  justify-content: center;
 }
 </style>
