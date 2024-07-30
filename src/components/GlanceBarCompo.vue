@@ -178,11 +178,11 @@ const editDest = async (isDelete = false, option?: string) => {
     <!-- Date -->
     <div class="lg:ml-5 ml-3 w-[10%] flex flex-col items-start bg-white py-4">
       <p
-        class="text-4xl md:text-2xl ipad-landscape:text-2xl lg:text-4xl justify-start items-start"
+        class="text-4xl md:text-2xl ipad-landscape:text-2xl  justify-start items-start"
       >
         {{ timeFormatter(dateTime) }}
       </p>
-      <p class="text-4xl md:text-2xl ipad-landscape:text-xl lg:text-2xl">
+      <p class="text-4xl md:text-2xl ipad-landscape:text-xl ">
         {{ dateFormatter(dateTime, 3) }}
       </p>
     </div>
@@ -301,7 +301,7 @@ const editDest = async (isDelete = false, option?: string) => {
         v-else
         :class="[
           `extra-section ${getTextColor(device.color1)}`,
-          { 'border-blink': isEdit },
+          { 'border-blink ': isEdit },
           { '!border-solid': device.arrow1 !== null },
           { 'cursor-pointer': device.arrow1 === null },
         ]"
@@ -499,7 +499,7 @@ const editDest = async (isDelete = false, option?: string) => {
             :class="[isSmall ? 'w-1/2 small mb-[28px]' : 'large']"
           >
             <div
-              class="img-wrapper lg:text-[20px] text-[16px]"
+              class="img-wrapper  ipad-landscape:text-[16px] text-[14px]"
               :class="[
                 { 'large-wrapper': !isSmall },
                 {
@@ -647,12 +647,13 @@ const editDest = async (isDelete = false, option?: string) => {
 
 .border-blink {
   animation: blink 1s infinite;
+  border: none;
 }
 
 @keyframes blink {
   50% {
-    border-color: #87efac;
-    box-shadow: #87efac 0px 0px 8px -2px, #87efac 0px 0px 8px -2px;
+    border: 3px solid white ;
+   
   }
 }
 
@@ -691,7 +692,7 @@ button.active {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
 }
 
 .img-wrapper {
@@ -703,13 +704,13 @@ button.active {
   gap: 5px;
   div {
     text-align: start;
-    margin-inline: 10px;
+    margin-inline: 2px;
   }
 }
 
 .small.small .img-wrapper {
   width: 200px;
-  height: 140px;
+  height: 150px;
 }
 
 .large.large .img-wrapper {
@@ -741,7 +742,7 @@ button.active {
 @media (max-width: 1024px) or (max-height: 768px) {
   .small.small .img-wrapper {
     width: 150px;
-    height: 135px;
+    height: 140px;
   }
 
   .large.large .img-wrapper {
@@ -754,7 +755,7 @@ button.active {
     justify-content: center;
     align-items: center;
     margin-right: 5px;
-    width: 180px !important;
+    width: 200px !important;
     height: 100px !important;
   }
 }
