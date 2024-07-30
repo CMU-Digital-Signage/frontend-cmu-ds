@@ -173,10 +173,10 @@ const editDest = async (isDelete = false, option?: string) => {
 
 <template>
   <div
-    class="flex w-full h-[130px] justify-between glance-bar-box items-center text-black rounded-lg"
+    class="flex w-full h-[130px] bg-[#0e1235] justify-between glance-bar-box items-center text-white rounded-lg"
   >
     <!-- Date -->
-    <div class="lg:ml-5 ml-3 w-[10%] flex flex-col items-start bg-white py-4">
+    <div class="lg:ml-5 ml-3 w-[20%] flex font-semibold flex-col items-start py-4">
       <p
         class="text-4xl md:text-2xl ipad-landscape:text-2xl  justify-start items-start"
       >
@@ -187,13 +187,13 @@ const editDest = async (isDelete = false, option?: string) => {
       </p>
     </div>
     <div
-      class="items-center w-[10%] flex-col bg-white text-[20px] ipad-landscape:text-[16px] flex font-semibold justify-center"
+      class="items-center w-[10%] flex-col  text-[20px] ipad-landscape:text-[16px] flex font-semibold justify-center"
     >
       <img alt="weather" class="size-10" src="../assets/images/clearDay.png" />
       <p>25 °C</p>
     </div>
     <!-- AQI -->
-    <div class="flex w-[30%] items-center flex-col justify-center h-full">
+    <div class="flex w-[20%] items-center flex-col justify-center h-full">
       <div
         class="flex flex-col w-full bg-[#43a027] items-center justify-center text-white px-4 md:px-6 h-full"
       >
@@ -204,7 +204,7 @@ const editDest = async (isDelete = false, option?: string) => {
     </div>
     <!-- Direction -->
     <div
-      class="flex w-[50%] rounded-r-[8px] py-2 h-full items-end justify-center  gap-2.5 bg-[#0e1235] lg:text-[22px] font-semibold text-[20px]"
+      class="flex w-[40%] rounded-r-[8px] py-2 h-full items-end justify-center  gap-2.5 bg-[#0e1235] lg:text-[22px] font-semibold text-[20px]"
     >
       <div v-if="isSmall" class="split-sections">
         <div
