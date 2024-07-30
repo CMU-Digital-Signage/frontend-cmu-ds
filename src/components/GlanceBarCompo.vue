@@ -623,7 +623,7 @@ const editDest = async (isDelete = false, option?: string) => {
 .extra-section {
   width: 90%;
   height: 100%;
-  border: 2px dashed white;
+  border: 3px dashed white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -647,13 +647,12 @@ const editDest = async (isDelete = false, option?: string) => {
 
 .border-blink {
   animation: blink 1s infinite;
-  border: none;
+  border: 3px none white;
 }
 
 @keyframes blink {
   50% {
     border: 3px solid white ;
-   
   }
 }
 
