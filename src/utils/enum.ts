@@ -19,7 +19,7 @@ export enum CONTENT_CODE {
 export enum AQI_STATUS {
   GOOD = "Good",
   MODERATE = "Moderate",
-  UNHEALTHY_SG = "Unhealthy (Sensitive Group)",
+  UNHEALTHY_SG = "Concern",
   UNHEALTHY = "Unhealthy",
   VERY_UNHEALTHY = "Very Unhealthy",
   HAZARDOUS = "Hazardous",
