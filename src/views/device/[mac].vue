@@ -222,14 +222,14 @@ onUnmounted(() => {
   >
     <div
       v-if="!emerPoster"
-      class="flex justify-between h-screen flex-col w-[11vw] items-center pb-4 bg-[#ffffff]"
+      class="flex justify-between h-screen flex-col w-[11vw] items-center pb-4 bg-[#0e1235]"
     >
       <div
-        class="flex flex-col gap-6 w-full bg-[#0e1235]  p-8 justify-center items-center text-start rotate-0"
+        class="flex flex-col gap-6 w-full bg-[#0e1235] h-[40%] p-8 justify-center items-center text-start rotate-0"
       >
         <div
           v-if="device?.color2"
-          :class="['bottomBlock gap-2 flex-row-reverse !text-end']"
+          :class="['bottomBlock gap-2 h-1/2 flex-row-reverse !text-end']"
         >
           <div class="flex justify-center items-center">
             <img
@@ -260,6 +260,7 @@ onUnmounted(() => {
           v-if="device?.color1"
           :class="[
             'bottomBlock gap-2',
+            `${device?.color2 ? 'h-1/2' : 'h-full'}`,
             { 'flex-row-reverse !text-end': device.arrow1 === 0 },
           ]"
         >
@@ -289,55 +290,43 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
-      <div class="bottomBlockAQI items-center justify-center flex-col">
-        <div class="flex flex-row h-full w-full">
-          <div
-            class="items-center flex-col bg-white text-[48px] h-1/2 flex font-semibold justify-center"
-          >
-            <img alt="weather" class=" size-24" :src="iconWeather.image" />
-            <p>{{ weather?.current?.weather?.tp  }} °C</p>
-          </div>
-          <div
-            class="flex flex-row  items-center justify-center h-1/2"
-            :class="{
-              'bg-[#43a027]': aqiStatus() === AQI_STATUS.GOOD,
-              'bg-[#FDD64B]': aqiStatus() === AQI_STATUS.MODERATE,
-              'bg-[#faa166]': aqiStatus() == AQI_STATUS.UNHEALTHY_SG,
-              'bg-[#fe5b5b]': aqiStatus() === AQI_STATUS.UNHEALTHY,
-              'bg-[#A97ABC]': aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
-              'bg-[#966B78]': aqiStatus() === AQI_STATUS.HAZARDOUS,
-              'text-[#654E0C]': aqiStatus() === AQI_STATUS.MODERATE,
-              'text-[#571F00]': aqiStatus() === AQI_STATUS.UNHEALTHY_SG,
-              'text-[#ffffff]':
-                aqiStatus() === AQI_STATUS.GOOD ||
-                aqiStatus() === AQI_STATUS.UNHEALTHY ||
-                aqiStatus() === AQI_STATUS.VERY_UNHEALTHY ||
-                aqiStatus() === AQI_STATUS.HAZARDOUS,
-            }"
-          >
-            <div class="flex flex-col justify-center items-center">
-              <p class="text-[60px] font-semibold -ml-3">
-                {{ weather?.current?.pollution?.aqius  }}
-              </p>
-              <p class="text-[20px] whitespace-nowrap ml-2">US AQI</p>
-              <p class="text-[30px] font-semibold text-wrap whitespace-wrap">{{ aqiStatus() }}</p>
-            </div>
-            <!-- <div
-              class="pb-5 pt-4 text-2xl items-center font-medium flex flex-1 justify-center"
-            >
-             
-            </div> -->
+      <div class="bottomBlockAQI items-center h-[20%] justify-center flex-col">
+        <div
+          class="flex flex-row w-full h-full items-center justify-center"
+          :class="{
+            'bg-[#43a027]': aqiStatus() === AQI_STATUS.GOOD,
+            'bg-[#FDD64B]': aqiStatus() === AQI_STATUS.MODERATE,
+            'bg-[#faa166]': aqiStatus() == AQI_STATUS.UNHEALTHY_SG,
+            'bg-[#fe5b5b]': aqiStatus() === AQI_STATUS.UNHEALTHY,
+            'bg-[#A97ABC]': aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
+            'bg-[#966B78]': aqiStatus() === AQI_STATUS.HAZARDOUS,
+            'text-[#654E0C]': aqiStatus() === AQI_STATUS.MODERATE,
+            'text-[#571F00]': aqiStatus() === AQI_STATUS.UNHEALTHY_SG,
+            'text-[#ffffff]':
+              aqiStatus() === AQI_STATUS.GOOD ||
+              aqiStatus() === AQI_STATUS.UNHEALTHY ||
+              aqiStatus() === AQI_STATUS.VERY_UNHEALTHY ||
+              aqiStatus() === AQI_STATUS.HAZARDOUS,
+          }"
+        >
+          <div class="flex flex-col justify-center items-center">
+            <p class="text-[60px] font-semibold -ml-3">
+              {{ weather?.current?.pollution?.aqius }}
+            </p>
+            <p class="text-[20px] whitespace-nowrap ml-2">US AQI</p>
+            <p class="text-[30px] font-semibold text-wrap whitespace-wrap">
+              {{ aqiStatus() }}
+            </p>
           </div>
         </div>
-        <!-- <div class="text-[13px] font-medium text-white mr-3">
-          Last updated:
-          {{ updateWeather.getHours().toString().padStart(2, "0") }}:{{
-            updateWeather.getMinutes().toString().padStart(2, "0")
-          }}
-          | IQAir
-        </div> -->
       </div>
-      <div class="bottomBlockGroup h-fit flex-col text-[44px] text-black">
+      <div
+        class="items-center h-[20%] bottomBlockAQI flex-col bg-[#0e1235] text-[48px] text-white flex font-semibold justify-center"
+      >
+        <img alt="weather" class="size-24" :src="iconWeather.image" />
+        <p>{{ weather?.current?.weather?.tp }} °C</p>
+      </div>
+      <div class="bottomBlockGroup h-[20%] flex-col text-[44px] text-white">
         <p class="text-[72px] font-semibold">{{ timeFormatter(dateTime) }}</p>
         <p class="font-medium text-[40px]">{{ dateFormatter(dateTime, 3) }}</p>
       </div>
@@ -423,7 +412,6 @@ video {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
   /* flex: 1 1; */
-  height: fit-content;
   display: flex;
   align-items: center;
   background-color: #0e1235;
@@ -434,11 +422,9 @@ video {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
   /* flex: 1 1; */
-  height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: #ffffff;
   justify-content: center;
 }
 
@@ -446,11 +432,10 @@ video {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
   /* flex: 1 1; */
-  height: fit-content;
   width: 100%;
   display: flex;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #0e1235;
   justify-content: center;
 }
 </style>
