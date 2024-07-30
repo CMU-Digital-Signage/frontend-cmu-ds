@@ -310,11 +310,11 @@ onUnmounted(() => {
           }"
         >
           <div class="flex flex-col justify-center items-center">
-            <p class="text-[60px] font-semibold -ml-3">
-              {{ weather?.current?.pollution?.aqius }}
+            <p class="text-6xl font-bold">
+              {{ weather?.current?.pollution?.aqius  }}
             </p>
-            <p class="text-[20px] whitespace-nowrap ml-2">US AQI</p>
-            <p class="text-[30px] font-semibold text-wrap whitespace-wrap">
+            <p class="text-[22px] whitespace-nowrap">US AQI</p>
+            <p class="text-4xl font-semibold text-wrap whitespace-wrap">
               {{ aqiStatus() }}
             </p>
           </div>
