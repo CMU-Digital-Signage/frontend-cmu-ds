@@ -123,10 +123,6 @@ const toggleOverlay = (e: any) => {
 const closeModalAddEditDevice = () => {
   showPopupAddDevice.value = false;
 };
-
-const handleDialogClick = (event: any) => {
-  event.stopPropagation();
-};
 </script>
 
 <template>

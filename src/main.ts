@@ -35,10 +35,10 @@ import Password from "primevue/password";
 import ProgressSpinner from "primevue/progressspinner";
 import "vue3-carousel-3d/dist/index.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
+import { library, IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faPlay);
+library.add(faPlay as IconDefinition);
 
 createApp(App)
   .use(store)
@@ -49,9 +49,12 @@ createApp(App)
         root: (slotProps: any) => ({
           class: [
             {
-              "bg-yellow-400 bg-opacity-30 text-yellow-800": slotProps.props.severity == "poster",
-              "bg-fuchsia-400 bg-opacity-30 text-fuchsia-800": slotProps.props.severity == "video",
-              "bg-blue-400 bg-opacity-30 text-blue-800": slotProps.props.severity == "webview",
+              "bg-yellow-400 bg-opacity-30 text-yellow-800":
+                slotProps.props.severity == "poster",
+              "bg-fuchsia-400 bg-opacity-30 text-fuchsia-800":
+                slotProps.props.severity == "video",
+              "bg-blue-400 bg-opacity-30 text-blue-800":
+                slotProps.props.severity == "webview",
             },
           ],
         }),
@@ -73,7 +76,7 @@ createApp(App)
             },
           ],
         }),
-        content: (slotProps: any) => ({
+        content: () => ({
           class: ["border-none rounded-lg"],
         }),
         summary: () => ({

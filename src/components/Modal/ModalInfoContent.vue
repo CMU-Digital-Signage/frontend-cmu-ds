@@ -9,7 +9,7 @@ export default defineComponent({
 
 <script setup lang="ts">
 import store from "@/store";
-import { computed, defineProps, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, defineProps, ref, watch } from "vue";
 import { User } from "@/types";
 import { deleteEmergency, deletePoster } from "@/services";
 import { dateFormatter, setNorForm, typePoster } from "@/utils/constant";
