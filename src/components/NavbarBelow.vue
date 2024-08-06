@@ -33,7 +33,6 @@ const closeModalInfoContent = () => {
 </script>
 
 <template>
-  <Toast />
   <div
     class="bg-none border-t-[1px] border-neutral-300 h-14 py-[26px] px-6 flex items-center"
   >

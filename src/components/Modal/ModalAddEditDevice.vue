@@ -112,7 +112,6 @@ const errorSelectFile = () => {
 </script>
 
 <template>
-  <Toast />
   <Dialog
     v-model:visible="showPopup"
     class="w-[600px] h-auto"

@@ -130,7 +130,6 @@ const closeModalAddEditDevice = () => {
     class="h-16 px-6 inline-flex flex-wrap items-center z-10 border-b-[1px] border-[#dddddd] font-semibold text-[#575757] text-[16px]"
     :class="{ 'shadow-navbar': $route.path === '/login' }"
   >
-    <Toast />
     <!-- Popup Add Device -->
     <ModalAddEditDevice
       :show="showPopupAddDevice"

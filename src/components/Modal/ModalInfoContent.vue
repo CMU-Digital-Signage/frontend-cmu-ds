@@ -72,12 +72,10 @@ const goToLink = () => {
 </script>
 
 <template>
-  <Toast />
-
-  <!-- popup Delete -->
+  <!-- Popup Delete -->
   <Dialog
-    :closable="!loading"
     v-model:visible="deletePopup"
+    :closable="!loading"
     modal
     close-on-escape
     :draggable="false"
@@ -108,7 +106,7 @@ const goToLink = () => {
             text
             label="Cancel"
             :loading="loading"
-            @click="onClose"
+            @click="deletePopup = false"
             :class="'secondaryButton'"
           ></Button>
           <Button

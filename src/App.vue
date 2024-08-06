@@ -83,6 +83,7 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <Toast />
   <ModalUpload />
   <div
     class="flex flex-row w-screen h-screen md:fixed bg-[#fefefe] heig"

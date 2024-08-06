@@ -550,8 +550,6 @@ const nextStepPreview = async () => {
 </script>
 
 <template>
-  <Toast />
-
   <Dialog
     v-model:visible="showUpload"
     modal
