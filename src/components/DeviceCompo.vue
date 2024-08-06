@@ -45,8 +45,6 @@ const del = async () => {
 </script>
 
 <template>
-  <Toast />
-
   <Dialog
     :closable="!loading"
     v-model:visible="deletePopup"

@@ -142,7 +142,6 @@ const handleEmergency = async () => {
 
 <template>
   <div class="rectangle flex md:flex-row !overflow-auto flex-col md:gap-6">
-    <Toast />
     <Skeleton
       v-if="loading1st"
       height="100"
@@ -150,7 +149,7 @@ const handleEmergency = async () => {
     ></Skeleton>
     <div
       v-else
-      class="    flex flex-1 flex-col text-left justify-between md:gap-0 gap-5 "
+      class="flex flex-1 flex-col text-left justify-between md:gap-0 gap-5"
     >
       <div v-if="!emerPosters?.find((e) => e.status === 'Active')">
         <div
@@ -159,9 +158,7 @@ const handleEmergency = async () => {
           <div
             class="w-8 h-8 ml-1 flex items-center justify-center rounded-full"
           >
-            <i
-              class="pi pi-exclamation-triangle text-red-500 text-2xl"
-            ></i>
+            <i class="pi pi-exclamation-triangle text-red-500 text-2xl"></i>
           </div>
 
           <div class="ml-1 md:text-[14px] text-[12px]">
@@ -180,7 +177,7 @@ const handleEmergency = async () => {
               Choose Poster to displayed
             </p>
             <div
-              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-30 md:h-28 xl:h-40  overflow-y-scroll"
+              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-30 md:h-28 xl:h-40 overflow-y-scroll"
             >
               <div class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9">
                 <div
@@ -224,7 +221,7 @@ const handleEmergency = async () => {
                     @input="getTextPoster"
                     :maxlength="312"
                     placeholder="Ex: There's a fire, do not use the elevator"
-                    class="md:text-[14px] text-[12px]  border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] md:h-[85px] xl:h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
+                    class="md:text-[14px] text-[12px] border-[2px] border-[#DBDBDB] p-3 rounded-lg h-[110px] md:h-[85px] xl:h-[110px] bg-none resize-none disabled:text-[#8E8A8A]"
                     :class="{
                       'border-red-500':
                         selectEmer.incidentName === 'banner' &&
@@ -318,9 +315,7 @@ const handleEmergency = async () => {
       </div>
     </div>
 
-    <div
-      class="flex-1 border-l-[2px]; border-[#eaeaea]  flex flex-col"
-    >
+    <div class="flex-1 border-l-[2px]; border-[#eaeaea] flex flex-col">
       <div
         class="w-full h-full overflow-y-scroll rounded-xl border-[3px] border-black-300 bg-[#ffffff] flex items-center justify-center"
       >
@@ -347,7 +342,9 @@ const handleEmergency = async () => {
             <div
               class="font-semibold text-xl text-center opacity-20 rounded-full"
             >
-              <p class="text-[#3a3737] text-[16px] opacity-400">Preview Poster</p>
+              <p class="text-[#3a3737] text-[16px] opacity-400">
+                Preview Poster
+              </p>
             </div>
           </div>
         </div>
@@ -358,7 +355,7 @@ const handleEmergency = async () => {
 
 <style scoped>
 .rectangle {
-padding: 20px;
+  padding: 20px;
 }
 
 .rotated-image {

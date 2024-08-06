@@ -57,7 +57,6 @@ const resetPassword = async () => {
   <div
     class="bg-gradient-to-r from-[#E5F9FA] to-[#F6FDF7] h-screen flex items-center justify-center overflow-hidden"
   >
-    <Toast />
     <h1 class="text-xl" v-if="!message.includes('Success')">{{ message }}</h1>
     <div
       v-else
@@ -114,7 +113,6 @@ const resetPassword = async () => {
           <p class="font-sf-pro-rounded ml-2 font-medium">Reset Password</p>
         </Button>
       </div>
-
     </div>
   </div>
 </template>
