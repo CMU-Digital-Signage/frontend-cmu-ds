@@ -1,6 +1,6 @@
 import store from "@/store";
 import { Device } from "@/types";
-import { color, convertUrlToFile } from "@/utils/constant";
+import { color } from "@/utils/constant";
 import axios from "axios";
 
 export async function getDevice() {
