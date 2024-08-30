@@ -16,12 +16,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@font-face {
-  font-family: "SF Pro";
-  src: url("~@/assets/fonts/SF-Pro.ttf") format("truetype");
-  font-style: normal;
-  font-weight: normal;
-}
 
 @font-face {
   font-family: "NotoSansThai";

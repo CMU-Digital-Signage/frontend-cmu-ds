@@ -327,8 +327,8 @@ onUnmounted(() => {
         <p>{{ weather?.current?.weather?.tp }} °C</p>
       </div>
       <div class="bottomBlockGroup h-[20%] flex-col text-[44px] text-white">
-        <p class="text-[72px] font-semibold">{{ timeFormatter(dateTime) }}</p>
-        <p class="font-medium text-[40px]">{{ dateFormatter(dateTime, 3) }}</p>
+        <p class="text-[70px] font-semibold">{{ timeFormatter(dateTime) }}</p>
+        <p class="font-medium text-[36px]">{{ dateFormatter(dateTime, 3) }}</p>
       </div>
     </div>
     <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
