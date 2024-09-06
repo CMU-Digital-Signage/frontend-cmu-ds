@@ -218,7 +218,7 @@ const setEvent = () => {
         onDevice: posterOnDevice,
         backgroundColor: exist
           ? exist.backgroundColor
-          : color.at(postersView.value.length),
+          : color.at(color.length - postersView.value.length),
         ...schedule,
       });
     });
