@@ -163,19 +163,22 @@ const closeModalAddEditDevice = () => {
         class="font-normal text-[16px] flex items-center"
         v-if="!clickSearch"
       >
-        <div class="flex gap-2 items-center text-[#575757]">
-          <label class="font-semibold w-36 text-left">
+        <div class="flex gap-1 items-center text-[#575757]">
+          <label class="font-semibold w-36 text-left text-[15px]">
             {{ currentViewDate }}
           </label>
-          <button
-            id="prev"
-            class="pi pi-angle-left rounded-full p-1 hover:bg-gray-200"
-          ></button>
-          <button
-            id="next"
-            class="pi pi-angle-right rounded-full p-1 hover:bg-gray-200"
-          ></button>
+          <div class="flex gap-2 items-center">
+            <button
+              id="prev"
+              class="pi pi-angle-left rounded-full p-1 hover:bg-gray-200"
+            ></button>
+            <button
+              id="next"
+              class="pi pi-angle-right rounded-full p-1 hover:bg-gray-200"
+            ></button>
+          </div>
         </div>
+        <div></div>
         <div class="flex items-center gap-4 pl-3">
           <button
             id="today"
@@ -185,14 +188,14 @@ const closeModalAddEditDevice = () => {
           </button>
           <button
             id="dayView"
-            class="rounded-full p-1 hover:bg-gray-200"
+            class="rounded-full flex items-center justify-center w-8 h-8 hover:bg-gray-200"
             :class="{ 'bg-gray-300 cursor-not-allowed': !viewType }"
             :disabled="!viewType"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="26"
-              height="26"
+              width="20"
+              height="20"
               viewBox="0 0 26 26"
               fill="none"
             >
@@ -204,14 +207,14 @@ const closeModalAddEditDevice = () => {
           </button>
           <button
             id="monthView"
-            class="rounded-full -ml-1 hover:bg-gray-200"
+            class="rounded-full -ml-1 flex items-center justify-center w-8 h-8 hover:bg-gray-200 p-1"
             :class="{ 'bg-gray-300 cursor-not-allowed': viewType }"
             :disabled="viewType"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="32"
-              height="32"
+              width="25"
+              height="25"
               viewBox="2 -1 32 32"
               fill="none"
             >
@@ -354,7 +357,7 @@ const closeModalAddEditDevice = () => {
                           :icon="`pi pi-${type.icon}`"
                           :value="TYPE[type.type as MAP_TYPE]"
                           :severity="type.severity"
-                          :pt="{ value: 'text-[14px]' }"
+                          :pt="{ value: 'text-[13px]' }"
                         />
                       </div>
                     </div>
@@ -384,7 +387,7 @@ const closeModalAddEditDevice = () => {
                           rounded
                           :value="status.status"
                           :severity="status.severity"
-                          :pt="{ value: 'text-[14px]' }"
+                          :pt="{ value: 'text-[13px]' }"
                         />
                       </div>
                     </div>
@@ -395,7 +398,7 @@ const closeModalAddEditDevice = () => {
                     <Button
                       label="Clear"
                       @click="store.commit('resetFilter')"
-                      class="text-sm text-[#6869AD] font-medium rounded-[8px] h-8 w-44 border-1 border-[#6869AD] bg-white text-right hover:bg-[#6869AD] hover:text-white"
+                      class="text-sm text-[#495057] font-medium rounded-[8px] h-8 w-44 border-1 border-[#F4F5F8] text-right bg-[#ebecf0] hover:bg-[#bg-[#ebecf0]"
                       :pt="{
                         label: 'flex justify-center items-center',
                       }"

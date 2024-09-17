@@ -106,9 +106,28 @@ const resetSelect = () => {
     scrollDirection="vertical"
     scrollable
     scrollHeight="flex"
-    :virtualScrollerOptions="{ itemSize: (uniquePosters?.length || 1) + 40 }"
+    :virtualScrollerOptions="{
+      itemSize: uniquePosters?.length ? uniquePosters.length + 40 : 0,
+    }"
     :class="`text-[12px]  lg:text-[14px] flex-1 ${user.isAdmin ? '' : 'py-2'}`"
   >
+    <template #empty>
+      <div
+        v-if="uniquePosters.length === 0"
+        class="flex flex-1 gap-10 justify-center items-center h-full"
+      >
+        <div class="flex flex-col">
+          <p class="text-[18px] font-semibold text-[#575757]">
+            No results found
+          </p>
+        </div>
+        <img
+          class="w-[420px] h-[420px]"
+          alt="cmulogo"
+          src="../assets/images/notFound.jpg"
+        />
+      </div>
+    </template>
     <Column
       :field="(e) => (props.types !== 'EP' ? e.title : e.incidentName)"
       header="Title"
@@ -198,7 +217,7 @@ const resetSelect = () => {
     </Column>
     <Column
       field="status"
-      :class="`${props.types !== 'EP' ? 'w-1/6' : 'w-1/3'}`"
+      :class="`${props.types !== 'EP' ? 'w-[13%]' : 'w-1/3'}`"
     >
       <template #header>
         <div>Status</div>
@@ -216,35 +235,47 @@ const resetSelect = () => {
             <div class="inline-flex gap-2">
               <Tag
                 :pt="{
-                  value: 'text-[12px]',
+                  value: 'text-[13px]',
                 }"
                 severity="success"
                 value="Displayed"
               />
-              <p class="mt-1">Poster is currently being displayed.</p>
-            </div>
-            <div class="inline-flex gap-2">
-              <Tag
-                :pt="{
-                  value: 'text-[12px]',
-                }"
-                severity="danger"
-                value="Expired"
-              />
               <p class="mt-1">
-                Posters are no longer scheduled to be displayed.
+                Poster is
+                <span class="font-semibold text-[#188A42]">currently</span>
+                being displayed.
               </p>
             </div>
             <div class="inline-flex gap-2">
               <Tag
                 :pt="{
-                  value: 'text-[12px]',
+                  value: 'text-[13px]',
+                }"
+                severity="danger"
+                value="Expired"
+              />
+              <p class="mt-1">
+                Posters are
+                <span class="font-semibold text-[#b32b24]"
+                  >no longer scheduled</span
+                >
+                to be displayed.
+              </p>
+            </div>
+            <div class="inline-flex gap-2">
+              <Tag
+                :pt="{
+                  value: 'text-[13px]',
                 }"
                 severity="info"
                 value="Awaited"
               />
               <p class="mt-1">
-                Posters will be displayed at a later date or time.
+                Posters
+                <span class="font-semibold text-[#4070ba]"
+                  >will be displayed</span
+                >
+                at a later date or time.
               </p>
             </div>
           </div>
@@ -274,38 +305,26 @@ const resetSelect = () => {
       :class="`${props.types !== 'EP' ? 'w-1/6' : 'w-1/3'}`"
     >
       <template #body="rowData">
-        <div class="flex gap-3">
-          <!-- <Button
-            v-if="
-              (user.isAdmin && store.state.selectTabview === 0) || !user.isAdmin
-            "
-            icon="pi pi-info"
-            rounded
-            class="w-5 h-5 md:w-7 md:h-7"
-            severity="primary"
-            @click="
-              selectPoster = rowData.data;
-              showInfo = true;
-            "
-          /> -->
+        <div class="flex gap-3 items-center">
           <Button
             v-if="user.isAdmin || user.id === rowData.data.id"
-            icon="pi pi-pencil"
             rounded
-            class="w-5 h-5 md:w-7 md:h-7"
+            outlined
+            class="w-7 h-7 md:w-8 md:h-8 p-2 bg-transparent text-[#F39D4E] border-[#F39D4E] hover:bg-[#FDEBDC] flex items-center justify-center"
             severity="warning"
             @click="
               props.types !== 'EP'
                 ? setNorForm(rowData.data)
                 : setEmerForm(rowData.data)
             "
-          />
+          >
+            <i class="pi pi-pencil" style="font-size: 0.8rem"></i>
+          </Button>
           <Button
             v-if="user.isAdmin || user.id === rowData.data.id"
-            icon="pi pi-trash"
             rounded
-            class="w-5 h-5 md:w-7 md:h-7"
-            severity="danger"
+            outlined
+            class="w-7 h-7 md:w-8 md:h-8 p-2 bg-transparent text-[#FF4747] border-[#FF4747] hover:bg-[#FFDADA] flex items-center justify-center"
             :loading="
               loading &&
               (rowData.data.posterId === delP ||
@@ -315,7 +334,9 @@ const resetSelect = () => {
               selectPoster = rowData.data;
               deletePopup = true;
             "
-          />
+          >
+            <i class="pi pi-trash" style="font-size: 0.85rem"></i>
+          </Button>
         </div>
       </template>
     </Column>

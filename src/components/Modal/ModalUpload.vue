@@ -577,10 +577,13 @@ const nextStepPreview = async () => {
         class="flex -mt-2 gap-5 items-center cursor-pointer px-4 py-3 rounded-xl"
         :class="{
           'bg-[#e5e5e5] text-[#a1a1a1] !cursor-not-allowed': type.disabled,
-          'bg-[#FFEDD2] text-[#856F00]': type.code == CONTENT_CODE.Poster,
-          'bg-[#E9E7FF] text-[#7054C1]': type.code == CONTENT_CODE.Video,
-          'bg-[#C6EBFF] text-[#2E7DC5]': type.code == CONTENT_CODE.Webview,
-          'bg-[#FFD7D7] text-[#D04A4A]': type.code == 'EP',
+          'bg-[#FFEDD2] text-[#856F00] hover:bg-[#fce4c2]':
+            type.code == CONTENT_CODE.Poster,
+          'bg-[#E9E7FF] text-[#7054C1] hover:bg-[#D3D0FC]':
+            type.code == CONTENT_CODE.Video,
+          'bg-[#C6EBFF] text-[#2E7DC5] hover:bg-[#AEE1FD]':
+            type.code == CONTENT_CODE.Webview,
+          'bg-[#FFD7D7] text-[#D04A4A] hover:bg-[#FCB4B4]': type.code == 'EP',
         }"
         @click="
           if (!type.disabled) {

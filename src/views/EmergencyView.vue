@@ -12,6 +12,7 @@ import { Emergency } from "@/types";
 import { useToast } from "primevue/usetoast";
 
 const emerPosters = computed(() => store.state.emerPosters);
+
 const selectEmer = ref({ incidentName: "", emergencyImage: "" } as Emergency);
 const password = ref("");
 const toast = useToast();
@@ -176,10 +177,19 @@ const handleEmergency = async () => {
             <p class="md:text-[14px] text-[12px] mt-3 font-semibold mb-2">
               Choose Poster to displayed
             </p>
+
             <div
-              class="border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-30 md:h-28 xl:h-40 overflow-y-scroll"
+              :class="[
+                'border-[1px] border-[#CDC8C8]-200 bg-white shadow-sm rounded-xl h-30 md:h-28 xl:h-40 overflow-y-scroll',
+                {
+                  'flex items-center justify-center': emerPosters?.length === 1,
+                },
+              ]"
             >
-              <div class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9">
+              <div
+                v-if="emerPosters?.length > 1"
+                class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9"
+              >
                 <div
                   v-for="category in emerPosters?.filter(
                     (e) => e.incidentName !== 'banner'
@@ -193,6 +203,16 @@ const handleEmergency = async () => {
                     category.incidentName
                   }}</label>
                 </div>
+              </div>
+              <div v-else class="-mt-4">
+                <img
+                  class="w-32"
+                  alt="cmulogo"
+                  src="../assets/images/NoEmergencyPoster.png"
+                />
+                <p class="-mt-3 text-[14px] text-[#979797] font-medium">
+                  No Emergency Poster
+                </p>
               </div>
             </div>
           </div>

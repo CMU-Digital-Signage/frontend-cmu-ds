@@ -171,20 +171,19 @@ const closeModalInfoContent = () => {
         <div class="flex justify-end items-center gap-3">
           <Button
             v-if="user.isAdmin || user.id === selectPoster?.id"
-            icon="pi pi-pencil"
             rounded
-            class="w-7 h-7"
-            severity="warning"
+            class="w-7 h-7 md:w-8 md:h-8 p-2 text-[#F39D4E] bg-transparent border-[#F39D4E] hover:bg-[#FDEBDC] flex items-center justify-center"
             @click="setNorForm(selectPoster)"
-          />
+            ><i class="pi pi-pencil" style="font-size: 0.85rem"></i
+          ></Button>
           <Button
             v-if="user.isAdmin || user.id === selectPoster?.id"
             icon="pi pi-trash"
             rounded
-            class="w-7 h-7"
-            severity="danger"
+            class="w-7 h-7 md:w-8 md:h-8 p-2 text-[#FF4747] bg-transparent border-[#FF4747] hover:bg-[#FFDADA] flex items-center justify-center"
             @click="deletePopup = true"
-          />
+            ><i class="pi pi-trash" style="font-size: 0.85rem"></i
+          ></Button>
         </div>
       </div>
       <div

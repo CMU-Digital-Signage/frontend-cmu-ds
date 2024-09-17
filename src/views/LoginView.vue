@@ -16,7 +16,7 @@
       <span class="!font-normal"
         >starts with
         <span
-          class=" bg-gradient-to-r from-blue-500 via-green-500 to-indigo-400 text-transparent bg-clip-text"
+          class="bg-gradient-to-r from-blue-500 via-green-500 to-indigo-400 text-transparent bg-clip-text"
           >pixelParade</span
         ></span
       >
@@ -26,7 +26,7 @@
     </span>
 
     <Button
-      class="flex items-center hide-on-mobile bg-[#6869AE] border-none md:mb-4 py-6 justify-center w-auto md:px-4 md:h-11 h-fit relative rounded-[15px] text-white text-lg button-container"
+      class="flex items-center hide-on-mobile bg-[#5768D5] hover:bg-[#4251b1] border-none md:mb-4 py-5 justify-center w-auto md:px-5 !h-8 relative rounded-[8px] text-white text-lg button-container"
       @click="redirectToOAuth()"
       style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
     >
@@ -36,7 +36,7 @@
         src="../assets/images/cmu-logo-th-white.png"
       />
       <span class="md:text-[14px] text-sm font-semibold">
-        Login with CMU Account
+        Sign in CMU Account
       </span>
     </Button>
 
@@ -61,7 +61,7 @@
     </div>
     <!-- card -->
     <div
-      class="hide-on-mobile ipad-landscape:overflow-x-auto ipad-landscape:grid ipad-landscape:grid-cols-5 ipad-portrait:overflow-y-auto ipad-portrait:overflow-x-auto ipad-portrait:flex  grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 overflow-x-auto w-full h-full px-14 py-3 mt-5 gap-5"
+      class="hide-on-mobile ipad-landscape:overflow-x-auto ipad-landscape:grid ipad-landscape:grid-cols-5 ipad-portrait:overflow-y-auto ipad-portrait:overflow-x-auto ipad-portrait:flex grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 overflow-x-auto w-full h-full px-14 py-3 mt-5 gap-5"
     >
       <div
         class="relative shadow bg-[#ffffff] min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
@@ -81,7 +81,7 @@
       </div>
 
       <div
-        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff] min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">SCHEDULING</span>
@@ -98,7 +98,7 @@
       </div>
 
       <div
-        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff] min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">SHARE INFOMATION</span>
@@ -108,14 +108,14 @@
         </div>
 
         <img
-          class="h-full rounded-xl rounded-r-none object-left scale-90 translate-x-3 object-cover mt-5 shadow-md"
+          class="h-full rounded-xl rounded-r-none object-left scale-125 translate-x-12 object-cover mt-[88px] shadow-lg"
           alt="cmulogo"
           src="../assets/images/glance.png"
         />
       </div>
 
       <div
-        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff] min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">ACT SWIFTLY</span>
@@ -127,11 +127,11 @@
         <img
           class="h-full object-cover object-left rounded-xl rounded-r-none scale-90 translate-x-3 mt-5 shadow-md"
           alt="cmulogo"
-          src="../assets/images/emergency2.png"
+          src="../assets/images/emegency2.png"
         />
       </div>
       <div
-        class="relative shadow bg-[#ffffff]  min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
+        class="relative shadow bg-[#ffffff] min-w-48 ipad-portrait:min-w-60 ipad-landscape:min-w-40 max-w-full h-full rounded-2xl pl-4 pt-5 flex-col overflow-hidden hover:shadow-lg hover:shadow-[#9B9B9B] transform transition ease-in-out duration-200 hover:-translate-y-2"
       >
         <div class="flex flex-col text-start gap-1">
           <span class="text-sm font-normal">EASE TO MANAGE</span>
@@ -179,10 +179,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.button-container:hover {
-  background-color: #52538a;
-}
-
 .bgImages {
   background-size: cover;
   background-position: center;
@@ -193,7 +189,8 @@ export default defineComponent({
   display: none;
 }
 .shadow {
-  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 @media (max-width: 790px) or (max-height: 600px) {

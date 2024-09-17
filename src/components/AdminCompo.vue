@@ -72,7 +72,8 @@ const del = async () => {
     </template>
     <div class="flex flex-col gap-2 text-[14px]">
       <div>
-        Deleting this user will not have access to all contents (except their own content), add device and add emergency content.
+        Deleting this user will not have access to all contents (except their
+        own content), add device and add emergency content.
       </div>
       <div class="inline-block">
         <div class="flex flex-row gap-4 pt-3">
@@ -149,16 +150,16 @@ const del = async () => {
       <Column header="Action" headerClass="w-1/2" :exportable="false">
         <template #body="rowData">
           <Button
-            icon="pi pi-trash"
             rounded
-            class="w-7 h-7"
-            severity="danger"
+            class="w-7 h-7 md:w-8 md:h-8 p-2 bg-transparent text-[#FF4747] border-[#FF4747] hover:bg-[#FFDADA] flex items-center justify-center"
             v-if="!isCurrentUser(rowData.data)"
             @click="
               deletePopup = true;
               selectDelUser = rowData.data;
             "
-          />
+          >
+            <i class="pi pi-trash" style="font-size: 0.85rem"></i
+          ></Button>
         </template>
       </Column>
     </DataTable>

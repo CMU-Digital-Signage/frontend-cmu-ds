@@ -177,25 +177,25 @@ const del = async () => {
       <template #body="rowData">
         <div class="inline-flex gap-3">
           <Button
-            icon="pi pi-pencil"
             rounded
-            class="w-7 h-7"
-            severity="warning"
+            class="w-7 h-7 md:w-8 md:h-8 p-2 bg-transparent text-[#F39D4E] border-[#F39D4E] hover:bg-[#FDEBDC] flex items-center justify-center"
             @click="
               Object.assign(form, rowData.data);
               showPopup = true;
             "
-          />
+          >
+            <i class="pi pi-pencil" style="font-size: 0.85rem"></i
+          ></Button>
           <Button
-            icon="pi pi-trash"
             rounded
-            class="w-7 h-7"
-            severity="danger"
+            class="w-7 h-7 md:w-8 md:h-8 p-2 bg-transparent text-[#FF4747] border-[#FF4747] hover:bg-[#FFDADA] flex items-center justify-center"
             @click="
               deletePopup = true;
               selectDelDevice = rowData.data;
             "
-          />
+          >
+            <i class="pi pi-trash" style="font-size: 0.85rem"></i
+          ></Button>
         </div>
       </template>
     </Column>
