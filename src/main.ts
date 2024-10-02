@@ -65,13 +65,13 @@ createApp(App)
           class: [
             "rounded-md h-fit w-96 right-0 absolute items-center pb-2 border-solid border-0 border-l-[4px] shadow-sm",
             {
-              "border-blue-600 bg-blue-100 bg-opacity-60 text-blue-600":
+              "border-blue-600 bg-blue-100 text-blue-600":
                 slotProps.props.message.severity == "info",
-              "border-green-600 bg-green-100 bg-opacity-60 text-green-600":
+              "border-green-600 bg-green-100 text-green-600":
                 slotProps.props.message.severity == "success",
-              "border-orange-600 bg-orange-100 bg-opacity-60 text-orange-600":
+              "border-orange-600 bg-orange-100 text-orange-600":
                 slotProps.props.message.severity == "warn",
-              "border-red-600 bg-red-100 bg-opacity-60 text-red-600":
+              "border-red-600 bg-red-100 text-red-600":
                 slotProps.props.message.severity == "error",
             },
           ],

@@ -139,7 +139,7 @@ const removeContent = (i: number) => {
     :fileLimit="posType === CONTENT_CODE.Poster ? maxContent : 1"
     :maxFileSize="52428800"
     @select="
-      async (e) => {
+      async (e: any) => {
         if (posType === 'EP' && e.files[0]) {
           formEmer.emergencyImage = await onUpload(e.files[0], posType);
         } else if (

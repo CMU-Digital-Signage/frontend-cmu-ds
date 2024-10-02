@@ -311,7 +311,7 @@ onUnmounted(() => {
         >
           <div class="flex flex-col justify-center items-center">
             <p class="text-6xl font-bold">
-              {{ weather?.current?.pollution?.aqius  }}
+              {{ weather?.current?.pollution?.aqius }}
             </p>
             <p class="text-[22px] whitespace-nowrap">US AQI</p>
             <p class="text-4xl font-semibold text-wrap whitespace-wrap">
@@ -347,7 +347,11 @@ onUnmounted(() => {
         <iframe
           v-if="image.type == MAP_TYPE.WEBVIEW && image.image"
           title="webview"
-          :src="image.image"
+          :src="
+            (image.image as string).endsWith('.pdf')
+              ? `${image.image}#toolbar=0&navpanes=0`
+              : image.image
+          "
           scrolling="no"
           fullScreen="true"
           class="absolute overflow-hidden pointer-events-none duration-500 transition-opacity"

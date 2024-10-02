@@ -232,7 +232,11 @@ const closeModalInfoContent = () => {
         <iframe
           v-if="image.type == MAP_TYPE.WEBVIEW"
           title="webview"
-          :src="`${image.image}`"
+          :src="
+            (image.image as string).endsWith('.pdf')
+              ? `${image.image}#toolbar=0&navpanes=0`
+              : image.image
+          "
           :width="`${2160 / 2}px`"
           :height="`${3840 / 2}px`"
           scrolling="no"
