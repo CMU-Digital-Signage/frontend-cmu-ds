@@ -234,7 +234,7 @@ const closeModalInfoContent = () => {
           title="webview"
           :src="
             (image.image as string).endsWith('.pdf')
-              ? `${image.image}#toolbar=0&navpanes=0`
+              ? `${image.image}#toolbar=0&navpanes=0&view=FitH`
               : image.image
           "
           :width="`${2160 / 2}px`"
