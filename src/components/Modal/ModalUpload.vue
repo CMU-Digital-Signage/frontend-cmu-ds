@@ -970,7 +970,7 @@ const nextStepPreview = async () => {
                         <iframe
                           v-show="!loadingWebview"
                           :title="formPoster.title"
-                          :src="`${(formPoster.image[0].image as string).endsWith('.pdf')? `${formPoster.image[0].image}#toolbar=0&navpanes=0&view=FitH`: formPoster.image[0].image }`"
+                          :src="`${(formPoster.image[0].image as string).endsWith('.pdf')? `${formPoster.image[0].image}#toolbar=0&navpanes=0&view=Fit`: formPoster.image[0].image }`"
                           :width="`${2160 / 2}px`"
                           :height="`${3840 / 2}px`"
                           scrolling="no"

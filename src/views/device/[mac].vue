@@ -349,11 +349,9 @@ onUnmounted(() => {
           title="webview"
           :src="
             (image.image as string).endsWith('.pdf')
-              ? `${image.image}#toolbar=0&navpanes=0&view=FitH`
+              ? `${image.image}#toolbar=0&navpanes=0&view=Fit`
               : image.image
           "
-          :width="`${2160 / 2}px`"
-          :height="`${3840 / 2}px`"
           scrolling="no"
           fullScreen="true"
           class="absolute overflow-hidden pointer-events-none duration-500 transition-opacity"
