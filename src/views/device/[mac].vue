@@ -349,7 +349,7 @@ onUnmounted(() => {
           title="webview"
           :src="
             (image.image as string).endsWith('.pdf')
-              ? `${image.image}#toolbar=0&navpanes=0&view=Fit`
+              ? `${image.image}#toolbar=0&navpanes=0&zoom=50`
               : image.image
           "
           scrolling="no"
