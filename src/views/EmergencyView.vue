@@ -187,7 +187,7 @@ const handleEmergency = async () => {
               ]"
             >
               <div
-                v-if="emerPosters?.length > 1"
+                v-if="emerPosters?.length! > 1"
                 class="grid grid-cols-2 gap-y-10 md:p-8 p-5 pt-9"
               >
                 <div
@@ -308,7 +308,7 @@ const handleEmergency = async () => {
             :feedback="false"
             toggle-mask
             @keypress="
-              (e) => {
+              (e:any) => {
                 if (e.key === 'Enter') handleEmergency();
               }
             "

@@ -17,6 +17,7 @@ export async function getEmergency() {
       }
     );
     res.data.emergency.forEach(async (e: Emergency) => {
+      e.status = e.status ? 'Active' : 'Inactive'
       if (e.emergencyImage && typeof e.emergencyImage === "string")
         e.emergencyImage = await convertUrlToFile(e.emergencyImage);
     });
