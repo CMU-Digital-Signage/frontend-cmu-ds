@@ -106,7 +106,7 @@ router.beforeEach(async (to, from, next) => {
   if (token == "Link Expired.") {
     localStorage.removeItem("token");
   }
-  if (["/emergency", "/login"].includes(to.path)) {
+  if (!localStorage.getItem("token") && ["/emergency", "/login"].includes(to.path)) {
     next();
     return;
   }
