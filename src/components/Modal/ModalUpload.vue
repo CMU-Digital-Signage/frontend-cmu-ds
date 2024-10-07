@@ -262,11 +262,6 @@ const handleEditPoster = async () => {
 const uploadPoster = async () => {
   loading.value = true;
   if (formEmer.value.incidentName && formEmer.value.emergencyImage) {
-    if (formEmer.value.emergencyImage.name) {
-      formEmer.value.emergencyImage.name = `${
-        formEmer.value.incidentName
-      }.${formEmer.value.emergencyImage.name.split(".").pop()}`;
-    }
     editcontentType.value.title.length
       ? handleEditEmergency()
       : handleAddEmergency();

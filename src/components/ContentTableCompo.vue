@@ -115,7 +115,7 @@ const resetSelect = () => {
   >
     <template #empty>
       <div
-        v-if="uniquePosters.length === 0"
+        v-if="uniquePosters?.length === 0"
         class="flex flex-1 gap-10 justify-center items-center h-full"
       >
         <div class="flex flex-col">
@@ -131,7 +131,7 @@ const resetSelect = () => {
       </div>
     </template>
     <Column
-      :field="(e) => (props.types !== 'EP' ? e.title : e.incidentName)"
+      :field="(e: any) => (props.types !== 'EP' ? e.title : e.incidentName)"
       header="Title"
       sortable
       :class="`${props.types !== 'EP' ? 'w-1/5' : 'w-1/3'}`"
@@ -167,10 +167,10 @@ const resetSelect = () => {
     </Column>
     <Column
       v-if="props.types !== 'EP'"
-      :field="(e) => dateFormatter(e.createdAt)"
+      :field="(e: any) => dateFormatter(e.createdAt)"
       header="Upload Date"
       sortable
-      :sortField="(e) => e.createdAt.getTime()"
+      :sortField="(e: any) => e.createdAt.getTime()"
       class="w-1/5"
     >
       <template #sorticon="slotProps">

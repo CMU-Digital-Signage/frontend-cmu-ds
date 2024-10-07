@@ -55,7 +55,7 @@ const fetchWeather = async () => {
   updateWeather.value = new Date();
   weather.value = res.data.data;
 
-  const weatherValue = weather.value.current.weather.ic;
+  const weatherValue = weather.value?.current.weather.ic;
   if (weatherValue === "01d") {
     iconWeather.value = {
       condition: "Clear",
@@ -185,6 +185,7 @@ watch(emerPoster, () => {
   if (emerPoster.value) {
     if (stopLoop.value) stopLoop.value();
     showEmer.value = true;
+    store.state.currentImage.type = "EP";
     store.state.currentImage.image = emerPoster.value.emergencyImage;
     store.state.currentImage.key = emerPoster.value.incidentName;
   } else if (showEmer.value && posters.value) {

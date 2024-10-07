@@ -91,31 +91,40 @@ const errorSelectFile = async (isFromComp = false) => {
 };
 
 const selectContent = async (event: any) => {
-  loading.value = true;
-  if (!store.state.formPoster.image) {
-    store.state.formPoster.image = [];
+  if (posType.value == "EP") {
+    formEmer.value.emergencyImage = await onUpload(event, posType.value);
+    if (event.name) {
+      formEmer.value.emergencyImage.name = `${
+        formEmer.value.incidentName
+      }.${event.name?.split(".").pop()}`;
+    }
+  } else {
+    loading.value = true;
+    if (!store.state.formPoster.image) {
+      store.state.formPoster.image = [];
+    }
+    if (
+      posType.value === CONTENT_CODE.Video &&
+      store.state.formPoster.image.length
+    ) {
+      removeContent(0);
+    }
+    const initialLength = store.state.formPoster.image.length;
+    const filePromises = event.files.map(async (e: any, i: number) => {
+      const priority = initialLength + i + 1;
+      const file = await onUpload(e, posType.value);
+      file.name = `${formPoster.value.title}-${priority}.${e.name
+        .split(".")
+        .pop()}`;
+      return {
+        image: file,
+        priority: priority,
+      };
+    });
+    const processedFiles = await Promise.all(filePromises);
+    store.state.formPoster.image.push(...processedFiles);
+    loading.value = false;
   }
-  if (
-    posType.value === CONTENT_CODE.Video &&
-    store.state.formPoster.image.length
-  ) {
-    removeContent(0);
-  }
-  const initialLength = store.state.formPoster.image.length;
-  const filePromises = event.files.map(async (e: any, i: number) => {
-    const priority = initialLength + i + 1;
-    const file = await onUpload(e, posType.value);
-    file.name = `${formPoster.value.title}-${priority}.${e.name
-      .split(".")
-      .pop()}`;
-    return {
-      image: file,
-      priority: priority,
-    };
-  });
-  const processedFiles = await Promise.all(filePromises);
-  store.state.formPoster.image.push(...processedFiles);
-  loading.value = false;
 };
 
 const removeContent = (i: number) => {
@@ -141,7 +150,7 @@ const removeContent = (i: number) => {
     @select="
       async (e: any) => {
         if (posType === 'EP' && e.files[0]) {
-          formEmer.emergencyImage = await onUpload(e.files[0], posType);
+          selectContent(e.files[0]);
         } else if (
           e.files[0] &&
           maxContent &&
