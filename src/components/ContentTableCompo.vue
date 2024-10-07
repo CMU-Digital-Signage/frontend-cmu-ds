@@ -70,15 +70,17 @@ const uniquePosters = computed(() =>
 
 watch(selectPoster, () => {
   if (selectPoster.value) {
-    poster.value = store.state.posters?.find(
-      (e) => e.posterId === selectPoster.value.posterId
-    );
-    const onDevice = store.state.posters
-      ?.filter((e) => e.posterId == selectPoster.value.posterId)
-      .map((e) => e.MACaddress);
-    poster.value.onDevice = store.state.devices
-      ?.filter((e) => onDevice?.includes(e.MACaddress!))
-      .map((e) => e.deviceName);
+    if (selectPoster.value.posterId) {
+      poster.value = store.state.posters?.find(
+        (e) => e.posterId === selectPoster.value.posterId
+      );
+      const onDevice = store.state.posters
+        ?.filter((e) => e.posterId == selectPoster.value.posterId)
+        .map((e) => e.MACaddress);
+      poster.value.onDevice = store.state.devices
+        ?.filter((e) => onDevice?.includes(e.MACaddress!))
+        .map((e) => e.deviceName);
+    }
   }
 });
 
@@ -95,7 +97,7 @@ const resetSelect = () => {
 <template>
   <ModalInfoContent
     :show="showInfo"
-    :data="poster"
+    :data="props.types !== 'EP' ? poster : selectPoster"
     :onClose="closeModalInfoContent"
     :resetSelect="resetSelect"
     :deletecontent="deletePopup"
@@ -331,6 +333,10 @@ const resetSelect = () => {
                 rowData.data.incidentName === delP)
             "
             @click="
+              delP =
+                props.types !== 'EP'
+                  ? rowData.data.posterId
+                  : rowData.data.incidentName;
               selectPoster = rowData.data;
               deletePopup = true;
             "
