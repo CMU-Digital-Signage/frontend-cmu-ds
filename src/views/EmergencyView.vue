@@ -68,15 +68,14 @@ const checkNumOfRows = (e: any) => {
 };
 
 onMounted(async () => {
-  if (!emerPosters.value) {
-    loading1st.value = true;
-    const res = await getEmergency();
-    if (res.ok) {
-      res.emergency.forEach((e: Emergency) => e.status === "Active");
-      store.state.emerPosters = res.emergency;
-    }
-    loading1st.value = false;
+  loading1st.value = true;
+  const res = await getEmergency();
+  if (res.ok) {
+    store.state.emerPosters = res.emergency;
+    selectEmer.value =
+      res.emergency.find((e: Emergency) => e.status === "Active") || {};
   }
+  loading1st.value = false;
 });
 
 watchEffect(() => {
@@ -284,8 +283,9 @@ const handleEmergency = async () => {
               class="text-bold font-notoThai text-4xl text-center font-medium text-[#23C6A0] rounded-full"
             >
               {{
-                selectEmer.incidentName.charAt(0).toUpperCase() +
-                selectEmer.incidentName.slice(1)
+                selectEmer.incidentName === "banner"
+                  ? "Banner"
+                  : selectEmer.incidentName
               }}
             </div>
             <div class="flex text-[#3fbda0] text-bold">has been activated</div>
@@ -346,7 +346,9 @@ const handleEmergency = async () => {
           <img
             v-if="selectEmer.incidentName !== 'banner'"
             class="m-auto w-full transition-opacity rotated-image"
-            :src="selectEmer.emergencyImage.dataURL"
+            :src="
+              selectEmer.emergencyImage.dataURL || selectEmer.emergencyImage
+            "
             alt="poster-image"
           />
           <div v-else>
