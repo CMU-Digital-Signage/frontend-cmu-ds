@@ -4,7 +4,7 @@ import { computed, onMounted, onUnmounted, watch } from "vue";
 import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import ModalUpload from "@/components/Modal/ModalUpload.vue";
-import setupSocket, { socket } from "./utils/socket";
+// import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
 import { Device, Emergency } from "./types";
@@ -57,7 +57,7 @@ const fetchData = async () => {
 };
 
 onMounted(() => {
-  setupSocket();
+  // setupSocket();
   interval = setInterval(() => {
     if (
       !store.state.showUpload &&
@@ -77,7 +77,7 @@ watch(user, async () => {
 });
 
 onUnmounted(() => {
-  socket.disconnect();
+  // socket.disconnect();
   clearInterval(interval);
 });
 </script>
