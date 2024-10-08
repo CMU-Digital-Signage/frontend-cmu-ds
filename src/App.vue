@@ -33,9 +33,6 @@ const fetchData = async () => {
   });
 
   const emerPromise = getEmergency().then((emerRes) => {
-    emerRes.emergency.forEach((e: Emergency) => {
-      e.status = e.status ? "Active" : "Inactive";
-    });
     store.state.emerPosters = emerRes.emergency;
   });
 
