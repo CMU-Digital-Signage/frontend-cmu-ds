@@ -9,14 +9,13 @@ export const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 export const checkTokenExpired = async (token: string) => {
   try {
     const decode = await JSON.parse(atob(token.split(".")[1]));
+    // check expired
+    if (decode.exp * 1000 < new Date().getTime()) {
+      return "Link Expired.";
+    }
     // check email
     if (decode.email.includes(store.state.userInfo.email)) {
-      // check expired
-      if (decode.exp * 1000 < new Date().getTime()) {
-        return "Link Expired.";
-      } else {
-        return "Success";
-      }
+      return "Success";
     }
     return "Invalid Token.";
   } catch (err) {
