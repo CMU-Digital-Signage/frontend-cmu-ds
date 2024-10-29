@@ -59,15 +59,15 @@
           We are facing an internal server error.   Our team are trying to fix the problem.
         </p>
         <p class="text-[18px] text-[#575757] font-normal mb-14">
-          Please be patient or try again later.
+          Please be patient or try again by hit Command/Ctrl + R.
         </p>
 
-        <Button
+        <!-- <Button
           class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
           link
           @click="$router.push('/login')"
           >Back to login</Button
-        >
+        > -->
       </div>
     </div>
     <div

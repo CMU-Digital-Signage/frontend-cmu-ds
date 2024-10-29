@@ -142,7 +142,7 @@ onUnmounted(() => {
       problem.
     </p>
     <p class="text-[18px] text-[#575757] font-normal mb-14">
-      Please be patient or try again later.
+      Please be patient or try again by hit Command/Ctrl + R.
     </p>
 
     <!-- <Button
