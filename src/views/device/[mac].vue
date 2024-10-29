@@ -398,12 +398,12 @@ onUnmounted(() => {
       Please be patient or try again later.
     </p>
 
-    <Button
+    <!-- <Button
       class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
       link
       @click="$router.push('/login')"
       >Back to login</Button
-    >
+    > -->
   </div>
 </template>
 
