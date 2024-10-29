@@ -4,7 +4,7 @@ import { computed, onMounted, onUnmounted, watch } from "vue";
 import SideBar from "@/components/SideBar.vue";
 import NavBar from "@/components/NavBar.vue";
 import ModalUpload from "@/components/Modal/ModalUpload.vue";
-// import setupSocket, { socket } from "./utils/socket";
+import setupSocket, { socket } from "./utils/socket";
 import { getAllUser, getDevice, getEmergency, getPoster } from "./services";
 import { color, createUnique, setFieldPoster } from "./utils/constant";
 import { Device, Emergency } from "./types";
@@ -33,6 +33,9 @@ const fetchData = async () => {
   });
 
   const emerPromise = getEmergency().then((emerRes) => {
+    emerRes.emergency.forEach((e: Emergency) => {
+      e.status = e.status ? "Active" : "Inactive";
+    });
     store.state.emerPosters = emerRes.emergency;
   });
 
@@ -54,7 +57,7 @@ const fetchData = async () => {
 };
 
 onMounted(() => {
-  // setupSocket();
+  setupSocket();
   interval = setInterval(() => {
     if (
       !store.state.showUpload &&
@@ -74,12 +77,12 @@ watch(user, async () => {
 });
 
 onUnmounted(() => {
-  // socket.disconnect();
+  socket.disconnect();
   clearInterval(interval);
 });
 </script>
 
-<template>
+<!-- <template>
   <Toast />
   <ModalUpload />
   <div
@@ -119,6 +122,35 @@ onUnmounted(() => {
       </span>
       CPE #30
     </span>
+  </div>
+</template> -->
+<template>
+  <div class="flex flex-col items-start justify-center heig px-28 h-full w-full">
+    <p class="text-[44px] text-blue-700 font-light mb-10">
+      Sorry, this is unexpected...
+    </p>
+    <p class="text-[32px] text-blue-700 font-normal">Error 500</p>
+    <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
+      <span
+        class="bg-gradient-to-r text-transparent bg-clip-text from-blue-500 via-green-500 to-indigo-400"
+        >pixelParade</span
+      >
+      LOST
+    </p>
+    <p class="text-[18px] text-[#575757] font-normal">
+      We are facing an internal server error. Our team are trying to fix the
+      problem.
+    </p>
+    <p class="text-[18px] text-[#575757] font-normal mb-14">
+      Please be patient or try again later.
+    </p>
+
+    <Button
+      class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
+      link
+      @click="$router.push('/login')"
+      >Back to login</Button
+    >
   </div>
 </template>
 
