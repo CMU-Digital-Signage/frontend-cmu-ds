@@ -205,7 +205,7 @@ onUnmounted(() => {
 });
 </script>
 
-<!-- <template>
+<template>
   <div
     v-if="error.status"
     class="flex flex-col h-screen w-screen justify-center items-center"
@@ -374,36 +374,6 @@ onUnmounted(() => {
         />
       </transition>
     </div>
-  </div>
-</template> -->
-
-<template>
-  <div class="flex flex-col items-start justify-center heig px-28 h-full w-full">
-    <p class="text-[44px] text-blue-700 font-light mb-10">
-      Sorry, this is unexpected...
-    </p>
-    <p class="text-[32px] text-blue-700 font-normal">Error 500</p>
-    <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
-      <span
-        class="bg-gradient-to-r text-transparent bg-clip-text from-blue-500 via-green-500 to-indigo-400"
-        >pixelParade</span
-      >
-      LOST
-    </p>
-    <p class="text-[18px] text-[#575757] font-normal">
-      We are facing an internal server error. Our team are trying to fix the
-      problem.
-    </p>
-    <p class="text-[18px] text-[#575757] font-normal mb-14">
-      Please be patient or try again by hit Command/Ctrl + R.
-    </p>
-
-    <!-- <Button
-      class="text-cyan-600 -translate-x-4 border-none font-normal text-xl hover:underline"
-      link
-      @click="$router.push('/login')"
-      >Back to login</Button
-    > -->
   </div>
 </template>
 
