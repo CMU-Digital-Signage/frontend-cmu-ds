@@ -3,18 +3,20 @@
     v-if="status != 0"
     class="flex h-full w-full bg-[#f1f9ff] justify-center items-center"
   >
-  <div
+    <div
       v-if="[403].includes(status)"
       class="flex h-full w-full items-center px-[160px]"
     >
       <div class="flex flex-col items-start">
         <p class="text-[44px] text-blue-700 font-light mb-10">Hold on...</p>
         <p class="text-[32px] text-blue-700 font-normal">Error 403</p>
-        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">ACCESS DENIED</p>
-        <p class="text-[18px] text-[#575757] font-normal ">
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
+          ACCESS DENIED
+        </p>
+        <p class="text-[18px] text-[#575757] font-normal">
           Look like your CMU account don't have permission to access this page.
         </p>
-        <p class="text-[18px] text-[#575757] font-normal mb-14 ">
+        <p class="text-[18px] text-[#575757] font-normal mb-14">
           Reach out to system administrator to gain access.
         </p>
 
@@ -33,8 +35,10 @@
       <div class="flex flex-col items-start">
         <p class="text-[44px] text-blue-700 font-light mb-10">Whoops!</p>
         <p class="text-[32px] text-blue-700 font-normal">Error 400</p>
-        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">BAD REQUEST</p>
-        <p class="text-[18px] text-[#575757] font-normal mb-14 ">
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
+          BAD REQUEST
+        </p>
+        <p class="text-[18px] text-[#575757] font-normal mb-14">
           Something went wrong. We encountered an issue processing your request.
         </p>
 
@@ -52,11 +56,20 @@
       class="flex h-full w-full items-center px-[160px]"
     >
       <div class="flex flex-col items-start">
-        <p class="text-[44px] text-blue-700 font-light mb-10">Sorry, this is unexpected...</p>
+        <p class="text-[44px] text-blue-700 font-light mb-10">
+          Sorry, this is unexpected...
+        </p>
         <p class="text-[32px] text-blue-700 font-normal">Error 500</p>
-        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8"><span class="bg-gradient-to-r text-transparent bg-clip-text from-blue-500 via-green-500 to-indigo-400">pixelParade</span> LOST</p>
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
+          <span
+            class="bg-gradient-to-r text-transparent bg-clip-text from-blue-500 via-green-500 to-indigo-400"
+            >pixelParade</span
+          >
+          LOST
+        </p>
         <p class="text-[18px] text-[#575757] font-normal">
-          We are facing an internal server error.   Our team are trying to fix the problem.
+          We are facing an internal server error. Our team are trying to fix the
+          problem.
         </p>
         <p class="text-[18px] text-[#575757] font-normal mb-14">
           Please be patient or try again by hit Command/Ctrl + R.
@@ -77,7 +90,9 @@
       <div class="flex flex-col items-start">
         <p class="text-[44px] text-blue-700 font-light mb-10">Oh No!</p>
         <p class="text-[32px] text-blue-700 font-normal">Error 401</p>
-        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">UNAUTHORIZED</p>
+        <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
+          UNAUTHORIZED
+        </p>
         <p class="text-[18px] text-[#575757] font-normal">
           We couldn't validate or support your credentials.
         </p>
