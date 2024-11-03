@@ -12,6 +12,7 @@ export default {
 // import { computed, onMounted, ref, watch, onUnmounted, reactive } from "vue";
 // import { useRoute } from "vue-router";
 // import store from "@/store";
+
 // import TextPoster from "@/components/TextPoster.vue";
 // import { Device, Poster } from "@/types";
 // import {
@@ -378,17 +379,35 @@ export default {
 </template> -->
 
 <template>
-  <div class="flex h-full w-full items-center px-[160px]">
+  <div
+    class="flex h-full w-full justify-between bg-[#f1f9ff] items-center px-[160px]"
+  >
     <div class="flex flex-col items-start">
       <p class="text-[44px] text-blue-700 font-light mb-10">Hold on...</p>
       <p class="text-[32px] text-blue-700 font-normal">Error 403</p>
       <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
-        MinIO ACCESS DENIED
+        <span class="text-[#c72c48] font-bold">MinIO </span>Access denied
       </p>
-      <p class="text-[18px] text-[#575757] font-normal">
-        Insufficient permissions to access the requested data.
+      <p class="text-[18px] text-start text-[#575757] font-normal">
+       pixelParade doesn't have enough permissions to access <br/> the requested data from MinIO.
       </p>
     </div>
+    <div class="flex flex-col items-center justify-center gap-6">
+      <img
+      class="w-[380px] h-[120px]"
+      alt="pixel"
+      src="../../assets/images/pixelParadeLogo.png"
+    />
+    <img
+      class="w-[80px] h-[80px] -mt-5"
+      alt="mark"
+      src="../../assets/images/exclamation.png"
+    />
+    <img
+      class="w-[380px] h-[80px]"
+      alt="minio"
+      src="../../assets/images/minioLogo.png"
+    /></div>
   </div>
 </template>
 
