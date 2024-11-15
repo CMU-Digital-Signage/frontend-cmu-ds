@@ -4,209 +4,209 @@ export default {
 };
 </script>
 <script setup lang="ts">
-// import {
-//   getPosterEachDevice,
-//   getActivateEmerPoster,
-//   getGlanceBarEachDevice,
-// } from "@/services";
-// import { computed, onMounted, ref, watch, onUnmounted, reactive } from "vue";
-// import { useRoute } from "vue-router";
-// import store from "@/store";
+import {
+  getPosterEachDevice,
+  getActivateEmerPoster,
+  getGlanceBarEachDevice,
+} from "@/services";
+import { computed, onMounted, ref, watch, onUnmounted, reactive } from "vue";
+import { useRoute } from "vue-router";
+import store from "@/store";
 
-// import TextPoster from "@/components/TextPoster.vue";
-// import { Device, Poster } from "@/types";
-// import {
-//   loopPoster,
-//   setFieldPoster,
-//   dateFormatter,
-//   timeFormatter,
-// } from "@/utils/constant";
-// import axios from "axios";
-// import { AQI_STATUS, MAP_TYPE } from "@/utils/enum";
+import TextPoster from "@/components/TextPoster.vue";
+import { Device, Poster } from "@/types";
+import {
+  loopPoster,
+  setFieldPoster,
+  dateFormatter,
+  timeFormatter,
+} from "@/utils/constant";
+import axios from "axios";
+import { AQI_STATUS, MAP_TYPE } from "@/utils/enum";
 
-// const route = useRoute();
-// const mac = route.params.mac as string;
-// const showEmer = ref(false);
-// const posters = computed(() => store.state.posters);
-// const emerPoster = computed(() =>
-//   store.state.emerPosters ? store.state.emerPosters[0] : undefined
-// );
-// const image = computed(() => store.state.currentImage);
-// const videoEl = ref<HTMLVideoElement | null>();
-// const stopLoop = ref();
-// const dateTime = ref(new Date());
-// const device = ref<Partial<Device>>();
-// let intervalPoster: any = null;
-// let intervalEmer: any = null;
-// let intervalWeather: any = null;
-// let dateTimeInterval: any = null;
-// const weather: any = ref();
-// const iconWeather = ref({ condition: "", image: "" });
-// const updateWeather = ref(new Date());
-// const error = reactive({ status: 0, message: "" });
+const route = useRoute();
+const mac = route.params.mac as string;
+const showEmer = ref(false);
+const posters = computed(() => store.state.posters);
+const emerPoster = computed(() =>
+  store.state.emerPosters ? store.state.emerPosters[0] : undefined
+);
+const image = computed(() => store.state.currentImage);
+const videoEl = ref<HTMLVideoElement | null>();
+const stopLoop = ref();
+const dateTime = ref(new Date());
+const device = ref<Partial<Device>>();
+let intervalPoster: any = null;
+let intervalEmer: any = null;
+let intervalWeather: any = null;
+let dateTimeInterval: any = null;
+const weather: any = ref();
+const iconWeather = ref({ condition: "", image: "" });
+const updateWeather = ref(new Date());
+const error = reactive({ status: 0, message: "" });
 
-// const fetchWeather = async () => {
-//   const res = await axios.get("https://api.airvisual.com/v2/nearest_city", {
-//     params: {
-//       key: "4f6af6ef-9045-4d4e-b95e-7a125bb11db8",
-//       lat: "18.79",
-//       lon: "98.95",
-//     },
-//   });
-//   updateWeather.value = new Date();
-//   weather.value = res.data.data;
+const fetchWeather = async () => {
+  const res = await axios.get("https://api.airvisual.com/v2/nearest_city", {
+    params: {
+      key: "4f6af6ef-9045-4d4e-b95e-7a125bb11db8",
+      lat: "18.79",
+      lon: "98.95",
+    },
+  });
+  updateWeather.value = new Date();
+  weather.value = res.data.data;
 
-//   const weatherValue = weather.value?.current.weather.ic;
-//   if (weatherValue === "01d") {
-//     iconWeather.value = {
-//       condition: "Clear",
-//       image: require("../../assets/images/clearDay.png"),
-//     };
-//   } else if (weatherValue === "01n") {
-//     iconWeather.value = {
-//       condition: "Clear",
-//       image: require("../../assets/images/clearNight.jpg"),
-//     };
-//   } else if (weatherValue === "02d") {
-//     iconWeather.value = {
-//       condition: "Mostly Clear",
-//       image: require("../../assets/images/clearDay.png"),
-//     };
-//   } else if (weatherValue === "02n") {
-//     iconWeather.value = {
-//       condition: "Mostly Clear",
-//       image: require("../../assets/images/clearNight.jpg"),
-//     };
-//   } else if (weatherValue === "03d") {
-//     iconWeather.value = {
-//       condition: "Partly Cloudy",
-//       image: require("../../assets/images/partlyCloudy.png"),
-//     };
-//   } else if (weatherValue === "09d") {
-//     iconWeather.value = {
-//       condition: "Drizzle",
-//       image: require("../../assets/images/drizzle.png"),
-//     };
-//   } else if (weatherValue === "10d" || weatherValue === "10n") {
-//     iconWeather.value = {
-//       condition: "Rain",
-//       image: require("../../assets/images/rain.png"),
-//     };
-//   } else if (weatherValue === "11d" || weatherValue === "11n") {
-//     iconWeather.value = {
-//       condition: "Thunderstorm",
-//       image: require("../../assets/images/thunderstorm.png"),
-//     };
-//   } else if (weatherValue === "13d") {
-//     iconWeather.value = {
-//       condition: "Snow",
-//       image: require("../../assets/images/snow.png"),
-//     };
-//   } else {
-//     iconWeather.value = {
-//       condition: "Fog",
-//       image: require("../../assets/images/fog.png"),
-//     };
-//   }
-// };
+  const weatherValue = weather.value?.current.weather.ic;
+  if (weatherValue === "01d") {
+    iconWeather.value = {
+      condition: "Clear",
+      image: require("../../assets/images/clearDay.png"),
+    };
+  } else if (weatherValue === "01n") {
+    iconWeather.value = {
+      condition: "Clear",
+      image: require("../../assets/images/clearNight.jpg"),
+    };
+  } else if (weatherValue === "02d") {
+    iconWeather.value = {
+      condition: "Mostly Clear",
+      image: require("../../assets/images/clearDay.png"),
+    };
+  } else if (weatherValue === "02n") {
+    iconWeather.value = {
+      condition: "Mostly Clear",
+      image: require("../../assets/images/clearNight.jpg"),
+    };
+  } else if (weatherValue === "03d") {
+    iconWeather.value = {
+      condition: "Partly Cloudy",
+      image: require("../../assets/images/partlyCloudy.png"),
+    };
+  } else if (weatherValue === "09d") {
+    iconWeather.value = {
+      condition: "Drizzle",
+      image: require("../../assets/images/drizzle.png"),
+    };
+  } else if (weatherValue === "10d" || weatherValue === "10n") {
+    iconWeather.value = {
+      condition: "Rain",
+      image: require("../../assets/images/rain.png"),
+    };
+  } else if (weatherValue === "11d" || weatherValue === "11n") {
+    iconWeather.value = {
+      condition: "Thunderstorm",
+      image: require("../../assets/images/thunderstorm.png"),
+    };
+  } else if (weatherValue === "13d") {
+    iconWeather.value = {
+      condition: "Snow",
+      image: require("../../assets/images/snow.png"),
+    };
+  } else {
+    iconWeather.value = {
+      condition: "Fog",
+      image: require("../../assets/images/fog.png"),
+    };
+  }
+};
 
-// const aqiStatus = () => {
-//   if (weather.value?.current) {
-//     const aqiValue = weather.value.current.pollution.aqius;
-//     if (aqiValue <= 50) return AQI_STATUS.GOOD;
-//     else if (aqiValue <= 100) return AQI_STATUS.MODERATE;
-//     else if (aqiValue <= 150) return AQI_STATUS.UNHEALTHY_SG;
-//     else if (aqiValue <= 200) return AQI_STATUS.UNHEALTHY;
-//     else if (aqiValue <= 300) return AQI_STATUS.VERY_UNHEALTHY;
-//     else return AQI_STATUS.HAZARDOUS;
-//   }
-//   return AQI_STATUS.GOOD;
-// };
+const aqiStatus = () => {
+  if (weather.value?.current) {
+    const aqiValue = weather.value.current.pollution.aqius;
+    if (aqiValue <= 50) return AQI_STATUS.GOOD;
+    else if (aqiValue <= 100) return AQI_STATUS.MODERATE;
+    else if (aqiValue <= 150) return AQI_STATUS.UNHEALTHY_SG;
+    else if (aqiValue <= 200) return AQI_STATUS.UNHEALTHY;
+    else if (aqiValue <= 300) return AQI_STATUS.VERY_UNHEALTHY;
+    else return AQI_STATUS.HAZARDOUS;
+  }
+  return AQI_STATUS.GOOD;
+};
 
-// const fetchData = async () => {
-//   const { ok, poster, message, status } = await getPosterEachDevice(mac);
-//   if (ok) {
-//     setFieldPoster(poster);
-//     poster.sort((a: Poster, b: Poster) => {
-//       if (a.startTime < b.startTime) return -1;
-//       if (a.startTime > b.startTime) return 1;
-//       return 0;
-//     });
-//     store.state.posters = poster;
-//   } else {
-//     error.message = message;
-//     error.status = status;
-//   }
-// };
+const fetchData = async () => {
+  const { ok, poster, message, status } = await getPosterEachDevice(mac);
+  if (ok) {
+    setFieldPoster(poster);
+    poster.sort((a: Poster, b: Poster) => {
+      if (a.startTime < b.startTime) return -1;
+      if (a.startTime > b.startTime) return 1;
+      return 0;
+    });
+    store.state.posters = poster;
+  } else {
+    error.message = message;
+    error.status = status;
+  }
+};
 
-// const fetchGlanceBar = async () => {
-//   const res = await getGlanceBarEachDevice(mac);
-//   if (res.ok) {
-//     device.value = res.device;
-//   } else {
-//     error.message = res.message;
-//     error.status = res.status;
-//   }
-// };
+const fetchGlanceBar = async () => {
+  const res = await getGlanceBarEachDevice(mac);
+  if (res.ok) {
+    device.value = res.device;
+  } else {
+    error.message = res.message;
+    error.status = res.status;
+  }
+};
 
-// onMounted(async () => {
-//   await fetchData();
-//   if (posters.value) {
-//     fetchWeather();
-//     await getActivateEmerPoster();
-//     stopLoop.value = loopPoster(posters.value, emerPoster.value);
-//     dateTimeInterval = setInterval(async () => {
-//       dateTime.value = new Date();
-//       await fetchGlanceBar();
-//     }, 1000);
-//     intervalEmer = setInterval(async () => {
-//       await getActivateEmerPoster();
-//     }, 1000);
-//     intervalWeather = setInterval(async () => {
-//       await fetchWeather();
-//     }, 1000 * 60 * 30); // fetch every 30 minutes
-//     intervalPoster = setInterval(async () => {
-//       await fetchData();
-//     }, 1000 * 16); // fetch every 16 sec
-//   }
-// });
+onMounted(async () => {
+  await fetchData();
+  if (posters.value) {
+    fetchWeather();
+    await getActivateEmerPoster();
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
+    dateTimeInterval = setInterval(async () => {
+      dateTime.value = new Date();
+      await fetchGlanceBar();
+    }, 1000);
+    intervalEmer = setInterval(async () => {
+      await getActivateEmerPoster();
+    }, 1000);
+    intervalWeather = setInterval(async () => {
+      await fetchWeather();
+    }, 1000 * 60 * 30); // fetch every 30 minutes
+    intervalPoster = setInterval(async () => {
+      await fetchData();
+    }, 1000 * 16); // fetch every 16 sec
+  }
+});
 
-// watch(posters, (newPosters, oldPosters) => {
-//   if (
-//     newPosters?.length !== oldPosters?.length &&
-//     posters.value &&
-//     stopLoop.value
-//   ) {
-//     stopLoop.value();
-//     stopLoop.value = loopPoster(posters.value, emerPoster.value);
-//   }
-// });
+watch(posters, (newPosters, oldPosters) => {
+  if (
+    newPosters?.length !== oldPosters?.length &&
+    posters.value &&
+    stopLoop.value
+  ) {
+    stopLoop.value();
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
+  }
+});
 
-// watch(emerPoster, () => {
-//   if (emerPoster.value) {
-//     if (stopLoop.value) stopLoop.value();
-//     showEmer.value = true;
-//     store.state.currentImage.type = "EP";
-//     store.state.currentImage.image = emerPoster.value.emergencyImage;
-//     store.state.currentImage.key = emerPoster.value.incidentName;
-//   } else if (showEmer.value && posters.value) {
-//     showEmer.value = false;
-//     stopLoop.value = loopPoster(posters.value, emerPoster.value);
-//   }
-// });
+watch(emerPoster, () => {
+  if (emerPoster.value) {
+    if (stopLoop.value) stopLoop.value();
+    showEmer.value = true;
+    store.state.currentImage.type = "EP";
+    store.state.currentImage.image = emerPoster.value.emergencyImage;
+    store.state.currentImage.key = emerPoster.value.incidentName;
+  } else if (showEmer.value && posters.value) {
+    showEmer.value = false;
+    stopLoop.value = loopPoster(posters.value, emerPoster.value);
+  }
+});
 
-// onUnmounted(() => {
-//   if (stopLoop.value) stopLoop.value();
-//   image.value.key = "";
-//   image.value.image = null;
-//   clearInterval(intervalPoster);
-//   clearInterval(intervalEmer);
-//   clearInterval(dateTimeInterval);
-//   clearInterval(intervalWeather);
-// });
+onUnmounted(() => {
+  if (stopLoop.value) stopLoop.value();
+  image.value.key = "";
+  image.value.image = null;
+  clearInterval(intervalPoster);
+  clearInterval(intervalEmer);
+  clearInterval(dateTimeInterval);
+  clearInterval(intervalWeather);
+});
 </script>
 
-<!-- <template>
+<template>
   <div
     v-if="error.status"
     class="flex flex-col h-screen w-screen justify-center items-center"
@@ -375,39 +375,6 @@ export default {
         />
       </transition>
     </div>
-  </div>
-</template> -->
-
-<template>
-  <div
-    class="flex h-full w-full justify-between bg-[#f1f9ff] items-center px-[160px]"
-  >
-    <div class="flex flex-col items-start">
-      <p class="text-[44px] text-blue-700 font-light mb-10">Hold on...</p>
-      <p class="text-[32px] text-blue-700 font-normal">Error 403</p>
-      <p class="text-[48px] text-blue-700 font-normal -mt-2 mb-8">
-        <span class="text-[#c72c48] font-bold">MinIO </span>Access denied
-      </p>
-      <p class="text-[18px] text-start text-[#575757] font-normal">
-       pixelParade doesn't have enough permissions to access <br/> the requested data from MinIO.
-      </p>
-    </div>
-    <div class="flex flex-col items-center justify-center gap-6">
-      <img
-      class="w-[380px] h-[120px]"
-      alt="pixel"
-      src="../../assets/images/pixelParadeLogo.png"
-    />
-    <img
-      class="w-[80px] h-[80px] -mt-5"
-      alt="mark"
-      src="../../assets/images/exclamation.png"
-    />
-    <img
-      class="w-[380px] h-[80px]"
-      alt="minio"
-      src="../../assets/images/minioLogo.png"
-    /></div>
   </div>
 </template>
 
