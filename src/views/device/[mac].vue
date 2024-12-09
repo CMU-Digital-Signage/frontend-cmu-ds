@@ -271,8 +271,13 @@ onUnmounted(() => {
       >
         <div
           v-if="device?.color2"
-          class="bottomBlock"
           style="
+            writing-mode: vertical-rl;
+            transform: scale(-1, -1);
+            display: flex;
+            align-items: center;
+            background-color: #0e1235;
+            justify-content: center;
             gap: 8px;
             height: 50%;
             flex-direction: row-reverse;
@@ -315,10 +320,14 @@ onUnmounted(() => {
         </div>
         <div
           v-if="device?.color1"
-          class="bottomBlock"
           :class="{ 'important-text-align': device.arrow1 === 0 }"
           :style="{
-            gap: '8px',
+            writingMode: 'vertical-rl',
+            transform: 'scale(-1, -1)',
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#0e1235',
+            justifyContent: 'center',
             height: device?.color2 ? '50%' : '100%',
             flexDirection: device.arrow1 === 0 ? 'row-reverse' : undefined,
           }"
@@ -359,8 +368,13 @@ onUnmounted(() => {
         </div>
       </div>
       <div
-        class="bottomBlockAQI"
         style="
+          writing-mode: vertical-rl;
+          transform: scale(-1, -1);
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           align-items: center;
           height: 20%;
           justify-content: center;
@@ -411,8 +425,13 @@ onUnmounted(() => {
         </div>
       </div>
       <div
-        class="bottomBlockAQI"
         style="
+          writing-mode: vertical-rl;
+          transform: scale(-1, -1);
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           height: 20%;
           display: flex;
           flex-direction: column;
@@ -432,8 +451,14 @@ onUnmounted(() => {
         <p>{{ weather?.current?.weather?.tp }} °C</p>
       </div>
       <div
-        class="bottomBlockGroup"
         style="
+          writing-mode: vertical-rl;
+          transform: scale(-1, -1);
+          width: 100%;
+          display: flex;
+          align-items: center;
+          background-color: #0e1235;
+          justify-content: center;
           color: white;
           height: 20%;
           flex-direction: column;
@@ -551,34 +576,6 @@ video {
 
 .rotateText {
   transform: rotate(-90deg);
-}
-
-.bottomBlock {
-  writing-mode: vertical-rl;
-  transform: scale(-1, -1);
-  display: flex;
-  align-items: center;
-  background-color: #0e1235;
-  justify-content: center;
-}
-
-.bottomBlockAQI {
-  writing-mode: vertical-rl;
-  transform: scale(-1, -1);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bottomBlockGroup {
-  writing-mode: vertical-rl;
-  transform: scale(-1, -1);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  background-color: #0e1235;
-  justify-content: center;
 }
 
 .important-text-align {

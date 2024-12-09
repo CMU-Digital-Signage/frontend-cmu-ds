@@ -51,8 +51,12 @@ const processText = (text: string | undefined) => {
       >
         <div class="w-28 h-28 flex items-center justify-center rounded-full">
           <i
-            class="pi pi-exclamation-triangle text-white"
-            :class="$route.path === '/emergency' ? 'text-7xl' : 'text-[160px]'"
+            class="pi pi-exclamation-triangle"
+            :style="{
+              color: 'white',
+              lineHeight: 1,
+              fontSize: $route.path === '/emergency' ? '72px' : '160px',
+            }"
           ></i>
         </div>
         <p
