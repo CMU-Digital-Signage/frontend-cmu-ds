@@ -207,137 +207,272 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="error.status" class="container-error">
-    <p class="text-6xl font-bold">{{ error.status }}</p>
-    <p class="text-xl">{{ error.message }}</p>
+  <div
+    v-if="error.status"
+    style="
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      justify-content: center;
+      align-items: center;
+    "
+  >
+    <p style="font-size: 60px; line-height: 1; font-weight: 700">
+      {{ error.status }}
+    </p>
+    <p style="font-size: 20px; line-height: 1.75rem">
+      {{ error.message }}
+    </p>
   </div>
   <div
     v-else
-    class="container-mac-view"
-    :class="{
-      'bg-[#ff0000]': emerPoster?.incidentName === 'banner',
-      'bg-black': emerPoster?.incidentName !== 'banner',
+    :style="{
+      backgroundColor:
+        emerPoster?.incidentName === 'banner' ? '#ff0000' : 'black',
     }"
+    style="
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      width: 100vw;
+      justify-content: space-between;
+      align-items: center;
+      overflow: hidden;
+    "
   >
-    <div v-if="!emerPoster" class="container-top-bar">
+    <div
+      v-if="!emerPoster"
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+        width: 11vw;
+        overflow: hidden;
+        padding-bottom: 16px;
+        background-color: #0e1235;
+      "
+    >
       <div
-        class="flex flex-col gap-6 w-full bg-[#0e1235] h-[40%] p-8 justify-center items-center text-start rotate-0"
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          width: 100%;
+          background-color: #0e1235;
+          height: 40%;
+          padding: 32px;
+          justify-content: center;
+          align-items: center;
+          text-align: start;
+          transform: rotate(0deg);
+        "
       >
         <div
           v-if="device?.color2"
-          :class="['bottomBlock gap-2 h-1/2 flex-row-reverse !text-end']"
+          class="bottomBlock"
+          style="
+            gap: 8px;
+            height: 50%;
+            flex-direction: row-reverse;
+            text-align: end !important;
+          "
         >
-          <div class="flex justify-center items-center">
+          <div
+            style="display: flex; justify-content: center; align-items: center"
+          >
             <img
-              class="w-[88px] h-[88px]"
+              :class="{
+                rotate90: device.arrow2 === 0,
+                rotate180: device.arrow2 === 90,
+                rotateMinus90: device.arrow2 === 180,
+              }"
+              style="width: 88px; height: 88px"
               alt="arrow2"
               :src="
                 device.color2 === 'green'
                   ? require('../../assets/images/arrowGreen.png')
                   : require('../../assets/images/arrow.png')
               "
-              :class="{
-                'rotate-90': device.arrow2 === 0,
-                'rotate-180': device.arrow2 === 90,
-                '-rotate-90': device.arrow2 === 180,
-              }"
             />
           </div>
           <div
-            class="flex flex-col whitespace-break-spaces text-[52px] justify-center"
-            :class="`${
-              device.color2 === 'green' ? 'text-green-300' : 'text-yellow-400'
-            }`"
+            :class="{
+              colorDirectionGreen: device.color2 === 'green',
+              colorDirectionYellow: device.color2 === 'yellow',
+            }"
+            style="
+              display: flex;
+              flex-direction: column;
+              white-space: break-spaces;
+              font-size: 52px;
+              justify-content: center;
+            "
           >
             {{ device.desc2?.replace(" ", "\n") }}
           </div>
         </div>
         <div
           v-if="device?.color1"
-          :class="[
-            'bottomBlock gap-2',
-            `${device?.color2 ? 'h-1/2' : 'h-full'}`,
-            { 'flex-row-reverse !text-end': device.arrow1 === 0 },
-          ]"
+          class="bottomBlock"
+          :class="{ 'important-text-align': device.arrow1 === 0 }"
+          :style="{
+            gap: '8px',
+            height: device?.color2 ? '50%' : '100%',
+            flexDirection: device.arrow1 === 0 ? 'row-reverse' : undefined,
+          }"
         >
-          <div class="flex justify-center items-center">
+          <div
+            style="display: flex; justify-content: center; align-items: center"
+          >
             <img
-              class="w-[88px] h-[88px]"
+              :class="{
+                rotate90: device.arrow1 === 0,
+                rotate180: device.arrow1 === 90,
+                rotateMinus90: device.arrow1 === 180,
+              }"
+              style="width: 88px; height: 88px"
               alt="arrow1"
               :src="
                 device.color1 === 'green'
                   ? require('../../assets/images/arrowGreen.png')
                   : require('../../assets/images/arrow.png')
               "
-              :class="{
-                'rotate-90': device.arrow1 === 0,
-                'rotate-180': device.arrow1 === 90,
-                '-rotate-90': device.arrow1 === 180,
-              }"
             />
           </div>
           <div
-            class="flex flex-col whitespace-break-spaces text-[52px] justify-center"
-            :class="`${
-              device.color1 === 'green' ? 'text-green-300' : 'text-yellow-400'
-            }`"
+            :class="{
+              colorDirectionGreen: device.color1 === 'green',
+              colorDirectionYellow: device.color1 === 'yellow',
+            }"
+            style="
+              display: flex;
+              flex-direction: column;
+              white-space: break-spaces;
+              font-size: 52px;
+              justify-content: center;
+            "
           >
             {{ device.desc1?.replace(" ", "\n") }}
           </div>
         </div>
       </div>
-      <div class="bottomBlockAQI items-center h-[20%] justify-center flex-col">
+      <div
+        class="bottomBlockAQI"
+        style="
+          align-items: center;
+          height: 20%;
+          justify-content: center;
+          flex-direction: column;
+        "
+      >
         <div
-          class="flex flex-row w-full h-full items-center justify-center"
+          style="
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+          "
           :class="{
-            'bg-[#43a027]': aqiStatus() === AQI_STATUS.GOOD,
-            'bg-[#FDD64B]': aqiStatus() === AQI_STATUS.MODERATE,
-            'bg-[#faa166]': aqiStatus() == AQI_STATUS.UNHEALTHY_SG,
-            'bg-[#fe5b5b]': aqiStatus() === AQI_STATUS.UNHEALTHY,
-            'bg-[#A97ABC]': aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
-            'bg-[#966B78]': aqiStatus() === AQI_STATUS.HAZARDOUS,
-            'text-[#654E0C]': aqiStatus() === AQI_STATUS.MODERATE,
-            'text-[#571F00]': aqiStatus() === AQI_STATUS.UNHEALTHY_SG,
-            'text-[#ffffff]':
-              aqiStatus() === AQI_STATUS.GOOD ||
-              aqiStatus() === AQI_STATUS.UNHEALTHY ||
-              aqiStatus() === AQI_STATUS.VERY_UNHEALTHY ||
-              aqiStatus() === AQI_STATUS.HAZARDOUS,
+            aqiGood: aqiStatus() === AQI_STATUS.GOOD,
+            aqiModerate: aqiStatus() === AQI_STATUS.MODERATE,
+            aqiConcern: aqiStatus() == AQI_STATUS.UNHEALTHY_SG,
+            aqiUnhealthy: aqiStatus() === AQI_STATUS.UNHEALTHY,
+            aqiVeryUnhealthy: aqiStatus() === AQI_STATUS.VERY_UNHEALTHY,
+            aqiHazardous: aqiStatus() === AQI_STATUS.HAZARDOUS,
           }"
         >
-          <div class="flex flex-col justify-center items-center">
-            <p class="text-6xl font-bold">
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            "
+          >
+            <p style="font-size: 60px; line-height: 1; font-weight: 700">
               {{ weather?.current?.pollution?.aqius }}
             </p>
-            <p class="text-[22px] whitespace-nowrap">US AQI</p>
-            <p class="text-4xl font-semibold text-wrap whitespace-wrap">
+            <p style="font-size: 22px; white-space: nowrap">US AQI</p>
+            <p
+              style="
+                font-size: 36px;
+                line-height: 40px;
+                font-weight: 600;
+                text-wrap: wrap;
+              "
+            >
               {{ aqiStatus() }}
             </p>
           </div>
         </div>
       </div>
       <div
-        class="items-center h-[20%] bottomBlockAQI flex-col bg-[#0e1235] text-[48px] text-white flex font-semibold justify-center"
+        class="bottomBlockAQI"
+        style="
+          height: 20%;
+          display: flex;
+          flex-direction: column;
+          background-color: #0e1235;
+          font-size: 48px;
+          color: white;
+          font-weight: 600;
+          justify-content: center;
+          align-items: center;
+        "
       >
-        <img alt="weather" class="size-24" :src="iconWeather.image" />
+        <img
+          alt="weather"
+          style="width: 96px; height: 96px"
+          :src="iconWeather.image"
+        />
         <p>{{ weather?.current?.weather?.tp }} °C</p>
       </div>
-      <div class="bottomBlockGroup h-[20%] flex-col text-[44px] text-white">
-        <p class="text-[70px] font-semibold">{{ timeFormatter(dateTime) }}</p>
-        <p class="font-medium text-[36px]">{{ dateFormatter(dateTime, 3) }}</p>
+      <div
+        class="bottomBlockGroup"
+        style="
+          color: white;
+          height: 20%;
+          flex-direction: column;
+          font-size: 44px;
+        "
+      >
+        <p style="font-size: 70px; font-weight: 600">
+          {{ timeFormatter(dateTime) }}
+        </p>
+        <p style="font-size: 36px; font-weight: 500">
+          {{ dateFormatter(dateTime, 3) }}
+        </p>
       </div>
     </div>
-    <div v-if="emerPoster?.incidentName === 'banner'" class="flex flex-1">
+    <div
+      v-if="emerPoster?.incidentName === 'banner'"
+      style="display: flex; flex: 1 1 0%"
+    >
       <div
-        class="rotateText flex justify-center items-center h-screen w-screen -ml-[40px]"
+        class="rotateText"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100vw;
+          height: 100vh;
+          margin-left: -40px;
+        "
       >
         <TextPoster :text="emerPoster.emergencyImage" />
       </div>
     </div>
     <div
       v-else
-      class="flex-1"
-      :class="{ 'overflow-hidden relative': image.type !== MAP_TYPE.POSTER }"
+      style="flex: 1 1 0%"
+      :style="{
+        overflow: image.type !== MAP_TYPE.POSTER ? 'hidden' : undefined,
+        position: image.type !== MAP_TYPE.POSTER ? 'relative' : undefined,
+      }"
     >
       <transition v-if="image.image" name="fade" mode="out-in">
         <iframe
@@ -348,9 +483,10 @@ onUnmounted(() => {
               ? `${image.image}#toolbar=0&navpanes=0&view=Fit`
               : image.image
           "
+          class="transitionPoster"
           scrolling="no"
           fullScreen="true"
-          class="absolute overflow-hidden pointer-events-none duration-500 transition-opacity"
+          style="position: absolute; overflow: hidden; pointer-events: none"
         ></iframe>
         <video
           v-else-if="image.type == MAP_TYPE.VIDEO && image.image"
@@ -358,11 +494,13 @@ onUnmounted(() => {
           muted
           autoplay
           :src="image.image"
-          class="absolute m-auto duration-500 transition-opacity"
+          class="transitionPoster"
+          style="position: absolute; margin: auto"
         ></video>
         <img
           v-else-if="image.image"
-          class="max-w-screen h-screen m-auto duration-500 transition-opacity"
+          class="transitionPoster"
+          style="max-width: 100vw; height: 100vh; margin: auto"
           alt="poster"
           :key="image.key"
           :src="image.image"
@@ -377,45 +515,25 @@ onUnmounted(() => {
   font-family: "Lato", "Sarabun";
 }
 
-.container-error {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  justify-content: center;
-  align-items: center;
+.colorDirectionGreen {
+  color: #86efac;
 }
 
-.container-mac-view {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-  width: 100vw;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
+.colorDirectionYellow {
+  color: #facc15;
 }
 
-.container-top-bar {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100vh;
-  width: 11vw;
-  overflow: hidden;
-  padding-bottom: 16px;
-  background-color: #0e1235;
+.rotate90 {
+  transform: rotate(90deg);
 }
-
-iframe {
-  width: 100vh;
-  height: 90vw;
+.rotate180 {
+  transform: rotate(180deg);
+}
+.rotateMinus90 {
   transform: rotate(-90deg);
-  top: 100%;
-  left: 0;
-  transform-origin: 0 0;
 }
 
+iframe,
 video {
   width: 100vh;
   height: 90vw;
@@ -441,7 +559,6 @@ video {
 .bottomBlock {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
-  /* flex: 1 1; */
   display: flex;
   align-items: center;
   background-color: #0e1235;
@@ -451,7 +568,6 @@ video {
 .bottomBlockAQI {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
-  /* flex: 1 1; */
   width: 100%;
   display: flex;
   align-items: center;
@@ -461,11 +577,51 @@ video {
 .bottomBlockGroup {
   writing-mode: vertical-rl;
   transform: scale(-1, -1);
-  /* flex: 1 1; */
   width: 100%;
   display: flex;
   align-items: center;
   background-color: #0e1235;
   justify-content: center;
+}
+
+.important-text-align {
+  text-align: end !important;
+}
+
+.transitionPoster {
+  transition-duration: 500ms;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.aqiGood {
+  background-color: #43a027;
+  color: white;
+}
+
+.aqiModerate {
+  background-color: #fdd64b;
+  color: #654e0c;
+}
+
+.aqiConcern {
+  background-color: #faa166;
+  color: #571f00;
+}
+
+.aqiUnhealthy {
+  background-color: #fe5b5b;
+  color: white;
+}
+
+.aqiVeryUnhealthy {
+  background-color: #a97abc;
+  color: white;
+}
+
+.aqiHazardous {
+  background-color: #966b78;
+  color: white;
 }
 </style>
