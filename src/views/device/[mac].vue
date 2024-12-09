@@ -207,25 +207,19 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div
-    v-if="error.status"
-    class="flex flex-col h-screen w-screen justify-center items-center"
-  >
+  <div v-if="error.status" class="container-error">
     <p class="text-6xl font-bold">{{ error.status }}</p>
     <p class="text-xl">{{ error.message }}</p>
   </div>
   <div
     v-else
-    class="flex flex-row justify-between h-screen w-screen overflow-hidden"
+    class="container-mac-view"
     :class="{
       'bg-[#ff0000]': emerPoster?.incidentName === 'banner',
       'bg-black': emerPoster?.incidentName !== 'banner',
     }"
   >
-    <div
-      v-if="!emerPoster"
-      class="flex justify-between h-screen flex-col w-[11vw] items-center pb-4 bg-[#0e1235]"
-    >
+    <div v-if="!emerPoster" class="container-top-bar">
       <div
         class="flex flex-col gap-6 w-full bg-[#0e1235] h-[40%] p-8 justify-center items-center text-start rotate-0"
       >
@@ -381,6 +375,36 @@ onUnmounted(() => {
 <style scoped>
 * {
   font-family: "Lato", "Sarabun";
+}
+
+.container-error {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-mac-view {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.container-top-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  width: 11vw;
+  overflow: hidden;
+  padding-bottom: 16px;
+  background-color: #0e1235;
 }
 
 iframe {
