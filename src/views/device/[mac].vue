@@ -468,11 +468,8 @@ onUnmounted(() => {
     </div>
     <div
       v-else
-      style="flex: 1 1 0%"
-      :style="{
-        overflow: image.type !== MAP_TYPE.POSTER ? 'hidden' : undefined,
-        position: image.type !== MAP_TYPE.POSTER ? 'relative' : undefined,
-      }"
+      :class="{ hiddenRelative: image.type !== MAP_TYPE.POSTER }"
+      style="flex: 1 1 0%; width: 89vw"
     >
       <transition v-if="image.image" name="fade" mode="out-in">
         <iframe
@@ -500,7 +497,7 @@ onUnmounted(() => {
         <img
           v-else-if="image.image"
           class="transitionPoster"
-          style="max-width: 100vw; height: 100vh; margin: auto"
+          style="height: 100vh; margin: auto"
           alt="poster"
           :key="image.key"
           :src="image.image"
@@ -586,6 +583,11 @@ video {
 
 .important-text-align {
   text-align: end !important;
+}
+
+.hiddenRelative {
+  overflow: hidden;
+  position: relative;
 }
 
 .transitionPoster {
