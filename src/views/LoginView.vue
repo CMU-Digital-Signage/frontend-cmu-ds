@@ -159,7 +159,7 @@ export default defineComponent({
   methods: {
     redirectToOAuth() {
       window.location.href =
-        process.env.VUE_APP_NEXT_PUBLIC_CMU_OAUTH_URL || "";
+        process.env.VUE_APP_NEXT_PUBLIC_CMU_ENTRAID_URL || "";
     },
   },
   async beforeRouteEnter(to, from, next) {
