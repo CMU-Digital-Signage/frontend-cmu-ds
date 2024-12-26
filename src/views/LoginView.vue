@@ -27,7 +27,7 @@
 
     <Button
       class="flex items-center hide-on-mobile bg-[#5768D5] hover:bg-[#4251b1] border-none md:mb-4 py-5 justify-center w-auto md:px-5 !h-8 relative rounded-[8px] text-white text-lg button-container"
-      @click="redirectToOAuth()"
+      @click="redirectToEntraID()"
       style="box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px"
     >
       <img
@@ -157,8 +157,8 @@ import { getUserInfo } from "@/services";
 
 export default defineComponent({
   methods: {
-    redirectToOAuth() {
-      window.location.href = process.env.VUE_APP_CMU_ENTRAID_URL!;
+    redirectToEntraID() {
+      window.location.assign(process.env.VUE_APP_CMU_ENTRAID_URL!);
     },
   },
   async beforeRouteEnter(to, from, next) {
