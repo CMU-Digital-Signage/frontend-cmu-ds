@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
 import { getUserInfo } from "@/services";
 import Login from "../views/LoginView.vue";
-import cmuOAuthCallback from "@/views/cmuOAuthCallbackView.vue";
+import cmuEntraIDCallback from "@/views/cmuEntraIDCallbackView.vue";
 import Dashboard from "../views/DashboardView.vue";
 import ContentManage from "../views/ContentManageView.vue";
 import DeviceManage from "../views/DeviceView.vue";
@@ -41,9 +41,9 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/cmuOAuthCallback",
+    path: "/cmuEntraIDCallback",
     name: "cmuOAuth",
-    component: cmuOAuthCallback,
+    component: cmuEntraIDCallback,
     meta: {
       hideSidebar: true,
     },

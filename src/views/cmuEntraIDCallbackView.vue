@@ -129,7 +129,7 @@ export default {
     async function signIn(authorizationCode: string) {
       try {
         const res = await axios.post(
-          `${process.env.VUE_APP_API_BASE_URL}/cmuOAuth`,
+          `${process.env.VUE_APP_API_BASE_URL}/login`,
           {},
           {
             params: {

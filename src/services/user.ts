@@ -100,5 +100,5 @@ export async function changePassword(oldPassword: string, newPassword: string) {
 export function signOut() {
   localStorage.removeItem("token");
   store.state.userInfo = <User>{};
-  router.replace("/login");
+  window.location.assign(process.env.VUE_APP_LOGOUT_URL!);
 }
