@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/cmuEntraIDCallback",
-    name: "cmuOAuth",
+    name: "cmuEntraID",
     component: cmuEntraIDCallback,
     meta: {
       hideSidebar: true,
