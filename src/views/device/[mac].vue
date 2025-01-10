@@ -237,7 +237,6 @@ onUnmounted(() => {
       height: 100vh;
       width: 100vw;
       justify-content: space-between;
-      align-items: center;
       overflow: hidden;
     "
   >
@@ -247,6 +246,7 @@ onUnmounted(() => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        align-items: center;
         height: 100vh;
         width: 11vw;
         overflow: hidden;
@@ -328,6 +328,7 @@ onUnmounted(() => {
             alignItems: 'center',
             backgroundColor: '#0e1235',
             justifyContent: 'center',
+            gap: '8px',
             height: device?.color2 ? '50%' : '100%',
             flexDirection: device.arrow1 === 0 ? 'row-reverse' : undefined,
           }"
@@ -375,9 +376,7 @@ onUnmounted(() => {
           display: flex;
           align-items: center;
           justify-content: center;
-          align-items: center;
           height: 20%;
-          justify-content: center;
           flex-direction: column;
         "
       >
@@ -439,8 +438,6 @@ onUnmounted(() => {
           font-size: 48px;
           color: white;
           font-weight: 600;
-          justify-content: center;
-          align-items: center;
         "
       >
         <img
@@ -494,7 +491,7 @@ onUnmounted(() => {
     <div
       v-else
       :class="{ hiddenRelative: image.type !== MAP_TYPE.POSTER }"
-      style="flex: 1 1 0%; width: 89vw"
+      style="flex: 1 1 0%"
     >
       <transition v-if="image.image" name="fade" mode="out-in">
         <iframe
