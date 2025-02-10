@@ -20,8 +20,9 @@ const admin = computed(() =>
   store.state.allUser?.filter(
     (e) =>
       e.isAdmin &&
-      (e.firstName?.toLowerCase().includes(search.value?.toLowerCase()) ||
-        e.lastName?.toLowerCase().includes(search.value?.toLowerCase()) ||
+      (`${e.firstName?.toLowerCase()} ${e.lastName?.toLowerCase()}`.includes(
+        search.value?.toLowerCase()
+      ) ||
         e.email.includes(search.value?.toLowerCase()))
   )
 );
@@ -105,10 +106,10 @@ const del = async () => {
         >Search
       </label>
       <InputText
+        id="name"
         v-model="search"
         class="border border-[#C6C6C6] p-2 h-8 ml-2 mt-1 mb-3 w-96 text-[12px] rounded-lg"
         placeholder="Ex. Navadon Khunlertgit"
-        type="text"
       ></InputText>
     </div>
     <DataTable
