@@ -8,10 +8,13 @@ export default defineComponent({
 import store from "@/store";
 import { toRefs, defineProps } from "vue";
 import { Device } from "@/types";
+import { copyToClipboard, webAppUrl } from "@/utils/constant";
+import { useToast } from "primevue/usetoast";
 // import { turnOnOffDevice } from "@/services";
 
 const props = defineProps<{ device: Device }>();
 const { device } = toRefs(props);
+const toast = useToast();
 // const onOff = ref(false);
 // const loading = ref(false);
 
@@ -74,6 +77,20 @@ const { device } = toRefs(props);
         <p class="text-[#62ccca] font-bold" v-if="device.status == true">On</p> -->
       </div>
     </Button>
+    <div
+      v-if="store.state.userInfo.isAdmin"
+      class="flex absolute top-2 right-2"
+    >
+      <Button
+        class="w-7 h-7 border-0 mr-1 mt-1 bg-[#62ccca]"
+        icon="pi pi-external-link"
+        :title="`${webAppUrl}/device/${device.MACaddress}`"
+        rounded
+        @click="
+          copyToClipboard(`${webAppUrl}/device/${device.MACaddress}`, toast)
+        "
+      ></Button>
+    </div>
     <!-- <div
       v-if="store.state.userInfo.isAdmin"
       class="flex absolute bottom-2 right-2"

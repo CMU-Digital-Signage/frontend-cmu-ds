@@ -1,3 +1,4 @@
+import { webAppUrl } from "@/utils/constant";
 import axios from "axios";
 
 export async function sendEmail() {
@@ -5,7 +6,7 @@ export async function sendEmail() {
     const res = await axios.post(
       `${process.env.VUE_APP_API_BASE_URL}/email`,
       {
-        link: process.env.VUE_APP_WEB_APP,
+        link: `${webAppUrl}/reset/`,
       },
       {
         headers: {

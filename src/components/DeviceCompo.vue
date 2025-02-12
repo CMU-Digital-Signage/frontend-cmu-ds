@@ -9,7 +9,12 @@ import { ref, reactive, computed } from "vue";
 import store from "@/store";
 import { deleteDevice } from "@/services";
 import { Device } from "@/types";
-import { initialFormDevice, calculateScreenHeight } from "@/utils/constant";
+import {
+  initialFormDevice,
+  calculateScreenHeight,
+  copyToClipboard,
+  webAppUrl,
+} from "@/utils/constant";
 import { useToast } from "primevue/usetoast";
 import ModalAddEditDevice from "@/components/Modal/ModalAddEditDevice.vue";
 
@@ -101,7 +106,7 @@ const del = async () => {
     scrollDirection="vertical"
     scrollable
     :scrollHeight="calculateScreenHeight(0.75)"
-    class="mt-2 flex-1 text-[12px] lg:text-[14px]"
+    class="mt-2 flex-1 overflow-hidden text-[12px] lg:text-[14px]"
   >
     <Column
       field="deviceName"
@@ -145,6 +150,23 @@ const del = async () => {
             />
             <p>{{ rowData.data.description }}</p>
           </OverlayPanel>
+        </div>
+      </template>
+    </Column>
+    <Column header="URL" class="font-semibold max-w-52" headerStyle="font-bold">
+      <template #body="rowData">
+        <div class="flex items-center gap-3">
+          <p
+            class="text-ellipsis overflow-hidden whitespace-nowrap font-normal cursor-pointer text-blue-600 hover:text-blue-800 hover:underline"
+            @click="
+              copyToClipboard(
+                `${webAppUrl}/device/${rowData.data.MACaddress}`,
+                toast
+              )
+            "
+          >
+            {{ webAppUrl }}/device/{{ rowData.data.MACaddress }}
+          </p>
         </div>
       </template>
     </Column>

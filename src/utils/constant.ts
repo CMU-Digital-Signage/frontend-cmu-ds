@@ -4,8 +4,11 @@ import { Device, Display, Emergency, Poster } from "@/types";
 import axios from "axios";
 import Compressor from "compressorjs";
 import { CONTENT_CODE, MAP_TYPE } from "./enum";
+import { ToastServiceMethods } from "primevue/toastservice";
 
 export const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+export const webAppUrl = process.env.VUE_APP_WEB_APP;
+
 export const checkTokenExpired = async (token: string) => {
   try {
     const decode = await JSON.parse(atob(token.split(".")[1]));
@@ -94,6 +97,22 @@ export const month = [
 ];
 
 export const dayOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+export const copyToClipboard = (text: string, toast: ToastServiceMethods) => {
+  navigator.clipboard
+    .writeText(text)
+    .then(() => {
+      toast.add({
+        severity: "success",
+        summary: "Copied",
+        detail: "URL copied to clipboard",
+        life: 2000,
+      });
+    })
+    .catch((err) => {
+      console.error("Failed to copy:", err);
+    });
+};
 
 export const dateFormatter = (
   date: Date | null | undefined,
